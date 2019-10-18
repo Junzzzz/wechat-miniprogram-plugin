@@ -5,6 +5,8 @@
 
     <description>微信小程序支持，wxml、wxss、wxs三种文件支持，语法解析，代码完成，快速创建文件</description>
 
+    <depends>JavaScript</depends>
+
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <!-- uncomment to enable plugin in all products
@@ -12,9 +14,15 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileType name="Wxml" extensions="wxml" language="Wxml"
-                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlFileType"
+        <fileType name="Simple file" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.simp.SimpleFileType" fieldName="INSTANCE"
+                  language="Simple" extensions="simple"/>
+        <fileType name="WXML file" extensions="wxml" language="WXML"
+                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
                   fieldName="INSTANCE"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="JavaScript">
+
     </extensions>
 
     <actions>
