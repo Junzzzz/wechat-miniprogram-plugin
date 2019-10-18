@@ -14,9 +14,6 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileType name="Simple file" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.simp.SimpleFileType"
-                  fieldName="INSTANCE"
-                  language="Simple" extensions="simple"/>
         <fileType name="WXML file" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
                   fieldName="INSTANCE"/>
