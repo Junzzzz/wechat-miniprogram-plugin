@@ -33,6 +33,7 @@ sourceSets {
     main {
         java {
             srcDirs 'src'
+            srcDirs 'gen'
         }
         resources{
             srcDirs 'resources'

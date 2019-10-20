@@ -110,3 +110,5 @@ gradle/
 gradlew
 gradlew.bat
 settings.gradle
+/src/org/jetbrains/vuejs/lang/html/lexer/_VueLexer.java
+/gen
