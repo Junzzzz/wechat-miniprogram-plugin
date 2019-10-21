@@ -6,6 +6,7 @@
     <description>微信小程序支持，wxml、wxss、wxs三种文件支持，语法解析，代码完成，快速创建文件</description>
 
     <depends>JavaScript</depends>
+    <depends>com.intellij.css</depends>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
