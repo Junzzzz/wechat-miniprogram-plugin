@@ -11,12 +11,16 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WXSSParser
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 class WXSSParserDefinition : ParserDefinition {
 
-    companion object{
+    companion object {
         val iFileElementType = IFileElementType(WXSSLanguage.INSTANCE)
+        val COMMENTS = TokenSet.create(WXSSTypes.STRING)
     }
+
 
     override fun createFile(p0: FileViewProvider?): PsiFile {
         return WXSSPsiFile(p0!!)
@@ -35,14 +39,14 @@ class WXSSParserDefinition : ParserDefinition {
     }
 
     override fun createElement(p0: ASTNode?): PsiElement {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return WXSSTypes.Factory.createElement(p0)
     }
 
     override fun getCommentTokens(): TokenSet {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return COMMENTS
     }
 
     override fun createParser(p0: Project?): PsiParser {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return WXSSParser()
     }
 }

@@ -44,7 +44,8 @@ sourceSets {
 apply plugin: "kotlin"
 
 intellij {
-    version 'IU-LATEST-EAP-SNAPSHOT'
+    localPath  "C:\\Users\\Administrator\\Downloads\\ideaIU-LATEST-EAP-SNAPSHOT"
+//    version 'IU-LATEST-EAP-SNAPSHOT'
     pluginName 'wechat mini program'
     downloadSources false
     updateSinceUntilBuild false

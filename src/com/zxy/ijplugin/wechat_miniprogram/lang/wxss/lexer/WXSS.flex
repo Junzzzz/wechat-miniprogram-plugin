@@ -1,9 +1,9 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss;
 
-import com.intellij.lexer.FlexLexer;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSElementTypes;
+import com.intellij.psi.tree.IElementType;
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTokenTypes;
+import com.intellij.lexer.FlexLexer;
 %%
 
 %unicode
@@ -23,14 +23,16 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSElementTypes;
 %state STRING_END
 %state IMPORT_VALUE_START
 
+ALPHA=[:letter:]
 CRLF=\R
 WHITE_SPACE=[\ \n\t\f]
-
+DIGIT=[0-9]
+STRING_CONTENT = ({ALPHA}|"_"|":")({ALPHA}|{DIGIT}|"_"|":"|"."|"-")*
 %%
 
 <YYINITIAL> "@import" {
     yybegin(IMPORT_VALUE_START);
-    return WXSSElementTypes.WXSS_IMPORT;
+    return WXSSTokenTypes.WXSS_IMPORT;
 }
 
 
@@ -40,20 +42,23 @@ WHITE_SPACE=[\ \n\t\f]
       }
 "\"" {
   yybegin(STRING_START_DQ);
-  return WXSSElementTypes.WXSS_STRING_START;
+  return WXSSTokenTypes.WXSS_STRING_START;
 }
 }
 
 <IMPORT_VALUE_START> "'" {
   yybegin(STRING_START_SQ);
-  return WXSSElementTypes.WXSS_STRING_START;
+  return WXSSTokenTypes.WXSS_STRING_START;
 }
 
 <STRING_START_DQ>  {
     "\"" {
-        yybegin(STRING_END);
-        return WXSSElementTypes.WXSS_STRING_END;
-    }
+            yybegin(STRING_END);
+            return WXSSTokenTypes.WXSS_STRING_END;
+        }
+      {STRING_CONTENT} {
+          return WXSSTokenTypes.WXSS_STRING_CONTENT;
+      }
     [^] {
         return TokenType.BAD_CHARACTER;
     }

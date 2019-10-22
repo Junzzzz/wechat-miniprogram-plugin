@@ -5,7 +5,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.xml.XmlTokenType;
 import kotlin.Pair;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.vuejs.lang.html.lexer.VueTokenTypes;
+import org.jetbrains.vuejs.com.zxy.ijplugin.wechat_miniprogram.lang.html.lexer.VueTokenTypes;
 %%
 
 %unicode

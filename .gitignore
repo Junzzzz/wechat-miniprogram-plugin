@@ -110,5 +110,5 @@ gradle/
 gradlew
 gradlew.bat
 settings.gradle
-/src/org/jetbrains/vuejs/lang/html/lexer/_VueLexer.java
-/gen
+/src/org/jetbrains/vuejs/com.zxy.ijplugin.wechat_miniprogram.lang/html/lexer/_VueLexer.java
+/gen/

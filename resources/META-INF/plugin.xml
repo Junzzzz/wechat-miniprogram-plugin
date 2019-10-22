@@ -11,7 +11,7 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <!-- uncomment to enable plugin in all products
-    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.com.zxy.ijplugin.wechat_miniprogram.lang</depends>
     -->
 
     <extensions defaultExtensionNs="com.intellij">
@@ -22,6 +22,7 @@
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
         <fileType name="WXS file" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
+        <lang.parserDefinition language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSParserDefinition"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">

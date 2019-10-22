@@ -1,0 +1,19 @@
+{
+  parserClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WXSSParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="WXSS"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi"
+  psiImplPackage="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl"
+
+  elementTypeHolderClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes"
+  elementTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSElementType"
+  tokenTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSElementType"
+}
+
+wxssFile ::= part*
+part ::= import
+import ::= ("@import"string) | "@import"
+string ::= "\""STRING_CONTENT"\"" | "'"STRING_CONTENT"'"

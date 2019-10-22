@@ -8,7 +8,6 @@ import com.intellij.lang.ecmascript6.parsing.ES6StatementParser
 import com.intellij.lang.javascript.JSTokenTypes
 import com.intellij.lang.javascript.parsing.JSPsiTypeParser
 import com.intellij.lang.javascript.parsing.JavaScriptParser
-import org.intellij.plugins.relaxNG.compact.RncTokenTypes.KEYWORDS
 
 class WeAppJsParser(builder: PsiBuilder) :
         ES6Parser<ES6ExpressionParser<WeAppJsParser>, WeAppJsParser.WeAppJsStatementParser, ES6FunctionParser<WeAppJsParser>,
