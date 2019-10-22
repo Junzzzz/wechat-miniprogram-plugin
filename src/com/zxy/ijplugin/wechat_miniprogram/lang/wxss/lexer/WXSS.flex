@@ -1,67 +1,79 @@
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss;
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.lexer;
 
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTokenTypes;
-import com.intellij.lexer.FlexLexer;
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes;
 %%
 
 %unicode
 
 %class _WXSSLexer
 %public
-%implements FlexLexer
+%implements com.intellij.lexer.FlexLexer
 %function advance
 %type IElementType
 
 // state
 %state IDENTIFIER
 %state PERIOD
-%state STRING
-%state STRING_START_DQ
-%state STRING_START_SQ
-%state STRING_END
+%state IMPORT_STRING
+%state IMPORT_STRING_START_DQ
+%state IMPORT_STRING_START_SQ
+%state IMPORT_STRING_END
 %state IMPORT_VALUE_START
 
 ALPHA=[:letter:]
 CRLF=\R
 WHITE_SPACE=[\ \n\t\f]
 DIGIT=[0-9]
-STRING_CONTENT = ({ALPHA}|"_"|":")({ALPHA}|{DIGIT}|"_"|":"|"."|"-")*
+STRING_CONTENT = ({ALPHA}|{DIGIT}|"_"|":"|"."|"-"|"\\"|"/")*
 %%
 
 <YYINITIAL> "@import" {
     yybegin(IMPORT_VALUE_START);
-    return WXSSTokenTypes.WXSS_IMPORT;
+    return WXSSTypes.IMPORT_KEYWORD;
 }
 
 
 <IMPORT_VALUE_START> {
-"s" {
-          return TokenType.WHITE_SPACE;
-      }
-"\"" {
-  yybegin(STRING_START_DQ);
-  return WXSSTokenTypes.WXSS_STRING_START;
-}
-}
+    {WHITE_SPACE} {
+        return TokenType.WHITE_SPACE;
+    }
 
-<IMPORT_VALUE_START> "'" {
-  yybegin(STRING_START_SQ);
-  return WXSSTokenTypes.WXSS_STRING_START;
-}
-
-<STRING_START_DQ>  {
     "\"" {
-            yybegin(STRING_END);
-            return WXSSTokenTypes.WXSS_STRING_END;
-        }
-      {STRING_CONTENT} {
-          return WXSSTokenTypes.WXSS_STRING_CONTENT;
-      }
-    [^] {
-        return TokenType.BAD_CHARACTER;
+                yybegin(IMPORT_STRING_START_DQ);
+                return WXSSTypes.STRING_START_DQ;
+            }
+    "'" {
+                yybegin(IMPORT_STRING_START_SQ);
+                return WXSSTypes.STRING_START_SQ;
+            }
+}
+
+<IMPORT_STRING_START_SQ,IMPORT_STRING_START_DQ>{
+    {STRING_CONTENT} {
+        return WXSSTypes.STRING_CONTENT;
     }
 }
+
+<IMPORT_STRING_START_DQ>  {
+    "\"" {
+                yybegin(IMPORT_STRING_END);
+                return WXSSTypes.STRING_END_DQ;
+        }
+}
+
+<IMPORT_STRING_START_SQ>  {
+    "'" {
+                yybegin(IMPORT_STRING_END);
+                return WXSSTypes.STRING_END_SQ;
+        }
+}
+
+<IMPORT_STRING_END> ";" {
+          yybegin(YYINITIAL);
+    return WXSSTypes.SEMICOLON;
+}
+
 
 [^] { return TokenType.BAD_CHARACTER; }

@@ -11,6 +11,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.lexer._WXSSLexer
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WXSSParser
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
