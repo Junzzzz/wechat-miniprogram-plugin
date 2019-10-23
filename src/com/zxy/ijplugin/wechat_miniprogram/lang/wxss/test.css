@@ -1,5 +1,44 @@
-@import "中文dsds";
-#a,#c,element-c c s a p{
-    a:.1,.1;
-    中文:function(.1 1,2 3rgd);
+.container {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    padding: 20rpx;
+    align-items: center;
+    background-color: white;
 }
+
+.goods-image {
+    width: 200rpx;
+    height: 200rpx;
+    margin-left: 20rpx;
+}
+
+.goods-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: 20rpx;
+    height: 200rpx;
+    box-sizing: border-box;
+}
+
+.goods-info .spec{
+    background-color: #DCDFE6;
+    font-size: 24rpx;
+    display: inline;
+    padding: 8rpx 12rpx;
+    border-radius: 20rpx;
+}
+
+.goods-name {
+    font-size: 32rpx;
+}
+
+.price-and-count {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
