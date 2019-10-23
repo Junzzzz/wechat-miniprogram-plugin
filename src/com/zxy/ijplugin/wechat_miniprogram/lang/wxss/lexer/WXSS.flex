@@ -126,13 +126,13 @@ ELEMENT_NAME = ({ALPHA}|-)+
 
 <CLASS_SELECTOR> {IDENTIFIER} {
            yybegin(SELECTOR_GROUP);
-                  return WXSSTypes.ID;
+                  return WXSSTypes.CLASS;
       }
 
 <ID_SELECTOR> {
     {IDENTIFIER} {
           yybegin(SELECTOR_GROUP);
-        return WXSSTypes.CLASS;
+        return WXSSTypes.ID;
       }
 }
 
