@@ -13,9 +13,22 @@
   tokenTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTokenType"
 }
 
-wxssFile ::= (import | styleDefinition)*
+wxssFile ::= (import | styleDefinition | CRLF)*
 import ::= (IMPORT_KEYWORD string SEMICOLON)
 string ::= (STRING_START_DQ STRING_CONTENT STRING_END_DQ | STRING_START_SQ STRING_CONTENT STRING_END_SQ)
-styleDefinition ::= (selectorGroup  styleStatementCollection)
-selectorGroup ::= ()
-styleStatementCollection ::=
+styleDefinition ::= (selectorGroup  styleStatementSection)
+selectorGroup ::= (selectors (COMMA selectors)*)
+selectors ::= ((idSelector | classSelector | ELEMENT_NAME)(PSEUDO_SELECTOR)?)+
+idSelector ::= NUMBER_SIGN IDENTIFIER
+classSelector ::= DOT IDENTIFIER
+styleStatementSection ::= LEFT_BRACKET styleStatementCollection RIGHT_BRACKET
+styleStatementCollection ::= ((styleStatement SEMICOLON)* (styleStatement SEMICOLON?)? )
+styleStatement ::= ATTRIBUTE_NAME COLON attributeValue
+attributeValue ::= valueGroup (COMMA valueGroup)*
+valueGroup ::= (value)+
+value ::= (HASH | function | numericalValue | string | ATTRIBUTE_VALUE_LITERAL)
+function ::= FUNCTION_NAME LEFT_PARENTHESES functionArgs? RIGHT_PARENTHESES
+functionArgs ::= (functionArgGroup (COMMA functionArgGroup)*)
+functionArgGroup ::= (functionArg)+
+functionArg ::= (HASH | numericalValue | string )
+numericalValue ::= NUMBER NUMBER_UNIT?

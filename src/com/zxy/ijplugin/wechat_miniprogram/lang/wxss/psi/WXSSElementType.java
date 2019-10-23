@@ -10,5 +10,4 @@ public class WXSSElementType extends IElementType {
         super(debugName, WXSSLanguage.INSTANCE);
     }
 
-
 }
