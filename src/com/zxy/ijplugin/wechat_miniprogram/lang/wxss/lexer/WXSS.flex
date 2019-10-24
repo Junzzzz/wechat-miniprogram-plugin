@@ -343,9 +343,6 @@ COMMENT_END = "*/"
     [^] {
         return WXSSTypes.COMMENT;
     }
-    <<EOF>> {
-        return WXSSTypes.COMMENT;
-    }
 }
 
 {WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
