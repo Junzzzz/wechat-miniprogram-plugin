@@ -22,9 +22,22 @@ class WXSSColorSettingPage : ColorSettingsPage {
 
     override fun getAttributeDescriptors(): Array<AttributesDescriptor> {
         return arrayOf(
-                AttributesDescriptor("Class",WXSSSyntaxHighlighter.WXSS_CLASS),
-                AttributesDescriptor("Bad character",WXSSSyntaxHighlighter.WXSS_BAD_CHARACTER),
-                AttributesDescriptor("Braces",WXSSSyntaxHighlighter.WXSS_BRACKET)
+                AttributesDescriptor("Class", WXSSSyntaxHighlighter.WXSS_CLASS),
+                AttributesDescriptor("Bad character", WXSSSyntaxHighlighter.WXSS_BAD_CHARACTER),
+                AttributesDescriptor("Braces", WXSSSyntaxHighlighter.WXSS_BRACKET),
+                AttributesDescriptor("Property name", WXSSSyntaxHighlighter.WXSS_ATTRIBUTE_NAME),
+                AttributesDescriptor("Class selector", WXSSSyntaxHighlighter.WXSS_CLASS_SELECTOR),
+                AttributesDescriptor("Class name", WXSSSyntaxHighlighter.WXSS_CLASS),
+                AttributesDescriptor("Id", WXSSSyntaxHighlighter.WXSS_ID),
+                AttributesDescriptor("Property value", WXSSSyntaxHighlighter.WXSS_ATTRIBUTE_VALUE_BASIC),
+                AttributesDescriptor("Colon", WXSSSyntaxHighlighter.WXSS_COLON),
+                AttributesDescriptor("Parenthesis", WXSSSyntaxHighlighter.WXSS_PARENTHESES),
+                AttributesDescriptor("Color", WXSSSyntaxHighlighter.WXSS_COLOR),
+                AttributesDescriptor("Function", WXSSSyntaxHighlighter.WXSS_FUNCTION),
+                AttributesDescriptor("Semicolon", WXSSSyntaxHighlighter.WXSS_SEMICOLON),
+                AttributesDescriptor("String", WXSSSyntaxHighlighter.WXSS_STRING),
+                AttributesDescriptor("Tag name", WXSSSyntaxHighlighter.WXSS_ELEMENT),
+                AttributesDescriptor("Pseudo selector", WXSSSyntaxHighlighter.WXSS_PSEUDO)
         )
     }
 
@@ -38,31 +51,51 @@ class WXSSColorSettingPage : ColorSettingsPage {
 
     override fun getDemoText(): String {
         return """
-            @import "manual.css";
-
+            @import "abcddsadas";
             @font-face {
-              font-family: DroidSans;
-              src: url(DroidSans.ttf);
-              unicode-range: U+000-5FF, U+1e00-1fff, U+2000-2300;
+                
             }
             
-            h1.mystyle:lang(en) {
-              color:blue; /* TODO: change THIS to yellow for next version! */
-              border:rgb(255,0,0);
-              background-color: #FAFAFA;
-              background:url(hello.jpg) !important;
+            .container::before{
+                margin-top: 20rpx;
+                padding: 30rpx;
+                box-sizing: border-box;
+                background-color: white;
+                border-radius: 30;
+                border-radius: 30,232,value
             }
             
-            div > p, p ~ ul, input [type="radio"] {
-              color: green;
-              width: 80%;
+            .content{
+                display: flex;
+                flex-direction: row;
+            
             }
             
-            #header:after {
-              color: red;
+            .cover{
+                width: 200rpx;
+                height: 200rpx;
             }
             
-            &!
+            .info{
+                margin-left: 30rpx;
+            }
+            
+            .info .attrs{
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                color: #909399;
+                font-size: 28rpx;
+            }
+            
+            .info .attrs .attr{
+                margin-right: 12rpx;
+            }
+            
+            .info .name{
+                font-size: 32rpx;
+                font-weight: 400;
+            }
         """.trimIndent()
     }
 }

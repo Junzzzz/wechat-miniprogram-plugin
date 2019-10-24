@@ -31,6 +31,9 @@ class WXSSSyntaxHighlighter : SyntaxHighlighterBase() {
         val WXSS_KEYWORD = createTextAttributesKey("WXSS_KEYWORD", CssHighlighter.CSS_KEYWORD)
         val WXSS_COMMENT = createTextAttributesKey("WXSS_COMMENT", CssHighlighter.CSS_COMMENT)
         val WXSS_STRING = createTextAttributesKey("WXSS_STRING", CssHighlighter.CSS_STRING)
+        val WXSS_SEMICOLON = createTextAttributesKey("WXSS_SEMICOLON",CssHighlighter.CSS_SEMICOLON)
+        val WXSS_ELEMENT = createTextAttributesKey("WXSS_ELEMENT",CssHighlighter.CSS_TAG_NAME)
+        val WXSS_PSEUDO = createTextAttributesKey("WXSS_PSEUDO",CssHighlighter.CSS_PSEUDO)
 
         val WXSS_BAD_CHARACTER = createTextAttributesKey("WXSS_BAD_CHARACTER", CssHighlighter.CSS_BAD_CHARACTER)
     }
@@ -65,6 +68,9 @@ class WXSSSyntaxHighlighter : SyntaxHighlighterBase() {
             WXSSTypes.STRING_START_DQ,
             WXSSTypes.STRING_START_SQ,
             WXSSTypes.STRING_END_SQ -> arrayOf(WXSS_STRING)
+            WXSSTypes.SEMICOLON -> arrayOf(WXSS_SEMICOLON)
+            WXSSTypes.ELEMENT_NAME -> arrayOf(WXSS_ELEMENT)
+            WXSSTypes.PSEUDO_SELECTOR -> arrayOf(WXSS_PSEUDO)
             TokenType.BAD_CHARACTER -> arrayOf(WXSS_BAD_CHARACTER)
             else -> emptyArray()
         }
