@@ -324,8 +324,6 @@ COMMENT_END = "*/"
         }
 }
 
-{WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-
 // 注释，记录进入注释之前的状态
 // 再注释结束之后释放
 {COMMENT_START} {
@@ -349,5 +347,7 @@ COMMENT_END = "*/"
         return WXSSTypes.COMMENT;
     }
 }
+
+{WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
 [^] { return TokenType.BAD_CHARACTER; }
