@@ -19,7 +19,7 @@ class WXSSParserDefinition : ParserDefinition {
 
     companion object {
         val iFileElementType = IFileElementType(WXSSLanguage.INSTANCE)
-        val COMMENTS = TokenSet.create(WXSSTypes.STRING)
+        val COMMENTS = TokenSet.create(WXSSTypes.COMMENT)
     }
 
 

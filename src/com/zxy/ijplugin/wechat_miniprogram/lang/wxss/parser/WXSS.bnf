@@ -11,11 +11,14 @@
   elementTypeHolderClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes"
   elementTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSElementType"
   tokenTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTokenType"
+  tokens = [
+    COMMENT = 'regexp:/*..*/'
+  ]
 }
 
 wxssFile ::= (import | styleDefinition | CRLF)*
 import ::= (IMPORT_KEYWORD string SEMICOLON)
-string ::= (STRING_START_DQ STRING_CONTENT STRING_END_DQ | STRING_START_SQ STRING_CONTENT STRING_END_SQ)
+string ::= (STRING_START_DQ STRING_CONTENT? STRING_END_DQ | STRING_START_SQ STRING_CONTENT? STRING_END_SQ)
 styleDefinition ::= (selectorGroup  styleStatementSection)
 selectorGroup ::= (selectors (COMMA selectors)*)
 selectors ::= ((idSelector | classSelector | ELEMENT_NAME)(PSEUDO_SELECTOR)?)+

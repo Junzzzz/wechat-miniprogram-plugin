@@ -3,7 +3,16 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.lexer;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes;
+
 %%
+
+%{
+    private int beforeCommentState = YYINITIAL;
+
+    private void saveBeforeCommentState(){
+        this.beforeCommentState = yystate();
+    }
+%}
 
 %unicode
 
@@ -32,6 +41,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes;
 %state ATTRIBUTE_VALUE_FUNCTION
 %state ATTRIBUTE_VALUE_FUNCTION_ARGS
 %state ATTRIBUTE_VALUE_FUNCTION_ARG_NUMBER
+%state COMMENT
 
 ALPHA=[:letter:]
 CRLF=\R
@@ -50,6 +60,8 @@ NUMBER_UNIT = {ALPHA}+
 NUMBER_WITH_UNIT = {NUMBER}{NUMBER_UNIT}
 FUNCTION_NAME = {IDENTIFIER}
 ELEMENT_NAME = ({ALPHA}|-)+
+COMMENT_START = "/*"
+COMMENT_END = "*/"
 %%
 
 <YYINITIAL> "@import" {
@@ -313,5 +325,29 @@ ELEMENT_NAME = ({ALPHA}|-)+
 }
 
 {WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+
+// 注释，记录进入注释之前的状态
+// 再注释结束之后释放
+{COMMENT_START} {
+    this.saveBeforeCommentState();
+    yybegin(COMMENT);
+    return WXSSTypes.COMMENT;
+}
+
+<COMMENT> {
+    {COMMENT_END} {
+        yybegin(this.beforeCommentState);
+        return WXSSTypes.COMMENT;
+    }
+    {WHITE_SPACE_AND_CRLF} {
+          return WXSSTy
+      }
+    [^] {
+        return WXSSTypes.COMMENT;
+    }
+    <<EOF>> {
+        return WXSSTypes.COMMENT;
+    }
+}
 
 [^] { return TokenType.BAD_CHARACTER; }
