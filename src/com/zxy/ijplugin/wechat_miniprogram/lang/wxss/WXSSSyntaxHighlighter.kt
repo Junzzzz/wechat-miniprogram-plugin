@@ -15,7 +15,7 @@ class WXSSSyntaxHighlighter : SyntaxHighlighterBase() {
 
     companion object {
         val WXSS_COMMA = createTextAttributesKey("WXSS_COMMA", CssHighlighter.CSS_COMMA)
-        val WXSS_ATTRIBUTE_NAME = createTextAttributesKey("WXSS_ATTRIBUTE_NAME", CssHighlighter.CSS_ATTRIBUTE_NAME)
+        val WXSS_ATTRIBUTE_NAME = createTextAttributesKey("WXSS_ATTRIBUTE_NAME", CssHighlighter.CSS_PROPERTY_NAME)
         val WXSS_ATTRIBUTE_VALUE_BASIC = createTextAttributesKey(
                 "WXSS_ATTRIBUTE_VALUE_BASIC", CssHighlighter.CSS_PROPERTY_VALUE
         )
@@ -28,9 +28,11 @@ class WXSSSyntaxHighlighter : SyntaxHighlighterBase() {
         val WXSS_CLASS_SELECTOR = createTextAttributesKey("WXSS_CLASS_SELECTOR", CssHighlighter.CSS_DOT)
         val WXSS_COLON = createTextAttributesKey("WXSS_COLON", CssHighlighter.CSS_COLON)
         val WXSS_COLOR = createTextAttributesKey("WXSS_COLOR", CssHighlighter.CSS_COLOR)
-        val WXSS_KEYWORD = createTextAttributesKey("WXSS_KEYWORD",CssHighlighter.CSS_KEYWORD)
+        val WXSS_KEYWORD = createTextAttributesKey("WXSS_KEYWORD", CssHighlighter.CSS_KEYWORD)
+        val WXSS_COMMENT = createTextAttributesKey("WXSS_COMMENT", CssHighlighter.CSS_COMMENT)
+        val WXSS_STRING = createTextAttributesKey("WXSS_STRING", CssHighlighter.CSS_STRING)
 
-        val WXSS_BAD_CHARACTER = createTextAttributesKey("WXSS_BAD_CHARACTER",CssHighlighter.CSS_BAD_CHARACTER)
+        val WXSS_BAD_CHARACTER = createTextAttributesKey("WXSS_BAD_CHARACTER", CssHighlighter.CSS_BAD_CHARACTER)
     }
 
     override fun getHighlightingLexer(): Lexer {
@@ -56,6 +58,12 @@ class WXSSSyntaxHighlighter : SyntaxHighlighterBase() {
             WXSSTypes.COLON -> arrayOf(WXSS_COLON)
             WXSSTypes.HASH -> arrayOf(WXSS_COLOR)
             WXSSTypes.IMPORT_KEYWORD -> arrayOf(WXSS_KEYWORD)
+            WXSSTypes.COMMENT -> arrayOf(WXSS_COMMENT)
+            WXSSTypes.STRING_CONTENT,
+            WXSSTypes.STRING_END_DQ,
+            WXSSTypes.STRING_START_DQ,
+            WXSSTypes.STRING_START_SQ,
+            WXSSTypes.STRING_END_SQ -> arrayOf(WXSS_STRING)
             TokenType.BAD_CHARACTER -> arrayOf(WXSS_BAD_CHARACTER)
             else -> emptyArray()
         }

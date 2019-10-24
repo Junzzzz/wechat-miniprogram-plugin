@@ -340,7 +340,7 @@ COMMENT_END = "*/"
         return WXSSTypes.COMMENT;
     }
     {WHITE_SPACE_AND_CRLF} {
-          return WXSSTy
+          return TokenType.WHITE_SPACE;
       }
     [^] {
         return WXSSTypes.COMMENT;
