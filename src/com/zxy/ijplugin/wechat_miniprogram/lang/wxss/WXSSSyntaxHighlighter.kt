@@ -39,8 +39,8 @@ class WXSSSyntaxHighlighter : SyntaxHighlighterBase() {
             WXSSTypes.FUNCTION_NAME -> arrayOf(WXSS_FUNCTION)
             WXSSTypes.NUMBER,
             WXSSTypes.NUMBER_UNIT -> arrayOf(WXSS_NUMBER)
-            WXSSTypes.CLASS -> arrayOf(WXSS_CLASS_SELECTOR)
-            WXSSTypes.CLASS_SELECTOR -> arrayOf(WXSS_CLASS)
+            WXSSTypes.CLASS -> arrayOf(WXSS_CLASS)
+            WXSSTypes.CLASS_SELECTOR -> arrayOf(WXSS_CLASS_SELECTOR)
             WXSSTypes.ID_SELECTOR,
             WXSSTypes.ID -> arrayOf(WXSS_ID)
             WXSSTypes.LEFT_BRACKET,
