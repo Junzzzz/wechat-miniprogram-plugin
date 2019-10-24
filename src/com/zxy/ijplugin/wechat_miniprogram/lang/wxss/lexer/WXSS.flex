@@ -52,6 +52,8 @@ STRING_CONTENT = ({ALPHA}|{DIGIT}|"_"|":"|"."|"-"|"\\"|"/")*
 IDENTIFIER_START = {ALPHA}|"-"|"_"
 IDENTIFIER = {IDENTIFIER_START}({IDENTIFIER_START}|{DIGIT})*
 
+ATTRIBUTE_VALUE_LITERAL = {ALPHA}({ALPHA}|"-"|"_"|{DIGIT})*
+
 ATTRIBUTE_NAME = {ALPHA}({ALPHA}|-)*
 WHITE_SPACE_AND_CRLF =     ({CRLF}|{WHITE_SPACE})+
 HASH = #([0-9a-fA-F]{3}|[0-9a-fA-F]{6})
@@ -203,9 +205,6 @@ COMMENT_END = "*/"
       {HASH} {
           return WXSSTypes.HASH;
       }
-      {WHITE_SPACE_AND_CRLF} {
-          return TokenType.WHITE_SPACE;
-      }
       {NUMBER}|{NUMBER_WITH_UNIT} {
           yypushback(yylength());
           yybegin(ATTRIBUTE_VALUE_NUMBER);
@@ -222,9 +221,16 @@ COMMENT_END = "*/"
                 yypushback(yylength());
                 yybegin(ATTRIBUTE_VALUE_FUNCTION);
             }
-       {IDENTIFIER} {
+       {ATTRIBUTE_VALUE_LITERAL} {
           return WXSSTypes.ATTRIBUTE_VALUE_LITERAL;
       }
+          "}" {
+                yybegin(YYINITIAL);
+              return WXSSTypes.RIGHT_BRACKET;
+            }
+        {WHITE_SPACE_AND_CRLF} {
+            return TokenType.WHITE_SPACE;
+        }
 }
 
 // 属性值中的数字
@@ -343,6 +349,12 @@ COMMENT_END = "*/"
     [^] {
         return WXSSTypes.COMMENT;
     }
+}
+// @font-face
+
+<YYINITIAL> "@font-face" {
+          yybegin(STYLE_SELCTION);
+    return WXSSTypes.FONT_FACE_KEYWORD;
 }
 
 {WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }

@@ -57,7 +57,8 @@ class WXSSSyntaxHighlighter : SyntaxHighlighterBase() {
             WXSSTypes.RIGHT_PARENTHESES -> arrayOf(WXSS_PARENTHESES)
             WXSSTypes.COLON -> arrayOf(WXSS_COLON)
             WXSSTypes.HASH -> arrayOf(WXSS_COLOR)
-            WXSSTypes.IMPORT_KEYWORD -> arrayOf(WXSS_KEYWORD)
+            WXSSTypes.IMPORT_KEYWORD,
+            WXSSTypes.FONT_FACE_KEYWORD -> arrayOf(WXSS_KEYWORD)
             WXSSTypes.COMMENT -> arrayOf(WXSS_COMMENT)
             WXSSTypes.STRING_CONTENT,
             WXSSTypes.STRING_END_DQ,

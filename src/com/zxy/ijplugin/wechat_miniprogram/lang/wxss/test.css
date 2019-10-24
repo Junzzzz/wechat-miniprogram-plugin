@@ -23,7 +23,8 @@
     justify-content: space-between;
     padding-left: 20rpx;
     height: 200rpx;
-    box-sizing: border-box;
+    box-sizing: border-box
+    border: 200rpx;
 }
 
 .goods-info .spec{

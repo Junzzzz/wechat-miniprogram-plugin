@@ -16,7 +16,7 @@
   ]
 }
 
-wxssFile ::= (import | styleDefinition | CRLF)*
+wxssFile ::= (import | styleDefinition | CRLF | fontDefinition)*
 import ::= (IMPORT_KEYWORD string SEMICOLON)
 string ::= (STRING_START_DQ STRING_CONTENT? STRING_END_DQ | STRING_START_SQ STRING_CONTENT? STRING_END_SQ)
 styleDefinition ::= (selectorGroup  styleStatementSection)
@@ -25,7 +25,7 @@ selectors ::= ((idSelector | classSelector | ELEMENT_NAME)(PSEUDO_SELECTOR)?)+
 idSelector ::= NUMBER_SIGN ID
 classSelector ::= DOT CLASS
 styleStatementSection ::= LEFT_BRACKET styleStatementCollection RIGHT_BRACKET
-styleStatementCollection ::= ((styleStatement SEMICOLON)* (styleStatement SEMICOLON?) )
+styleStatementCollection ::= (styleStatement SEMICOLON)* styleStatement?
 styleStatement ::= ATTRIBUTE_NAME COLON attributeValue
 attributeValue ::= valueGroup (COMMA valueGroup)*
 valueGroup ::= (value)+
@@ -35,3 +35,5 @@ functionArgs ::= (functionArgGroup (COMMA functionArgGroup)*)
 functionArgGroup ::= (functionArg)+
 functionArg ::= (HASH | numericalValue | string )
 numericalValue ::= NUMBER NUMBER_UNIT?
+
+fontDefinition ::= FONT_FACE_KEYWORD styleStatementSection
