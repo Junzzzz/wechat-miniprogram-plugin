@@ -11,6 +11,9 @@
   elementTypeHolderClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes"
   elementTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSElementType"
   tokenTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTokenType"
+
+  psiImplUtilClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl.WXSSPsiImplUtils"
+
   tokens = [
     COMMENT = 'regexp:/*..*/'
   ]
@@ -22,7 +25,11 @@ string ::= (STRING_START_DQ STRING_CONTENT? STRING_END_DQ | STRING_START_SQ STRI
 styleDefinition ::= (selectorGroup  styleStatementSection)
 selectorGroup ::= (selectors (COMMA selectors)*)
 selectors ::= ((idSelector | classSelector | ELEMENT_NAME)(PSEUDO_SELECTOR)?)+
-idSelector ::= NUMBER_SIGN ID
+idSelector ::= NUMBER_SIGN ID {
+    implements="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"
+    methods=[getPresentation getId getNameIdentifier setName getName]
+    mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
+}
 classSelector ::= DOT CLASS
 styleStatementSection ::= LEFT_BRACKET styleStatementCollection RIGHT_BRACKET
 styleStatementCollection ::= (styleStatement SEMICOLON)* styleStatement?
