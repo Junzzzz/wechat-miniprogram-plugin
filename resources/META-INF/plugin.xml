@@ -25,6 +25,7 @@
         <lang.parserDefinition language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSParserDefinition"/>
         <lang.syntaxHighlighterFactory language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSColorSettingPage"/>
+        <colorProvider implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.line_mark.WXSSElementColorProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
