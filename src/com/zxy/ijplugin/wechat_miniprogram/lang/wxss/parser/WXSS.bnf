@@ -29,7 +29,7 @@ styleStatementCollection ::= (styleStatement SEMICOLON)* styleStatement?
 styleStatement ::= ATTRIBUTE_NAME COLON attributeValue
 attributeValue ::= valueGroup (COMMA valueGroup)*
 valueGroup ::= (value)+
-value ::= (HASH | function | numericalValue | string | ATTRIBUTE_VALUE_LITERAL)
+value ::= (HASH | function | numericalValue | string | ATTRIBUTE_VALUE_LITERAL | UNICODE_RANGE)
 function ::= FUNCTION_NAME LEFT_PARENTHESES functionArgs? RIGHT_PARENTHESES
 functionArgs ::= (functionArgGroup (COMMA functionArgGroup)*)
 functionArgGroup ::= (functionArg)+
@@ -37,4 +37,3 @@ functionArg ::= (HASH | numericalValue | string )
 numericalValue ::= NUMBER NUMBER_UNIT?
 
 fontDefinition ::= FONT_FACE_KEYWORD styleStatementSection
-// TODO url函数的参数  Unicode range

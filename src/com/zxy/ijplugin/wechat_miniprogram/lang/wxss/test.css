@@ -1,6 +1,7 @@
 @import "icons";
 @font-face {
-
+    src: url("icons");
+    unicode-range: U+26;
 }
 .container {
     display: flex;

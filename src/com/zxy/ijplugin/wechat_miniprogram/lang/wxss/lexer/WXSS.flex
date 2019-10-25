@@ -64,6 +64,7 @@ FUNCTION_NAME = {IDENTIFIER}
 ELEMENT_NAME = ({ALPHA}|-)+
 COMMENT_START = "/*"
 COMMENT_END = "*/"
+UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 %%
 
 <YYINITIAL> "@import" {
@@ -201,6 +202,9 @@ COMMENT_END = "*/"
       }
       "," {
           return WXSSTypes.COMMA;
+      }
+      {UNICODE_RANGE} {
+          return WXSSTypes.UNICODE_RANGE;
       }
       {HASH} {
           return WXSSTypes.HASH;

@@ -37,7 +37,8 @@ class WXSSColorSettingPage : ColorSettingsPage {
                 AttributesDescriptor("Semicolon", WXSSSyntaxHighlighter.WXSS_SEMICOLON),
                 AttributesDescriptor("String", WXSSSyntaxHighlighter.WXSS_STRING),
                 AttributesDescriptor("Tag name", WXSSSyntaxHighlighter.WXSS_ELEMENT),
-                AttributesDescriptor("Pseudo selector", WXSSSyntaxHighlighter.WXSS_PSEUDO)
+                AttributesDescriptor("Pseudo selector", WXSSSyntaxHighlighter.WXSS_PSEUDO),
+                AttributesDescriptor("Unicode range",WXSSSyntaxHighlighter.WXSS_UNICODE_RANGE)
         )
     }
 
