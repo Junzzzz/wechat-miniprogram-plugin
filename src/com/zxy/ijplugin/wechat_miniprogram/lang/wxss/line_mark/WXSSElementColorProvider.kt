@@ -13,14 +13,12 @@ class WXSSElementColorProvider : ElementColorProvider {
     override fun setColorTo(psiElement: PsiElement, color: Color) {
 
         val hex = String.format("#%02x%02x%02x", color.red, color.blue, color.green).toUpperCase()
-        psiElement.replace(WXSSElementFactory.createWXSSValue(psiElement.project,hex))
+        psiElement.replace(WXSSElementFactory.createWXSSValue(psiElement.project, hex))
     }
 
     override fun getColorFrom(psiElement: PsiElement): Color? {
-        if (psiElement is WXSSValueImpl) {
-            if (psiElement.firstChild?.node?.elementType == WXSSTypes.HASH) {
-                return ColorHexUtil.fromHex(psiElement.text)
-            }
+        if (psiElement.node.elementType == WXSSTypes.HASH) {
+            return ColorHexUtil.fromHex(psiElement.text)
         }
         return null
     }
