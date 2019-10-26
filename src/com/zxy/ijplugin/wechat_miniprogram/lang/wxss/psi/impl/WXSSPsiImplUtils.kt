@@ -2,15 +2,18 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl
 
 import com.intellij.icons.AllIcons
 import com.intellij.navigation.ItemPresentation
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
-
-import javax.swing.*
 import com.intellij.psi.PsiElement
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSItemPresentation
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSElementFactory
+import javax.swing.Icon
 
 
 object WXSSPsiImplUtils {
+
+    /*WXSSIdSelector*/
 
     private fun getIdNodeByWXSSIdSelector(
             element: WXSSIdSelector
@@ -53,6 +56,44 @@ object WXSSPsiImplUtils {
     @JvmStatic
     fun getId(wxssIdSelector: WXSSIdSelector): String {
         return getIdNodeByWXSSIdSelector(wxssIdSelector).text
+    }
+
+    /*WXSSClassSelector*/
+
+    private fun getClassNodeByWXSSClassSelector(
+            wxssClassSelector: WXSSClassSelector
+    ) = wxssClassSelector.node.findChildByType(WXSSTypes.CLASS)!!
+
+    @JvmStatic
+    fun getClassName(wxssClassSelector: WXSSClassSelector): String {
+        return getClassNodeByWXSSClassSelector(wxssClassSelector).text
+    }
+
+    @JvmStatic
+    fun getPresentation(element: WXSSClassSelector): ItemPresentation {
+        return object : WXSSItemPresentation(element) {
+
+            override fun getIcon(unused: Boolean): Icon? {
+                return AllIcons.Xml.Css_class
+            }
+        }
+    }
+
+    @JvmStatic
+    fun getName(element: WXSSClassSelector): String {
+        return getClassName(element)
+    }
+
+    @JvmStatic
+    fun setName(element: WXSSClassSelector, newName: String): PsiElement {
+        val node = getClassNodeByWXSSClassSelector(element)
+        element.node.replaceChild(node,WXSSElementFactory.createClass(element.project,newName))
+        return element
+    }
+
+    @JvmStatic
+    fun getNameIdentifier(element: WXSSClassSelector): PsiElement? {
+        return getClassNodeByWXSSClassSelector(element).psi
     }
 
 }

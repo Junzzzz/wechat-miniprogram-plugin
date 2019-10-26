@@ -30,7 +30,11 @@ idSelector ::= NUMBER_SIGN ID {
     methods=[getPresentation getId getNameIdentifier setName getName]
     mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
 }
-classSelector ::= DOT CLASS
+classSelector ::= DOT CLASS {
+    implements="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"
+    methods=[getPresentation getClassName getNameIdentifier setName getName]
+    mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
+}
 styleStatementSection ::= LEFT_BRACKET styleStatementCollection RIGHT_BRACKET
 styleStatementCollection ::= (styleStatement SEMICOLON)* styleStatement?
 styleStatement ::= ATTRIBUTE_NAME COLON attributeValue
