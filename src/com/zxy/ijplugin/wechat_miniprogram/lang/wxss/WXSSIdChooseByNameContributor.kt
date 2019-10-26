@@ -23,18 +23,10 @@ class WXSSIdChooseByNameContributor : ChooseByNameContributor {
             name: String?, pattern: String?, project: Project, includeNonProjectItems: Boolean
     ): Array<NavigationItem> {
         val idSelectors = getIdSelectorsByProject(project).filter { it.lastChild.text==name }
-        println("name:$name  ")
-        println(idSelectors.toTypedArray().map { it.presentation.presentableText + it.presentation.locationString })
         return idSelectors.toTypedArray()
     }
 
     override fun getNames(project: Project, includeNonProjectItems: Boolean): Array<String> {
-
-        println("getNames ${
-        Arrays.toString(getIdSelectorsByProject(project).map { wxssIdSelector ->
-            wxssIdSelector.node.findChildByType(WXSSTypes.ID)!!.text
-        }.toTypedArray())
-        }")
         return getIdSelectorsByProject(project).map { wxssIdSelector ->
             wxssIdSelector.node.findChildByType(WXSSTypes.ID)!!.text
         }.toTypedArray()

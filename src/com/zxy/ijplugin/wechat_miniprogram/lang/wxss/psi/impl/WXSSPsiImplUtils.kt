@@ -18,7 +18,6 @@ object WXSSPsiImplUtils {
 
     @JvmStatic
     fun getPresentation(element: WXSSIdSelector): ItemPresentation {
-        print("getPresentation")
         return object : ItemPresentation {
             override fun getPresentableText(): String? {
                 return element.text

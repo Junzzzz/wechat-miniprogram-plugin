@@ -6,6 +6,4 @@ import com.intellij.psi.PsiNameIdentifierOwner
 
 interface WXSSNamedElement: PsiNameIdentifierOwner
 
-abstract class WXSSNamedElementImpl(node:ASTNode ) : ASTWrapperPsiElement(node),WXSSNamedElement {
-
-}
+abstract class WXSSNamedElementImpl(node:ASTNode ) : ASTWrapperPsiElement(node),WXSSNamedElement
