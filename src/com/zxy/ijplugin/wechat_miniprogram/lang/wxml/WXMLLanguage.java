@@ -21,6 +21,6 @@ public class WXMLLanguage extends HTMLLanguage {
     @NotNull
     @Override
     public String getDisplayName() {
-        return "Wechat XML template";
+        return "WXML";
     }
 }
