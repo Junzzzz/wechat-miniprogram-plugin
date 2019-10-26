@@ -15,13 +15,8 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileType name="WXML file" extensions="wxml" language="WXML"
-                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
-                  fieldName="INSTANCE"/>
         <fileType name="WXSS file" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
-        <fileType name="WXS file" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
-                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
         <lang.parserDefinition language="WXSS"
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSParserDefinition"/>
         <lang.syntaxHighlighterFactory language="WXSS"
@@ -35,6 +30,18 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSClassChooseByNameContributor"/>
         <lang.commenter language="WXSS"
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>
+
+        <fileType name="WXML file" extensions="wxml" language="WXML"
+                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
+                  fieldName="INSTANCE"/>
+        <lang.parserDefinition language="WXML"
+                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLParserDefinition"/>
+        <lang.syntaxHighlighterFactory
+                language="WXML"
+                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLSyntaxHighlighterFactory"/>
+
+        <fileType name="WXS file" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
+                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">

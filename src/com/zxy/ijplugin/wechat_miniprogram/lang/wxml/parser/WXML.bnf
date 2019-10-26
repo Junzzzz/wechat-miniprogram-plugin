@@ -1,0 +1,30 @@
+{
+  parserClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="WXML"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi"
+  psiImplPackage="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl"
+
+  elementTypeHolderClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes"
+  elementTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElementType"
+  tokenTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTokenType"
+
+//  psiImplUtilClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl.WXMLPsiImplUtils"
+
+  tokens = [
+    COMMENT = 'regexp:<!--..-->'
+  ]
+}
+
+wxmlFile ::= (element | CRLF | COMMENT)*
+element ::= openedElement | closedElement
+openedElement ::= START_TAG_START TAG_NAME attributes? START_TAG_END elementContent? END_TAG_START TAG_NAME END_TAG_END
+closedElement ::= START_TAG_START TAG_NAME attributes? EMPTY_ELEMENT_END
+attributes ::= attribute+
+attribute ::= ATTRIBUTE_NAME (EQ attributeValue)?
+attributeValue ::= string
+string ::= STRING_START STRING_CONTENT STRING_END
+elementContent ::= (element | TEXT)*

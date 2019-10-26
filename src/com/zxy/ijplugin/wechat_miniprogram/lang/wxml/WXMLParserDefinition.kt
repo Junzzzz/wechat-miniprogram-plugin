@@ -1,4 +1,4 @@
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
@@ -11,23 +11,23 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.lexer._WXSSLexer
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WXSSParser
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer._WXMLLexer
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParser
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 
-class WXSSParserDefinition : ParserDefinition {
+class WXMLParserDefinition : ParserDefinition {
 
     companion object {
-        val iFileElementType = IFileElementType(WXSSLanguage.INSTANCE)
-        val COMMENTS = TokenSet.create(WXSSTypes.COMMENT)
+        val iFileElementType = IFileElementType(WXMLLanguage.INSTANCE)
+        val COMMENTS = TokenSet.create(WXMLTypes.COMMENT)
     }
 
     override fun createParser(p0: Project?): PsiParser {
-        return WXSSParser()
+        return WXMLParser()
     }
 
     override fun createFile(p0: FileViewProvider): PsiFile {
-        return WXSSPsiFile(p0)
+        return WXMLPsiFile(p0)
     }
 
     override fun getStringLiteralElements(): TokenSet {
@@ -39,11 +39,11 @@ class WXSSParserDefinition : ParserDefinition {
     }
 
     override fun createLexer(p0: Project?): Lexer {
-        return FlexAdapter(_WXSSLexer(null))
+        return FlexAdapter(_WXMLLexer(null))
     }
 
     override fun createElement(p0: ASTNode?): PsiElement {
-        return WXSSTypes.Factory.createElement(p0)
+        return WXMLTypes.Factory.createElement(p0)
     }
 
     override fun getCommentTokens(): TokenSet {

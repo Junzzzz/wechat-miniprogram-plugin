@@ -46,6 +46,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes;
 ALPHA=[:letter:]
 CRLF=\R
 WHITE_SPACE=[\ \n\t\f]
+WHITE_SPACE_AND_CRLF =     ({CRLF}|{WHITE_SPACE})+
 DIGIT=[0-9]
 STRING_CONTENT = ({ALPHA}|{DIGIT}|"_"|":"|"."|"-"|"\\"|"/")*
 
