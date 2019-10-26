@@ -22,11 +22,19 @@
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
         <fileType name="WXS file" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
-        <lang.parserDefinition language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSParserDefinition"/>
-        <lang.syntaxHighlighterFactory language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSSyntaxHighlighterFactory"/>
+        <lang.parserDefinition language="WXSS"
+                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="WXSS"
+                                       implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSColorSettingPage"/>
-        <colorProvider implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.line_mark.WXSSElementColorProvider"/>
-        <gotoSymbolContributor implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSIdChooseByNameContributor"/>
+        <colorProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.line_mark.WXSSElementColorProvider"/>
+        <gotoSymbolContributor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSIdChooseByNameContributor"/>
+        <gotoSymbolContributor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSClassChooseByNameContributor"/>
+        <lang.commenter language="WXSS"
+                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
