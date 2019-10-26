@@ -48,6 +48,7 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
 <YYINITIAL> {
     "</" {yybegin(END_TAG_START);return WXMLTypes.END_TAG_START;}
     "<"  {yybegin(START_TAG_START);return WXMLTypes.START_TAG_START;}
+    [^] {return WXMLTypes.TEXT;}
 }
 
 <END_TAG_START> {TAG_NAME} {yybegin(END_TAG_TAG_NAME);return WXMLTypes.TAG_NAME;}
