@@ -2,7 +2,7 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer;
 
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes;import jdk.nashorn.internal.parser.Token;
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes;
 
 %%
 
@@ -110,6 +110,8 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
         return WXMLTypes.COMMENT;
     }
 }
+
+// TODO https://github.com/joewalnes/idea-community/blob/master/plugins/groovy/src/org/jetbrains/plugins/groovy/lang/groovydoc/parser/GroovyDocElementTypes.java
 
 {WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
