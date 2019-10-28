@@ -18,7 +18,7 @@
         <fileType name="WXSS file" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
         <lang.parserDefinition language="WXSS"
-                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSParserDefinition"/>
+                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WXSSParserDefinition"/>
         <lang.syntaxHighlighterFactory language="WXSS"
                                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSColorSettingPage"/>
@@ -35,7 +35,7 @@
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
                   fieldName="INSTANCE"/>
         <lang.parserDefinition language="WXML"
-                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLParserDefinition"/>
+                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition"/>
         <lang.syntaxHighlighterFactory
                 language="WXML"
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLSyntaxHighlighterFactory"/>

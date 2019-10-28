@@ -32,6 +32,8 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes;
 %state END_TAG_START
 %state END_TAG_TAG_NAME
 %state COMMENT
+%state EXPR_START_SQ
+%state EXPR_START_DQ
 
 // regex
 
@@ -48,7 +50,7 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
 <YYINITIAL> {
     "</" {yybegin(END_TAG_START);return WXMLTypes.END_TAG_START;}
     "<"  {yybegin(START_TAG_START);return WXMLTypes.START_TAG_START;}
-    [^] {return WXMLTypes.TEXT;}
+    [^\ \n\t\f\R<][^<]+ {return WXMLTypes.TEXT;}
 }
 
 <END_TAG_START> {TAG_NAME} {yybegin(END_TAG_TAG_NAME);return WXMLTypes.TAG_NAME;}
@@ -84,12 +86,26 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
 
 <ATTRIBUTE_VALUE_STRING_SQ_STRAT> {
     "'" { yybegin(START_TAG_TAG_NAME);return WXMLTypes.STRING_END; }
-    ([^\R']|"\\'")+ { return WXMLTypes.STRING_CONTENT; }
+    "{{" { yybegin(EXPR_START_SQ); return WXMLTypes.LEFT_DOUBLE_BRACE; }
+    ([^\R"{{"']|"\\'")+ { return WXMLTypes.STRING_CONTENT; }
 }
 
 <ATTRIBUTE_VALUE_STRING_DQ_STRAT> {
     "\"" { yybegin(START_TAG_TAG_NAME);return WXMLTypes.STRING_END; }
-    ([^\R\"]|"\\\"")+ { return WXMLTypes.STRING_CONTENT; }
+    "{{" { yybegin(EXPR_START_DQ); return WXMLTypes.LEFT_DOUBLE_BRACE;}
+     ([^\R"{{"\"]|"\\\"")+ {
+        return WXMLTypes.STRING_CONTENT;
+     }
+}
+
+<EXPR_START_SQ> {
+    "}}" { yybegin(ATTRIBUTE_VALUE_STRING_SQ_STRAT); return WXMLTypes.RIGHT_DOUBLE_BRACE;}
+    ([^\R'"}}"]|"\\'")+ { return WXMLTypes.EXPR;}
+}
+
+<EXPR_START_DQ> {
+    "}}" { yybegin(ATTRIBUTE_VALUE_STRING_DQ_STRAT); return WXMLTypes.RIGHT_DOUBLE_BRACE;}
+    ([^\R'"}}"]|"\\\"")+ { return WXMLTypes.EXPR;}
 }
 
 "<!--" {
@@ -115,4 +131,4 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
 
 {WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
-[^] { return TokenType.BAD_CHARACTER; }
+[^] { return TokenType.BAD_CHARACTER ; }

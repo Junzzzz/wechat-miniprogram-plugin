@@ -19,12 +19,14 @@
   ]
 }
 
-wxmlFile ::= (element | CRLF | COMMENT)*
+wxmlFile ::= (element | CRLF )*
 element ::= openedElement | closedElement
 openedElement ::= START_TAG_START TAG_NAME attributes? START_TAG_END elementContent? END_TAG_START TAG_NAME END_TAG_END
 closedElement ::= START_TAG_START TAG_NAME attributes? EMPTY_ELEMENT_END
 attributes ::= attribute+
 attribute ::= ATTRIBUTE_NAME (EQ attributeValue)?
 attributeValue ::= string
-string ::= STRING_START STRING_CONTENT STRING_END
+string ::= STRING_START string_text STRING_END
+string_text ::= (exprInsert|STRING_CONTENT )*
+exprInsert ::= LEFT_DOUBLE_BRACE EXPR RIGHT_DOUBLE_BRACE
 elementContent ::= (element | TEXT)*
