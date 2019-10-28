@@ -2,7 +2,7 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer;
 
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes;
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLExprElementType;import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes;
 
 %%
 
@@ -102,7 +102,7 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
 
 <EXPR_START_SQ> {
     "}}" { yybegin(ATTRIBUTE_VALUE_STRING_SQ_STRAT); return WXMLTypes.RIGHT_DOUBLE_BRACE;}
-    ([^\R'"}}"]|"\\'")+ { return WXMLTypes.EXPR;}
+    ([^\R'"}}"]|"\\'")+ { return WXMLExprElementType.INSTANCE;}
 }
 
 <EXPR_START_DQ> {
@@ -135,7 +135,7 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
         return WXMLTypes.RIGHT_DOUBLE_BRACE;
     }
     ([^\R'"}}"])+ {
-      return WXMLTypes.EXPR;
+        return WXMLExprElementType.INSTANCE;
     }
 }
 
