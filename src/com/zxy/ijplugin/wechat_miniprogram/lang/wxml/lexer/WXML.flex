@@ -34,6 +34,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes;
 %state COMMENT
 %state EXPR_START_SQ
 %state EXPR_START_DQ
+%state EXPR_START
 
 // regex
 
@@ -50,7 +51,8 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
 <YYINITIAL> {
     "</" {yybegin(END_TAG_START);return WXMLTypes.END_TAG_START;}
     "<"  {yybegin(START_TAG_START);return WXMLTypes.START_TAG_START;}
-    [^\ \n\t\f\R<][^<]+ {return WXMLTypes.TEXT;}
+    "{{" {yybegin(EXPR_START);return WXMLTypes.LEFT_DOUBLE_BRACE;}
+    [^\ \n\t\f\R<"{{"][^<"{{"]* {return WXMLTypes.TEXT;}
 }
 
 <END_TAG_START> {TAG_NAME} {yybegin(END_TAG_TAG_NAME);return WXMLTypes.TAG_NAME;}
@@ -127,7 +129,15 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
     }
 }
 
-// TODO https://github.com/joewalnes/idea-community/blob/master/plugins/groovy/src/org/jetbrains/plugins/groovy/lang/groovydoc/parser/GroovyDocElementTypes.java
+<EXPR_START> {
+    "}}" {
+        yybegin(YYINITIAL);
+        return WXMLTypes.RIGHT_DOUBLE_BRACE;
+    }
+    ([^\R'"}}"])+ {
+      return WXMLTypes.EXPR;
+    }
+}
 
 {WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 

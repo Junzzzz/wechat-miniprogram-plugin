@@ -29,4 +29,4 @@ attributeValue ::= string
 string ::= STRING_START string_text STRING_END
 string_text ::= (exprInsert|STRING_CONTENT )*
 exprInsert ::= LEFT_DOUBLE_BRACE EXPR RIGHT_DOUBLE_BRACE
-elementContent ::= (element | TEXT)*
+elementContent ::= (element | TEXT | exprInsert)*
