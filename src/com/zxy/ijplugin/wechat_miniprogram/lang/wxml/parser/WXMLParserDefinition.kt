@@ -1,4 +1,4 @@
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser
 
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
@@ -11,6 +11,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer._WXMLLexer
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParser
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
