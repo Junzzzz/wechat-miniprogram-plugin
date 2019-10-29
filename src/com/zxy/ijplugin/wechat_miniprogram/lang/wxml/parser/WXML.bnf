@@ -10,7 +10,7 @@
 
   elementTypeHolderClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes"
   elementTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElementType"
-  tokenTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTokenType"
+  tokenTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.psi.WXMLExprTokenType"
 
 //  psiImplUtilClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl.WXMLPsiImplUtils"
 
@@ -28,6 +28,5 @@ attribute ::= ATTRIBUTE_NAME (EQ attributeValue)?
 attributeValue ::= string
 string ::= STRING_START string_text STRING_END
 string_text ::= (exprInsert|STRING_CONTENT )*
-exprInsert ::= LEFT_DOUBLE_BRACE expr? RIGHT_DOUBLE_BRACE
+exprInsert ::= LEFT_DOUBLE_BRACE EXPR? RIGHT_DOUBLE_BRACE
 elementContent ::= (element | TEXT | exprInsert)*
-expr ::=

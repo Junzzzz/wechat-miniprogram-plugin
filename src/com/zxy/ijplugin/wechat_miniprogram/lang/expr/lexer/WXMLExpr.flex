@@ -1,27 +1,29 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.expr.lexer;
-import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import com.zxy.ijplugin.wechat_miniprogram.lang.expr.psi.WXMLExprTypes;import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLExpr;
-import com.zxy.ijplugin.wechat_miniprogram.lang.expr.ExprWrapType;
+import com.zxy.ijplugin.wechat_miniprogram.lang.expr.psi.WXMLExprTypes;
 %%
 
 %unicode
 
-%class _WXSSLexer
+%class _WXMLExprLexer
 %public
 %implements com.intellij.lexer.FlexLexer
 %function advance
 %type IElementType
-%ctorarg ExprWrapType exprWrapType
+//%ctorarg ExprWrapType exprWrapType
 
-%{
-    private ExprWrapType wrapType;
-%}
+//%{
+//    private ExprWrapType wrapType;
+//%}
+//
+//%init{
+//    this.wrapType = exprWrapType;
+//%init}
+// state
+%state STRING_DQ_START
+%state STRING_SQ_START
 
-%init{
-    this.wrapType = exprWrapType;
-%init}
-
+// regex
 ALPHA=[:letter:]
 WHITE_SPACE=[\ \n\t\f]
 DIGIT=[0-9]
@@ -50,8 +52,26 @@ IDENTIFIER = {IDENTIFIER_START} ({IDENTIFIER_START}|{DIGIT})*
     "[" {return WXMLExprTypes.LEFT_BRACKET;}
     "]" {return WXMLExprTypes.RIGHT_BRACKET;}
     "..." {return WXMLExprTypes.EXPAND_KEYWORD;}
-    "\\\'" {}
-    "\\\"" {
-        
+    "\\'""'" {yybegin(STRING_DQ_START);return WXMLExprTypes.STRING_START;}
+    "\\\""|"\"" {yybegin(STRING_SQ_START);return WXMLExprTypes.STRING_START;}
+}
+
+<STRING_DQ_START> {
+    [^\R"\\\""\"] {
+        return WXMLExprTypes.STRING_CONTENT;
+    }
+    "\\\""|"\"" {
+          yybegin(YYINITIAL);
+          return WXMLExprTypes.STRING_END;
+      }
+}
+
+<STRING_SQ_START> {
+    [^\R"\\'"\'] {
+          return WXMLExprTypes.STRING_CONTENT;
+    }
+    "\\'"|"'" {
+          yybegin(YYINITIAL);
+          return WXMLExprTypes.STRING_END;
     }
 }

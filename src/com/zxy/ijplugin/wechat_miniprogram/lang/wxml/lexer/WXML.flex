@@ -2,7 +2,7 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer;
 
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLExprElementType;import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes;
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLEmbedExprElementType;import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes;
 
 %%
 
@@ -102,12 +102,12 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
 
 <EXPR_START_SQ> {
     "}}" { yybegin(ATTRIBUTE_VALUE_STRING_SQ_STRAT); return WXMLTypes.RIGHT_DOUBLE_BRACE;}
-    ([^\R'"}}"]|"\\'")+ { return WXMLExprElementType.INSTANCE;}
+    ([^\R'"}}"]|"\\'")+ { return WXMLEmbedExprElementType.INSTANCE;}
 }
 
 <EXPR_START_DQ> {
     "}}" { yybegin(ATTRIBUTE_VALUE_STRING_DQ_STRAT); return WXMLTypes.RIGHT_DOUBLE_BRACE;}
-    ([^\R'"}}"]|"\\\"")+ { return WXMLExprElementType.INSTANCE;}
+    ([^\R'"}}"]|"\\\"")+ { /*return WXMLEmbedExprElementType.INSTANCE;*/return WXMLTypes.EXPR;}
 }
 
 "<!--" {
@@ -135,8 +135,8 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
         return WXMLTypes.RIGHT_DOUBLE_BRACE;
     }
     ([^\R'"}}"])+ {
-        return WXMLExprElementType.INSTANCE;
-    }
+                return WXMLEmbedExprElementType.INSTANCE;
+            }
 }
 
 {WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
