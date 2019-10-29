@@ -4,11 +4,11 @@ import com.intellij.lang.javascript.DialectOptionHolder
 import com.intellij.lang.javascript.JSLanguageDialect
 import com.intellij.lang.javascript.JavaScriptSupportLoader
 
-class WeAppJsLanguage :
-        JSLanguageDialect("WeAppJs", DialectOptionHolder.ECMA_6, JavaScriptSupportLoader.ECMA_SCRIPT_6) {
+class WXMLExprLanguage :
+        JSLanguageDialect("WXMLExpr", DialectOptionHolder.ECMA_6, JavaScriptSupportLoader.ECMA_SCRIPT_6) {
 
     companion object {
-        val INSTANCE: WeAppJsLanguage = WeAppJsLanguage()
+        val INSTANCE: WXMLExprLanguage = WXMLExprLanguage()
     }
 
     override fun getFileExtension(): String {

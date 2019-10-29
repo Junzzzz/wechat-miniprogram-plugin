@@ -1,6 +1,5 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
 import com.intellij.lang.PsiParser
@@ -16,6 +15,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer._WXMLLexer
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl.WXMLExprImpl
 
 class WXMLParserDefinition : ParserDefinition {
 
@@ -45,8 +45,8 @@ class WXMLParserDefinition : ParserDefinition {
     }
 
     override fun createElement(astNode: ASTNode): PsiElement {
-        if (astNode.elementType === WXMLTypes.EXPR){
-            return ASTWrapperPsiElement(astNode)
+        if (astNode.elementType === WXMLExprElementType.INSTANCE){
+            return WXMLExprImpl(astNode)
         }
         return WXMLTypes.Factory.createElement(astNode)
     }

@@ -4,8 +4,8 @@ import com.intellij.lang.ASTNode
 import com.intellij.lang.Language
 import com.intellij.lang.PsiBuilderFactory
 import com.intellij.psi.tree.ILazyParseableElementType
+import com.zxy.ijplugin.wechat_miniprogram.lang.expr.parser.WXMLExprParser
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WXSSParser
 
 
 open class WXMLExprElementType: ILazyParseableElementType("EXPR") {
@@ -24,8 +24,8 @@ open class WXMLExprElementType: ILazyParseableElementType("EXPR") {
         val parentElement = chameleon.treeParent.psi
         val project = parentElement.project
         val builder = factory.createBuilder(project,chameleon)
-        val parser = WXSSParser()
-        return parser.parse(this, builder)
+        val parser = WXMLExprParser()
+        return parser.parse(this,builder)
     }
 
 }

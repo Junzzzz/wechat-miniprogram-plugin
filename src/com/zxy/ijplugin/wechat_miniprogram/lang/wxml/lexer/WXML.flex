@@ -107,7 +107,7 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
 
 <EXPR_START_DQ> {
     "}}" { yybegin(ATTRIBUTE_VALUE_STRING_DQ_STRAT); return WXMLTypes.RIGHT_DOUBLE_BRACE;}
-    ([^\R'"}}"]|"\\\"")+ { return WXMLTypes.EXPR;}
+    ([^\R'"}}"]|"\\\"")+ { return WXMLExprElementType.INSTANCE;}
 }
 
 "<!--" {
