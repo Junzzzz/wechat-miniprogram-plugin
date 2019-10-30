@@ -44,7 +44,7 @@
         <fileType name="WXS file" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
 
-
+        <lang.formatter language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
@@ -52,6 +52,6 @@
     </extensions>
 
     <actions>
-        <!-- Add your actions here -->
+
     </actions>
 </idea-plugin>
