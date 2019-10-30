@@ -173,6 +173,7 @@ NUMBER = {DIGIT}*.{DIGIT}+ | {DIGIT}+ (.{DIGIT}+)?
     "==" {return WXMLTypes.EQ;}
     "===" {return WXMLTypes.STRICT_EQ;}
     "!" {return WXMLTypes.EXCLAMATION_MARK;}
+    "null" {return WXMLTypes.NULL;}
 }
 
 <EXPR_START> {

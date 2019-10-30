@@ -10,7 +10,7 @@
 
   elementTypeHolderClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes"
   elementTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElementType"
-  tokenTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.psi.WXMLExprTokenType"
+  tokenTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTokenType"
 
 //  psiImplUtilClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl.WXMLPsiImplUtils"
 
@@ -38,7 +38,7 @@ expr ::= value | array | rootObjectItems
 operator ::= PLUS | MINUS | MULTIPLY | DIVIDE | RESIDUAL | NOT_EQ | NOT_STRICT_EQ | EQ | STRICT_EQ
 // 链式对象 a.b  a[b]
 private valueChainSuffix ::= DOT IDENTIFIER | LEFT_BRACKET value RIGHT_BRACKET
-value ::= (NUMBER | exprString | TRUE | FALSE | object | valueWrap | IDENTIFIER | negativeValue) valueChainSuffix? (operator value)* ternaryExprSuffix?
+value ::= (NUMBER | exprString | TRUE | FALSE | NULL | object | valueWrap | IDENTIFIER | negativeValue) valueChainSuffix? (operator value)* ternaryExprSuffix?
 // 三元表达式
 private ternaryExprSuffix ::= QUESTION_MARK value COLON value
 negativeValue ::= EXCLAMATION_MARK value
