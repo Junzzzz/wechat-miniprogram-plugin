@@ -11,8 +11,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
-import com.zxy.ijplugin.wechat_miniprogram.lang.expr.psi.WXMLExprElementType
-import com.zxy.ijplugin.wechat_miniprogram.lang.expr.psi.WXMLExprTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer._WXMLLexer
@@ -46,11 +44,7 @@ class WXMLParserDefinition : ParserDefinition {
     }
 
     override fun createElement(astNode: ASTNode): PsiElement {
-        return when {
-            astNode.elementType === WXMLTypes.EXPR -> WXMLEmbedExprElementType()
-            astNode.elementType is WXMLExprElementType -> WXMLExprTypes.Factory.createElement(astNode)
-            else -> WXMLTypes.Factory.createElement(astNode)
-        }
+        return WXMLTypes.Factory.createElement(astNode)
     }
 
     override fun getCommentTokens(): TokenSet {

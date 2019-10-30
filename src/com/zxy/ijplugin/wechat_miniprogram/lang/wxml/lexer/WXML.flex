@@ -2,7 +2,7 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer;
 
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLEmbedExprElementType;import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes;
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes;
 
 %%
 
@@ -35,6 +35,13 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLEmbedExprElement
 %state EXPR_START_SQ
 %state EXPR_START_DQ
 %state EXPR_START
+%state STRING_DQ_START
+%state STRING_SQ_START
+%state DQ_STRING_DQ_START
+%state SQ_STRING_DQ_START
+%state DQ_STRING_SQ_START
+%state SQ_STRING_SQ_START
+
 
 // regex
 
@@ -42,9 +49,13 @@ ALPHA=[:letter:]
 CRLF=\R
 WHITE_SPACE=[\ \n\t\f]
 WHITE_SPACE_AND_CRLF =     ({CRLF}|{WHITE_SPACE})+
-
+DIGIT=[0-9]
 TAG_NAME = [a-z_][a-z_-]*
 ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
+
+IDENTIFIER_START = {ALPHA}|"_"|"$"
+IDENTIFIER = {IDENTIFIER_START} ({IDENTIFIER_START}|{DIGIT})*
+NUMBER = {DIGIT}*.{DIGIT}+ | {DIGIT}+ (.{DIGIT}+)?
 
 %%
 
@@ -102,12 +113,10 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
 
 <EXPR_START_SQ> {
     "}}" { yybegin(ATTRIBUTE_VALUE_STRING_SQ_STRAT); return WXMLTypes.RIGHT_DOUBLE_BRACE;}
-    ([^\R'"}}"]|"\\'")+ { return WXMLEmbedExprElementType.INSTANCE;}
 }
 
 <EXPR_START_DQ> {
     "}}" { yybegin(ATTRIBUTE_VALUE_STRING_DQ_STRAT); return WXMLTypes.RIGHT_DOUBLE_BRACE;}
-    ([^\R'"}}"]|"\\\"")+ { /*return WXMLEmbedExprElementType.INSTANCE;*/return WXMLTypes.EXPR;}
 }
 
 "<!--" {
@@ -134,9 +143,111 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
         yybegin(YYINITIAL);
         return WXMLTypes.RIGHT_DOUBLE_BRACE;
     }
-    ([^\R'"}}"])+ {
-                return WXMLEmbedExprElementType.INSTANCE;
-            }
+}
+
+// 双括号表达式的分词
+
+<EXPR_START,EXPR_START_SQ,EXPR_START_DQ> {
+    "+" { return WXMLTypes.PLUS; }
+    "-" { return WXMLTypes.MINUS;}
+    "*" { return WXMLTypes.MULTIPLY;}
+    "/" { return WXMLTypes.DIVIDE;}
+    "%" { return WXMLTypes.RESIDUAL;}
+    {NUMBER} {return WXMLTypes.NUMBER;}
+    "true" {return WXMLTypes.TRUE;}
+    "false" {return WXMLTypes.FALSE;}
+    "." {return WXMLTypes.DOT;}
+    {IDENTIFIER} {return WXMLTypes.IDENTIFIER;}
+    ":" {return WXMLTypes.COLON;}
+    "," {return WXMLTypes.COMMA;}
+    "(" {return WXMLTypes.LEFT_PARENTHESES;}
+    ")" {return WXMLTypes.RIGHT_PARENTHESES;}
+    "{" {return WXMLTypes.LEFT_BRACE;}
+    "}" {return WXMLTypes.RIGHT_BRACE;}
+    "[" {return WXMLTypes.LEFT_BRACKET;}
+    "]" {return WXMLTypes.RIGHT_BRACKET;}
+    "..." {return WXMLTypes.EXPAND_KEYWORD;}
+    "?" {return WXMLTypes.QUESTION_MARK;}
+    "!==" {return WXMLTypes.NOT_STRICT_EQ;}
+    "!=" {return WXMLTypes.NOT_EQ;}
+    "==" {return WXMLTypes.EQ;}
+    "===" {return WXMLTypes.STRICT_EQ;}
+    "!" {return WXMLTypes.EXCLAMATION_MARK;}
+}
+
+<EXPR_START> {
+    "'" {yybegin(STRING_SQ_START);return WXMLTypes.STRING_START;}
+    "\"" {yybegin(STRING_DQ_START);return WXMLTypes.STRING_START;}
+}
+
+<EXPR_START_SQ> {
+        "'"|"\\'" {yybegin(SQ_STRING_SQ_START);return WXMLTypes.STRING_START;}
+        "\""|"\\\"" {yybegin(SQ_STRING_DQ_START);return WXMLTypes.STRING_START;}
+}
+
+<EXPR_START_DQ> {
+        "'"|"\\'" {yybegin(DQ_STRING_SQ_START);return WXMLTypes.STRING_START;}
+        "\""|"\\\"" {yybegin(DQ_STRING_DQ_START);return WXMLTypes.STRING_START;}
+}
+
+<STRING_DQ_START> {
+    [^\R\"]+ {
+        return WXMLTypes.STRING_CONTENT;
+    }
+    "\"" {
+          yybegin(EXPR_START);
+          return WXMLTypes.STRING_END;
+      }
+}
+
+<STRING_SQ_START> {
+    [^\R\']+ {
+          return WXMLTypes.STRING_CONTENT;
+    }
+    "'" {
+          yybegin(EXPR_START);
+          return WXMLTypes.STRING_END;
+    }
+}
+
+<SQ_STRING_DQ_START> {
+    [^\R"\\\""\"]+ {
+        return WXMLTypes.STRING_CONTENT;
+    }
+    "\"" {
+          yybegin(EXPR_START_SQ);
+          return WXMLTypes.STRING_END;
+    }
+}
+
+<SQ_STRING_SQ_START> {
+    [^\R"\\'"\']+ {
+          return WXMLTypes.STRING_CONTENT;
+    }
+    "\\'"|"'" {
+          yybegin(EXPR_START_SQ);
+          return WXMLTypes.STRING_END;
+    }
+}
+
+<DQ_STRING_DQ_START> {
+    [^\R"\\\""\"]+ {
+        return WXMLTypes.STRING_CONTENT;
+    }
+    "\"" {
+          yybegin(EXPR_START_DQ);
+          return WXMLTypes.STRING_END;
+    }
+}
+
+<DQ_STRING_SQ_START> {
+    [^\R"\\'"\']+ {
+          return WXMLTypes.STRING_CONTENT;
+    }
+    "\\'"|"'" {
+          yybegin(EXPR_START_DQ);
+          return WXMLTypes.STRING_END;
+    }
 }
 
 {WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }

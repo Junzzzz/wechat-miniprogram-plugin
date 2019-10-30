@@ -28,5 +28,27 @@ attribute ::= ATTRIBUTE_NAME (EQ attributeValue)?
 attributeValue ::= string
 string ::= STRING_START string_text STRING_END
 string_text ::= (exprInsert|STRING_CONTENT )*
-exprInsert ::= LEFT_DOUBLE_BRACE EXPR? RIGHT_DOUBLE_BRACE
+exprInsert ::= LEFT_DOUBLE_BRACE expr? RIGHT_DOUBLE_BRACE
 elementContent ::= (element | TEXT | exprInsert)*
+
+// 嵌入双括号中的表达式
+
+// rootObject 省略双括号
+expr ::= value | array | rootObjectItems
+operator ::= PLUS | MINUS | MULTIPLY | DIVIDE | RESIDUAL | NOT_EQ | NOT_STRICT_EQ | EQ | STRICT_EQ
+// 链式对象 a.b  a[b]
+private valueChainSuffix ::= DOT IDENTIFIER | LEFT_BRACKET value RIGHT_BRACKET
+value ::= (NUMBER | exprString | TRUE | FALSE | object | valueWrap | IDENTIFIER | negativeValue) valueChainSuffix? (operator value)* ternaryExprSuffix?
+// 三元表达式
+private ternaryExprSuffix ::= QUESTION_MARK value COLON value
+negativeValue ::= EXCLAMATION_MARK value
+
+
+valueWrap ::= LEFT_PARENTHESES value RIGHT_PARENTHESES
+array ::= LEFT_BRACKET arrayItems RIGHT_BRACKET
+rootObjectItems ::= (objectItem COMMA)+ objectItem?
+arrayItems ::= (value COMMA)* value?
+objectItems ::= (objectItem COMMA)* objectItem?
+objectItem ::= IDENTIFIER COLON value | IDENTIFIER | EXPAND_KEYWORD value
+object ::= LEFT_BRACE objectItems RIGHT_BRACE
+exprString ::= STRING_START STRING_CONTENT? STRING_END
