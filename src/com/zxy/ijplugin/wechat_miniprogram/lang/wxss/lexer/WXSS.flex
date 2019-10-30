@@ -35,6 +35,8 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes;
 %state STYLE_SELCTION
 %state ATTRIBUTE_START
 %state ATTRIBUTE_VALUE_STRAT
+%state ATTRIBUTE_VALUE
+%state ATTRIBUTE_VALUE_END
 %state ATTRIBUTE_VALUE_NUMBER
 %state ATTRIBUTE_VALUE_STRING_START_DQ
 %state ATTRIBUTE_VALUE_STRING_START_SQ
@@ -197,45 +199,51 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 }
 
 <ATTRIBUTE_VALUE_STRAT>{
+
+      [^\R\ \n\t\f,;}]+ {
+          yypushback(yylength());
+          yybegin(ATTRIBUTE_VALUE);
+      }
+
+      {WHITE_SPACE_AND_CRLF} { return TokenType.WHITE_SPACE; }
+}
+
+<ATTRIBUTE_VALUE> {
+    {UNICODE_RANGE} { yybegin(ATTRIBUTE_VALUE_END);return WXSSTypes.UNICODE_RANGE; }
+          {HASH} { yybegin(ATTRIBUTE_VALUE_END);return WXSSTypes.HASH;}
+          {NUMBER}|{NUMBER_WITH_UNIT} { yypushback(yylength());yybegin(ATTRIBUTE_VALUE_NUMBER); }
+          "'" {
+              yybegin(ATTRIBUTE_VALUE_STRING_START_DQ);
+              return WXSSTypes.STRING_START_DQ;
+          }
+          "\"" {
+              yybegin(ATTRIBUTE_VALUE_STRING_START_SQ);
+              return WXSSTypes.STRING_START_SQ;
+          }
+          {FUNCTION_NAME}{WHITE_SPACE_AND_CRLF}?"(" {
+                    yypushback(yylength());
+                    yybegin(ATTRIBUTE_VALUE_FUNCTION);
+                }
+           {ATTRIBUTE_VALUE_LITERAL} {
+                yybegin(ATTRIBUTE_VALUE_END);
+              return WXSSTypes.ATTRIBUTE_VALUE_LITERAL;
+          }
+}
+
+<ATTRIBUTE_VALUE_END> {
       ";" {
           yybegin(STYLE_SELCTION);
           return WXSSTypes.SEMICOLON;
       }
       "," {
+          yybegin(ATTRIBUTE_VALUE_STRAT);
           return WXSSTypes.COMMA;
       }
-      {UNICODE_RANGE} {
-          return WXSSTypes.UNICODE_RANGE;
-      }
-      {HASH} {
-          return WXSSTypes.HASH;
-      }
-      {NUMBER}|{NUMBER_WITH_UNIT} {
-          yypushback(yylength());
-          yybegin(ATTRIBUTE_VALUE_NUMBER);
-      }
-      "'" {
-          yybegin(ATTRIBUTE_VALUE_STRING_START_DQ);
-          return WXSSTypes.STRING_START_DQ;
-      }
-      "\"" {
-          yybegin(ATTRIBUTE_VALUE_STRING_START_SQ);
-          return WXSSTypes.STRING_START_SQ;
-      }
-      {FUNCTION_NAME}{WHITE_SPACE_AND_CRLF}?"(" {
-                yypushback(yylength());
-                yybegin(ATTRIBUTE_VALUE_FUNCTION);
-            }
-       {ATTRIBUTE_VALUE_LITERAL} {
-          return WXSSTypes.ATTRIBUTE_VALUE_LITERAL;
-      }
-          "}" {
+         "}" {
                 yybegin(YYINITIAL);
               return WXSSTypes.RIGHT_BRACKET;
-            }
-        {WHITE_SPACE_AND_CRLF} {
-            return TokenType.WHITE_SPACE;
         }
+        {WHITE_SPACE_AND_CRLF} { yybegin(ATTRIBUTE_VALUE_STRAT); return TokenType.WHITE_SPACE; }
 }
 
 // 属性值中的数字
@@ -245,11 +253,11 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
         return WXSSTypes.NUMBER;
     }
     {WHITE_SPACE_AND_CRLF} {
-            yybegin(ATTRIBUTE_VALUE_STRAT);
+            yybegin(ATTRIBUTE_VALUE_END);
             return TokenType.WHITE_SPACE;
     }
     "," {
-          yybegin(ATTRIBUTE_VALUE_STRAT);
+          yybegin(ATTRIBUTE_VALUE_END);
           return WXSSTypes.COMMA;
       }
     {NUMBER_UNIT} {
@@ -265,13 +273,13 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 
 <ATTRIBUTE_VALUE_STRING_START_DQ> {
     "'" {
-          yybegin(ATTRIBUTE_VALUE_STRAT);
+          yybegin(ATTRIBUTE_VALUE_END);
           return WXSSTypes.STRING_END_DQ;
     }
 }
 
 <ATTRIBUTE_VALUE_STRING_START_SQ> "'" {
-    yybegin(ATTRIBUTE_VALUE_STRAT);
+    yybegin(ATTRIBUTE_VALUE_END);
     return WXSSTypes.STRING_END_SQ;
 }
 
@@ -308,7 +316,7 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
           return WXSSTypes.HASH;
       }
      ")" {
-          yybegin(ATTRIBUTE_VALUE_STRAT);
+          yybegin(ATTRIBUTE_VALUE_END);
           return WXSSTypes.RIGHT_PARENTHESES;
       }
 }
@@ -330,7 +338,7 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
             return WXSSTypes.COMMA;
         }
         ")" {
-            yybegin(ATTRIBUTE_VALUE_STRAT);
+            yybegin(ATTRIBUTE_VALUE_END);
             return WXSSTypes.RIGHT_PARENTHESES;
         }
 }
