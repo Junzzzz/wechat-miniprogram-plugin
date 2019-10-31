@@ -55,7 +55,7 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
 
 IDENTIFIER_START = {ALPHA}|"_"|"$"
 IDENTIFIER = {IDENTIFIER_START} ({IDENTIFIER_START}|{DIGIT})*
-NUMBER = {DIGIT}*.{DIGIT}+ | {DIGIT}+ (.{DIGIT}+)?
+NUMBER = {DIGIT}*\.{DIGIT}+ | {DIGIT}+ (\.{DIGIT}+)?
 
 %%
 
@@ -174,6 +174,7 @@ NUMBER = {DIGIT}*.{DIGIT}+ | {DIGIT}+ (.{DIGIT}+)?
     "===" {return WXMLTypes.STRICT_EQ;}
     "!" {return WXMLTypes.EXCLAMATION_MARK;}
     "null" {return WXMLTypes.NULL;}
+     {WHITE_SPACE} {return TokenType.WHITE_SPACE;}
 }
 
 <EXPR_START> {
