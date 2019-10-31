@@ -204,6 +204,14 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
           yypushback(yylength());
           yybegin(ATTRIBUTE_VALUE);
       }
+            "," {
+                yybegin(ATTRIBUTE_VALUE_STRAT);
+                return WXSSTypes.COMMA;
+            }
+       ";" {
+            yybegin(STYLE_SELCTION);
+            return WXSSTypes.SEMICOLON;
+        }
 
       {WHITE_SPACE_AND_CRLF} { return TokenType.WHITE_SPACE; }
 }
