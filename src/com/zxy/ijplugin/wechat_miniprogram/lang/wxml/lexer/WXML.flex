@@ -174,7 +174,7 @@ NUMBER = {DIGIT}*\.{DIGIT}+ | {DIGIT}+ (\.{DIGIT}+)?
     "===" {return WXMLTypes.STRICT_EQ;}
     "!" {return WXMLTypes.EXCLAMATION_MARK;}
     "null" {return WXMLTypes.NULL;}
-     {WHITE_SPACE} {return TokenType.WHITE_SPACE;}
+     {WHITE_SPACE}+ {return TokenType.WHITE_SPACE;}
 }
 
 <EXPR_START> {
