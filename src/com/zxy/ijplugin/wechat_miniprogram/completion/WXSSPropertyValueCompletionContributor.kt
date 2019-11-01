@@ -12,7 +12,7 @@ class WXSSPropertyValueCompletionContributor : CompletionContributor() {
     init {
         extend(
                 CompletionType.BASIC,
-                PlatformPatterns.psiElement(WXSSTypes.ATTRIBUTE_VALUE)
+                PlatformPatterns. .psiElement(WXSSTypes.VALUE)
                         .withLanguage(WXSSLanguage.INSTANCE),
                 object : CompletionProvider<CompletionParameters>() {
                     public override fun addCompletions(
