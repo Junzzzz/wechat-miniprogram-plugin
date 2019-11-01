@@ -368,4 +368,9 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 
 {WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
+"}" {
+    yybegin(YYINITIAL);
+  return WXSSTypes.RIGHT_BRACKET;
+}
+
 [^] { return TokenType.BAD_CHARACTER; }

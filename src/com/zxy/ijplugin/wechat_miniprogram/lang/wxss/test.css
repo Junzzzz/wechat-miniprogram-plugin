@@ -20,7 +20,11 @@
     height: 200px;
     margin-left: 20px;
 }
-
+li::after {
+    content: "[" counter(listCounter) "] == ["
+    counter(listCounter, upper-roman) "]";
+    font-size: small;
+}
 .goods-info {
     display: flex;
     flex-direction: column;

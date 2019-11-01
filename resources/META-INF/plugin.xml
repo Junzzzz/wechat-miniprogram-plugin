@@ -44,7 +44,10 @@
         <fileType name="WXS file" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
 
-        <lang.formatter language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
+        <lang.formatter language="WXSS"
+                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
+        <completion.contributor language="WXSS"
+                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXSSPropertyValueCompletionContributor"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
