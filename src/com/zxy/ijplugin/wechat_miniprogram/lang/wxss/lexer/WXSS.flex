@@ -91,7 +91,7 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 }
 
 <IMPORT_STRING_START_SQ>{
-    [^\R"'"]+ {
+    [^\n"'"]+ {
         return WXSSTypes.STRING_CONTENT;
     }
     "'" {
@@ -101,7 +101,7 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 }
 
 <IMPORT_STRING_START_DQ> {
-    [^\R"\""]+ {
+    [^\n"\""]+ {
         return WXSSTypes.STRING_CONTENT;
     }
     "\"" {
@@ -271,7 +271,7 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
         yybegin(ATTRIBUTE_VALUE_END);
         return WXSSTypes.STRING_END_DQ;
     }
-    [^\R"\""]+ {
+    [^\n\"]+ {
         return WXSSTypes.STRING_CONTENT;
     }
 }
@@ -281,7 +281,7 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
         yybegin(ATTRIBUTE_VALUE_END);
         return WXSSTypes.STRING_END_SQ;
     }
-    [^\R"'"]+ {
+    [^\n\']+ {
         return WXSSTypes.STRING_CONTENT;
     }
 }
@@ -381,7 +381,13 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 }
 
 "(" {
-          return WXSSTypes.LEFT_PARENTHESES;
-      }
+    return WXSSTypes.LEFT_PARENTHESES;
+}
+"\"" {
+    return WXSSTypes.STRING_START_DQ;
+}
+"'" {
+    return WXSSTypes.STRING_END_DQ;
+}
 
 [^] { return TokenType.BAD_CHARACTER; }

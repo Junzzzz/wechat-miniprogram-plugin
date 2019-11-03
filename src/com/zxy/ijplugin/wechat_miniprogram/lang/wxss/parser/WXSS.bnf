@@ -20,6 +20,10 @@
     RIGHT_BRACKET = '}'
     LEFT_PARENTHESES = '('
     RIGHT_PARENTHESES = ')'
+    STRING_START_DQ = '"'
+    STRING_START_SQ = "'"
+    STRING_END_DQ = '"'
+    STRING_END_SQ = "'"
   ]
 }
 
