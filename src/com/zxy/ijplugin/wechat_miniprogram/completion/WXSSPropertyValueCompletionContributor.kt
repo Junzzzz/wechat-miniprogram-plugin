@@ -68,6 +68,10 @@ class WXSSPropertyValueCompletionContributor : CompletionContributor() {
                         val propertyName = styleStatement?.firstChild?.text ?: return
                         CssElementDescriptorFactory.getDescriptor(propertyName)?.let {
                             it.allVariants.filter { variant -> variant !== null && (variant !is String || variant.isNotEmpty()) }
+                                    .filter { variant ->
+                                        // 过滤掉带浏览器前缀的
+                                        variant !is String || !variant.startsWith("-")
+                                    }
                                     .forEach { variant ->
                                         resultSet.addElement(
                                                 LookupElementBuilder.create(
