@@ -30,6 +30,7 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSClassChooseByNameContributor"/>
         <lang.commenter language="WXSS"
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>
+        <lang.braceMatcher language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBraceMatcher"/>
 
         <fileType name="WXML file" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
