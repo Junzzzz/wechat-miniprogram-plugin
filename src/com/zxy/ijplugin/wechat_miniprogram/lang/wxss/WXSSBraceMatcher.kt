@@ -14,7 +14,9 @@ class WXSSBraceMatcher : PairedBraceMatcher {
     override fun getPairs(): Array<BracePair> {
         return arrayOf(
                 BracePair(WXSSTypes.LEFT_PARENTHESES, WXSSTypes.RIGHT_PARENTHESES, false),
-                BracePair(WXSSTypes.LEFT_BRACKET, WXSSTypes.RIGHT_BRACKET, false)
+                BracePair(WXSSTypes.LEFT_BRACKET, WXSSTypes.RIGHT_BRACKET, false),
+                BracePair(WXSSTypes.STRING_START_DQ,WXSSTypes.STRING_END_DQ,false),
+                BracePair(WXSSTypes.STRING_START_SQ,WXSSTypes.STRING_START_SQ,false)
         )
     }
 
