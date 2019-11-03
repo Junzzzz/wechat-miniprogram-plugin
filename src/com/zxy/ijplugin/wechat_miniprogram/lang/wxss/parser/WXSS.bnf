@@ -16,6 +16,10 @@
 
   tokens = [
     COMMENT = 'regexp:/*..*/'
+    LEFT_BRACKET = '{'
+    RIGHT_BRACKET = '}'
+    LEFT_PARENTHESES = '('
+    RIGHT_PARENTHESES = ')'
   ]
 }
 

@@ -373,4 +373,12 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
   return WXSSTypes.RIGHT_BRACKET;
 }
 
+"{" {
+    return WXSSTypes.LEFT_BRACKET;
+}
+
+"(" {
+          return WXSSTypes.LEFT_PARENTHESES;
+      }
+
 [^] { return TokenType.BAD_CHARACTER; }
