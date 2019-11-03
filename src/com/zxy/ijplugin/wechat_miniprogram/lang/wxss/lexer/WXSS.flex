@@ -50,7 +50,7 @@ CRLF=\R
 WHITE_SPACE=[\ \n\t\f]
 WHITE_SPACE_AND_CRLF =     ({CRLF}|{WHITE_SPACE})+
 DIGIT=[0-9]
-STRING_CONTENT = ({ALPHA}|{DIGIT}|"_"|":"|"."|"-"|"\\"|"/")*
+STRING_CONTENT = [^\R]*
 
 IDENTIFIER_START = {ALPHA}|"-"|"_"
 IDENTIFIER = {IDENTIFIER_START}({IDENTIFIER_START}|{DIGIT})*
@@ -90,28 +90,28 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
             }
 }
 
-<IMPORT_STRING_START_SQ,IMPORT_STRING_START_DQ>{
-    {STRING_CONTENT} {
+<IMPORT_STRING_START_SQ>{
+    [^\R"'"]+ {
         return WXSSTypes.STRING_CONTENT;
     }
-}
-
-<IMPORT_STRING_START_DQ>  {
-    "\"" {
-                yybegin(IMPORT_STRING_END);
-                return WXSSTypes.STRING_END_DQ;
-        }
-}
-
-<IMPORT_STRING_START_SQ>  {
     "'" {
                 yybegin(IMPORT_STRING_END);
                 return WXSSTypes.STRING_END_SQ;
-        }
+    }
+}
+
+<IMPORT_STRING_START_DQ> {
+    [^\R"\""]+ {
+        return WXSSTypes.STRING_CONTENT;
+    }
+    "\"" {
+        yybegin(IMPORT_STRING_END);
+        return WXSSTypes.STRING_END_DQ;
+    }
 }
 
 <IMPORT_STRING_END> ";" {
-          yybegin(YYINITIAL);
+    yybegin(YYINITIAL);
     return WXSSTypes.SEMICOLON;
 }
 
@@ -156,18 +156,17 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 
 <ID_SELECTOR,CLASS_SELECTOR,SELECTOR_GROUP>{
     "," {
-          yybegin(SELECTOR_GROUP);
-          return WXSSTypes.COMMA;
-
-      }
-      {WHITE_SPACE} {
         yybegin(SELECTOR_GROUP);
-          return TokenType.WHITE_SPACE;
-      }
-            "{" {
-                yybegin(STYLE_SELCTION);
-                yypushback(yylength());
-            }
+        return WXSSTypes.COMMA;
+    }
+    {WHITE_SPACE} {
+        yybegin(SELECTOR_GROUP);
+        return TokenType.WHITE_SPACE;
+    }
+    "{" {
+        yybegin(STYLE_SELCTION);
+        yypushback(yylength());
+    }
 }
 
 <STYLE_SELCTION>{
@@ -221,12 +220,12 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
           {HASH} { yybegin(ATTRIBUTE_VALUE_END);return WXSSTypes.HASH;}
           {NUMBER}|{NUMBER_WITH_UNIT} { yypushback(yylength());yybegin(ATTRIBUTE_VALUE_NUMBER); }
           "'" {
-              yybegin(ATTRIBUTE_VALUE_STRING_START_DQ);
-              return WXSSTypes.STRING_START_DQ;
-          }
-          "\"" {
               yybegin(ATTRIBUTE_VALUE_STRING_START_SQ);
               return WXSSTypes.STRING_START_SQ;
+          }
+          "\"" {
+              yybegin(ATTRIBUTE_VALUE_STRING_START_DQ);
+              return WXSSTypes.STRING_START_DQ;
           }
           {FUNCTION_NAME}{WHITE_SPACE_AND_CRLF}?"(" {
                     yypushback(yylength());
@@ -247,11 +246,11 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
           yybegin(ATTRIBUTE_VALUE_STRAT);
           return WXSSTypes.COMMA;
       }
-         "}" {
-                yybegin(YYINITIAL);
-              return WXSSTypes.RIGHT_BRACKET;
-        }
-        {WHITE_SPACE_AND_CRLF} { yybegin(ATTRIBUTE_VALUE_STRAT); return TokenType.WHITE_SPACE; }
+     "}" {
+            yybegin(YYINITIAL);
+          return WXSSTypes.RIGHT_BRACKET;
+     }
+     {WHITE_SPACE_AND_CRLF} { yybegin(ATTRIBUTE_VALUE_STRAT); return TokenType.WHITE_SPACE; }
 }
 
 // 属性值中的数字
@@ -268,30 +267,34 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 // 属性值中的字符串
 
 <ATTRIBUTE_VALUE_STRING_START_DQ> {
-    "'" {
-          yybegin(ATTRIBUTE_VALUE_END);
-          return WXSSTypes.STRING_END_DQ;
+    "\"" {
+        yybegin(ATTRIBUTE_VALUE_END);
+        return WXSSTypes.STRING_END_DQ;
+    }
+    [^\R"\""]+ {
+        return WXSSTypes.STRING_CONTENT;
     }
 }
 
-<ATTRIBUTE_VALUE_STRING_START_SQ> "'" {
-    yybegin(ATTRIBUTE_VALUE_END);
-    return WXSSTypes.STRING_END_SQ;
-}
-
-<ATTRIBUTE_VALUE_STRING_START_DQ,ATTRIBUTE_VALUE_STRING_START_SQ> {STRING_CONTENT} {
-      return WXSSTypes.STRING_CONTENT;
+<ATTRIBUTE_VALUE_STRING_START_SQ> {
+    "'" {
+        yybegin(ATTRIBUTE_VALUE_END);
+        return WXSSTypes.STRING_END_SQ;
+    }
+    [^\R"'"]+ {
+        return WXSSTypes.STRING_CONTENT;
+    }
 }
 
 // 属性值中的方法调用
 <ATTRIBUTE_VALUE_FUNCTION> {
     {FUNCTION_NAME} {
-          return WXSSTypes.FUNCTION_NAME;
-      }
-     "(" {
-          yybegin(ATTRIBUTE_VALUE_FUNCTION_ARGS);
-          return WXSSTypes.LEFT_PARENTHESES;
-      }
+        return WXSSTypes.FUNCTION_NAME;
+    }
+    "(" {
+        yybegin(ATTRIBUTE_VALUE_FUNCTION_ARGS);
+        return WXSSTypes.LEFT_PARENTHESES;
+    }
 }
 
 <ATTRIBUTE_VALUE_FUNCTION_ARGS>{
