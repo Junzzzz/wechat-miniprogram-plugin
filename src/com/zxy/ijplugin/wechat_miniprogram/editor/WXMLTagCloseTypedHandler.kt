@@ -6,8 +6,8 @@ import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.util.PsiTreeUtil
-import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findSiblingBackward
+import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findNextSibling
+import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findPrevSibling
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 
@@ -31,8 +31,8 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
 
     override fun charTyped(c: Char, project: Project, editor: Editor, file: PsiFile): Result {
 
-        if (file.language === WXMLLanguage.INSTANCE){
-            if (c == '/' ) {
+        if (file.language === WXMLLanguage.INSTANCE) {
+            if (c == '/') {
                 // 当键入一个斜杠时
                 // 根据上下文，完成未闭合的标签
                 val psiFile = TypeHandlerDelegateUtils.commitDocumentAndGetPsiFile(project, editor)
@@ -48,7 +48,7 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
                         editor.caretModel.moveToOffset(offset + prevStartTagName.length + 1)
                     }
                 }
-            }else if (c=='>'){
+            } else if (c == '>') {
                 // 当键入一个标签结束符号
                 // 如果此时正好构成一个标签开始
             }
@@ -57,22 +57,19 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
     }
 
     private fun getPrevStartTagName(psiElement: PsiElement): String? {
-        var element = psiElement
-        do {
-            val prev1 = psiElement.findSiblingBackward{
-                it.node.elementType==WXMLTypes.START_TAG_END
-            }
-            if (prev1!=null) {
-                val prev2 = psiElement.findSiblingBackward {  }
-                if (prev2.node.elementType == WXMLTypes.TAG_NAME) {
-                    val prev3 = prev2.prevSibling ?: return null
-                    if (prev3.node.elementType == WXMLTypes.START_TAG_START) {
-                        return prev2.text
-                    }
+        val prev1 = psiElement.findPrevSibling {
+            it.node.elementType == WXMLTypes.START_TAG_END
+        }
+        if (prev1 != null) {
+            val prev2 = psiElement.findPrevSibling { it.node.elementType == WXMLTypes.TAG_NAME && it.findNextSibling { p -> p.node.elementType == WXMLTypes.START_TAG_END } == prev1 }
+            if (prev2 != null) {
+                val prev3 = prev2.prevSibling ?: return null
+                if (prev3.node.elementType == WXMLTypes.START_TAG_START) {
+                    return prev2.text
                 }
             }
-            element = prev1
-        } while (true)
+        }
+        return null
     }
 
 }
