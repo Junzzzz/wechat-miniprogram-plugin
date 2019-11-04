@@ -32,7 +32,7 @@
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>
         <lang.braceMatcher language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBraceMatcher"/>
 <!--        <typedHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSStringCharTypedHandler"/>-->
-        <quoteHandler fileType="WXSS" className="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSQuoteHandler"/>
+        <quoteHandler fileType="WXSS" className="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSDoubleQuoteHandler"/>
 
         <fileType name="WXML" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
