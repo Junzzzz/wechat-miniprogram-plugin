@@ -156,6 +156,7 @@ NUMBER = {DIGIT}*\.{DIGIT}+ | {DIGIT}+ (\.{DIGIT}+)?
     {NUMBER} {return WXMLTypes.NUMBER;}
     "true" {return WXMLTypes.TRUE;}
     "false" {return WXMLTypes.FALSE;}
+      "null" {return WXMLTypes.NULL;}
     "." {return WXMLTypes.DOT;}
     {IDENTIFIER} {return WXMLTypes.IDENTIFIER;}
     ":" {return WXMLTypes.COLON;}
@@ -173,7 +174,6 @@ NUMBER = {DIGIT}*\.{DIGIT}+ | {DIGIT}+ (\.{DIGIT}+)?
     "==" {return WXMLTypes.EQ;}
     "===" {return WXMLTypes.STRICT_EQ;}
     "!" {return WXMLTypes.EXCLAMATION_MARK;}
-    "null" {return WXMLTypes.NULL;}
      {WHITE_SPACE}+ {return TokenType.WHITE_SPACE;}
 }
 
