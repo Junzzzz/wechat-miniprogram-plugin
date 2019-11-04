@@ -338,7 +338,7 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 
 <STRING_START_SQ> {
   "'" { yybegin(this.beforeStringState);return WXSSTypes.STRING_END_SQ; }
-   ([^\n\"]|"'")+ { return WXSSTypes.STRING_CONTENT; }
+   ([^\n\']|"\\'")+ { return WXSSTypes.STRING_CONTENT; }
 }
 <STRING_START_DQ> {
   "\"" { yybegin(this.beforeStringState);return WXSSTypes.STRING_END_DQ; }

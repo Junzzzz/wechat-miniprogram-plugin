@@ -32,14 +32,14 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
     override fun charTyped(c: Char, project: Project, editor: Editor, file: PsiFile): Result {
 
         if (file.language === WXMLLanguage.INSTANCE) {
+            val psiFile = TypeHandlerDelegateUtils.commitDocumentAndGetPsiFile(project, editor)
+                    ?: return Result.CONTINUE
+            val viewProvider = psiFile.viewProvider
+            val offset = editor.caretModel.offset
+            val inputCharElement = viewProvider.findElementAt(offset - 1) ?: return Result.CONTINUE
             if (c == '/') {
                 // 当键入一个斜杠时
                 // 根据上下文，完成未闭合的标签
-                val psiFile = TypeHandlerDelegateUtils.commitDocumentAndGetPsiFile(project, editor)
-                        ?: return Result.CONTINUE
-                val viewProvider = psiFile.viewProvider
-                val offset = editor.caretModel.offset
-                val inputCharElement = viewProvider.findElementAt(offset - 1) ?: return Result.CONTINUE
                 if (inputCharElement.node.elementType === WXMLTypes.END_TAG_START) {
                     // 键入的结束标签的头部 </
                     val prevStartTagName = getPrevStartTagName(inputCharElement)
@@ -51,6 +51,11 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
             } else if (c == '>') {
                 // 当键入一个标签结束符号
                 // 如果此时正好构成一个标签开始
+                if (inputCharElement.node.elementType===WXMLTypes.START_TAG_END){
+                    inputCharElement.findPrevSibling { it.node.elementType==WXMLTypes.TAG_NAME }?.let {
+                        editor.document.insertString(offset,"</${it.text}>")
+                    }
+                }
             }
         }
         return Result.CONTINUE
