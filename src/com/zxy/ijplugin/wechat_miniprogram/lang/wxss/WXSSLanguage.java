@@ -9,7 +9,7 @@ public class WXSSLanguage extends Language {
 
     public static WXSSLanguage INSTANCE = new WXSSLanguage();
 
-    private WXSSLanguage(){
+    private WXSSLanguage() {
         super("WXSS");
     }
 

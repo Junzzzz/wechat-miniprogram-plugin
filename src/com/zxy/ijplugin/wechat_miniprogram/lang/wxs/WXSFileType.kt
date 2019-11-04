@@ -15,7 +15,7 @@ class WXSFileType : LanguageFileType(JavaScriptSupportLoader.ECMA_SCRIPT_6) {
     }
 
     override fun getName(): String {
-        return "WXS file"
+        return "WXS"
     }
 
     override fun getDefaultExtension(): String {

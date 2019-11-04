@@ -2,7 +2,6 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
 import com.intellij.openapi.fileTypes.LanguageFileType
 import javax.swing.Icon
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage;
 
 class WXMLFileType : LanguageFileType(WXMLLanguage.INSTANCE) {
 
@@ -16,7 +15,7 @@ class WXMLFileType : LanguageFileType(WXMLLanguage.INSTANCE) {
     }
 
     override fun getName(): String {
-        return "WXML file"
+        return "WXML"
     }
 
     override fun getDefaultExtension(): String {

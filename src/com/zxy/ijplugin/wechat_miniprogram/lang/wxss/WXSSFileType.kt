@@ -15,7 +15,7 @@ class WXSSFileType :LanguageFileType(WXSSLanguage.INSTANCE){
     }
 
     override fun getName(): String {
-        return "WXSS file"
+        return "WXSS"
     }
 
     override fun getDefaultExtension(): String {
