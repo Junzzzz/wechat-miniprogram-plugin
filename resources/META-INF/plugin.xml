@@ -15,7 +15,7 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileType name="WXSS file" fieldName="INSTANCE" extensions="wxss" language="WXSS"
+        <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
         <lang.parserDefinition language="WXSS"
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WXSSParserDefinition"/>
@@ -31,9 +31,10 @@
         <lang.commenter language="WXSS"
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>
         <lang.braceMatcher language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBraceMatcher"/>
-        <typedHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSStringCharTypedHandler"/>
+<!--        <typedHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSStringCharTypedHandler"/>-->
+        <quoteHandler fileType="WXSS" className="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSQuoteHandler"/>
 
-        <fileType name="WXML file" extensions="wxml" language="WXML"
+        <fileType name="WXML" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
                   fieldName="INSTANCE"/>
         <lang.parserDefinition language="WXML"
@@ -44,7 +45,7 @@
         <colorSettingsPage implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLColorSettingPage"/>
         <typedHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagCloseTypedHandler"/>
 
-        <fileType name="WXS file" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
+        <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
 
         <lang.formatter language="WXSS"
