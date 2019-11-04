@@ -12,6 +12,12 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes;
     private void saveBeforeCommentState(){
         this.beforeCommentState = yystate();
     }
+
+    private int beforeStringState = YYINITIAL;
+
+    private void saveBeforeStringState(){
+        this.beforeStringState = yystate();
+    }
 %}
 
 %unicode
@@ -25,10 +31,6 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes;
 // state
 %state IDENTIFIER
 %state PERIOD
-%state IMPORT_STRING_START_DQ
-%state IMPORT_STRING_START_SQ
-%state IMPORT_STRING_END
-%state IMPORT_VALUE_START
 %state SELECTOR_GROUP
 %state ID_SELECTOR
 %state CLASS_SELECTOR
@@ -44,13 +46,14 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes;
 %state ATTRIBUTE_VALUE_FUNCTION_ARGS
 %state ATTRIBUTE_VALUE_FUNCTION_ARG_NUMBER
 %state COMMENT
+%state STRING_START_DQ
+%state STRING_START_SQ
 
 ALPHA=[:letter:]
 CRLF=\R
 WHITE_SPACE=[\ \n\t\f]
 WHITE_SPACE_AND_CRLF =     ({CRLF}|{WHITE_SPACE})+
 DIGIT=[0-9]
-STRING_CONTENT = [^\R]*
 
 IDENTIFIER_START = {ALPHA}|"-"|"_"
 IDENTIFIER = {IDENTIFIER_START}({IDENTIFIER_START}|{DIGIT})*
@@ -70,53 +73,17 @@ COMMENT_END = "*/"
 UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 %%
 
-<YYINITIAL> "@import" {
-    yybegin(IMPORT_VALUE_START);
-    return WXSSTypes.IMPORT_KEYWORD;
-}
-
-<IMPORT_VALUE_START> {
-    {WHITE_SPACE} {
-        return TokenType.WHITE_SPACE;
+<YYINITIAL> {
+    "@import" {
+        return WXSSTypes.IMPORT_KEYWORD;
+    }
+    ";" {
+          return WXSSTypes.SEMICOLON;
     }
 
-    "\"" {
-                yybegin(IMPORT_STRING_START_DQ);
-                return WXSSTypes.STRING_START_DQ;
-            }
-    "'" {
-                yybegin(IMPORT_STRING_START_SQ);
-                return WXSSTypes.STRING_START_SQ;
-            }
-}
-
-<IMPORT_STRING_START_SQ>{
-    [^\n"'"]+ {
-        return WXSSTypes.STRING_CONTENT;
-    }
-    "'" {
-                yybegin(IMPORT_STRING_END);
-                return WXSSTypes.STRING_END_SQ;
-    }
-}
-
-<IMPORT_STRING_START_DQ> {
-    [^\n"\""]+ {
-        return WXSSTypes.STRING_CONTENT;
-    }
-    "\"" {
-        yybegin(IMPORT_STRING_END);
-        return WXSSTypes.STRING_END_DQ;
-    }
-}
-
-<IMPORT_STRING_END> ";" {
-    yybegin(YYINITIAL);
-    return WXSSTypes.SEMICOLON;
 }
 
 // 选择器
-
 <YYINITIAL> "#"|"."|{ELEMENT_NAME} {
     yypushback(yylength());
     yybegin(SELECTOR_GROUP);
@@ -369,10 +336,16 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
     return WXSSTypes.FONT_FACE_KEYWORD;
 }
 
-{WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+<STRING_START_SQ> {
+  "'" { yybegin(this.beforeStringState);return WXSSTypes.STRING_END_SQ; }
+   ([^\n\"]|"'")+ { return WXSSTypes.STRING_CONTENT; }
+}
+<STRING_START_DQ> {
+  "\"" { yybegin(this.beforeStringState);return WXSSTypes.STRING_END_DQ; }
+  ([^\n"\""]|"\\\"")+ { return WXSSTypes.STRING_CONTENT; }
+}
 
 "}" {
-    yybegin(YYINITIAL);
   return WXSSTypes.RIGHT_BRACKET;
 }
 
@@ -380,14 +353,15 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
     return WXSSTypes.LEFT_BRACKET;
 }
 
-"(" {
-    return WXSSTypes.LEFT_PARENTHESES;
-}
-"\"" {
-    return WXSSTypes.STRING_START_DQ;
-}
-"'" {
-    return WXSSTypes.STRING_END_DQ;
-}
+"(" { return WXSSTypes.LEFT_PARENTHESES; }
+")" { return WXSSTypes.RIGHT_PARENTHESES; }
+
+"\"" { this.saveBeforeStringState();yybegin(STRING_START_DQ);return WXSSTypes.STRING_START_DQ; }
+
+"'" { this.saveBeforeStringState();yybegin(STRING_START_SQ);return WXSSTypes.STRING_START_SQ; }
+
+{WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+
+
 
 [^] { return TokenType.BAD_CHARACTER; }
