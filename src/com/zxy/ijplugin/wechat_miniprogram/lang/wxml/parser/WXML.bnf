@@ -12,7 +12,7 @@
   elementTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElementType"
   tokenTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTokenType"
 
-//  psiImplUtilClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl.WXMLPsiImplUtils"
+  psiImplUtilClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl.WXMLPsiImplUtils"
 
   tokens = [
     COMMENT = 'regexp:<!--..-->'
@@ -21,7 +21,13 @@
 
 wxmlFile ::= (element | CRLF )*
 element ::= openedElement | closedElement
-openedElement ::= START_TAG_START TAG_NAME attributes? START_TAG_END elementContent? END_TAG_START TAG_NAME END_TAG_END
+openedElement ::= startTag elementContent? endTag
+startTag ::= START_TAG_START TAG_NAME attributes? START_TAG_END {
+    methods = [getEndTag]
+}
+endTag ::= END_TAG_START TAG_NAME END_TAG_END {
+    methods = [getStartTag]
+}
 closedElement ::= START_TAG_START TAG_NAME attributes? EMPTY_ELEMENT_END
 attributes ::= attribute+
 attribute ::= ATTRIBUTE_NAME (EQ attributeValue)?

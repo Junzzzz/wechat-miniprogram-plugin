@@ -42,6 +42,7 @@
                 language="WXML"
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLColorSettingPage"/>
+        <typedHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagCloseTypedHandler"/>
 
         <fileType name="WXS file" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>

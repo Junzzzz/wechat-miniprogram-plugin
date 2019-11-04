@@ -4,7 +4,6 @@ import com.intellij.codeInsight.editorActions.TypedHandlerDelegate
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
@@ -31,8 +30,7 @@ class WXSSStringCharTypedHandler : TypedHandlerDelegate() {
     override fun charTyped(c: Char, project: Project, editor: Editor, file: PsiFile): Result {
         // 当键入一个字符串的起始符号时
         // 自动完成字符串的结束
-        PsiDocumentManager.getInstance(project).commitAllDocuments()
-        val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return Result.CONTINUE
+        val psiFile = TypeHandlerDelegateUtils.commitDocumentAndGetPsiFile(project, editor)?:return Result.CONTINUE
         if ((c == '"' || c == '\'') && psiFile.language == WXSSLanguage.INSTANCE) {
             val viewProvider = psiFile.viewProvider
             val offset = editor.caretModel.offset
