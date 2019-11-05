@@ -1,5 +1,6 @@
 package com.zxy.ijplugin.wechat_miniprogram.completion
 
+import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
@@ -19,9 +20,58 @@ class WXMLCompletionContributor : CompletionContributor() {
                 CompletionType.BASIC, PlatformPatterns.psiElement(WXMLTypes.ATTRIBUTE_NAME),
                 WXMLAttributeCompletionProvider()
         )
+        this.extend(
+                CompletionType.BASIC, PlatformPatterns.psiElement(WXMLTypes.STRING_CONTENT),
+                /**
+                 * 对WXML的属性值提供完成
+                 */
+                object : CompletionProvider<CompletionParameters>() {
+                    override fun addCompletions(
+                            completionParameters: CompletionParameters, processingContext: ProcessingContext,
+                            completionResultSet: CompletionResultSet
+                    ) {
+                        val stringContentElement = completionParameters.originalFile.findElementAt(
+                                completionParameters.offset
+                        )
+                        // 对WXML的枚举属性值提供完成
+                        val wxmlElement = PsiTreeUtil.getParentOfType(
+                                stringContentElement, WXMLElement::class.java
+                        )!!
+                        val wxmlAttribute = PsiTreeUtil.findChildOfType(wxmlElement, WXMLAttribute::class.java)!!
+                        val tagName = wxmlElement.tagName
+                        val attribute = WXMLMetadata.ELEMENT_DESCRIPTORS.stream().filter { it.name == tagName }
+                                .findFirst()
+                                .map { it.attributeDescriptors }
+                                .orElse(emptyArray())
+                                .stream()
+                                .filter { it.key == wxmlAttribute.name }
+                                .findFirst()
+                                .orElse(null) ?: return
+                        if (wxmlAttributeIsEnumerable(attribute)) {
+                            completionResultSet.addAllElements(attribute.enums.map {
+                                LookupElementBuilder.create(it)
+                                        .withInsertHandler { insertionContext, lookupElement ->
+                                            val editor = insertionContext.editor
+                                            val range = completionParameters.position.textRange
+                                            editor.document.replaceString(
+                                                    range.startOffset, range.endOffset,
+                                                    lookupElement.lookupString
+                                            )
+                                        }
+                            })
+                        }
+
+                    }
+                }
+        )
     }
 
 }
+
+private fun wxmlAttributeIsEnumerable(
+        attribute: WXMLElementAttributeDescriptor
+) =
+        attribute.enums.isNotEmpty() && attribute.types.size == 1 && attribute.types[0] == WXMLElementAttributeDescriptor.ValueType.STRING
 
 
 class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>() {
@@ -79,6 +129,10 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
                 val offset = editor.caretModel.offset
                 insertionContext.document.insertString(offset, "=\"\"")
                 editor.caretModel.moveToOffset(offset + 2)
+                if (wxmlAttributeIsEnumerable(it)) {
+                    AutoPopupController.getInstance(insertionContext.project)
+                            .autoPopupMemberLookup(insertionContext.editor, null)
+                }
             }
         }
     }
