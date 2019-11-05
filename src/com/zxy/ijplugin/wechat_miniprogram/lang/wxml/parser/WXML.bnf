@@ -23,9 +23,10 @@ wxmlFile ::= (element | CRLF )*
 element ::= openedElement | closedElement {
     methods=[getTagName]
 }
-openedElement ::= startTag elementContent? endTag
+openedElement ::= startTag elementContent? endTag {pin=startTag}
 startTag ::= START_TAG_START TAG_NAME attributes? START_TAG_END {
     methods = [getEndTag]
+    pin = 2
 }
 endTag ::= END_TAG_START TAG_NAME END_TAG_END {
     methods = [getStartTag]
