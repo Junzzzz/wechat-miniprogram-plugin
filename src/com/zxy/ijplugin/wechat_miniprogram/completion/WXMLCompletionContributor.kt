@@ -15,35 +15,42 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 class WXMLCompletionContributor : CompletionContributor() {
 
     init {
-        this.extend(CompletionType.BASIC, PlatformPatterns.psiElement(WXMLTypes.ATTRIBUTE_NAME),
-                object : CompletionProvider<CompletionParameters>() {
-                    override fun addCompletions(
-                            completionParameters: CompletionParameters, processingContext: ProcessingContext,
-                            completionResultSet: CompletionResultSet
-                    ) {
-                        // 根据组件名称进行完成
-                        val wxmlElement = PsiTreeUtil.getParentOfType(
-                                completionParameters.position, WXMLElement::class.java
-                        )
-                        val tagName = wxmlElement!!.tagName
+        this.extend(
+                CompletionType.BASIC, PlatformPatterns.psiElement(WXMLTypes.ATTRIBUTE_NAME),
+                WXMLAttributeCompletionProvider()
+        )
+    }
 
-                        val wxmlAttributeNames = PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java).map(WXMLAttribute::getName)
+}
 
-                        val attributes = WXMLMetadata.ELEMENT_DESCRIPTORS.stream().filter { it.name == tagName }
-                                .findFirst()
-                                .map { it.attributeDescriptors }
-                                .orElse(emptyArray())
-                                .toMutableList().apply {
-                                    // 全局属性
-                                    this.addAll(WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS)
-                                }
-                                // 过滤掉元素上已存在的类型
-                                .filter { !wxmlAttributeNames.contains(it.key) }
-                        completionResultSet.addAllElements(attributes.map {
-                            createLookupElement(it)
-                        })
-                    }
-                })
+
+open class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>() {
+    override fun addCompletions(
+            completionParameters: CompletionParameters, processingContext: ProcessingContext,
+            completionResultSet: CompletionResultSet
+    ) {
+        // 根据组件名称进行完成
+        val wxmlElement = PsiTreeUtil.getParentOfType(
+                completionParameters.position, WXMLElement::class.java
+        )
+        val tagName = wxmlElement!!.tagName
+
+        val wxmlAttributeNames = PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java)
+                .map(WXMLAttribute::getName)
+
+        val attributes = WXMLMetadata.ELEMENT_DESCRIPTORS.stream().filter { it.name == tagName }
+                .findFirst()
+                .map { it.attributeDescriptors }
+                .orElse(emptyArray())
+                .toMutableList().apply {
+                    // 全局属性
+                    this.addAll(WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS)
+                }
+                // 过滤掉元素上已存在的类型
+                .filter { !wxmlAttributeNames.contains(it.key) }
+        completionResultSet.addAllElements(attributes.map {
+            createLookupElement(it)
+        })
     }
 
     private fun createLookupElement(it: WXMLElementAttributeDescriptor): LookupElementBuilder {
