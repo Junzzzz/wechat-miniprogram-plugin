@@ -31,8 +31,11 @@
         <lang.commenter language="WXSS"
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>
         <lang.braceMatcher language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBraceMatcher"/>
-<!--        <typedHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSStringCharTypedHandler"/>-->
         <quoteHandler fileType="WXSS" className="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSDoubleQuoteHandler"/>
+        <lang.formatter language="WXSS"
+                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
+        <completion.contributor language="WXSS"
+                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXSSCompletionContributor"/>
 
         <fileType name="WXML" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
@@ -44,14 +47,12 @@
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLColorSettingPage"/>
         <typedHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagCloseTypedHandler"/>
+        <completion.contributor
+                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXMLCompletionContributor"
+                language="WXML"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
-
-        <lang.formatter language="WXSS"
-                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
-        <completion.contributor language="WXSS"
-                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXSSPropertyValueCompletionContributor"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
