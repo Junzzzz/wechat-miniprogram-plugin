@@ -13,7 +13,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStyleStatement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 
-class WXSSPropertyValueCompletionContributor : CompletionContributor() {
+class WXSSCompletionContributor : CompletionContributor() {
 
     companion object {
         private val WXSS_PROPERTY_NAMES by lazy {
