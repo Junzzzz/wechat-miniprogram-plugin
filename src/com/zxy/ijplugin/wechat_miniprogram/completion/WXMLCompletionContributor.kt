@@ -24,7 +24,7 @@ class WXMLCompletionContributor : CompletionContributor() {
 }
 
 
-open class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>() {
+class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
             completionParameters: CompletionParameters, processingContext: ProcessingContext,
             completionResultSet: CompletionResultSet
