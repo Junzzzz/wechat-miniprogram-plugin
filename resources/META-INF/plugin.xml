@@ -8,12 +8,6 @@
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
 
-    <application-components>
-        <component>
-            <implementation-class>com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagNameSynchronizer</implementation-class>
-        </component>
-    </application-components>
-
     <extensions defaultExtensionNs="com.intellij">
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
@@ -50,6 +44,7 @@
         <completion.contributor
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXMLCompletionContributor"
                 language="WXML"/>
+        <editorFactoryListener implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagNameSynchronizer"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>

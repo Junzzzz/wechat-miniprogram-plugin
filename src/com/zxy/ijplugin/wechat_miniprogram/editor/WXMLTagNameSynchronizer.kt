@@ -3,8 +3,10 @@ package com.zxy.ijplugin.wechat_miniprogram.editor
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandEvent
 import com.intellij.openapi.command.CommandListener
-import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.command.undo.UndoManager
+import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.EditorFactory
+import com.intellij.openapi.editor.RangeMarker
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.editor.event.EditorFactoryEvent
@@ -12,69 +14,149 @@ import com.intellij.openapi.editor.event.EditorFactoryListener
 import com.intellij.openapi.editor.impl.EditorImpl
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Couple
+import com.intellij.openapi.util.Key
+import com.intellij.openapi.util.TextRange
+import com.intellij.pom.core.impl.PomModelImpl
 import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
+import com.intellij.psi.impl.PsiDocumentManagerBase
 import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findNextSibling
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLEndTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStartTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLUtils
 
-class WXMLTagNameSynchronizer(editorFactory: EditorFactory, fileDocumentManager: FileDocumentManager) : CommandListener {
+/**
+ * 用于同步WXML标签名称
+ * @see XmlTagNameSynchronizer
+ */
+class WXMLTagNameSynchronizer : CommandListener, EditorFactoryListener {
 
     init {
-        editorFactory.addEditorFactoryListener(object : EditorFactoryListener {
-            override fun editorCreated(event: EditorFactoryEvent) {
-                val editor = event.editor
-                val project = editor.project
-                if (project != null && editor is EditorImpl) {
-                    val document = editor.document
-                    val file = fileDocumentManager.getFile(document)
-                    val psiFile = if (file != null && file.isValid) PsiManager.getInstance(project).findFile(
-                            file
-                    ) else null
-                    if (psiFile != null && psiFile.language == WXMLLanguage.INSTANCE) {
-                        WXMLTagNameSyncDocumentListener(editor,project)
-                    }
-                }
-            }
-        }, ApplicationManager.getApplication())
         ApplicationManager.getApplication().messageBus.connect().subscribe(CommandListener.TOPIC, this)
     }
 
+    override fun editorCreated(event: EditorFactoryEvent) {
+        val editor = event.editor
+        val project = editor.project
+        if (project != null && editor is EditorImpl) {
+            val document = editor.document
+            val file = FileDocumentManager.getInstance().getFile(document)
+            val psiFile = if (file != null && file.isValid) PsiManager.getInstance(project).findFile(
+                    file
+            ) else null
+            if (psiFile != null && psiFile.language == WXMLLanguage.INSTANCE) {
+                WXMLTagNameSyncDocumentListener(editor, project)
+            }
+        }
+    }
+
     override fun beforeCommandFinished(event: CommandEvent) {
-        super.beforeCommandFinished(event)
+        val document = event.document ?: return
+        val editors = EditorFactory.getInstance().getEditors(document)
+        editors.mapNotNull { it.getUserData(WXMLTagNameSyncDocumentListener.KEY) }.forEach {
+            it.beforeCommandFinished()
+        }
     }
 
 }
 
 class WXMLTagNameSyncDocumentListener(private val editor: EditorImpl, private val project: Project) : DocumentListener {
 
-    private val documentManager = PsiDocumentManager.getInstance(project)
+    companion object {
+        val KEY = Key.create<WXMLTagNameSyncDocumentListener>("wxml.key.WXMLTagNameSyncDocumentListener")
+        val MARKERS_KEY = Key.create<Couple<RangeMarker>>("wxml.key.WXMLTagNameSyncDocumentListener.markers")
+    }
+
+    private val documentManager = PsiDocumentManager.getInstance(project) as PsiDocumentManagerBase
 
     init {
         editor.document.addDocumentListener(this, editor.disposable)
+        editor.putUserData(KEY, this)
     }
 
-    override fun documentChanged(event: DocumentEvent) {
-        val psiFile = documentManager.getPsiFile(editor.document) ?: return
-        val element = psiFile.findElementAt(event.offset) ?: return
-        if (element.node.elementType === WXMLTypes.TAG_NAME) {
-            // 修改了标签名称
-            val parent = element.parent
-            if (parent is WXMLStartTag) {
-                // 修改了开始标签
-                val endTag = parent.findNextSibling { it is WXMLEndTag }?:return
-                val endTagNameNode = endTag.node.findChildByType(WXMLTypes.TAG_NAME)?:return
-                val textRange = endTagNameNode.textRange
-                ApplicationManager.getApplication().invokeLater {
-                    WriteCommandAction.runWriteCommandAction(project){
-//                        editor.document.re(textRange.startOffset,textRange.endOffset,element.text)
-                    }
-                }
-            } else if (parent is WXMLEndTag) {
+    override fun beforeDocumentChange(event: DocumentEvent) {
+        val document = event.document
+        if (!project.isDefault && !UndoManager.getInstance(
+                        project
+                ).isUndoInProgress && PomModelImpl.isAllowPsiModification() && !document.isInBulkUpdate) {
 
+            val psiFile = documentManager.getPsiFile(editor.document) ?: return
+            if (psiFile.language != WXMLLanguage.INSTANCE) {
+                return
+            }
+            val oldLength = event.oldLength
+            val newLength = event.newLength
+            // 如果是新增字符则
+            // 取前一个字符
+            val offset = if (oldLength == 0 && newLength >= 1) event.offset - 1 else event.offset
+            val fragment = event.newFragment
+            val element = psiFile.findElementAt(offset) ?: return
+            val caret = editor.caretModel.currentCaret
+            // 被修改的是TAG_NAME
+            if (element.node.elementType !== WXMLTypes.TAG_NAME) {
+                return
+            }
+            // 是正确的标签名称
+            if (!WXMLUtils.isValidTagName(fragment)) {
+                return
+            }
+            if (documentManager.isUncommited(document)) {
+                documentManager.commitDocument(document)
+            }
+            val leader = document.createRangeMarker(element.textRange)
+            leader.isGreedyToLeft = true
+            leader.isGreedyToRight = true
+            val end = createEndRangeMarker(element, document) ?: return
+            end.isGreedyToRight = true
+            end.isGreedyToLeft = true
+            val markers = Couple.of(leader, end)
+            caret.putUserData(MARKERS_KEY, markers)
+        }
+
+    }
+
+    private fun createEndRangeMarker(element: PsiElement, document: Document): RangeMarker? {
+        val endTagNameNode = when (val parent = element.parent) {
+            is WXMLStartTag -> {
+                // 修改了开始标签
+                val endTag = parent.findNextSibling { it is WXMLEndTag } ?: return null
+                endTag.node.findChildByType(WXMLTypes.TAG_NAME)
+            }
+            is WXMLEndTag -> null
+            else -> null
+        }
+
+        if (endTagNameNode == null || endTagNameNode.text !== element.text) {
+            // 找不到结束标签
+            // 或者结束标签的标签名与开始标签不一致
+            return null
+        }
+        val textRange = endTagNameNode.textRange
+        return document.createRangeMarker(textRange)
+    }
+
+    internal fun beforeCommandFinished() {
+        val caret = this.editor.caretModel.currentCaret
+        val markers = caret.getUserData(MARKERS_KEY) ?: return
+        val leader = markers.first
+        if (!leader.isValid) return
+        val end = markers.second
+        if (!end.isValid) return
+        val document = editor.document
+        if (document.textLength >= leader.endOffset) {
+            val tagName = document.getText(TextRange(leader.startOffset, leader.endOffset))
+            if (document.textLength >= end.endOffset && tagName != document.getText(
+                            TextRange(end.startOffset, end.endOffset)
+                    )) {
+                ApplicationManager.getApplication().runWriteAction {
+                    document.replaceString(end.startOffset, end.endOffset, tagName)
+                }
             }
         }
+        caret.putUserData(MARKERS_KEY, null)
     }
 }
