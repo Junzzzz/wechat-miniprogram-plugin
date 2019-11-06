@@ -65,6 +65,7 @@ class WXMLCompletionContributor : CompletionContributor() {
                 CompletionType.BASIC,
                 PlatformPatterns.psiElement().afterLeafSkipping(
                         PlatformPatterns.alwaysFalse<Any>(), PlatformPatterns.psiElement(WXMLTypes.TAG_NAME)
+                        .beforeLeaf(PlatformPatterns.psiElement(WXMLTypes.START_TAG_START))
                 ),
                 object : CompletionProvider<CompletionParameters>() {
                     override fun addCompletions(
