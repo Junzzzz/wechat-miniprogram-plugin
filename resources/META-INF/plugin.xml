@@ -8,11 +8,11 @@
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
 
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-         on how to target different products -->
-    <!-- uncomment to enable plugin in all products
-    <depends>com.intellij.modules.com.zxy.ijplugin.wechat_miniprogram.lang</depends>
-    -->
+    <application-components>
+        <component>
+            <implementation-class>com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagNameSynchronizer</implementation-class>
+        </component>
+    </application-components>
 
     <extensions defaultExtensionNs="com.intellij">
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
