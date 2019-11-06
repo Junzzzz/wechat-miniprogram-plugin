@@ -4,6 +4,7 @@ import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
+import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import com.intellij.util.containers.stream
@@ -17,7 +18,10 @@ class WXMLCompletionContributor : CompletionContributor() {
 
     init {
         this.extend(
-                CompletionType.BASIC, PlatformPatterns.psiElement(WXMLTypes.ATTRIBUTE_NAME),
+                CompletionType.BASIC,
+                PlatformPatterns.psiElement(WXMLTypes.ATTRIBUTE_NAME).afterLeafSkipping(
+                        PlatformPatterns.alwaysFalse<Any>(), PlatformPatterns.instanceOf(PsiWhiteSpace::class.java)
+                ).inside(WXMLElement::class.java),
                 WXMLAttributeCompletionProvider()
         )
         this.extend(
@@ -50,20 +54,49 @@ class WXMLCompletionContributor : CompletionContributor() {
                         if (wxmlAttributeIsEnumerable(attribute)) {
                             completionResultSet.addAllElements(attribute.enums.map {
                                 LookupElementBuilder.create(it)
-                                        .withInsertHandler { insertionContext, lookupElement ->
-                                            val editor = insertionContext.editor
-                                            val range = completionParameters.position.textRange
-                                            editor.document.replaceString(
-                                                    range.startOffset, range.endOffset,
-                                                    lookupElement.lookupString
-                                            )
-                                        }
                             })
                         }
 
                     }
                 }
         )
+
+        this.extend(
+                CompletionType.BASIC,
+                PlatformPatterns.psiElement().afterLeafSkipping(
+                        PlatformPatterns.alwaysFalse<Any>(), PlatformPatterns.psiElement(WXMLTypes.TAG_NAME)
+                ),
+                object : CompletionProvider<CompletionParameters>() {
+                    override fun addCompletions(
+                            completionParameters: CompletionParameters, processingContext: ProcessingContext,
+                            completionResultSet: CompletionResultSet
+                    ) {
+                        val prevElement = completionParameters.originalFile.findElementAt(
+                                completionParameters.offset - 1
+                        )!!
+                        completionResultSet.withPrefixMatcher(prevElement.text)
+                                .addAllElements(WXMLMetadata.ELEMENT_DESCRIPTORS.map {
+                                    LookupElementBuilder.create(it.name)
+                                })
+                    }
+                }
+        )
+
+        // 输入一个元素开始符号后
+        // 自动完成元素名称
+        this.extend(CompletionType.BASIC, PlatformPatterns.psiElement().afterLeafSkipping(
+                PlatformPatterns.alwaysFalse<Any>(),
+                PlatformPatterns.psiElement(WXMLTypes.START_TAG_START)
+        ), object : CompletionProvider<CompletionParameters>() {
+            override fun addCompletions(
+                    p0: CompletionParameters, p1: ProcessingContext, completionResultSet: CompletionResultSet
+            ) {
+                // 获取所有组件名称
+                completionResultSet.addAllElements(WXMLMetadata.ELEMENT_DESCRIPTORS.map {
+                    LookupElementBuilder.create(it.name)
+                })
+            }
+        })
     }
 
 }
@@ -71,7 +104,7 @@ class WXMLCompletionContributor : CompletionContributor() {
 private fun wxmlAttributeIsEnumerable(
         attribute: WXMLElementAttributeDescriptor
 ) =
-        attribute.enums.isNotEmpty() && attribute.types.size == 1 && attribute.types[0] == WXMLElementAttributeDescriptor.ValueType.STRING
+        attribute.enums.isNotEmpty() && attribute.types.size == 1 && attribute.types[0] == WXMLElementAttributeDescriptor.ValueType.STRING && attribute.requiredInEnums
 
 
 class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>() {

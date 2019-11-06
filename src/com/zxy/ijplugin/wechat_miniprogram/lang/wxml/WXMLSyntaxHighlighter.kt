@@ -41,7 +41,6 @@ class WXMLSyntaxHighlighter : SyntaxHighlighterBase() {
             WXMLTypes.END_TAG_START,
             WXMLTypes.EMPTY_ELEMENT_END -> WXML_TAG
             WXMLTypes.ATTRIBUTE_NAME -> WXML_ATTRIBUTE_NAME
-            WXMLTypes.ATTRIBUTE_VALUE,
             WXMLTypes.EQ,
             WXMLTypes.STRING_START,
             WXMLTypes.STRING_END,

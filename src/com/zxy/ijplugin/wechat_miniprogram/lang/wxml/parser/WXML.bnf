@@ -20,23 +20,26 @@
 }
 
 wxmlFile ::= (element | CRLF )*
-element ::= openedElement | closedElement {
+element ::= closedElement| openedElement  {
     methods=[getTagName]
 }
-openedElement ::= startTag elementContent? endTag {pin=startTag}
+closedElement ::= START_TAG_START TAG_NAME attributes? EMPTY_ELEMENT_END
+openedElement ::= startTag elementContent? endTag {
+    pin=startTag
+}
 startTag ::= START_TAG_START TAG_NAME attributes? START_TAG_END {
     methods = [getEndTag]
-    pin = 2
+    pin = 1
 }
 endTag ::= END_TAG_START TAG_NAME END_TAG_END {
     methods = [getStartTag]
+    pin = 1
 }
-closedElement ::= START_TAG_START TAG_NAME attributes? EMPTY_ELEMENT_END
-attributes ::= attribute+
+private attributes ::= attribute+
 attribute ::= ATTRIBUTE_NAME (EQ attributeValue)? {
     methods= [getName]
 }
-attributeValue ::= string
+private attributeValue ::= string
 string ::= STRING_START string_text STRING_END
 string_text ::= (exprInsert|STRING_CONTENT )*
 exprInsert ::= LEFT_DOUBLE_BRACE expr? RIGHT_DOUBLE_BRACE
