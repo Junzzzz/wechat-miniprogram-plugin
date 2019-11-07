@@ -19,7 +19,7 @@
   ]
 }
 
-wxmlFile ::= (element | CRLF )*
+wxmlFile ::= (element | CRLF | TEXT | exprInsert )*
 element ::= closedElement| openedElement  {
     methods=[getTagName]
 }
@@ -43,7 +43,7 @@ private attributeValue ::= string
 string ::= STRING_START string_text STRING_END
 string_text ::= (exprInsert|STRING_CONTENT )*
 exprInsert ::= LEFT_DOUBLE_BRACE expr? RIGHT_DOUBLE_BRACE
-elementContent ::= (element | TEXT | exprInsert)*
+private elementContent ::= (element | TEXT | exprInsert | CRLF )*
 
 // 嵌入双括号中的表达式
 

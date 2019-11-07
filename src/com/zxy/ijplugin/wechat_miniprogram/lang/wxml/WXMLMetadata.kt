@@ -247,4 +247,6 @@ object WXMLMetadata {
             "touchstart", "touchmove", "touchcancel", "touchend", "tap", "longpress", "longtap", "transitionend",
             "animationstart", "animationiteration", "animationend", "touchforcechange"
     )
+
+    val INNER_ELEMENT_NAMES = arrayOf("text")
 }
