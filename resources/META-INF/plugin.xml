@@ -45,7 +45,9 @@
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXMLCompletionContributor"
                 language="WXML"/>
         <editorFactoryListener implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagNameSynchronizer"/>
-
+        <lang.foldingBuilder language="WXML"
+                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLTagPairFoldingBuilder"/>
+        <breadcrumbsInfoProvider implementation="com.zxy.ijplugin.wechat_miniprogram.breadcrumbs.WXMLElementBreadcrumbsProvider"/>
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
     </extensions>
