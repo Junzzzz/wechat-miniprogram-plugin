@@ -346,6 +346,7 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 }
 
 "}" {
+          yybegin(YYINITIAL);
   return WXSSTypes.RIGHT_BRACKET;
 }
 
