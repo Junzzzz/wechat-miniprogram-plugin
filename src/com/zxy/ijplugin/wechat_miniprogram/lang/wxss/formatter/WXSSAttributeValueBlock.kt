@@ -19,7 +19,7 @@ class WXSSAttributeValueBlock(node: ASTNode, codeStyleSettings: CodeStyleSetting
 
     override fun getSpacing(p0: Block?, p1: Block): Spacing? {
         return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
-                .before(WXSSTypes.VALUE)
+                .before(WXSSTypes.ATTRIBUTE_VALUE)
                 .spaces(1)
                 .before(TokenSet.create(WXSSTypes.COMMA))
                 .spaces(0)
@@ -33,7 +33,7 @@ class WXSSAttributeValueBlock(node: ASTNode, codeStyleSettings: CodeStyleSetting
         var child: ASTNode? = node.firstChildNode
         while (child != null) {
             if (child.elementType !== TokenType.WHITE_SPACE) {
-                if (child.elementType === WXSSTypes.VALUE_GROUP) {
+                if (child.elementType === WXSSTypes.ATTRIBUTE_VALUE) {
                     blocks.addAll(getChildrenByASTNode(child))
                 } else {
                     val block = WXSSBlockFactory.createBlock(child, codeStyleSettings)

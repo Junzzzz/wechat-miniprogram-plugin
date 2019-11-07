@@ -24,6 +24,7 @@ object WXSSBlockFactory {
             )
             node.elementType == WXSSTypes.RIGHT_BRACKET -> WXSSRightBracketBlock(node, codeStyleSettings)
             node.elementType == WXSSTypes.ATTRIBUTE_VALUE -> WXSSAttributeValueBlock(node, codeStyleSettings)
+            node.elementType == WXSSTypes.STYLE_STATEMENT -> WXSSStyleStatementBlock(node, codeStyleSettings)
             else -> WXSSDefaultBlock(node, codeStyleSettings = codeStyleSettings)
         }
     }

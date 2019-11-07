@@ -28,33 +28,57 @@
 }
 
 wxssFile ::= (import | styleDefinition | CRLF | fontDefinition)*
-import ::= (IMPORT_KEYWORD string SEMICOLON)
-string ::= (STRING_START_DQ STRING_CONTENT? STRING_END_DQ | STRING_START_SQ STRING_CONTENT? STRING_END_SQ)
-styleDefinition ::= (selectorGroup  styleStatementSection)
-selectorGroup ::= (selectors (COMMA selectors)*)
-selectors ::= (selector)+
+import ::= (IMPORT_KEYWORD string SEMICOLON) {
+    pin = 1
+}
+string ::= ( doubleQuoteString | singleQuoteString)
+private doubleQuoteString ::= STRING_START_DQ STRING_CONTENT? STRING_END_DQ {
+    pin = 1
+}
+private singleQuoteString ::= STRING_START_SQ STRING_CONTENT? STRING_END_SQ {
+    pin = 1
+}
+styleDefinition ::= selectorGroup  styleStatementSection {
+    pin = 1
+}
+selectorGroup ::= (selectors (COMMA selectors)*) {
+    pin = selectors
+}
+private selectors ::= (selector)+
 selector ::= (idSelector | classSelector | ELEMENT_NAME)(PSEUDO_SELECTOR)?
 idSelector ::= NUMBER_SIGN ID {
     implements="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"
     methods=[getPresentation getId getNameIdentifier setName getName]
     mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
+    pin = 1
 }
 classSelector ::= DOT CLASS {
     implements="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"
     methods=[getPresentation getClassName getNameIdentifier setName getName]
     mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
+    pin = 1
 }
-styleStatementSection ::= LEFT_BRACKET styleStatementCollection RIGHT_BRACKET
-styleStatementCollection ::= (styleStatement SEMICOLON)* styleStatement?
-styleStatement ::= ATTRIBUTE_NAME COLON attributeValue
+styleStatementSection ::= LEFT_BRACKET styleStatementCollection RIGHT_BRACKET {
+    pin = 1
+}
+styleStatementCollection ::= (styleStatement SEMICOLON)* styleStatement? {
+    pin = styleStatement
+}
+styleStatement ::= ATTRIBUTE_NAME COLON attributeValue {
+    pin = 1
+}
 attributeValue ::= valueGroup (COMMA valueGroup)*
-valueGroup ::= (value)+
+private valueGroup ::= (value)+
 value ::= (HASH | function | numericalValue | string | ATTRIBUTE_VALUE_LITERAL | UNICODE_RANGE)
-function ::= FUNCTION_NAME LEFT_PARENTHESES functionArgs? RIGHT_PARENTHESES
+function ::= FUNCTION_NAME LEFT_PARENTHESES functionArgs? RIGHT_PARENTHESES {
+    pin = 2
+}
 functionArgs ::= (functionArgGroup (COMMA functionArgGroup)*)
-functionArgGroup ::= (functionArg)+
+private functionArgGroup ::= (functionArg)+
 functionArg ::= (HASH | numericalValue | string )
 numericalValue ::= NUMBER NUMBER_UNIT?
 
 
-fontDefinition ::= FONT_FACE_KEYWORD styleStatementSection
+fontDefinition ::= FONT_FACE_KEYWORD styleStatementSection {
+    pin = 1
+}
