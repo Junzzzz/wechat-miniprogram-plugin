@@ -23,6 +23,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.PsiDocumentManagerBase
 import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findNextSibling
+import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findPrevSibling
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLEndTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStartTag
@@ -110,23 +111,27 @@ class WXMLTagNameSyncDocumentListener(private val editor: EditorImpl, private va
             val leader = document.createRangeMarker(element.textRange)
             leader.isGreedyToLeft = true
             leader.isGreedyToRight = true
-            val end = createEndRangeMarker(element, document) ?: return
-            end.isGreedyToRight = true
-            end.isGreedyToLeft = true
-            val markers = Couple.of(leader, end)
+            val another = createAnotherRangeMarker(element, document) ?: return
+            another.isGreedyToRight = true
+            another.isGreedyToLeft = true
+            val markers = Couple.of(leader, another)
             caret.putUserData(MARKERS_KEY, markers)
         }
 
     }
 
-    private fun createEndRangeMarker(element: PsiElement, document: Document): RangeMarker? {
+    private fun createAnotherRangeMarker(element: PsiElement, document: Document): RangeMarker? {
         val endTagNameNode = when (val parent = element.parent) {
             is WXMLStartTag -> {
                 // 修改了开始标签
                 val endTag = parent.findNextSibling { it is WXMLEndTag } ?: return null
                 endTag.node.findChildByType(WXMLTypes.TAG_NAME)
             }
-            is WXMLEndTag -> null
+            is WXMLEndTag -> {
+                // 修改了结束标签
+                val startTag = parent.findPrevSibling { it is WXMLStartTag } ?: return null
+                startTag.node.findChildByType(WXMLTypes.TAG_NAME)
+            }
             else -> null
         }
 
@@ -144,16 +149,16 @@ class WXMLTagNameSyncDocumentListener(private val editor: EditorImpl, private va
         val markers = caret.getUserData(MARKERS_KEY) ?: return
         val leader = markers.first
         if (!leader.isValid) return
-        val end = markers.second
-        if (!end.isValid) return
+        val another = markers.second
+        if (!another.isValid) return
         val document = editor.document
         if (document.textLength >= leader.endOffset) {
             val tagName = document.getText(TextRange(leader.startOffset, leader.endOffset))
-            if (document.textLength >= end.endOffset && tagName != document.getText(
-                            TextRange(end.startOffset, end.endOffset)
+            if (document.textLength >= another.endOffset && tagName != document.getText(
+                            TextRange(another.startOffset, another.endOffset)
                     )) {
                 ApplicationManager.getApplication().runWriteAction {
-                    document.replaceString(end.startOffset, end.endOffset, tagName)
+                    document.replaceString(another.startOffset, another.endOffset, tagName)
                 }
             }
         }
