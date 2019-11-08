@@ -6,9 +6,10 @@ import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findNextSibling
+import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findPrevSibling
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 
 class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
@@ -62,19 +63,7 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
     }
 
     private fun getPrevStartTagName(psiElement: PsiElement): String? {
-        val prev1 = psiElement.findPrevSibling {
-            it.node.elementType == WXMLTypes.START_TAG_END
-        }
-        if (prev1 != null) {
-            val prev2 = psiElement.findPrevSibling { it.node.elementType == WXMLTypes.TAG_NAME && it.findNextSibling { p -> p.node.elementType == WXMLTypes.START_TAG_END } == prev1 }
-            if (prev2 != null) {
-                val prev3 = prev2.prevSibling ?: return null
-                if (prev3.node.elementType == WXMLTypes.START_TAG_START) {
-                    return prev2.text
-                }
-            }
-        }
-        return null
+        return PsiTreeUtil.getParentOfType(psiElement,WXMLElement::class.java)?.tagName
     }
 
 }
