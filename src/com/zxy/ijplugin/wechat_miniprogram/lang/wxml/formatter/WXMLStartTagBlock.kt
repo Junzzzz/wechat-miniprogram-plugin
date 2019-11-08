@@ -30,9 +30,7 @@ class WXMLStartTagBlock(startTag: WXMLStartTag, private val codeStyleSettings: C
 
     override fun getSpacing(p0: Block?, p1: Block): Spacing? {
         return SpacingBuilder(codeStyleSettings, WXMLLanguage.INSTANCE)
-                .after(WXMLTypes.ATTRIBUTE)
-                .spaces(1)
-                .between(WXMLTypes.ATTRIBUTE, WXMLTypes.ATTRIBUTE)
+                .before(WXMLTypes.ATTRIBUTE)
                 .spaces(1)
                 .before(WXMLTypes.START_TAG_END)
                 .spaces(0)
