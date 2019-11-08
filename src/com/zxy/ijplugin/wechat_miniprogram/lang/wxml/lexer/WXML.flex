@@ -12,6 +12,8 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes;
     private void saveBeforeCommentState(){
         this.beforeCommentState = yystate();
     }
+
+    private boolean badCharsetBacked = false;
 %}
 
 %unicode
@@ -250,4 +252,14 @@ NUMBER = {DIGIT}*\.{DIGIT}+ | {DIGIT}+ (\.{DIGIT}+)?
 
 {WHITE_SPACE_AND_CRLF}                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
-[^] { return TokenType.BAD_CHARACTER ; }
+[^] {
+          yybegin(YYINITIAL);
+          if (this.badCharsetBacked){
+            this.badCharsetBacked = false;
+            return TokenType.BAD_CHARACTER ;
+          }else {
+            this.yypushback(yylength());
+            this.badCharsetBacked = true;
+          }
+
+}
