@@ -17,9 +17,7 @@ class WXMLClosedElementBlock(element: WXMLClosedElement, private val codeStyleSe
 
     override fun getSpacing(p0: Block?, p1: Block): Spacing? {
         return SpacingBuilder(codeStyleSettings, WXMLLanguage.INSTANCE)
-                .after(WXMLTypes.ATTRIBUTE)
-                .spaces(1)
-                .between(WXMLTypes.ATTRIBUTE, WXMLTypes.ATTRIBUTE)
+                .before(WXMLTypes.ATTRIBUTE)
                 .spaces(1)
                 .before(WXMLTypes.EMPTY_ELEMENT_END)
                 .spaces(0)
