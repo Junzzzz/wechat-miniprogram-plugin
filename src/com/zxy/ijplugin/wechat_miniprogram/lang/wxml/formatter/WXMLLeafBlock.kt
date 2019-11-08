@@ -2,18 +2,22 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.formatter
 
 import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiComment
 import com.intellij.psi.TokenType
 import com.intellij.psi.formatter.common.AbstractBlock
 
-open class WXMLLeafBlock(node: ASTNode) :
-        AbstractBlock(node, Wrap.createWrap(WrapType.NONE, false), Alignment.createAlignment()) {
+open class WXMLLeafBlock(
+        node: ASTNode, wrap: Wrap = Wrap.createWrap(WrapType.NONE, false),
+        alignment: Alignment? = Alignment.createAlignment()
+) :
+        AbstractBlock(node, wrap, alignment) {
 
-    companion object{
+    companion object {
         fun createLeafBlockForIgnoredNode(node: ASTNode): WXMLLeafBlock? {
-            return if (node.elementType===TokenType.WHITE_SPACE){
-                null
-            }else{
-                WXMLLeafBlock(node)
+            return when {
+                node.elementType === TokenType.WHITE_SPACE -> null
+                node.psi is PsiComment -> WXMLCommentStartBlock(node)
+                else -> WXMLLeafBlock(node)
             }
         }
     }
@@ -28,5 +32,9 @@ open class WXMLLeafBlock(node: ASTNode) :
 
     override fun isLeaf(): Boolean {
         return true
+    }
+
+    override fun getIndent(): Indent? {
+        return Indent.getNoneIndent()
     }
 }

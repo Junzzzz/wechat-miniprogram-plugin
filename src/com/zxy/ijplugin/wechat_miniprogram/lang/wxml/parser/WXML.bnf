@@ -15,11 +15,13 @@
   psiImplUtilClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl.WXMLPsiImplUtils"
 
   tokens = [
-    COMMENT = 'regexp:<!--..-->'
+    COMMENT_START = '<!--'
+    COMMENT_CONTENT = 'regexp:<!--..-->'
+    COMMONT_END = '-->'
   ]
 }
 
-wxmlFile ::= (element | CRLF | TEXT | exprInsert )*
+wxmlFile ::= (element | CRLF | TEXT | exprInsert | comment)*
 element ::= closedElement| openedElement  {
     methods=[getTagName]
 }
@@ -66,3 +68,6 @@ objectItems ::= (objectItem COMMA)* objectItem?
 objectItem ::= IDENTIFIER COLON value | IDENTIFIER | EXPAND_KEYWORD value
 object ::= LEFT_BRACE objectItems RIGHT_BRACE
 exprString ::= STRING_START STRING_CONTENT? STRING_END
+comment::= COMMENT_START COMMENT_CONTENT? COMMONT_END {
+    pin = 1
+}

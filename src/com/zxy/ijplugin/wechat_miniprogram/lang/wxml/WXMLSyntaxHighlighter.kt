@@ -31,7 +31,7 @@ class WXMLSyntaxHighlighter : SyntaxHighlighterBase() {
         val WXML_NUMBER = createTextAttributesKey("WXML_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
         val WXML_NATIVE_VALUE = createTextAttributesKey("WXML_NATIVE_VALUE", JSHighlighter.JS_KEYWORD)
         val WXML_OPERATOR = createTextAttributesKey("WXML_OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN)
-        val WXML_COLON = createTextAttributesKey("WXML_COLON",CssHighlighter.CSS_COLON)
+        val WXML_COLON = createTextAttributesKey("WXML_COLON", CssHighlighter.CSS_COLON)
     }
 
     override fun getTokenHighlights(iElementType: IElementType): Array<TextAttributesKey> {
@@ -46,7 +46,9 @@ class WXMLSyntaxHighlighter : SyntaxHighlighterBase() {
             WXMLTypes.STRING_END,
             WXMLTypes.STRING_CONTENT -> WXML_ATTRIBUTE_VALUE
             WXMLTypes.TAG_NAME -> WXML_TAG_NAME
-            WXMLTypes.COMMENT -> WXML_COMMENT
+            WXMLTypes.COMMENT_START,
+            WXMLTypes.COMMENT_CONTENT,
+            WXMLTypes.COMMONT_END -> WXML_COMMENT
             // expr
             WXMLTypes.IDENTIFIER -> WXML_IDENTIFIER
             WXMLTypes.LEFT_BRACKET,

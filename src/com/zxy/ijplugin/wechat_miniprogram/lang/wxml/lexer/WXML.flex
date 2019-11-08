@@ -121,19 +121,16 @@ NUMBER = {DIGIT}*\.{DIGIT}+ | {DIGIT}+ (\.{DIGIT}+)?
 "<!--" {
     this.saveBeforeCommentState();
     yybegin(COMMENT);
-    return WXMLTypes.COMMENT;
+    return WXMLTypes.COMMENT_START;
 }
 
 <COMMENT> {
     "-->" {
         yybegin(this.beforeCommentState);
-        return WXMLTypes.COMMENT;
+        return WXMLTypes.COMMONT_END;
     }
-    {WHITE_SPACE_AND_CRLF} {
-          return TokenType.WHITE_SPACE;
-    }
-    [^] {
-        return WXMLTypes.COMMENT;
+    [^"-->"]+ {
+        return WXMLTypes.COMMENT_CONTENT;
     }
 }
 
