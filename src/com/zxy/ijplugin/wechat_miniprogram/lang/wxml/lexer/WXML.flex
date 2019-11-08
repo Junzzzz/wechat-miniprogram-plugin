@@ -60,10 +60,9 @@ IDENTIFIER = {IDENTIFIER_START} ({IDENTIFIER_START}|{DIGIT})*
 NUMBER = {DIGIT}*\.{DIGIT}+ | {DIGIT}+ (\.{DIGIT}+)?
 
 %%
-
+"</" {yybegin(END_TAG_START);return WXMLTypes.END_TAG_START;}
+"<"  {yybegin(START_TAG_START);return WXMLTypes.START_TAG_START;}
 <YYINITIAL> {
-    "</" {yybegin(END_TAG_START);return WXMLTypes.END_TAG_START;}
-    "<"  {yybegin(START_TAG_START);return WXMLTypes.START_TAG_START;}
     "{{" {yybegin(EXPR_START);return WXMLTypes.LEFT_DOUBLE_BRACE;}
     [^\ \n\t\f\R<"{{"][^<"{{"]* {return WXMLTypes.TEXT;}
 }
