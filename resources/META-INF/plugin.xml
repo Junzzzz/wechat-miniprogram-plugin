@@ -9,6 +9,10 @@
     <depends>com.intellij.css</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!--项目相关-->
+        <moduleBuilder builderClass="com.zxy.ijplugin.wechat_miniprogram.module.WechatMiniProgramModuleBuilder"/>
+        <moduleType id="WECHAT_MINI_PROGRAM_MODULE_TYPE" implementationClass="com.zxy.ijplugin.wechat_miniprogram.module.WechatMiniProgramModuleType"/>
+
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
         <lang.parserDefinition language="WXSS"
@@ -59,7 +63,7 @@
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
-
+        <predefinedLibraryProvider implementation="com.zxy.ijplugin.wechat_miniprogram.module.MyJSPredefinedLibraryProvider"/>
     </extensions>
 
     <actions>
