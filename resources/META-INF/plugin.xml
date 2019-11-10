@@ -8,10 +8,18 @@
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
 
+    <actions>
+        <action class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramPageAction"
+                id="CreateWechatMiniProgramPageAction"
+                text="Create Wechat Mini Program Page"
+                description="Create wechat mini program page (wxml js css json)">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
+        </action>
+    </actions>
+
     <extensions defaultExtensionNs="com.intellij">
-        <!--项目相关-->
-        <moduleBuilder builderClass="com.zxy.ijplugin.wechat_miniprogram.module.WechatMiniProgramModuleBuilder"/>
-        <moduleType id="WECHAT_MINI_PROGRAM_MODULE_TYPE" implementationClass="com.zxy.ijplugin.wechat_miniprogram.module.WechatMiniProgramModuleType"/>
+        <internalFileTemplate name="Wechat mini program page js file"/>
+        <internalFileTemplate name="Wechat mini program page json file"/>
 
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
@@ -28,7 +36,8 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSClassChooseByNameContributor"/>
         <lang.commenter language="WXSS"
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>
-        <lang.braceMatcher language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBraceMatcher"/>
+        <lang.braceMatcher language="WXSS"
+                           implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBraceMatcher"/>
         <quoteHandler fileType="WXSS" className="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSDoubleQuoteHandler"/>
         <lang.formatter language="WXSS"
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
@@ -51,19 +60,25 @@
         <editorFactoryListener implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagNameSynchronizer"/>
         <lang.foldingBuilder language="WXML"
                              implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLTagPairFoldingBuilder"/>
-        <breadcrumbsInfoProvider implementation="com.zxy.ijplugin.wechat_miniprogram.breadcrumbs.WXMLElementBreadcrumbsProvider"/>
-        <lang.formatter language="WXML" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.formatter.WXMLFormattingModelBuilder"/>
-        <extendWordSelectionHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLStartTagSelectioner"/>
+        <breadcrumbsInfoProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.breadcrumbs.WXMLElementBreadcrumbsProvider"/>
+        <lang.formatter language="WXML"
+                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.formatter.WXMLFormattingModelBuilder"/>
+        <extendWordSelectionHandler
+                implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLStartTagSelectioner"/>
         <extendWordSelectionHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLEndTagSelectioner"/>
-        <highlightingPassFactory implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagTreeHighlightingPassFactory"/>
-        <braceMatcher filetype="WXML" implementationClass="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLBraceMatcher"/>
+        <highlightingPassFactory
+                implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagTreeHighlightingPassFactory"/>
+        <braceMatcher filetype="WXML"
+                      implementationClass="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLBraceMatcher"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
-        <predefinedLibraryProvider implementation="com.zxy.ijplugin.wechat_miniprogram.module.MyJSPredefinedLibraryProvider"/>
+        <predefinedLibraryProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.context.MyJSPredefinedLibraryProvider"/>
     </extensions>
 
     <actions>
