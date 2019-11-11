@@ -6,10 +6,12 @@ import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findPrevSibling
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLOpenedElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 
 class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
@@ -19,9 +21,23 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
         // 根据上下文，完成未闭合的标签
         if (c == '/' && file.language === WXMLLanguage.INSTANCE) {
             val offset = editor.caretModel.offset
-            val prevNode = file.viewProvider.findElementAt(offset - 1)?.node ?: return Result.CONTINUE
-            if (prevNode.elementType === WXMLTypes.TAG_NAME && prevNode.treePrev.elementType === WXMLTypes.START_TAG_START && prevNode.treeNext?.elementType !== WXMLTypes.START_TAG_END) {
+            val prevElement = file.viewProvider.findElementAt(offset - 1)
+            val wxmlOpenedElement = if (prevElement is PsiWhiteSpace) {
+                // 处于空格处
+                // 看前一个元素是不是开标签
+                PsiTreeUtil.findChildOfType(
+                        prevElement.findPrevSibling { it is WXMLElement }, WXMLOpenedElement::class.java
+                )
+            } else {
+                // 处于开元素的最后位置
+                PsiTreeUtil.getParentOfType(
+                        prevElement, WXMLOpenedElement::class.java
+                )
+            } ?: return Result.CONTINUE
+
+            if (wxmlOpenedElement.textRange.endOffset <= offset) {
                 // 单标签
+                // 完成闭合标签
                 editor.document.insertString(offset, "/>")
                 editor.caretModel.moveToOffset(offset + 2)
                 return Result.STOP
@@ -52,9 +68,9 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
             } else if (c == '>') {
                 // 当键入一个标签结束符号
                 // 如果此时正好构成一个标签开始
-                if (inputCharElement.node.elementType===WXMLTypes.START_TAG_END){
-                    inputCharElement.findPrevSibling { it.node.elementType==WXMLTypes.TAG_NAME }?.let {
-                        editor.document.insertString(offset,"</${it.text}>")
+                if (inputCharElement.node.elementType === WXMLTypes.START_TAG_END) {
+                    inputCharElement.findPrevSibling { it.node.elementType == WXMLTypes.TAG_NAME }?.let {
+                        editor.document.insertString(offset, "</${it.text}>")
                     }
                 }
             }
@@ -63,7 +79,7 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
     }
 
     private fun getPrevStartTagName(psiElement: PsiElement): String? {
-        return PsiTreeUtil.getParentOfType(psiElement,WXMLElement::class.java)?.tagName
+        return PsiTreeUtil.getParentOfType(psiElement, WXMLElement::class.java)?.tagName
     }
 
 }
