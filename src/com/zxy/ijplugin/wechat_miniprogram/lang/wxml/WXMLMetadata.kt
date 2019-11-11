@@ -312,6 +312,63 @@ object WXMLMetadata {
                             A("show-message-card", arrayOf(T.BOOLEAN), false)
                     ),
                     arrayOf("getuserinfo", "contact", "getphonenumber", "error", "opensetting", "launchapp")
+            ),
+            E(
+                    "checkbox",
+                    arrayOf(
+                            A("value", arrayOf(T.STRING)),
+                            A("disabled", arrayOf(T.BOOLEAN), false),
+                            A("checked", arrayOf(T.BOOLEAN), false),
+                            A("color", arrayOf(T.COLOR), "#09BB07")
+                    )
+            ),
+            E("checkbox-group", emptyArray(), arrayOf("change")),
+            E(
+                    "editor",
+                    arrayOf(
+                            A("read-only", arrayOf(T.BOOLEAN), false),
+                            A("placeholder", arrayOf(T.STRING)),
+                            A("show-img-size", arrayOf(T.BOOLEAN), false),
+                            A("show-img-toolbar", arrayOf(T.BOOLEAN), false),
+                            A("show-img-resize", arrayOf(T.BOOLEAN), false)
+                    ),
+                    arrayOf("ready", "focus", "blur", "input", "statuschange")
+            ),
+            E(
+                    "form",
+                    arrayOf(
+                            A("report-submit", arrayOf(T.BOOLEAN), false),
+                            A("report-submit-timeout", arrayOf(T.NUMBER))
+                    ),
+                    arrayOf("submit", "reset")
+            ),
+            E(
+                    "input",
+                    arrayOf(
+                            A("value", arrayOf(T.STRING), null, true),
+                            A("type", arrayOf(T.STRING), "text", false, arrayOf("text", "number", "idcard", "digit")),
+                            A("password", arrayOf(T.BOOLEAN), false),
+                            // 文档上是必填
+                            A("placeholder", arrayOf(T.STRING), null, false),
+                            // 文档上是必填
+                            A("placeholder-style", arrayOf(T.STRING), null, false),
+                            A("placeholder-class", arrayOf(T.STRING), "input-placeholder"),
+                            A("disabled", arrayOf(T.BOOLEAN), false),
+                            A("maxlength", arrayOf(T.NUMBER), 140),
+                            A("cursor-spacing", arrayOf(T.NUMBER), 0),
+                            A("focus", arrayOf(T.BOOLEAN), false),
+                            A(
+                                    "confirm-type", arrayOf(T.STRING), "done", false,
+                                    arrayOf("send", "search", "next", "go", "done")
+                            ),
+                            A("confirm-hold", arrayOf(T.BOOLEAN), false),
+                            // 文档上是必填
+                            A("cursor", arrayOf(T.NUMBER), null, false),
+                            A("selection-end", arrayOf(T.NUMBER), -1),
+                            A("adjust-position", arrayOf(T.BOOLEAN), true),
+                            A("hold-keyboard", arrayOf(T.BOOLEAN), false)
+                    ),
+                    arrayOf("input", "focus", "blur", "confirm", "keyboardheightchange")
             )
     )
 
