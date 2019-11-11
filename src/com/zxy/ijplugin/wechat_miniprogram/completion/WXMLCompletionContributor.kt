@@ -2,6 +2,7 @@ package com.zxy.ijplugin.wechat_miniprogram.completion
 
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.*
+import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiWhiteSpace
@@ -104,8 +105,7 @@ class WXMLCompletionContributor : CompletionContributor() {
 
 private fun wxmlAttributeIsEnumerable(
         attribute: WXMLElementAttributeDescriptor
-) =
-        attribute.enums.isNotEmpty() && attribute.types.size == 1 && attribute.types[0] == WXMLElementAttributeDescriptor.ValueType.STRING && attribute.requiredInEnums
+) = attribute.enums.isNotEmpty() && attribute.types.size == 1 && attribute.types[0] == WXMLElementAttributeDescriptor.ValueType.STRING && attribute.requiredInEnums
 
 
 /**
@@ -116,12 +116,51 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elseif", "wx:else", "wx:key", "wx:if")
     }
 
+    /**
+     * 在插入属性名称时
+     * 额外插入双括号
+     */
+    class DoubleBraceInsertHandler : InsertHandler<LookupElement> {
+        override fun handleInsert(insertionContext: InsertionContext, p1: LookupElement) {
+            // 额外插入 [=""]
+            // 额外插入 [="{{}}"]
+            val editor = insertionContext.editor
+            val offset = editor.caretModel.offset
+            insertionContext.document.insertString(offset, "=\"{{}}\"")
+            editor.caretModel.moveToOffset(offset + 4)
+        }
+
+    }
+
+    /**
+     * 在插入属性名称之前
+     * 额外插入双引号
+     * @param autoPopup 完成之后是否立即唤醒自动完成控制器
+     */
+    class DoubleQuotaInsertHandler(private val autoPopup: Boolean = false) : InsertHandler<LookupElement> {
+        override fun handleInsert(insertionContext: InsertionContext, p1: LookupElement) {
+            // 额外插入 [=""]
+            val editor = insertionContext.editor
+            val offset = editor.caretModel.offset
+            insertionContext.document.insertString(offset, "=\"\"")
+            editor.caretModel.moveToOffset(offset + 2)
+            if (autoPopup) {
+                AutoPopupController.getInstance(insertionContext.project)
+                        .autoPopupMemberLookup(insertionContext.editor, null)
+            }
+        }
+
+    }
+
     override fun addCompletions(
             completionParameters: CompletionParameters, processingContext: ProcessingContext,
             completionResultSet: CompletionResultSet
     ) {
         // 提供固定的wx前缀完成
-        completionResultSet.addAllElements(WX_ATTRIBUTES.map { LookupElementBuilder.create(it) })
+        completionResultSet.addAllElements(
+                WX_ATTRIBUTES.map {
+                    LookupElementBuilder.create(it).withInsertHandler(DoubleBraceInsertHandler())
+                })
 
         // 根据组件名称进行完成
         val wxmlElement = PsiTreeUtil.getParentOfType(
@@ -132,52 +171,59 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         val wxmlAttributeNames = PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java)
                 .map(WXMLAttribute::getName)
 
-        val attributes = WXMLMetadata.ELEMENT_DESCRIPTORS.stream().filter { it.name == tagName }
-                .findFirst()
-                .map { it.attributeDescriptors }
-                .orElse(emptyArray())
-                .toMutableList().apply {
-                    // 全局属性
-                    this.addAll(WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS)
-                }
-                // 过滤掉元素上已存在的类型
-                .filter { !wxmlAttributeNames.contains(it.key) }
-        completionResultSet.addAllElements(attributes.map {
-            createLookupElement(it)
+        val elementDescriptor = WXMLMetadata.ELEMENT_DESCRIPTORS.stream().filter { it.name == tagName }
+                .findFirst().orElse(null)
+        if (elementDescriptor != null) {
+            val attributes = elementDescriptor.attributeDescriptors
+                    // 过滤掉元素上已存在的类型
+                    .filter { !wxmlAttributeNames.contains(it.key) }
+            // 添加组件对应的属性
+            completionResultSet.addAllElements(attributes.map {
+                createLookupElementFromAttribute(it)
+            })
+
+            //添加组件对应的事件
+            completionResultSet.addAllElements(createLookupElementsFromEvents(elementDescriptor.events))
+        }
+
+        // 公共属性
+        completionResultSet.addAllElements(WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.map {
+            createLookupElementFromAttribute(it)
         })
+
+        // 公共事件
+        completionResultSet.addAllElements(createLookupElementsFromEvents(WXMLMetadata.COMMON_ELEMENT_EVENTS))
     }
 
-    private fun createLookupElement(it: WXMLElementAttributeDescriptor): LookupElementBuilder {
+    private fun createLookupElementsFromEvents(events: Array<String>): List<LookupElementBuilder> {
+        return events.asSequence().flatMap {
+            arrayOf("catch$it", "bind$it", "catch:$it", "bind:$it").asSequence()
+        }.map {
+            LookupElementBuilder.create(it).withInsertHandler(DoubleQuotaInsertHandler(false))
+        }.toList()
+    }
+
+    private fun createLookupElementFromAttribute(
+            wxmlElementAttributeDescriptor: WXMLElementAttributeDescriptor
+    ): LookupElementBuilder {
         return when {
-            it.types.contains(
+            wxmlElementAttributeDescriptor.types.contains(
                     WXMLElementAttributeDescriptor.ValueType.BOOLEAN
-            ) && it.default == false -> {
+            ) && wxmlElementAttributeDescriptor.default == false -> {
                 // 属性的默认值为false
                 // 只插入属性名称
-                return LookupElementBuilder.create(it.key)
+                return LookupElementBuilder.create(wxmlElementAttributeDescriptor.key)
             }
-            it.types.contains(
+            wxmlElementAttributeDescriptor.types.contains(
                     WXMLElementAttributeDescriptor.ValueType.NUMBER
-            ) && !it.types.contains(
+            ) && !wxmlElementAttributeDescriptor.types.contains(
                     WXMLElementAttributeDescriptor.ValueType.STRING
-            ) -> LookupElementBuilder.create(it.key).withInsertHandler { insertionContext, _ ->
-                // 额外插入 [="{{}}"]
-                val editor = insertionContext.editor
-                val offset = editor.caretModel.offset
-                insertionContext.document.insertString(offset, "=\"{{}}\"")
-                editor.caretModel.moveToOffset(offset + 4)
-            }
-            else -> LookupElementBuilder.create(it.key).withInsertHandler { insertionContext, _ ->
-                // 额外插入 [=""]
-                val editor = insertionContext.editor
-                val offset = editor.caretModel.offset
-                insertionContext.document.insertString(offset, "=\"\"")
-                editor.caretModel.moveToOffset(offset + 2)
-                if (wxmlAttributeIsEnumerable(it)) {
-                    AutoPopupController.getInstance(insertionContext.project)
-                            .autoPopupMemberLookup(insertionContext.editor, null)
-                }
-            }
+            ) -> LookupElementBuilder.create(
+                    wxmlElementAttributeDescriptor.key
+            ).withInsertHandler(DoubleBraceInsertHandler())
+            else -> LookupElementBuilder.create(
+                    wxmlElementAttributeDescriptor.key
+            ).withInsertHandler(DoubleQuotaInsertHandler(wxmlAttributeIsEnumerable(wxmlElementAttributeDescriptor)))
         }
     }
 }
