@@ -13,12 +13,18 @@
                 id="CreateWechatMiniProgramPageAction"
                 text="Create Wechat Mini Program Page"
                 description="Create wechat mini program page (wxml js css json)">
-            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
+            <add-to-group group-id="NewGroup" anchor="first"/>
+        </action>
+        <action id="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction"
+                class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction"
+                text="Create Wechat Mini Program Component"
+                description="Create wechat mini program component (wxml,js,json,wxss)">
+            <add-to-group group-id="NewGroup" anchor="first"/>
         </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <internalFileTemplate name="Wechat mini program page js file"/>
+        <internalFileTemplate name="Wechat mini program page js file(Component API)"/>
         <internalFileTemplate name="Wechat mini program page json file"/>
 
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
