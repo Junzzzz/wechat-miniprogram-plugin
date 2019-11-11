@@ -25,7 +25,11 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <internalFileTemplate name="Wechat mini program page js file(Component API)"/>
-        <internalFileTemplate name="Wechat mini program page json file"/>
+        <internalFileTemplate name="Wechat mini program page json file(Component API)"/>
+        <internalFileTemplate name="Wechat mini program page js file(Page API)"/>
+        <internalFileTemplate name="Wechat mini program page json file(Page API)"/>
+        <internalFileTemplate name="Wechat mini program component js file"/>
+        <internalFileTemplate name="Wechat mini program component json file"/>
 
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
@@ -85,6 +89,7 @@
     <extensions defaultExtensionNs="JavaScript">
         <predefinedLibraryProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.context.MyJSPredefinedLibraryProvider"/>
+        <JsonSchema.ProviderFactory implementation="com.zxy.ijplugin.wechat_miniprogram.completion.WechatMiniProgramJsonSchemaProviderFactory"/>
     </extensions>
 
     <actions>
