@@ -108,11 +108,21 @@ private fun wxmlAttributeIsEnumerable(
         attribute.enums.isNotEmpty() && attribute.types.size == 1 && attribute.types[0] == WXMLElementAttributeDescriptor.ValueType.STRING && attribute.requiredInEnums
 
 
+/**
+ * 对WXML属性名称提供完成
+ */
 class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>() {
+    companion object {
+        val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elseif", "wx:else", "wx:key", "wx:if")
+    }
+
     override fun addCompletions(
             completionParameters: CompletionParameters, processingContext: ProcessingContext,
             completionResultSet: CompletionResultSet
     ) {
+        // 提供固定的wx前缀完成
+        completionResultSet.addAllElements(WX_ATTRIBUTES.map { LookupElementBuilder.create(it) })
+
         // 根据组件名称进行完成
         val wxmlElement = PsiTreeUtil.getParentOfType(
                 completionParameters.position, WXMLElement::class.java
