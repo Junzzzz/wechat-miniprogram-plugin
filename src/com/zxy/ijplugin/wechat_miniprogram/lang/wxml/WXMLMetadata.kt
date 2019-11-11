@@ -34,7 +34,7 @@ data class WXMLElementAttributeDescriptor(
 
     enum class ValueType {
         STRING, NUMBER, BOOLEAN,
-        COLOR
+        COLOR, ARRAY
     }
 
     override fun equals(other: Any?): Boolean {
@@ -233,7 +233,56 @@ object WXMLMetadata {
                     ),
                     arrayOf("change", "transition", "animationfinish")
             ),
-            E("swiper-item", arrayOf(A("item-id", arrayOf(T.STRING))))
+            E("swiper-item", arrayOf(A("item-id", arrayOf(T.STRING)))),
+            E(
+                    "icon",
+                    arrayOf(
+                            A(
+                                    "type", arrayOf(T.STRING), null, true,
+                                    arrayOf(
+                                            "success", "success_no_circle", "info", "warn", "waiting", "cancel",
+                                            "download",
+                                            "search",
+                                            "clear"
+                                    )
+                            ),
+                            A("size", arrayOf(T.STRING, T.NUMBER), 23),
+                            A("color", arrayOf(T.STRING))
+                    )
+            ),
+            E(
+                    "progress",
+                    arrayOf(
+                            A("percent", arrayOf(T.NUMBER)),
+                            A("show-info", arrayOf(T.BOOLEAN), false),
+                            A("border-radius", arrayOf(T.NUMBER, T.STRING), 0),
+                            A("font-size", arrayOf(T.NUMBER, T.STRING), 16),
+                            A("stroke-width", arrayOf(T.NUMBER, T.STRING), 6),
+                            A("color", arrayOf(T.STRING), "#09BB07"),
+                            A("activeColor", arrayOf(T.STRING), "#09BB07"),
+                            A("backgroundColor", arrayOf(T.STRING), "#EBEBEB"),
+                            A("active", arrayOf(T.BOOLEAN), false),
+                            A("active-mode", arrayOf(T.STRING), "backwards", false, arrayOf("forwards", "backwards")),
+                            A("duration", arrayOf(T.NUMBER, T.STRING), 30)
+                    ),
+                    arrayOf("activeend")
+            ),
+            E(
+                    "rich-text",
+                    arrayOf(
+                            A("nodes", arrayOf(T.ARRAY, T.STRING), emptyArray<Any>()),
+                            A("space", arrayOf(T.STRING), null, false, arrayOf("ensp", "emsp", "nbsp"))
+                    )
+            ),
+            E(
+                    "text",
+                    arrayOf(
+                            A("selectable", arrayOf(T.BOOLEAN), false),
+                            A("space", arrayOf(T.STRING), null, false, arrayOf("ensp", "emsp", "nbsp")),
+                            A("decode", arrayOf(T.BOOLEAN), false)
+                    )
+            )
+
     )
 
     val COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS = arrayOf(
