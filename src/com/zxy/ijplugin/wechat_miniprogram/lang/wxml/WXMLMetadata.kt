@@ -281,8 +281,38 @@ object WXMLMetadata {
                             A("space", arrayOf(T.STRING), null, false, arrayOf("ensp", "emsp", "nbsp")),
                             A("decode", arrayOf(T.BOOLEAN), false)
                     )
+            ),
+            E(
+                    "button",
+                    arrayOf(
+                            A("size", arrayOf(T.STRING), "default", false, arrayOf("default", "mini")),
+                            A("type", arrayOf(T.STRING), "default", false, arrayOf("primary", "default", "warn")),
+                            A("plain", arrayOf(T.BOOLEAN), false),
+                            A("disabled", arrayOf(T.BOOLEAN), false),
+                            A("loading", arrayOf(T.BOOLEAN), false),
+                            A("from-type", arrayOf(T.STRING), null, false, arrayOf("submit", "reset")),
+                            A(
+                                    "open-type", arrayOf(T.STRING), null, false,
+                                    arrayOf(
+                                            "contact", "share", "getPhoneNumber", "getUserInfo", "launchApp",
+                                            "openSetting",
+                                            "feedback"
+                                    )
+                            ),
+                            A("hover-class", arrayOf(T.STRING), "button-hover"),
+                            A("hover-stop-propagation", arrayOf(T.BOOLEAN), false),
+                            A("hover-start-time", arrayOf(T.NUMBER), 20),
+                            A("hover-stay-time", arrayOf(T.NUMBER), 70),
+                            A("lang", arrayOf(T.STRING), "en", false, arrayOf("en", "zh_CN", "zh_TW")),
+                            A("session-from", arrayOf(T.STRING)),
+                            A("send-message-title", arrayOf(T.STRING)),
+                            A("send-message-img", arrayOf(T.STRING)),
+                            A("send-message-path", arrayOf(T.STRING)),
+                            A("app-parameter", arrayOf(T.STRING)),
+                            A("show-message-card", arrayOf(T.BOOLEAN), false)
+                    ),
+                    arrayOf("getuserinfo", "contact", "getphonenumber", "error", "opensetting", "launchapp")
             )
-
     )
 
     val COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS = arrayOf(
