@@ -8,11 +8,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.elementType
 import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findPrevSibling
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLOpenedElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
 
 class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
 
@@ -33,14 +32,26 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
                 PsiTreeUtil.getParentOfType(
                         prevElement, WXMLOpenedElement::class.java
                 )
-            } ?: return Result.CONTINUE
+            }
 
-            if (wxmlOpenedElement.textRange.endOffset <= offset) {
+            if (wxmlOpenedElement!=null && wxmlOpenedElement.textRange.endOffset <= offset) {
                 // 单标签
                 // 完成闭合标签
                 editor.document.insertString(offset, "/>")
                 editor.caretModel.moveToOffset(offset + 2)
                 return Result.STOP
+            }
+            val element = file.viewProvider.findElementAt(offset)
+            if (element!=null && element.elementType==WXMLTypes.START_TAG_END){
+                val wxmlStartTag = PsiTreeUtil.getParentOfType(element,WXMLStartTag::class.java)
+                val nextSibling = wxmlStartTag?.nextSibling
+                if (nextSibling is WXMLEndTag){
+                    val range = nextSibling.textRange
+                    // 删除结束标签
+                    // 让这个标签变成闭合标签
+                    editor.document.deleteString(range.startOffset,range.endOffset)
+                    return Result.CONTINUE
+                }
             }
         }
         return Result.CONTINUE
