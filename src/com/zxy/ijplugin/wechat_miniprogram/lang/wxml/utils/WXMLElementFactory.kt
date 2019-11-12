@@ -15,7 +15,7 @@ object WXMLElementFactory {
             <a a="$text"/>
         """.trimIndent()
         )
-        return PsiTreeUtil.getChildOfType(psiFile, WXMLStringText::class.java)!!
+        return PsiTreeUtil.findChildOfType(psiFile, WXMLStringText::class.java)!!
     }
 
     private fun createDummyFile(project: Project, fileContent: String): PsiFile {
