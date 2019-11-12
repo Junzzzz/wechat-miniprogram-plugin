@@ -91,7 +91,8 @@
     <extensions defaultExtensionNs="JavaScript">
         <predefinedLibraryProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.context.MyJSPredefinedLibraryProvider"/>
-        <JsonSchema.ProviderFactory implementation="com.zxy.ijplugin.wechat_miniprogram.completion.WechatMiniProgramJsonSchemaProviderFactory"/>
+        <JsonSchema.ProviderFactory
+                implementation="com.zxy.ijplugin.wechat_miniprogram.completion.WechatMiniProgramJsonSchemaProviderFactory"/>
     </extensions>
 
     <actions>
