@@ -369,6 +369,15 @@ object WXMLMetadata {
                             A("hold-keyboard", arrayOf(T.BOOLEAN), false)
                     ),
                     arrayOf("input", "focus", "blur", "confirm", "keyboardheightchange")
+            ),
+            E("label", arrayOf(A("for", arrayOf(T.STRING)))),
+            E(
+                    "picker",
+                    arrayOf(
+                            A("mode", arrayOf(T.STRING), "selector",false, arrayOf("selector","multiSelector","time","date","region")),
+                            A("disabled", arrayOf(T.BOOLEAN), false)
+                    ),
+                    arrayOf("cancel")
             )
     )
 
