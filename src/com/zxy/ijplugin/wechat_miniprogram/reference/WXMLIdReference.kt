@@ -1,12 +1,13 @@
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
 
-class WXMLIdReference(wxmlStringText: WXMLStringText) : PsiReferenceBase<PsiElement>(wxmlStringText),
+class WXMLIdReference(wxmlStringText: WXMLStringText) : PsiReferenceBase<WXMLStringText>(wxmlStringText),
         PsiPolyVariantReference {
 
     override fun multiResolve(p0: Boolean): Array<ResolveResult> {
@@ -38,5 +39,9 @@ class WXMLIdReference(wxmlStringText: WXMLStringText) : PsiReferenceBase<PsiElem
             }
         }
 
+    }
+
+    override fun getRangeInElement(): TextRange {
+        return TextRange(0, this.element.textLength + 1)
     }
 }

@@ -1,5 +1,7 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl
 
+import com.intellij.psi.PsiReference
+import com.intellij.psi.PsiReferenceService
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
 
@@ -26,14 +28,20 @@ object WXMLPsiImplUtils {
     }
 
     @JvmStatic
-    fun getTagName(element:WXMLElement): String {
-        val wrapPsiElement = PsiTreeUtil.findChildOfType(element,WXMLStartTag::class.java)?:PsiTreeUtil.findChildOfType(element,WXMLClosedElement::class.java)!!
+    fun getTagName(element: WXMLElement): String {
+        val wrapPsiElement = PsiTreeUtil.findChildOfType(element, WXMLStartTag::class.java)
+                ?: PsiTreeUtil.findChildOfType(element, WXMLClosedElement::class.java)!!
         return wrapPsiElement.node.findChildByType(WXMLTypes.TAG_NAME)!!.text
     }
 
     @JvmStatic
-    fun getName(element:WXMLAttribute):String{
+    fun getName(element: WXMLAttribute): String {
         return element.node.firstChildNode.text
+    }
+
+    @JvmStatic
+    fun getReferences(element: WXMLStringText): Array<PsiReference> {
+        return PsiReferenceService.getService().getContributedReferences(element)
     }
 
 }

@@ -12,7 +12,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 class WXMLReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(psiReferenceRegistrar: PsiReferenceRegistrar) {
         psiReferenceRegistrar.registerReferenceProvider(
-                PlatformPatterns.psiElement(),
+                PlatformPatterns.psiElement(WXMLStringText::class.java),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext
@@ -24,7 +24,7 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                                     && psiElement.prevSibling.elementType == WXMLTypes.STRING_START) {
                                 // 这个字符串内容必须在 id中
                                 // 并且没有整个字符串没有表达式
-                                return arrayOf(WXMLIdReference(psiElement as WXMLStringText))
+                                return arrayOf(WXMLIdReference(psiElement))
                             }
                         }
 
