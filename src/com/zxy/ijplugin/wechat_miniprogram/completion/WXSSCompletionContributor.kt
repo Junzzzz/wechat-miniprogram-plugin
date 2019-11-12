@@ -2,12 +2,14 @@ package com.zxy.ijplugin.wechat_miniprogram.completion
 
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.*
+import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.css.impl.util.table.CssDescriptorsUtil
 import com.intellij.psi.css.impl.util.table.CssElementDescriptorFactory
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
+import com.intellij.xml.util.ColorSampleLookupValue
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStyleStatement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
@@ -73,11 +75,19 @@ class WXSSCompletionContributor : CompletionContributor() {
                                         variant !is String || !variant.startsWith("-")
                                     }
                                     .forEach { variant ->
-                                        resultSet.addElement(
-                                                LookupElementBuilder.create(
-                                                        variant
-                                                )
-                                        )
+                                        if (variant is LookupElement) {
+                                            resultSet.addElement(variant)
+                                        } else if (variant is ColorSampleLookupValue) {
+                                            if (variant.value.startsWith("#")) {
+                                                resultSet.addElement(LookupElementBuilder.create(variant.name))
+                                            }
+                                        } else {
+                                            resultSet.addElement(
+                                                    LookupElementBuilder.create(
+                                                            variant
+                                                    )
+                                            )
+                                        }
                                     }
                         }
                     }
