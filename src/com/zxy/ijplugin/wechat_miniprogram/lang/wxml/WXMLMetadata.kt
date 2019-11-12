@@ -437,7 +437,7 @@ object WXMLMetadata {
                     arrayOf(
                             A("checked", arrayOf(T.BOOLEAN), false),
                             A("disabled", arrayOf(T.BOOLEAN), false),
-                            A("type", arrayOf(T.STRING), "switch",false, arrayOf("switch","checkbox")),
+                            A("type", arrayOf(T.STRING), "switch", false, arrayOf("switch", "checkbox")),
                             A("color", arrayOf(T.COLOR), "#04BE02")
                     ),
                     arrayOf("change")
@@ -445,10 +445,10 @@ object WXMLMetadata {
             E(
                     "value",
                     arrayOf(
-                            A("value",arrayOf(T.STRING)),
-                            A("placeholder",arrayOf(T.STRING)),
-                            A("placeholder-style",arrayOf(T.STRING)),
-                            A("placeholder-class",arrayOf(T.STRING)),
+                            A("value", arrayOf(T.STRING)),
+                            A("placeholder", arrayOf(T.STRING)),
+                            A("placeholder-style", arrayOf(T.STRING)),
+                            A("placeholder-class", arrayOf(T.STRING)),
                             A("checked", arrayOf(T.BOOLEAN), false),
                             A("maxlength", arrayOf(T.NUMBER), 140),
                             A("focus", arrayOf(T.BOOLEAN), false),
@@ -462,7 +462,7 @@ object WXMLMetadata {
                             A("adjust-position", arrayOf(T.BOOLEAN), true),
                             A("hold-keyboard", arrayOf(T.BOOLEAN), false)
                     ),
-                    arrayOf("focus","blur","linechange","input","confirm","keyboardheightchange")
+                    arrayOf("focus", "blur", "linechange", "input", "confirm", "keyboardheightchange")
             )
     )
 
