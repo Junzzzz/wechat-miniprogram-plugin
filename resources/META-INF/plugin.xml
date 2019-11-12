@@ -21,6 +21,7 @@
                 description="Create wechat mini program component (wxml,js,json,wxss)">
             <add-to-group group-id="NewGroup" anchor="first"/>
         </action>
+
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -53,6 +54,8 @@
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
         <completion.contributor language="WXSS"
                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXSSCompletionContributor"/>
+        <lang.refactoringSupport language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXSSIdSelectorRefactoring"/>
+        <lang.namesValidator language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.validator.WXSSNamesValidator"/>
 
         <fileType name="WXML" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
@@ -85,6 +88,8 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.line_mark.WXMLElementColorProvider"/>
         <psi.referenceContributor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLReferenceContributor"/>
+        <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLStringTextManipulator"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>

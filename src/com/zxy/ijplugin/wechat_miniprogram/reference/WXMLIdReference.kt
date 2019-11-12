@@ -42,6 +42,7 @@ class WXMLIdReference(wxmlStringText: WXMLStringText) : PsiReferenceBase<WXMLStr
     }
 
     override fun getRangeInElement(): TextRange {
-        return TextRange(0, this.element.textLength + 1)
+        return TextRange(0, this.element.textLength)
     }
+
 }

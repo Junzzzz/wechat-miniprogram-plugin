@@ -29,8 +29,22 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                         }
 
                         return PsiReference.EMPTY_ARRAY
-//                        Regex("[_\\-a-zA-Z][_\\-a-zA-Z0-9]+").findAll(psiElement.text)
                     }
+                }
+        )
+
+        psiReferenceRegistrar.registerReferenceProvider(PlatformPatterns.psiElement(WXMLTypes.STRING_CONTENT),
+                object : PsiReferenceProvider() {
+                    override fun getReferencesByElement(psiElement: PsiElement, p1: ProcessingContext): Array<PsiReference> {
+                        val attribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
+                        if (attribute!=null){
+                            val findResults = Regex("[_\\-a-zA-Z][_\\-a-zA-Z0-9]+").findAll(psiElement.text)
+
+                        }
+
+                        return PsiReference.EMPTY_ARRAY
+                    }
+
                 }
         )
     }
