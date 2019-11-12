@@ -34,7 +34,7 @@ data class WXMLElementAttributeDescriptor(
 
     enum class ValueType {
         STRING, NUMBER, BOOLEAN,
-        COLOR, ARRAY
+        COLOR, ARRAY, OBJECT
     }
 
     override fun equals(other: Any?): Boolean {
@@ -374,10 +374,95 @@ object WXMLMetadata {
             E(
                     "picker",
                     arrayOf(
-                            A("mode", arrayOf(T.STRING), "selector",false, arrayOf("selector","multiSelector","time","date","region")),
-                            A("disabled", arrayOf(T.BOOLEAN), false)
+                            A(
+                                    "mode", arrayOf(T.STRING), "selector", false,
+                                    arrayOf("selector", "multiSelector", "time", "date", "region")
+                            ),
+                            A("disabled", arrayOf(T.BOOLEAN), false),
+                            // mode = selector
+                            A("range", arrayOf(T.ARRAY, T.OBJECT), emptyArray<Any>()),
+                            A("range-key", arrayOf(T.STRING)),
+                            A("value", arrayOf(T.NUMBER, T.ARRAY)),
+                            A("start", arrayOf(T.STRING)),
+                            A("fields", arrayOf(T.STRING), "day", false, arrayOf("year", "month", "day")),
+                            A("start", arrayOf(T.STRING)),
+                            A("custom-item", arrayOf(T.STRING))
                     ),
-                    arrayOf("cancel")
+                    arrayOf("cancel", "change", "columnchange")
+            ),
+            E(
+                    "picker-view",
+                    arrayOf(
+                            A(
+                                    "value", arrayOf(T.ARRAY)
+                            ),
+                            A("indicator-style", arrayOf(T.STRING)),
+                            A("indicator-class", arrayOf(T.STRING)),
+                            A("mask-style", arrayOf(T.STRING)),
+                            A("mask-class", arrayOf(T.STRING))
+                    ),
+                    arrayOf("change", "pickstart", "pickend")
+            ),
+            E("picker-view-column"),
+            E(
+                    "radio",
+                    arrayOf(
+                            A("value", arrayOf(T.STRING)),
+                            A("checked", arrayOf(T.BOOLEAN), false),
+                            A("disabled", arrayOf(T.BOOLEAN), false),
+                            A("color", arrayOf(T.COLOR), "#09BB07")
+                    )
+            ),
+            E("radio-group", emptyArray(), arrayOf("change")),
+            E(
+                    "slider",
+                    arrayOf(
+                            A("min", arrayOf(T.NUMBER), 0),
+                            A("max", arrayOf(T.NUMBER), 100),
+                            A("step", arrayOf(T.NUMBER), 1),
+                            A("disabled", arrayOf(T.BOOLEAN), false),
+                            A("value", arrayOf(T.NUMBER), 1),
+                            A("color", arrayOf(T.COLOR), "#e9e9e9"),
+                            A("selected-color", arrayOf(T.COLOR), "#1aad19"),
+                            A("activeColor", arrayOf(T.COLOR), "#1aad19"),
+                            A("backgroundColor", arrayOf(T.COLOR), "#e9e9e9"),
+                            A("block-size", arrayOf(T.NUMBER), 1),
+                            A("block-color", arrayOf(T.COLOR), "#FFFFFF"),
+                            A("show-value", arrayOf(T.BOOLEAN), false)
+                    ),
+                    arrayOf("change", "changing")
+            ),
+            E(
+                    "switch",
+                    arrayOf(
+                            A("checked", arrayOf(T.BOOLEAN), false),
+                            A("disabled", arrayOf(T.BOOLEAN), false),
+                            A("type", arrayOf(T.STRING), "switch",false, arrayOf("switch","checkbox")),
+                            A("color", arrayOf(T.COLOR), "#04BE02")
+                    ),
+                    arrayOf("change")
+            ),
+            E(
+                    "value",
+                    arrayOf(
+                            A("value",arrayOf(T.STRING)),
+                            A("placeholder",arrayOf(T.STRING)),
+                            A("placeholder-style",arrayOf(T.STRING)),
+                            A("placeholder-class",arrayOf(T.STRING)),
+                            A("checked", arrayOf(T.BOOLEAN), false),
+                            A("maxlength", arrayOf(T.NUMBER), 140),
+                            A("focus", arrayOf(T.BOOLEAN), false),
+                            A("auto-height", arrayOf(T.BOOLEAN), false),
+                            A("fixed", arrayOf(T.BOOLEAN), false),
+                            A("cursor-spacing", arrayOf(T.NUMBER), 140),
+                            A("cursor", arrayOf(T.NUMBER), -140),
+                            A("show-confirm-bar", arrayOf(T.BOOLEAN), true),
+                            A("selection-start", arrayOf(T.NUMBER), -1),
+                            A("selection-end", arrayOf(T.NUMBER), -1),
+                            A("adjust-position", arrayOf(T.BOOLEAN), true),
+                            A("hold-keyboard", arrayOf(T.BOOLEAN), false)
+                    ),
+                    arrayOf("focus","blur","linechange","input","confirm","keyboardheightchange")
             )
     )
 
