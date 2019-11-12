@@ -17,7 +17,7 @@ object WXSSPsiImplUtils {
 
     private fun getIdNodeByWXSSIdSelector(
             element: WXSSIdSelector
-    ) = element.node.findChildByType(WXSSTypes.ID)!!
+    ) = element.node.findChildByType(WXSSTypes.ID)
 
     @JvmStatic
     fun getPresentation(element: WXSSIdSelector): ItemPresentation {
@@ -37,25 +37,27 @@ object WXSSPsiImplUtils {
     }
 
     @JvmStatic
-    fun getName(element: WXSSIdSelector): String {
+    fun getName(element: WXSSIdSelector): String? {
         return getId(element)
     }
 
     @JvmStatic
     fun setName(element: WXSSIdSelector, newName: String): PsiElement {
         val idNode = getIdNodeByWXSSIdSelector(element)
-        element.node.replaceChild(idNode,WXSSElementFactory.createId(element.project,newName))
+        idNode?.let {
+            element.node.replaceChild(idNode, WXSSElementFactory.createId(element.project, newName))
+        }
         return element
     }
 
     @JvmStatic
     fun getNameIdentifier(element: WXSSIdSelector): PsiElement? {
-        return getIdNodeByWXSSIdSelector(element).psi
+        return getIdNodeByWXSSIdSelector(element)?.psi
     }
 
     @JvmStatic
-    fun getId(wxssIdSelector: WXSSIdSelector): String {
-        return getIdNodeByWXSSIdSelector(wxssIdSelector).text
+    fun getId(wxssIdSelector: WXSSIdSelector): String? {
+        return getIdNodeByWXSSIdSelector(wxssIdSelector)?.text
     }
 
     /*WXSSClassSelector*/

@@ -13,6 +13,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 /**
  * 可折叠wxml的成对标签
  * 只要开始标签和结束标签不在同一行上
+ * TODO BUG
  */
 class WXMLTagPairFoldingBuilder : FoldingBuilderEx() {
     override fun getPlaceholderText(p0: ASTNode): String? {

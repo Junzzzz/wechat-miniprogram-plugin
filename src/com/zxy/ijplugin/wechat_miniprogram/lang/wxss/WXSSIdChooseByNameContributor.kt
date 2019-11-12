@@ -20,12 +20,10 @@ class WXSSIdChooseByNameContributor : ChooseByNameContributor {
     }
 
     override fun getNames(project: Project, includeNonProjectItems: Boolean): Array<String> {
-        return getIdSelectorsByProject(project).map { wxssIdSelector ->
+        return getIdSelectorsByProject(project).mapNotNull { wxssIdSelector ->
             wxssIdSelector.id
         }.toTypedArray()
     }
-
-
 
     private fun getIdSelectorsByProject(project: Project): List<WXSSIdSelectorImpl> {
         val virtualFiles = FileTypeIndex.getFiles(WXSSFileType.INSTANCE, GlobalSearchScope.allScope(project))
@@ -36,4 +34,5 @@ class WXSSIdChooseByNameContributor : ChooseByNameContributor {
             } ?: emptyList()
         }
     }
+
 }
