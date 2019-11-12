@@ -81,6 +81,8 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagTreeHighlightingPassFactory"/>
         <braceMatcher filetype="WXML"
                       implementationClass="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLBraceMatcher"/>
+        <colorProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.line_mark.WXMLElementColorProvider"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
