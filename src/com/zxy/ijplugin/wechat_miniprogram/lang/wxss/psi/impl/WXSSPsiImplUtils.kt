@@ -60,6 +60,11 @@ object WXSSPsiImplUtils {
         return getIdNodeByWXSSIdSelector(wxssIdSelector)?.text
     }
 
+    @JvmStatic
+    fun getIcon(wxssIdSelector: WXSSIdSelector): Icon {
+        return AllIcons.Xml.Html_id
+    }
+
     /*WXSSClassSelector*/
 
     private fun getClassNodeByWXSSClassSelector(
@@ -89,13 +94,18 @@ object WXSSPsiImplUtils {
     @JvmStatic
     fun setName(element: WXSSClassSelector, newName: String): PsiElement {
         val node = getClassNodeByWXSSClassSelector(element)
-        element.node.replaceChild(node,WXSSElementFactory.createClass(element.project,newName))
+        element.node.replaceChild(node, WXSSElementFactory.createClass(element.project, newName))
         return element
     }
 
     @JvmStatic
     fun getNameIdentifier(element: WXSSClassSelector): PsiElement? {
         return getClassNodeByWXSSClassSelector(element).psi
+    }
+
+    @JvmStatic
+    fun getIcon(wxssClassSelector: WXSSClassSelector): Icon {
+        return AllIcons.Xml.Css_class
     }
 
 }
