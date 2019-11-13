@@ -19,3 +19,14 @@ fun isWechatMiniProgramContext(project: Project): Boolean {
     }
     return false
 }
+
+enum class RelateFileType{
+    WXML,
+    JSON,
+    JS,
+    WXSS
+}
+
+fun findRelateFile(relateFileType: RelateFileType){
+
+}

@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiPolyVariantReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.ResolveResult
+import com.zxy.ijplugin.wechat_miniprogram.utils.substring
 
 /**
  * WXML class 属性值的引用
@@ -12,15 +13,15 @@ import com.intellij.psi.ResolveResult
  */
 class WXMLClassReference(psiElement:PsiElement,textRange:TextRange): PsiReferenceBase<PsiElement>(psiElement,textRange),
         PsiPolyVariantReference {
-    override fun resolve(): PsiElement? {
-//        val cssClass = this.element.text.substring(textRange)
-//        val project = this.element.project
-//        val wxmlFile = this.element.containingFile.virtualFile
-        return null
+    override fun multiResolve(p0: Boolean): Array<ResolveResult> {
+        val cssClass = this.element.text.substring(this.rangeInElement)
+        val project = this.element.project
+        val wxmlFile = this.element.containingFile.virtualFile
     }
 
-    override fun multiResolve(p0: Boolean): Array<ResolveResult> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun resolve(): PsiElement? {
+
+        return null
     }
 
 }
