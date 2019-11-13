@@ -3,11 +3,14 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl
 import com.intellij.icons.AllIcons
 import com.intellij.navigation.ItemPresentation
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiReference
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSItemPresentation
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSElementFactory
+import com.zxy.ijplugin.wechat_miniprogram.reference.WXSSClassSelectorSelfReference
+import com.zxy.ijplugin.wechat_miniprogram.reference.WXSSIdSelectorSelfReference
 import javax.swing.Icon
 
 
@@ -65,15 +68,26 @@ object WXSSPsiImplUtils {
         return AllIcons.Xml.Html_id
     }
 
+    @JvmStatic
+    fun getReference(wxssIdSelector: WXSSIdSelector): WXSSIdSelectorSelfReference? {
+        val textRange = wxssIdSelector.nameIdentifier?.textRangeInParent ?: return null
+        return WXSSIdSelectorSelfReference(wxssIdSelector, textRange)
+    }
+
+    @JvmStatic
+    fun getTextOffset(wxssIdSelector: WXSSIdSelector): Int {
+        return wxssIdSelector.textRange.startOffset + 1
+    }
+
     /*WXSSClassSelector*/
 
     private fun getClassNodeByWXSSClassSelector(
             wxssClassSelector: WXSSClassSelector
-    ) = wxssClassSelector.node.findChildByType(WXSSTypes.CLASS)!!
+    ) = wxssClassSelector.node.findChildByType(WXSSTypes.CLASS)
 
     @JvmStatic
-    fun getClassName(wxssClassSelector: WXSSClassSelector): String {
-        return getClassNodeByWXSSClassSelector(wxssClassSelector).text
+    fun getClassName(wxssClassSelector: WXSSClassSelector): String? {
+        return getClassNodeByWXSSClassSelector(wxssClassSelector)?.text
     }
 
     @JvmStatic
@@ -87,25 +101,37 @@ object WXSSPsiImplUtils {
     }
 
     @JvmStatic
-    fun getName(element: WXSSClassSelector): String {
+    fun getName(element: WXSSClassSelector): String? {
         return getClassName(element)
     }
 
     @JvmStatic
     fun setName(element: WXSSClassSelector, newName: String): PsiElement {
-        val node = getClassNodeByWXSSClassSelector(element)
-        element.node.replaceChild(node, WXSSElementFactory.createClass(element.project, newName))
+        getClassNodeByWXSSClassSelector(element)?.let {
+            element.node.replaceChild(it, WXSSElementFactory.createClass(element.project, newName))
+        }
         return element
     }
 
     @JvmStatic
     fun getNameIdentifier(element: WXSSClassSelector): PsiElement? {
-        return getClassNodeByWXSSClassSelector(element).psi
+        return getClassNodeByWXSSClassSelector(element)?.psi
     }
 
     @JvmStatic
     fun getIcon(wxssClassSelector: WXSSClassSelector): Icon {
         return AllIcons.Xml.Css_class
+    }
+
+    @JvmStatic
+    fun getReferences(wxssClassSelector: WXSSClassSelector): PsiReference? {
+        val textRange = wxssClassSelector.nameIdentifier?.textRangeInParent ?: return null
+        return WXSSClassSelectorSelfReference(wxssClassSelector, textRange)
+    }
+
+    @JvmStatic
+    fun getTextOffset(wxssClassSelector: WXSSClassSelector): Int {
+        return wxssClassSelector.textRange.startOffset + 1
     }
 
 }

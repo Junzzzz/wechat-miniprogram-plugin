@@ -48,13 +48,13 @@ private selectors ::= (selector)+
 selector ::= (idSelector | classSelector | ELEMENT_NAME)(PSEUDO_SELECTOR)?
 idSelector ::= NUMBER_SIGN ID {
     implements="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"
-    methods=[getPresentation getId getNameIdentifier setName getName getIcon]
+    methods=[getPresentation getId getNameIdentifier setName getName getIcon getReference getTextOffset]
     mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
     pin = 1
 }
 classSelector ::= DOT CLASS {
     implements="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"
-    methods=[getPresentation getClassName getNameIdentifier setName getName getIcon]
+    methods=[getPresentation getClassName getNameIdentifier setName getName getIcon getReference getTextOffset]
     mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
     pin = 1
 }
