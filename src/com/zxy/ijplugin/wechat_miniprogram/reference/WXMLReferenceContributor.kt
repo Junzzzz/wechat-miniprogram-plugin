@@ -2,12 +2,14 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
+import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
+import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
 class WXMLReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(psiReferenceRegistrar: PsiReferenceRegistrar) {
@@ -33,13 +35,25 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                 }
         )
 
-        psiReferenceRegistrar.registerReferenceProvider(PlatformPatterns.psiElement(WXMLTypes.STRING_CONTENT),
+        psiReferenceRegistrar.registerReferenceProvider(
+                PlatformPatterns.psiElement(WXMLStringText::class.java),
                 object : PsiReferenceProvider() {
-                    override fun getReferencesByElement(psiElement: PsiElement, p1: ProcessingContext): Array<PsiReference> {
+                    override fun getReferencesByElement(
+                            psiElement: PsiElement, p1: ProcessingContext
+                    ): Array<PsiReference> {
                         val attribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
-                        if (attribute!=null){
-                            val findResults = Regex("[_\\-a-zA-Z][_\\-a-zA-Z0-9]+").findAll(psiElement.text)
-
+                        if (attribute != null && attribute.name == "class") {
+                            val stringContentNodes = psiElement.node.getChildren(
+                                    TokenSet.create(WXMLTypes.STRING_CONTENT)
+                            )
+                            return stringContentNodes.flatMap {
+                                val findResults = Regex("[_\\-a-zA-Z][_\\-a-zA-Z0-9]+").findAll(it.text)
+                                findResults.map { matchResult ->
+                                    WXMLClassReference(
+                                            psiElement, matchResult.range.toTextRange()
+                                    )
+                                }.toList()
+                            }.toTypedArray()
                         }
 
                         return PsiReference.EMPTY_ARRAY
