@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class WXMLLanguage extends HTMLLanguage {
 
+    public static String[] EVENT_ATTRIBUTE_PREFIX_ARRAY = new String[]{"bind", "catch", "bind:", "catch:"};
+
     public static WXMLLanguage INSTANCE = new WXMLLanguage();
 
     private WXMLLanguage() {

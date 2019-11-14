@@ -94,7 +94,7 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLReferenceContributor"/>
         <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLStringTextManipulator"/>
-        <multiHostInjector implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlWxsScriptInjector"/>
+        <multiHostInjector implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
@@ -105,6 +105,10 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.context.MyJSPredefinedLibraryProvider"/>
         <JsonSchema.ProviderFactory
                 implementation="com.zxy.ijplugin.wechat_miniprogram.completion.WechatMiniProgramJsonSchemaProviderFactory"/>
+        <dialectSpecificHandlersFactory language="WXML"
+                                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSSpecificHandlersFactory"/>
+        <intentionAndInspectionFilter language="WXML"
+                                      implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WxmlJsInspectionFilter"/>
     </extensions>
 
     <actions>

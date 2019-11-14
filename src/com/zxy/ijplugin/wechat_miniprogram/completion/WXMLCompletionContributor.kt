@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import com.intellij.util.containers.stream
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
@@ -197,7 +198,9 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
 
     private fun createLookupElementsFromEvents(events: Array<String>): List<LookupElementBuilder> {
         return events.asSequence().flatMap {
-            arrayOf("catch$it", "bind$it", "catch:$it", "bind:$it").asSequence()
+            WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.map { prefix ->
+                prefix + it
+            }.asSequence()
         }.map {
             LookupElementBuilder.create(it).withInsertHandler(DoubleQuotaInsertHandler(false))
         }.toList()

@@ -13,7 +13,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLText
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
-class WxmlWxsScriptInjector : MultiHostInjector {
+class WxmlJSInjector : MultiHostInjector {
     override fun elementsToInjectIn(): MutableList<out Class<out PsiElement>> {
         return mutableListOf(WXMLText::class.java, WXMLStringText::class.java)
     }
@@ -37,17 +37,16 @@ class WxmlWxsScriptInjector : MultiHostInjector {
             searchDoubleBraceAndInject(psiElement, multiHostRegistrar)
         }
     }
+}
 
-    private fun searchDoubleBraceAndInject(
-            psiElement: PsiLanguageInjectionHost,
-            multiHostRegistrar: MultiHostRegistrar
-    ) {
-        val inserts = Regex("\\{\\{.+?}}").findAll(psiElement.text)
-        inserts.forEach {
-            multiHostRegistrar.startInjecting(JavascriptLanguage.INSTANCE)
-                    .addPlace(null, null, psiElement, it.range.toTextRange())
-                    .doneInjecting()
-        }
+private fun searchDoubleBraceAndInject(
+        psiElement: PsiLanguageInjectionHost,
+        multiHostRegistrar: MultiHostRegistrar
+) {
+    val inserts = Regex("\\{\\{.+?}}").findAll(psiElement.text)
+    inserts.forEach {
+        multiHostRegistrar.startInjecting(JavascriptLanguage.INSTANCE)
+                .addPlace(null, null, psiElement, it.range.toTextRange())
+                .doneInjecting()
     }
-
 }
