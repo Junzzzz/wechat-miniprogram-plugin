@@ -1,6 +1,5 @@
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
-import com.intellij.model.SymbolResolveResult
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
@@ -32,14 +31,6 @@ class WXMLIdReference(wxmlStringText: WXMLStringText) : PsiPolyVariantReferenceB
     override fun resolve(): PsiElement? {
         val results = this.multiResolve(false)
         return results.getOrNull(0)?.element
-    }
-
-    override fun resolveReference(): MutableCollection<out SymbolResolveResult> {
-        return super<PsiPolyVariantReferenceBase>.resolveReference()
-    }
-
-    override fun isReferenceTo(element: PsiElement): Boolean {
-        return super.isReferenceTo(element)
     }
 
 }
