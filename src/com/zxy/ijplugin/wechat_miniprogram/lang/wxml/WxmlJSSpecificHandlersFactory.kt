@@ -7,6 +7,7 @@ import com.intellij.lang.javascript.psi.resolve.JSTypeEvaluator
 import com.intellij.lang.javascript.psi.resolve.JSTypeProcessor
 import com.intellij.psi.impl.source.resolve.ResolveCache
 
+// TODO  参考Vue插件
 class WxmlJSSpecificHandlersFactory : JavaScriptSpecificHandlersFactory() {
 
     override fun createReferenceExpressionResolver(
