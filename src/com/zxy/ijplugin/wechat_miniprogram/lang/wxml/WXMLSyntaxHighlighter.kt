@@ -50,27 +50,28 @@ class WXMLSyntaxHighlighter : SyntaxHighlighterBase() {
             WXMLTypes.COMMENT_CONTENT,
             WXMLTypes.COMMONT_END -> WXML_COMMENT
             // expr
-            WXMLTypes.IDENTIFIER -> WXML_IDENTIFIER
-            WXMLTypes.LEFT_BRACKET,
-            WXMLTypes.RIGHT_BRACKET -> WXML_BRACKET
-            WXMLTypes.COMMA -> WXML_COMMA
-            WXMLTypes.NUMBER -> WXML_NUMBER
-            WXMLTypes.FALSE,
-            WXMLTypes.TRUE,
-            WXMLTypes.NULL -> WXML_NATIVE_VALUE
-            WXMLTypes.PLUS,
-            WXMLTypes.MINUS,
-            WXMLTypes.MULTIPLY,
-            WXMLTypes.DIVIDE,
-            WXMLTypes.RESIDUAL,
-            WXMLTypes.NOT_EQ,
-            WXMLTypes.EQ,
-            WXMLTypes.NOT_STRICT_EQ,
-            WXMLTypes.QUESTION_MARK,
-            WXMLTypes.EXPAND_KEYWORD,
-            WXMLTypes.EXCLAMATION_MARK,
-            WXMLTypes.STRICT_EQ -> WXML_OPERATOR
-            WXMLTypes.COLON -> WXML_COLON
+//            WXMLTypes.IDENTIFIER -> WXML_IDENTIFIER
+//            WXMLTypes.LEFT_BRACKET,
+//            WXMLTypes.RIGHT_BRACKET -> WXML_BRACKET
+//            WXMLTypes.COMMA -> WXML_COMMA
+//            WXMLTypes.NUMBER -> WXML_NUMBER
+//            WXMLTypes.FALSE,
+//            WXMLTypes.TRUE,
+//            WXMLTypes.NULL -> WXML_NATIVE_VALUE
+//            WXMLTypes.PLUS,
+//            WXMLTypes.MINUS,
+//            WXMLTypes.MULTIPLY,
+//            WXMLTypes.DIVIDE,
+//            WXMLTypes.RESIDUAL,
+//            WXMLTypes.NOT_EQ,
+            WXMLTypes.EQ
+//            WXMLTypes.NOT_STRICT_EQ,
+//            WXMLTypes.QUESTION_MARK,
+//            WXMLTypes.EXPAND_KEYWORD,
+//            WXMLTypes.EXCLAMATION_MARK,
+//            WXMLTypes.STRICT_EQ
+            -> WXML_OPERATOR
+//            WXMLTypes.COLON -> WXML_COLON
             else -> null
         }
         return textAttributesKey?.let { arrayOf(it) } ?: emptyArray()

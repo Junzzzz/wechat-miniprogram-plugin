@@ -1,9 +1,12 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl
 
+import com.intellij.psi.LiteralTextEscaper
+import com.intellij.psi.PsiLanguageInjectionHost
 import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceService
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
 
 object WXMLPsiImplUtils {
 
@@ -39,9 +42,45 @@ object WXMLPsiImplUtils {
         return element.node.firstChildNode.text
     }
 
+    /*text*/
+    @JvmStatic
+    fun isValidHost(element: WXMLText): Boolean {
+        return true
+    }
+
+    @JvmStatic
+    fun updateText(element: WXMLText, newText: String): PsiLanguageInjectionHost {
+        element.replace(WXMLElementFactory.createText(element.project, newText))
+        return element
+    }
+
+    @JvmStatic
+    fun createLiteralTextEscaper(element: WXMLText): LiteralTextEscaper<WXMLText> {
+        return LiteralTextEscaper.createSimple(element)
+    }
+
+    /*string text*/
     @JvmStatic
     fun getReferences(element: WXMLStringText): Array<PsiReference> {
         return PsiReferenceService.getService().getContributedReferences(element)
     }
+
+    @JvmStatic
+    fun isValidHost(element: WXMLStringText): Boolean {
+        return true
+    }
+
+    @JvmStatic
+    fun updateText(element: WXMLStringText, newText: String): PsiLanguageInjectionHost {
+        element.replace(WXMLElementFactory.createStringText(element.project, newText))
+        return element
+    }
+
+    @JvmStatic
+    fun createLiteralTextEscaper(element: WXMLStringText): LiteralTextEscaper<WXMLStringText> {
+        return LiteralTextEscaper.createSimple(element)
+    }
+
+
 
 }

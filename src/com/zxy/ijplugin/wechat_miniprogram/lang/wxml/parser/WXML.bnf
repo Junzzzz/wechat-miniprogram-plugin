@@ -21,7 +21,11 @@
   ]
 }
 
-wxmlFile ::= (element | CRLF | TEXT | exprInsert | comment)*
+wxmlFile ::= (element | text  | comment)*
+text ::= CONTENT | CRLF {
+    implements = "com.intellij.psi.PsiLanguageInjectionHost"
+    methods= [createLiteralTextEscaper isValidHost updateText]
+}
 element ::= closedElement| openedElement  {
     methods=[getTagName]
 }
@@ -43,34 +47,34 @@ attribute ::= ATTRIBUTE_NAME (EQ attributeValue)? {
 }
 private attributeValue ::= string
 string ::= STRING_START string_text STRING_END
-string_text ::= (exprInsert|STRING_CONTENT )* {
-    methods = [getReferences]
-    implements = "com.intellij.psi.ContributedReferenceHost"
+string_text ::= STRING_CONTENT * {
+    implements =[ "com.intellij.psi.ContributedReferenceHost" "com.intellij.psi.PsiLanguageInjectionHost"]
+    methods =[createLiteralTextEscaper isValidHost updateText getReferences]
 }
-exprInsert ::= LEFT_DOUBLE_BRACE expr? RIGHT_DOUBLE_BRACE
-private elementContent ::= (element | TEXT | exprInsert | CRLF )*
+//exprInsert ::= LEFT_DOUBLE_BRACE expr? RIGHT_DOUBLE_BRACE
+private elementContent ::= (element | text  | CRLF )*
 
 // 嵌入双括号中的表达式
 
 // rootObject 省略双括号
-expr ::= value | array | rootObjectItems
-operator ::= PLUS | MINUS | MULTIPLY | DIVIDE | RESIDUAL | NOT_EQ | NOT_STRICT_EQ | EQ | STRICT_EQ
-// 链式对象 a.b  a[b]
-private valueChainSuffix ::= DOT IDENTIFIER | LEFT_BRACKET value RIGHT_BRACKET
-value ::= (NUMBER | exprString | TRUE | FALSE | NULL | object | valueWrap | IDENTIFIER | negativeValue) valueChainSuffix* (operator value)* ternaryExprSuffix?
-// 三元表达式
-private ternaryExprSuffix ::= QUESTION_MARK value COLON value
-negativeValue ::= EXCLAMATION_MARK value
-
-
-valueWrap ::= LEFT_PARENTHESES value RIGHT_PARENTHESES
-array ::= LEFT_BRACKET arrayItems RIGHT_BRACKET
-rootObjectItems ::= (objectItem COMMA)+ objectItem?
-arrayItems ::= (value COMMA)* value?
-objectItems ::= (objectItem COMMA)* objectItem?
-objectItem ::= IDENTIFIER COLON value | IDENTIFIER | EXPAND_KEYWORD value
-object ::= LEFT_BRACE objectItems RIGHT_BRACE
-exprString ::= STRING_START STRING_CONTENT? STRING_END
-comment::= COMMENT_START COMMENT_CONTENT? COMMONT_END {
-    pin = 1
-}
+//expr ::= value | array | rootObjectItems
+//operator ::= PLUS | MINUS | MULTIPLY | DIVIDE | RESIDUAL | NOT_EQ | NOT_STRICT_EQ | EQ | STRICT_EQ
+//// 链式对象 a.b  a[b]
+//private valueChainSuffix ::= DOT IDENTIFIER | LEFT_BRACKET value RIGHT_BRACKET
+//value ::= (NUMBER | exprString | TRUE | FALSE | NULL | object | valueWrap | IDENTIFIER | negativeValue) valueChainSuffix* (operator value)* ternaryExprSuffix?
+//// 三元表达式
+//private ternaryExprSuffix ::= QUESTION_MARK value COLON value
+//negativeValue ::= EXCLAMATION_MARK value
+//
+//
+//valueWrap ::= LEFT_PARENTHESES value RIGHT_PARENTHESES
+//array ::= LEFT_BRACKET arrayItems RIGHT_BRACKET
+//rootObjectItems ::= (objectItem COMMA)+ objectItem?
+//arrayItems ::= (value COMMA)* value?
+//objectItems ::= (objectItem COMMA)* objectItem?
+//objectItem ::= IDENTIFIER COLON value | IDENTIFIER | EXPAND_KEYWORD value
+//object ::= LEFT_BRACE objectItems RIGHT_BRACE
+//exprString ::= STRING_START STRING_CONTENT? STRING_END
+//comment::= COMMENT_START COMMENT_CONTENT? COMMONT_END {
+//    pin = 1
+//}

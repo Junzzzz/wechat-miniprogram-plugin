@@ -54,9 +54,12 @@
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
         <completion.contributor language="WXSS"
                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXSSCompletionContributor"/>
-        <!--        <lang.refactoringSupport language="WXSS"-->
-        <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXSSSelectorRefactoring"/>-->
-        <lang.namesValidator language="WXSS" implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.validator.WXSSNamesValidator"/>
+        <lang.refactoringSupport language="WXSS"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXSSSelectorRefactoring"/>
+        <lang.namesValidator language="WXSS"
+                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.validator.WXSSNamesValidator"/>
+        <lang.findUsagesProvider language="WXSS"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSFindUsageProvider"/>
 
         <fileType name="WXML" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
@@ -91,8 +94,7 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLReferenceContributor"/>
         <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLStringTextManipulator"/>
-        <lang.findUsagesProvider language="WXSS"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSFindUsageProvider"/>
+        <multiHostInjector implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlWxsScriptInjector"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
