@@ -2,11 +2,11 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
 import com.intellij.lang.injection.MultiHostInjector
 import com.intellij.lang.injection.MultiHostRegistrar
-import com.intellij.lang.javascript.JavascriptLanguage
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiLanguageInjectionHost
 import com.intellij.psi.util.PsiTreeUtil
+import com.zxy.ijplugin.wechat_miniprogram.lang.expr.WxmlJsLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLOpenedElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
@@ -24,7 +24,7 @@ class WxmlJSInjector : MultiHostInjector {
             if (wxmlOpenedElement != null) {
                 if ((wxmlOpenedElement.parent as WXMLElement).tagName == "wxs") {
                     // 对wxs标签注入js语言
-                    multiHostRegistrar.startInjecting(JavascriptLanguage.INSTANCE)
+                    multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
                             .addPlace(null, null, psiElement, TextRange(0, psiElement.textLength))
                             .doneInjecting()
                 } else {
@@ -45,7 +45,7 @@ private fun searchDoubleBraceAndInject(
 ) {
     val inserts = Regex("\\{\\{.+?}}").findAll(psiElement.text)
     inserts.forEach {
-        multiHostRegistrar.startInjecting(JavascriptLanguage.INSTANCE)
+        multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
                 .addPlace(null, null, psiElement, it.range.toTextRange())
                 .doneInjecting()
     }
