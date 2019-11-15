@@ -2,6 +2,7 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
 import com.intellij.lang.injection.MultiHostInjector
 import com.intellij.lang.injection.MultiHostRegistrar
+import com.intellij.lang.javascript.JavaScriptSupportLoader
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiLanguageInjectionHost
@@ -24,7 +25,7 @@ class WxmlJSInjector : MultiHostInjector {
             if (wxmlOpenedElement != null) {
                 if ((wxmlOpenedElement.parent as WXMLElement).tagName == "wxs") {
                     // 对wxs标签注入js语言
-                    multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
+                    multiHostRegistrar.startInjecting(JavaScriptSupportLoader.JAVASCRIPT_1_5)
                             .addPlace(null, null, psiElement, TextRange(0, psiElement.textLength))
                             .doneInjecting()
                 } else {
