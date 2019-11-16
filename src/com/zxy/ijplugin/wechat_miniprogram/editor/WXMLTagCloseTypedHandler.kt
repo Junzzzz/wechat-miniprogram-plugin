@@ -21,6 +21,7 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
         if (c == '/' && file.language === WXMLLanguage.INSTANCE) {
             val offset = editor.caretModel.offset
             val prevElement = file.viewProvider.findElementAt(offset - 1)
+            val element = file.viewProvider.findElementAt(offset)
             val wxmlOpenedElement = if (prevElement is PsiWhiteSpace) {
                 // 处于空格处
                 // 看前一个元素是不是开标签
@@ -34,14 +35,7 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
                 )
             }
 
-            if (wxmlOpenedElement!=null && wxmlOpenedElement.textRange.endOffset <= offset) {
-                // 单标签
-                // 完成闭合标签
-                editor.document.insertString(offset, "/>")
-                editor.caretModel.moveToOffset(offset + 2)
-                return Result.STOP
-            }
-            val element = file.viewProvider.findElementAt(offset)
+
             if (element!=null && element.elementType==WXMLTypes.START_TAG_END){
                 val wxmlStartTag = PsiTreeUtil.getParentOfType(element,WXMLStartTag::class.java)
                 val nextSibling = wxmlStartTag?.nextSibling
@@ -52,6 +46,13 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
                     editor.document.deleteString(range.startOffset,range.endOffset)
                     return Result.CONTINUE
                 }
+            }else if (wxmlOpenedElement!=null && wxmlOpenedElement.startTag.lastChild !== WXMLTypes.START_TAG_END) {
+                // 键入了闭合标签的尾部 />
+                // 单标签
+                // 完成闭合标签
+                editor.document.insertString(offset, "/>")
+                editor.caretModel.moveToOffset(offset + 2)
+                return Result.STOP
             }
         }
         return Result.CONTINUE
