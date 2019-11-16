@@ -31,6 +31,9 @@ class WxmlJsSpecificHandlersFactory : JavaScriptSpecificHandlersFactory() {
 
 }
 
+/**
+ * 控制wxml 中的表达式如何引用 js 中的标识符
+ */
 class WxmlJsReferenceExpressionResolver(
         referenceExpression: JSReferenceExpressionImpl,
         ignorePerformanceLimits: Boolean
@@ -41,7 +44,6 @@ class WxmlJsReferenceExpressionResolver(
         if (myReferencedName == null) return ResolveResult.EMPTY_ARRAY
         val project = expression.project
         if (myQualifier == null) {
-            //TODO
             val psiManager = PsiManager.getInstance(project)
             val jsFile = findRelateFile(
                     InjectedLanguageManager.getInstance(project).getInjectionHost(

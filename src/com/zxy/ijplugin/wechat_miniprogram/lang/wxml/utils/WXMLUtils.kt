@@ -1,7 +1,9 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 
 import com.intellij.psi.util.PsiTreeUtil
+1import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 
 object WXMLUtils {
@@ -23,4 +25,11 @@ fun WXMLElement.isMultiLine(): Boolean {
 
 fun WXMLElement.isInnerElement(): Boolean {
     return WXMLMetadata.INNER_ELEMENT_NAMES.contains(this.tagName)
+}
+
+fun WXMLAttribute.isEventHandler(): Boolean {
+    val name = this.name
+    return WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any {
+        name.startsWith(it)
+    }
 }

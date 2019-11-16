@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.expr.WxmlJsLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector.Companion.DOUBLE_BRACE_REGEX
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isEventHandler
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
 class WxmlJSInjector : MultiHostInjector {
@@ -38,9 +39,7 @@ class WxmlJSInjector : MultiHostInjector {
             }
         } else if (psiElement is WXMLStringText) {
             if (PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)?.let {
-                        WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any { prefix ->
-                            it.name.startsWith(prefix)
-                        }
+                        it.isEventHandler()
                     } == true && !DOUBLE_BRACE_REGEX.matches(psiElement.text)) {
                 // 此属性是事件
                 // 并且属性值中没有双括号
