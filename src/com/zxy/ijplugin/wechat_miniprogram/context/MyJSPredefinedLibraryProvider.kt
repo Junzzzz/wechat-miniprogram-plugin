@@ -7,6 +7,10 @@ import com.intellij.webcore.libraries.ScriptingLibraryModel
 
 class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
 
+    companion object{
+        val PAGE_LIFETIMES = arrayOf("onLoad","onShow","onReady","onHide","onUnload","onPullDownRefresh","onReachBottom","onShareAppMessage","onPageScroll","onResize","onTabItemTap")
+    }
+
     override fun getPredefinedLibraries(project: Project): Array<out ScriptingLibraryModel> {
         if (isWechatMiniProgramContext(project)){
             val fileUrl = this.javaClass.getResource("/wx.ts")
