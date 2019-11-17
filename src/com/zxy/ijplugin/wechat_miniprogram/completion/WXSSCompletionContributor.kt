@@ -11,6 +11,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import com.intellij.xml.util.ColorSampleLookupValue
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage.UNITS
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStyleStatement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
@@ -93,6 +94,16 @@ class WXSSCompletionContributor : CompletionContributor() {
                     }
                 }
         )
+
+        // 自动完成数字单位
+        extend(CompletionType.BASIC,PlatformPatterns.psiElement(WXSSTypes.NUMBER_UNIT),object :
+                CompletionProvider<CompletionParameters>() {
+            override fun addCompletions(completionParameters: CompletionParameters, processingContext: ProcessingContext, completionResultSet: CompletionResultSet) {
+                completionResultSet.addAllElements(UNITS.map {
+                    LookupElementBuilder.create(it)
+                })
+            }
+        })
 
 
     }
