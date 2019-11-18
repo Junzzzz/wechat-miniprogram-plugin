@@ -44,10 +44,13 @@ private fun searchDoubleBraceAndInject(
         psiElement: PsiLanguageInjectionHost,
         multiHostRegistrar: MultiHostRegistrar
 ) {
-    val inserts = Regex("\\{\\{.+?}}").findAll(psiElement.text)
+    val inserts = Regex("(?:\\{\\{)(.+?)(?:}})").findAll(psiElement.text)
     inserts.forEach {
-        multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
-                .addPlace(null, null, psiElement, it.range.toTextRange())
-                .doneInjecting()
+        val range = it.groups[1]?.range
+        if (range != null) {
+            multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
+                    .addPlace(null, null, psiElement, range.toTextRange())
+                    .doneInjecting()
+        }
     }
 }
