@@ -7,11 +7,8 @@ import com.intellij.navigation.GotoRelatedProvider
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.LangDataKeys
-import com.intellij.openapi.fileTypes.FileType
-import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
@@ -45,30 +42,20 @@ class WechatMiniProgramGotoRelatedProvider : GotoRelatedProvider() {
         return mutableListOf()
     }
 
-    private fun getName(fileType: FileType): String? =
-
-    class MyGotoRelatedItem(element: PsiElement, private val name: String, mnemonic: Int) :
+    class MyGotoRelatedItem(
+            element: PsiElement, private val name: String, private val filename: String, mnemonic: Int
+    ) :
             GotoRelatedItem(element, GROUP_NAME, mnemonic) {
 
         companion object {
-            fun create(psiFile: PsiFile): MyGotoRelatedItem? {
-                val name = when (psiFile.fileType) {
-                    WXMLFileType.INSTANCE -> "Template"
-                    JavaScriptFileType.INSTANCE -> "Script"
-                    WXSFileType.INSTANCE -> "Styles"
-                    JsonFileType.INSTANCE -> "Configurations"
-                    else -> null
-                }
-                val number = when (psiFile.fileType) {
-                    JavaScriptFileType.INSTANCE -> 1
-                    WXMLFileType.INSTANCE -> 2
-                    WXSFileType.INSTANCE -> 3
-                    JsonFileType.INSTANCE -> 4
-                }
-                name?.let {
-                    MyGotoRelatedItem(psiFile, name,)
-                }
+            fun create(psiFile: PsiFile): MyGotoRelatedItem? = when (psiFile.fileType) {
+                JavaScriptFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Script", psiFile.name, 1)
+                WXMLFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Template", psiFile.name, 2)
+                WXSFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Styles", psiFile.name, 3)
+                JsonFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Configurations", psiFile.name, 4)
+                else -> null
             }
+
         }
 
         override fun getCustomName(): String? {
@@ -76,7 +63,7 @@ class WechatMiniProgramGotoRelatedProvider : GotoRelatedProvider() {
         }
 
         override fun getCustomContainerName(): String? {
-            return this.name
+            return "($filename)"
         }
     }
 
