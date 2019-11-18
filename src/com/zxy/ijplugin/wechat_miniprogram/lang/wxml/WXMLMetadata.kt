@@ -443,7 +443,7 @@ object WXMLMetadata {
                     arrayOf("change")
             ),
             E(
-                    "value",
+                    "textarea",
                     arrayOf(
                             A("value", arrayOf(T.STRING)),
                             A("placeholder", arrayOf(T.STRING)),
@@ -463,6 +463,39 @@ object WXMLMetadata {
                             A("hold-keyboard", arrayOf(T.BOOLEAN), false)
                     ),
                     arrayOf("focus", "blur", "linechange", "input", "confirm", "keyboardheightchange")
+            ),
+            E(
+                    "functional-page-navigator",
+                    arrayOf(
+                            A("version", arrayOf(T.STRING), "release", false, arrayOf("release", "develop", "trial")),
+                            A(
+                                    "name", arrayOf(T.STRING), null, true,
+                                    arrayOf("loginAndGetUserInfo", "requestPayment", "chooseAddress")
+                            ),
+                            A("args", arrayOf(T.OBJECT))
+                    ),
+                    arrayOf("success", "fail", "cancel")
+            ),
+            E(
+                    "navigator",
+                    arrayOf(
+                            A("target", arrayOf(T.STRING), "self", false, arrayOf("miniProgram", "self")),
+                            A("url", arrayOf(T.STRING), null),
+                            A(
+                                    "open-type", arrayOf(T.STRING), "navigate", false,
+                                    arrayOf("redirect", "navigate", "switchTab", "reLaunch", "navigateBack", "exit")
+                            ),
+                            A("url", arrayOf(T.NUMBER), 1),
+                            A("app-id", arrayOf(T.STRING)),
+                            A("path", arrayOf(T.STRING)),
+                            A("extra-data", arrayOf(T.OBJECT)),
+                            A("version", arrayOf(T.STRING), "release", false, arrayOf("release", "develop", "trial")),
+                            A("hover-class", arrayOf(T.STRING), "navigator-hover"),
+                            A("hover-stop-propagation", arrayOf(T.BOOLEAN), false),
+                            A("hover-start-time", arrayOf(T.NUMBER), 50),
+                            A("hover-stay-time", arrayOf(T.NUMBER), 600)
+                    ),
+                    arrayOf("success", "fail", "complete")
             )
     )
 
