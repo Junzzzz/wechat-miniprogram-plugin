@@ -15,7 +15,7 @@ import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 class WxmlJSInjector : MultiHostInjector {
 
     companion object {
-        val DOUBLE_BRACE_REGEX = Regex("\\{\\{.+?}}")
+        val DOUBLE_BRACE_REGEX = Regex("\\{\\{(.+?)}}")
     }
 
     override fun elementsToInjectIn(): MutableList<out Class<out PsiElement>> {
