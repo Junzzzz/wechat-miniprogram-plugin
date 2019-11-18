@@ -45,6 +45,7 @@ apply plugin: "kotlin"
 
 intellij {
 //    localPath "C:\\Users\\Administrator\\Downloads\\ideaIU-LATEST-EAP-SNAPSHOT"
+    type = "IU"
     version 'IU-LATEST-EAP-SNAPSHOT'
     pluginName 'wechat mini program'
     downloadSources false
@@ -60,6 +61,10 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+runIde{
+    version 'IU-LATEST-EAP-SNAPSHOT'
 }
 
 dependencies {

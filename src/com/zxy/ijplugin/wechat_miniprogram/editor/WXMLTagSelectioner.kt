@@ -5,7 +5,6 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.elementType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLClosedElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLEndTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStartTag
@@ -19,7 +18,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
  */
 class WXMLStartTagSelectioner : AbstractWordSelectioner() {
     override fun canSelect(psiElement: PsiElement): Boolean {
-        return psiElement.elementType == WXMLTypes.START_TAG_START
+        return psiElement.node.elementType == WXMLTypes.START_TAG_START
     }
 
     override fun select(
@@ -46,7 +45,7 @@ class WXMLStartTagSelectioner : AbstractWordSelectioner() {
  */
 class WXMLEndTagSelectioner : AbstractWordSelectioner() {
     override fun canSelect(psiElement: PsiElement): Boolean {
-        return psiElement.elementType == WXMLTypes.END_TAG_START
+        return psiElement.node.elementType == WXMLTypes.END_TAG_START
     }
 
     override fun select(

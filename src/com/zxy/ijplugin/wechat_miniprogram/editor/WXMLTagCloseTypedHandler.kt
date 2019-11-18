@@ -8,7 +8,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.elementType
 import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findPrevSibling
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
@@ -36,7 +35,7 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
             }
 
 
-            if (element!=null && element.elementType==WXMLTypes.START_TAG_END){
+            if (element != null && element.node.elementType == WXMLTypes.START_TAG_END) {
                 val wxmlStartTag = PsiTreeUtil.getParentOfType(element,WXMLStartTag::class.java)
                 val nextSibling = wxmlStartTag?.nextSibling
                 if (nextSibling is WXMLEndTag){
