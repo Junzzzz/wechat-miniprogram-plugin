@@ -97,12 +97,12 @@ IDENTIFIER = {IDENTIFIER_START} ({IDENTIFIER_START}|{DIGIT})*
 
 <ATTRIBUTE_VALUE_STRING_SQ_STRAT> {
     "'" { yybegin(START_TAG_TAG_NAME);return WXMLTypes.STRING_END; }
-    ([^\R']|"\\'")+ { return WXMLTypes.STRING_CONTENT; }
+    ([^\r\n']|"\\'")+ { return WXMLTypes.STRING_CONTENT; }
 }
 
 <ATTRIBUTE_VALUE_STRING_DQ_STRAT> {
     "\"" { yybegin(START_TAG_TAG_NAME);return WXMLTypes.STRING_END; }
-     ([^\R\"]|"\\\"")+ {
+     ([^\r\n\"]|"\\\"")+ {
         return WXMLTypes.STRING_CONTENT;
      }
 }
@@ -127,38 +127,38 @@ IDENTIFIER = {IDENTIFIER_START} ({IDENTIFIER_START}|{DIGIT})*
 
 
 <STRING_DQ_START> {
-    [^\R\"]+ {
+    [^\r\n\"]+ {
         return WXMLTypes.STRING_CONTENT;
     }
 
 }
 
 <STRING_SQ_START> {
-    [^\R\']+ {
+    [^\r\n\']+ {
           return WXMLTypes.STRING_CONTENT;
     }
 }
 
 <SQ_STRING_DQ_START> {
-    [^\R"\\\""\"]+ {
+    [^\r\n"\\\""\"]+ {
         return WXMLTypes.STRING_CONTENT;
     }
 }
 
 <SQ_STRING_SQ_START> {
-    [^\R"\\'"\']+ {
+    [^\r\n"\\'"\']+ {
           return WXMLTypes.STRING_CONTENT;
     }
 }
 
 <DQ_STRING_DQ_START> {
-    [^\R"\\\""\"]+ {
+    [^\r\n"\\\""\"]+ {
         return WXMLTypes.STRING_CONTENT;
     }
 }
 
 <DQ_STRING_SQ_START> {
-    [^\R"\\'"\']+ {
+    [^\r\n"\\'"\']+ {
           return WXMLTypes.STRING_CONTENT;
     }
 }
