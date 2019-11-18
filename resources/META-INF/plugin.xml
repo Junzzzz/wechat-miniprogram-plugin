@@ -28,6 +28,9 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <gotoRelatedProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WechatMiniProgramGotoRelatedProvider"/>
+
         <internalFileTemplate name="Wechat mini program page js file(Component API)"/>
         <internalFileTemplate name="Wechat mini program page json file(Component API)"/>
         <internalFileTemplate name="Wechat mini program page js file(Page API)"/>
@@ -47,7 +50,7 @@
         <gotoSymbolContributor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSIdChooseByNameContributor"/>
         <gotoSymbolContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSClassChooseByNameContributor"/>
+                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXSSClassChooseByNameContributor"/>
         <lang.commenter language="WXSS"
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>
         <lang.braceMatcher language="WXSS"
