@@ -98,7 +98,7 @@
         <include.provider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WxmlJsModuleFileIncludeProvider"/>
 
-        <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="ECMAScript 6"
+        <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
 
         <lang.parserDefinition language="WxmlJs"
