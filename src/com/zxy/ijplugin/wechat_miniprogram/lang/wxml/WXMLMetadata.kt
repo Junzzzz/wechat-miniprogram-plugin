@@ -496,6 +496,127 @@ object WXMLMetadata {
                             A("hover-stay-time", arrayOf(T.NUMBER), 600)
                     ),
                     arrayOf("success", "fail", "complete")
+            ),
+            E(
+                    "audio",
+                    arrayOf(
+                            A("id", arrayOf(T.STRING)),
+                            A("src", arrayOf(T.STRING)),
+                            A("loop", arrayOf(T.BOOLEAN), false),
+                            A("controls", arrayOf(T.BOOLEAN), false),
+                            A("poster", arrayOf(T.STRING), "未知音频"),
+                            A("name", arrayOf(T.STRING)),
+                            A("author", arrayOf(T.STRING), "未知作者")
+                    ),
+                    arrayOf("error", "play", "pause", "timeupdate", "ended")
+            ),
+            E(
+                    "camera",
+                    arrayOf(
+                            A("mode", arrayOf(T.STRING), "normal", false, arrayOf("scanCode", "normal")),
+                            A("device-position", arrayOf(T.STRING), "back", false, arrayOf("front", "back")),
+                            A("flash", arrayOf(T.STRING), "auto", false, arrayOf("auto", "on", "off", "torch")),
+                            A("frame-size", arrayOf(T.STRING), "medium", false, arrayOf("small", "large", "medium"))
+                    ),
+                    arrayOf("stop", "error", "initdone", "scancode")
+            ),
+            E(
+                    "image",
+                    arrayOf(
+                            A("src", arrayOf(T.STRING), null, true),
+                            A(
+                                    "mode", arrayOf(T.STRING), "back", false,
+                                    arrayOf(
+                                            "scaleToFill", "aspectFit", "widthFix", "aspectFill", "top", "bottom",
+                                            "center",
+                                            "left", "right", "top left", "top right", "bottom left", "bottom right"
+                                    )
+                            ),
+                            A("webp", arrayOf(T.BOOLEAN), false),
+                            A("lazy-load", arrayOf(T.BOOLEAN), false),
+                            A("show-menu-by-longpress", arrayOf(T.BOOLEAN), false)
+                    ),
+                    arrayOf("error", "load")
+            ),
+            E(
+                    "live-player",
+                    arrayOf(
+                            A("src", arrayOf(T.STRING), null, true),
+                            A("mode", arrayOf(T.STRING), "live", false, arrayOf("mode", "RTC")),
+                            A("autoplay", arrayOf(T.BOOLEAN), false),
+                            A("muted", arrayOf(T.BOOLEAN), false),
+                            A("orientation", arrayOf(T.STRING), "vertical", false, arrayOf("horizontal", "vertical")),
+                            A("object-fit", arrayOf(T.STRING), "contain", false, arrayOf("fillCrop", "contain")),
+                            A("background-mute", arrayOf(T.BOOLEAN), false),
+                            A("min-cache", arrayOf(T.NUMBER), 1),
+                            A("max-cache", arrayOf(T.NUMBER), 3),
+                            A("sound-mode", arrayOf(T.STRING), "speaker", false, arrayOf("ear", "speaker")),
+                            A("auto-pause-if-navigate", arrayOf(T.BOOLEAN), true),
+                            A("auto-pause-if-open-native", arrayOf(T.BOOLEAN), true)
+                    ),
+                    arrayOf("fullscreenchange", "statechange", "netstatus")
+            ),
+            E(
+                    "live-pusher",
+                    arrayOf(
+                            A("url", arrayOf(T.STRING), null, true),
+                            A("mode", arrayOf(T.STRING), "RTC", false, arrayOf("SD", "HD", "FHD", "RTC")),
+                            A("autopush", arrayOf(T.BOOLEAN), false),
+                            A("enable-camera", arrayOf(T.BOOLEAN), true),
+                            A("auto-focus", arrayOf(T.BOOLEAN), true),
+                            A("orientation", arrayOf(T.STRING), "vertical", false, arrayOf("horizontal", "vertical")),
+                            A("beauty", arrayOf(T.NUMBER), 0),
+                            A("whiteness", arrayOf(T.NUMBER), 0),
+                            A("aspect", arrayOf(T.STRING), "9:16", false, arrayOf("3:4", "9:16")),
+                            A("background-mute", arrayOf(T.BOOLEAN), false),
+                            A("min-bitrate", arrayOf(T.NUMBER), 200),
+                            A("max-bitrate", arrayOf(T.NUMBER), 1000),
+                            A("audio-quality", arrayOf(T.STRING), "high", false, arrayOf("high", "low")),
+                            A("waiting-image", arrayOf(T.STRING)),
+                            A("waiting-image-hash", arrayOf(T.STRING)),
+                            A("zoom", arrayOf(T.BOOLEAN), false),
+                            A("device-position", arrayOf(T.STRING), "front", false, arrayOf("back", "front")),
+                            A("background-mute", arrayOf(T.BOOLEAN), false),
+                            A("mirror", arrayOf(T.BOOLEAN), false)
+                    ),
+                    arrayOf("statechange", "netstatus", "error", "bgmstart", "bgmprogress", "bgmcomplete")
+            ),
+            E(
+                    "video",
+                    arrayOf(
+                            A("src", arrayOf(T.STRING), null, true),
+                            A("duration", arrayOf(T.NUMBER)),
+                            A("controls", arrayOf(T.BOOLEAN), true),
+                            A("danmu-list", arrayOf(T.ARRAY, T.OBJECT), true),
+                            A("danmu-btn", arrayOf(T.BOOLEAN), false),
+                            A("enable-danmu", arrayOf(T.BOOLEAN), false),
+                            A("autoplay", arrayOf(T.BOOLEAN), false),
+                            A("loop", arrayOf(T.BOOLEAN), false),
+                            A("muted", arrayOf(T.BOOLEAN), false),
+                            A("initial-time", arrayOf(T.NUMBER), 0),
+                            A("page-gesture", arrayOf(T.BOOLEAN), false),
+                            A("direction", arrayOf(T.NUMBER),null,false, arrayOf("0","90","-90")),
+                            A("show-progress", arrayOf(T.BOOLEAN), true),
+                            A("show-fullscreen-btn", arrayOf(T.BOOLEAN), true),
+                            A("show-play-btn", arrayOf(T.BOOLEAN), true),
+                            A("show-center-play-btn", arrayOf(T.BOOLEAN), true),
+                            A("enable-progress-gesture", arrayOf(T.BOOLEAN), true),
+                            A("object-fit", arrayOf(T.STRING), "9:16", false, arrayOf("contain", "fill", "cover")),
+                            A("poster", arrayOf(T.STRING)),
+                            A("show-mute-btn", arrayOf(T.BOOLEAN), true),
+                            A("title", arrayOf(T.STRING), false),
+                            A("play-btn-position", arrayOf(T.STRING), "bottom", false, arrayOf("center", "bottom")),
+                            A("enable-play-gesture", arrayOf(T.BOOLEAN), false),
+                            A("auto-pause-if-navigate", arrayOf(T.BOOLEAN), true),
+                            A("auto-pause-if-open-native", arrayOf(T.BOOLEAN), true),
+                            A("vslide-gesture", arrayOf(T.BOOLEAN), false),
+                            A("vslide-gesture-in-fullscreen", arrayOf(T.BOOLEAN), true),
+                            A("ad-unit-id", arrayOf(T.STRING))
+                    ),
+                    arrayOf(
+                            "play", "pause", "ended", "timeupdate", "fullscreenchange", "waiting", "error", "progress",
+                            "loadedmetadata"
+                    )
             )
     )
 
