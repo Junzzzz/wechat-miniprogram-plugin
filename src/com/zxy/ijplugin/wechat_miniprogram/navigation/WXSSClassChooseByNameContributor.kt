@@ -20,7 +20,7 @@ class WXSSClassChooseByNameContributor : ChooseByNameContributor {
     }
 
     override fun getNames(project: Project, includeNonProjectItems: Boolean): Array<String> {
-        return getClassSelectorsByProject(project).map { it.className }.toTypedArray()
+        return getClassSelectorsByProject(project).mapNotNull { it.className }.toTypedArray()
     }
 
     private fun getClassSelectorsByProject(project: Project): List<WXSSClassSelectorImpl> {
