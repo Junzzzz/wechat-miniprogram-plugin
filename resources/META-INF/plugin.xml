@@ -38,6 +38,8 @@
         <internalFileTemplate name="Wechat mini program component js file"/>
         <internalFileTemplate name="Wechat mini program component json file"/>
 
+        <renamePsiElementProcessor implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLClassRenamePsiElementProcessor"/>
+
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
         <lang.parserDefinition language="WXSS"
