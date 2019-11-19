@@ -6,7 +6,6 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferen
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
@@ -89,9 +88,7 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                         val wxmlElement = PsiTreeUtil.getParentOfType(psiElement, WXMLElement::class.java)
                         val wxmlAttribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
                         if (wxmlElement != null && wxmlAttribute != null && matchPathAttribute(
-                                        wxmlElement.tagName, wxmlAttribute.name
-                                ) && !WxmlJSInjector.DOUBLE_BRACE_REGEX.matches(
-                                        psiElement.text
+                                        wxmlElement.tagName!!, wxmlAttribute.name
                                 )) {
                             // 这个属性是可解析为路径的
                             return FileReferenceSet(psiElement).allReferences

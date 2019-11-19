@@ -15,7 +15,7 @@ class WXMLElementBreadcrumbsProvider : BreadcrumbsProvider {
     }
 
     override fun getElementInfo(element: PsiElement): String {
-        return (element as WXMLElement).tagName
+        return (element as WXMLElement).tagName ?: "unknown"
     }
 
     override fun acceptElement(element: PsiElement): Boolean {

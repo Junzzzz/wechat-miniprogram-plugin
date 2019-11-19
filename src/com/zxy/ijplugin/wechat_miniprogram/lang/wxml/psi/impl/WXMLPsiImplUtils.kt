@@ -31,10 +31,10 @@ object WXMLPsiImplUtils {
     }
 
     @JvmStatic
-    fun getTagName(element: WXMLElement): String {
+    fun getTagName(element: WXMLElement): String? {
         val wrapPsiElement = PsiTreeUtil.findChildOfType(element, WXMLStartTag::class.java)
                 ?: PsiTreeUtil.findChildOfType(element, WXMLClosedElement::class.java)!!
-        return wrapPsiElement.node.findChildByType(WXMLTypes.TAG_NAME)!!.text
+        return wrapPsiElement.node.findChildByType(WXMLTypes.TAG_NAME)?.text
     }
 
     @JvmStatic
