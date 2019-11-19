@@ -32,11 +32,15 @@ import ::= (IMPORT_KEYWORD string SEMICOLON) {
     pin = 1
 }
 string ::= ( doubleQuoteString | singleQuoteString)
-private doubleQuoteString ::= STRING_START_DQ STRING_CONTENT? STRING_END_DQ {
+private doubleQuoteString ::= STRING_START_DQ stringText? STRING_END_DQ {
     pin = 1
 }
-private singleQuoteString ::= STRING_START_SQ STRING_CONTENT? STRING_END_SQ {
+private singleQuoteString ::= STRING_START_SQ stringText? STRING_END_SQ {
     pin = 1
+}
+stringText ::= STRING_CONTENT {
+    implements = ["com.intellij.psi.ContributedReferenceHost" "com.intellij.psi.PsiLanguageInjectionHost" ]
+    methods =[createLiteralTextEscaper isValidHost updateText getReferences]
 }
 styleDefinition ::= selectorGroup  styleStatementSection {
     pin = 1

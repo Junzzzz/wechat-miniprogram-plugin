@@ -21,6 +21,7 @@ class WXSSParserDefinition : ParserDefinition {
     companion object {
         val iFileElementType = IFileElementType(WXSSLanguage.INSTANCE)
         val COMMENTS = TokenSet.create(WXSSTypes.COMMENT)
+        val STRINGS = TokenSet.create(WXSSTypes.STRING)
     }
 
     override fun createParser(p0: Project?): PsiParser {
@@ -32,7 +33,7 @@ class WXSSParserDefinition : ParserDefinition {
     }
 
     override fun getStringLiteralElements(): TokenSet {
-        return TokenSet.EMPTY
+        return STRINGS
     }
 
     override fun getFileNodeType(): IFileElementType {

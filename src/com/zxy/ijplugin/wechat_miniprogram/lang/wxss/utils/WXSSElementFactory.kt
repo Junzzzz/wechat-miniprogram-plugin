@@ -6,10 +6,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.*
 
 object WXSSElementFactory {
 
@@ -38,6 +35,17 @@ object WXSSElementFactory {
             }
         """.trimIndent())
         return PsiTreeUtil.findChildOfType(file,WXSSValue::class.java)!!
+    }
+
+    fun createStringText(project: Project, text: String): WXSSStringText {
+        val file = createDummyFile(
+                project, """
+            .a{
+                key: "$text"
+            }
+        """.trimIndent()
+        )
+        return PsiTreeUtil.findChildOfType(file, WXSSStringText::class.java)!!
     }
 
     private fun createDummyFile(project: Project, fileContent:String): PsiFile {

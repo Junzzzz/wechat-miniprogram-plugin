@@ -2,11 +2,15 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl
 
 import com.intellij.icons.AllIcons
 import com.intellij.navigation.ItemPresentation
+import com.intellij.psi.LiteralTextEscaper
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
+import com.intellij.psi.PsiReferenceService
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSItemPresentation
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSElementFactory
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXSSClassSelectorSelfReference
@@ -132,6 +136,28 @@ object WXSSPsiImplUtils {
     @JvmStatic
     fun getTextOffset(wxssClassSelector: WXSSClassSelector): Int {
         return wxssClassSelector.textRange.startOffset + 1
+    }
+
+    /*string text*/
+    @JvmStatic
+    fun createLiteralTextEscaper(element: WXSSStringText): LiteralTextEscaper<WXSSStringText> {
+        return LiteralTextEscaper.createSimple(element)
+    }
+
+    @JvmStatic
+    fun isValidHost(element: WXSSStringText): Boolean {
+        return true
+    }
+
+    @JvmStatic
+    fun updateText(element: WXSSStringText, newText: String): WXSSStringText {
+        element.replace(WXSSElementFactory.createStringText(element.project, newText))
+        return element
+    }
+
+    @JvmStatic
+    fun getReferences(element: WXSSStringText): Array<out PsiReference> {
+        return PsiReferenceService.getService().getContributedReferences(element)
     }
 
 }
