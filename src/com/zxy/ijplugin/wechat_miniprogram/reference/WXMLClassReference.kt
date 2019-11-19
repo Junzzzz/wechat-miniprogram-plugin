@@ -3,7 +3,10 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.*
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElementResolveResult
+import com.intellij.psi.PsiManager
+import com.intellij.psi.ResolveResult
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
@@ -16,7 +19,7 @@ import com.zxy.ijplugin.wechat_miniprogram.utils.substring
  * @param textRange 此class在字符串中的位置
  */
 class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
-        PsiPolyVariantReferenceBase<PsiElement>(psiElement, textRange) {
+        MyMultiReference<PsiElement>(psiElement, textRange) {
     override fun multiResolve(p0: Boolean): Array<ResolveResult> {
         val results = arrayListOf<ResolveResult>()
         val cssClass = this.element.text.substring(this.rangeInElement)

@@ -113,6 +113,9 @@
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.parser.WxmlJsParserDefinition"/>
         <lang.syntaxHighlighterFactory language="WxmlJs"
                                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.highlighting.WxmlJsHighlighterFactory"/>
+
+        <psi.referenceContributor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WechatMiniProgramJSONReferenceContributor"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
