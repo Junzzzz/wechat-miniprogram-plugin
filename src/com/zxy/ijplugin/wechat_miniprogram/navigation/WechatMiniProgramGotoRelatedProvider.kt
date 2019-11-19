@@ -11,7 +11,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 
 /**
  * 找到一个组件或页面的相关文件
@@ -51,7 +51,7 @@ class WechatMiniProgramGotoRelatedProvider : GotoRelatedProvider() {
             fun create(psiFile: PsiFile): MyGotoRelatedItem? = when (psiFile.fileType) {
                 JavaScriptFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Script", psiFile.name, 1)
                 WXMLFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Template", psiFile.name, 2)
-                WXSFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Styles", psiFile.name, 3)
+                WXSSFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Styles", psiFile.name, 3)
                 JsonFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Configurations", psiFile.name, 4)
                 else -> null
             }
