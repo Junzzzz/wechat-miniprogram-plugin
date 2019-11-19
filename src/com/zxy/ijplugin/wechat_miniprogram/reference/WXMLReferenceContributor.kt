@@ -2,15 +2,33 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
 class WXMLReferenceContributor : PsiReferenceContributor() {
+
+    companion object {
+        // 描述可以被解析为路径的元素的属性
+        private val PATH_ATTRIBUTES = arrayOf(
+                PathAttribute("wxs", "src"),
+                PathAttribute("image", "src")
+        )
+
+        private fun matchPathAttribute(tagName: String, attributeName: String): Boolean {
+            return PATH_ATTRIBUTES.any {
+                it.tagName == tagName && it.attributeName == it.attributeName
+            }
+        }
+    }
+
     override fun registerReferenceProviders(psiReferenceRegistrar: PsiReferenceRegistrar) {
         psiReferenceRegistrar.registerReferenceProvider(
                 PlatformPatterns.psiElement(WXMLStringText::class.java),
@@ -60,5 +78,33 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
 
                 }
         )
+
+        // 解析wxml中的路径属性
+        psiReferenceRegistrar.registerReferenceProvider(
+                PlatformPatterns.psiElement(WXMLStringText::class.java),
+                object : PsiReferenceProvider() {
+                    override fun getReferencesByElement(
+                            psiElement: PsiElement, processingContext: ProcessingContext
+                    ): Array<out PsiReference> {
+                        val wxmlElement = PsiTreeUtil.getParentOfType(psiElement, WXMLElement::class.java)
+                        val wxmlAttribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
+                        if (wxmlElement != null && wxmlAttribute != null && matchPathAttribute(
+                                        wxmlElement.tagName, wxmlAttribute.name
+                                ) && !WxmlJSInjector.DOUBLE_BRACE_REGEX.matches(
+                                        psiElement.text
+                                )) {
+                            // 这个属性是可解析为路径的
+                            return FileReferenceSet(psiElement).allReferences
+                        }
+                        return PsiReference.EMPTY_ARRAY
+                    }
+                }
+        )
     }
+
+    private data class PathAttribute(
+            val tagName: String,
+            val attributeName: String
+    )
+
 }
