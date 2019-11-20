@@ -49,4 +49,9 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
         }.toMutableList()
     }
 
+    override fun isReferenceTo(element: PsiElement): Boolean {
+        // TODO wxss @import
+        return super.isReferenceTo(element)
+    }
+
 }
