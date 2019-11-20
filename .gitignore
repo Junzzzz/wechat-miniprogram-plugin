@@ -111,3 +111,5 @@ gradlew
 gradlew.bat
 settings.gradle
 /gen/
+
+note.md
