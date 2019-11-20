@@ -8,8 +8,10 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSSelectors
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.substring
 
 /**
@@ -36,9 +38,7 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
     private fun findClassSelectorResult(
             wxssFile: VirtualFile?, cssClass: String, project: Project
     ): List<PsiElementResolveResult> {
-        val psiManager = PsiManager.getInstance(project)
-        val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
-        val selectors = PsiTreeUtil.findChildrenOfType(wxssPsiFile, WXSSSelectors::class.java)
+        val selectors = getSelectors(project, wxssFile)
         return selectors.asSequence().mapNotNull {
             // 伪元素的选择器的第一个子元素也是基本选择器
             it.lastChild?.firstChild
@@ -49,8 +49,27 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
         }.toMutableList()
     }
 
+    private fun getSelectors(
+            project: Project, wxssFile: VirtualFile?
+    ): List<WXSSSelectors> {
+        val psiManager = PsiManager.getInstance(project)
+        val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
+        val wxssPsiFiles = WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile as WXSSPsiFile)
+
+        return wxssPsiFiles.flatMap {
+            PsiTreeUtil.findChildrenOfType(it, WXSSSelectors::class.java)
+        }
+    }
+
     override fun isReferenceTo(element: PsiElement): Boolean {
-        // TODO wxss @import
+        if (element is WXSSClassSelector){
+            val psiFile = element.containingFile
+            if (psiFile is WXSSPsiFile){
+                // TODO 全局样式和局部样式的重构关系
+                val selectors = getSelectors(element.project, psiFile)
+            }
+        }
+
         return super.isReferenceTo(element)
     }
 
