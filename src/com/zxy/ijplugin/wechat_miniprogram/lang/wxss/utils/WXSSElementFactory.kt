@@ -11,12 +11,14 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.*
 object WXSSElementFactory {
 
     fun createClass(project: Project,className:String):ASTNode{
+        return createClassSelector(project, ".$className").node.findChildByType(WXSSTypes.CLASS)!!
+    }
+
+    fun createClassSelector(project: Project, text: String): WXSSClassSelector {
         val file = createDummyFile(project,"""
-            .$className{
-                
-            }
+            $text
         """.trimIndent())
-        return PsiTreeUtil.findChildOfType(file, WXSSClassSelector::class.java)!!.node.findChildByType(WXSSTypes.CLASS)!!
+        return PsiTreeUtil.findChildOfType(file, WXSSClassSelector::class.java)!!
     }
 
     fun createId(project: Project, id:String): ASTNode {

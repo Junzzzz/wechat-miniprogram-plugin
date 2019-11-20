@@ -128,7 +128,7 @@ object WXSSPsiImplUtils {
     }
 
     @JvmStatic
-    fun getReferences(wxssClassSelector: WXSSClassSelector): PsiReference? {
+    fun getReference(wxssClassSelector: WXSSClassSelector): PsiReference? {
         val textRange = wxssClassSelector.nameIdentifier?.textRangeInParent ?: return null
         return WXSSClassSelectorSelfReference(wxssClassSelector, textRange)
     }
@@ -136,6 +136,13 @@ object WXSSPsiImplUtils {
     @JvmStatic
     fun getTextOffset(wxssClassSelector: WXSSClassSelector): Int {
         return wxssClassSelector.textRange.startOffset + 1
+    }
+
+    @JvmStatic
+    fun getReferences(wxssClassSelector: WXSSClassSelector): Array<PsiReference> {
+        return wxssClassSelector.reference?.let {
+            arrayOf(it)
+        } ?: emptyArray()
     }
 
     /*string text*/

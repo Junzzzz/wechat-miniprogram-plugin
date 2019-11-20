@@ -9,6 +9,7 @@ import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSSelectors
 import com.zxy.ijplugin.wechat_miniprogram.utils.substring
 
 /**
@@ -23,11 +24,11 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
         val project = this.element.project
         val wxmlFile = this.element.containingFile.virtualFile
         val wxssFile = findRelateFile(wxmlFile, RelateFileType.WXSS)
-        // 相关的wxss文件中找class
+        // 相关的wxss文件中找class的定义
         results.addAll(findClassSelectorResult(wxssFile, cssClass, project))
 
         val appWXSSFile = findAppFile(project, RelateFileType.WXSS)
-        // 在app.wxss文件中找class
+        // 在app.wxss文件中找class的定义
         results.addAll(findClassSelectorResult(appWXSSFile, cssClass, project))
         return results.toTypedArray()
     }
@@ -37,10 +38,15 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
     ): List<PsiElementResolveResult> {
         val psiManager = PsiManager.getInstance(project)
         val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
-        val classSelectors = PsiTreeUtil.findChildrenOfType(wxssPsiFile, WXSSClassSelector::class.java)
-        return classSelectors.filter { cssClass == it.className }.map {
+        val selectors = PsiTreeUtil.findChildrenOfType(wxssPsiFile, WXSSSelectors::class.java)
+        return selectors.asSequence().mapNotNull {
+            // 伪元素的选择器的第一个子元素也是基本选择器
+            it.lastChild?.firstChild
+        }.filter {
+            it is WXSSClassSelector && it.className == cssClass
+        }.map {
             PsiElementResolveResult(it)
-        }
+        }.toMutableList()
     }
 
 }

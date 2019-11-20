@@ -9,7 +9,7 @@
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
     <version>1.0.0</version>
-    <idea-version since-build="*"/>
+    <idea-version since-build="182.711"/>
 
     <actions>
         <action class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramPageAction"
@@ -38,7 +38,11 @@
         <internalFileTemplate name="Wechat mini program component js file"/>
         <internalFileTemplate name="Wechat mini program component json file"/>
 
-        <renamePsiElementProcessor implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLClassRenamePsiElementProcessor"/>
+        <renamePsiElementProcessor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLClassRenamePsiElementProcessor"/>
+        <!--        <renameHandler implementation="com.zxy.ijplugin.wechat_miniprogram.rename.WXSSIdRenameHandler"/>-->
+        <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
+
 
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
@@ -70,6 +74,8 @@
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSFindUsageProvider"/>
         <psi.referenceContributor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXSSReferenceContributor"/>
+        <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLClassSelectorManipulator"/>
 
         <fileType name="WXML" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
