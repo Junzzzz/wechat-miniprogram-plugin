@@ -47,9 +47,10 @@ attribute ::= ATTRIBUTE_NAME (EQ attributeValue)? {
 }
 private attributeValue ::= string
 string ::= STRING_START string_text STRING_END
-string_text ::= STRING_CONTENT * {
-    implements =[ "com.intellij.psi.ContributedReferenceHost" "com.intellij.psi.PsiLanguageInjectionHost"]
-    methods =[createLiteralTextEscaper isValidHost updateText getReferences]
+string_text ::= STRING_CONTENT {
+    implements =[ "com.intellij.psi.ContributedReferenceHost" "com.intellij.psi.PsiLanguageInjectionHost" "com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLNamedElement"]
+    methods =[createLiteralTextEscaper isValidHost updateText getReferences getNameIdentifier setName getName]
+    mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLNamedElementImpl"
 }
 //exprInsert ::= LEFT_DOUBLE_BRACE expr? RIGHT_DOUBLE_BRACE
 private elementContent ::= (element | text  | CRLF )*

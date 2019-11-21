@@ -1,9 +1,6 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl
 
-import com.intellij.psi.LiteralTextEscaper
-import com.intellij.psi.PsiLanguageInjectionHost
-import com.intellij.psi.PsiReference
-import com.intellij.psi.PsiReferenceService
+import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
@@ -81,6 +78,20 @@ object WXMLPsiImplUtils {
         return LiteralTextEscaper.createSimple(element)
     }
 
+    @JvmStatic
+    fun getName(element: WXMLStringText): String? {
+        return element.text
+    }
 
+    @JvmStatic
+    fun getNameIdentifier(element: WXMLStringText): PsiElement? {
+        return element
+    }
+
+    @JvmStatic
+    fun setName(element: WXMLStringText, name: String):PsiElement {
+        element.nameIdentifier?.replace(WXMLElementFactory.createStringText(element.project, name))
+        return element
+    }
 
 }

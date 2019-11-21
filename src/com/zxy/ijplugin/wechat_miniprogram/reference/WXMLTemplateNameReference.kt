@@ -7,12 +7,16 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.contentRange
 
-class WXMLTemplateIsReference(element: WXMLStringText) :
+class WXMLTemplateNameReference(element: WXMLStringText) :
         PsiReferenceBase<WXMLStringText>(element, element.contentRange()) {
 
     override fun resolve(): PsiElement? {
         val wxmlPsiFile = this.element.containingFile
         return WXMLModuleUtils.findTemplateDefinition(wxmlPsiFile as WXMLPsiFile, this.element.text)
+    }
+
+    override fun isReferenceTo(element: PsiElement): Boolean {
+        return super.isReferenceTo(element)
     }
 
 }

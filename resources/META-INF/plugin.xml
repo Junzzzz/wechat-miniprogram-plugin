@@ -132,6 +132,8 @@
         <multiHostInjector implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector"/>
         <include.provider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WxmlJsModuleFileIncludeProvider"/>
+        <lang.findUsagesProvider language="WXML"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXMLFindUsageProvider"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
