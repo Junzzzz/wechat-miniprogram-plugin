@@ -668,6 +668,15 @@ object WXMLMetadata {
                             "regionchange",
                             "poitap"
                     )
+            ),
+            E(
+                    "canvas",
+                    arrayOf(
+                            A("type",arrayOf(T.STRING)),
+                            A("canvas-id",arrayOf(T.STRING)),
+                            A("disable-scroll",arrayOf(T.STRING))
+                    ),
+                    arrayOf("error")
             )
     )
 
