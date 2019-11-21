@@ -2,17 +2,21 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl
 
 import com.intellij.icons.AllIcons
 import com.intellij.navigation.ItemPresentation
-import com.intellij.psi.LiteralTextEscaper
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiReference
-import com.intellij.psi.PsiReferenceService
+import com.intellij.psi.*
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.search.SearchScope
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
+import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
+import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSItemPresentation
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSElementFactory
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXSSClassSelectorSelfReference
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXSSIdSelectorSelfReference
 import javax.swing.Icon
@@ -73,7 +77,7 @@ object WXSSPsiImplUtils {
     }
 
     @JvmStatic
-    fun getReference(wxssIdSelector: WXSSIdSelector): WXSSIdSelectorSelfReference? {
+    fun getReference(wxssIdSelector: WXSSIdSelector): PsiReference? {
         val textRange = wxssIdSelector.nameIdentifier?.textRangeInParent ?: return null
         return WXSSIdSelectorSelfReference(wxssIdSelector, textRange)
     }
@@ -81,6 +85,29 @@ object WXSSPsiImplUtils {
     @JvmStatic
     fun getTextOffset(wxssIdSelector: WXSSIdSelector): Int {
         return wxssIdSelector.textRange.startOffset + 1
+    }
+
+    @JvmStatic
+    fun getReferences(wxssIdSelector: WXSSIdSelector): Array<PsiReference> {
+        return wxssIdSelector.reference?.let {
+            arrayOf(it)
+        } ?: emptyArray()
+    }
+
+    @JvmStatic
+    fun getUseScope(wxssIdSelector: WXSSIdSelector): SearchScope {
+        val psiFile = wxssIdSelector.containingFile
+        if (psiFile is WXSSPsiFile) {
+            return GlobalSearchScope.filesScope(
+                    wxssIdSelector.project,
+                    WXSSModuleUtils.findImportedFilesWithSelf(psiFile).map { it.virtualFile }.toMutableList().apply {
+                        // WXML文件
+                        findRelateFile(psiFile.virtualFile, RelateFileType.WXML)?.let {
+                            this.add(it)
+                        }
+                    })
+        }
+        return GlobalSearchScope.EMPTY_SCOPE
     }
 
     /*WXSSClassSelector*/
@@ -143,6 +170,33 @@ object WXSSPsiImplUtils {
         return wxssClassSelector.reference?.let {
             arrayOf(it)
         } ?: emptyArray()
+    }
+
+    @JvmStatic
+    fun getUseScope(wxssClassSelector: WXSSClassSelector): SearchScope {
+        val psiFile = wxssClassSelector.containingFile
+        if (psiFile is WXSSPsiFile) {
+            val result = hashSetOf<WXSSPsiFile>()
+            val wxssFilesWithImported = WXSSModuleUtils.findImportedFilesWithSelf(psiFile)
+            result.addAll(wxssFilesWithImported)
+            val appWXSSFile = findAppFile(wxssClassSelector.project, RelateFileType.WXSS)
+            val psiManager = PsiManager.getInstance(wxssClassSelector.project)
+            val appWXSSPsiFile = appWXSSFile?.let { psiManager.findFile(appWXSSFile) }
+            if (appWXSSPsiFile is WXSSPsiFile) {
+                val appWXSSFileWithImported = appWXSSPsiFile.let { WXSSModuleUtils.findImportedFilesWithSelf(it) }
+                result.addAll(appWXSSFileWithImported)
+            }
+
+
+            return GlobalSearchScope.filesScope(
+                    wxssClassSelector.project, result.map { it.virtualFile }.toMutableList().apply {
+                // WXML文件
+                findRelateFile(psiFile.virtualFile, RelateFileType.WXML)?.let {
+                    this.add(it)
+                }
+            })
+        }
+        return GlobalSearchScope.EMPTY_SCOPE
     }
 
     /*string text*/

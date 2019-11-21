@@ -62,15 +62,29 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
     }
 
     override fun isReferenceTo(element: PsiElement): Boolean {
-        if (element is WXSSClassSelector){
-            val psiFile = element.containingFile
-            if (psiFile is WXSSPsiFile){
-                // TODO 全局样式和局部样式的重构关系
-                val selectors = getSelectors(element.project, psiFile)
+        val cssClass = this.element.text.substring(this.rangeInElement)
+        if (element is WXSSClassSelector && element.className == cssClass) {
+            val project = this.element.project
+            val wxmlFile = this.element.containingFile.virtualFile
+            val wxssFile = findRelateFile(wxmlFile, RelateFileType.WXSS)
+            if (this.containsSelector(element, wxssFile)) {
+                return true
+            }
+            val appWXSSFile = findAppFile(project, RelateFileType.WXSS)
+            if (this.containsSelector(element, appWXSSFile)) {
+                return true
             }
         }
+        return false
+    }
 
-        return super.isReferenceTo(element)
+    private fun containsSelector(selector: WXSSClassSelector, wxssFile: VirtualFile?): Boolean {
+        val psiManager = PsiManager.getInstance(selector.project)
+        val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
+        val wxssPsiFiles = WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile as WXSSPsiFile)
+        return wxssPsiFiles.any {
+            PsiTreeUtil.findChildrenOfType(it, WXSSClassSelector::class.java).contains(selector)
+        }
     }
 
 }

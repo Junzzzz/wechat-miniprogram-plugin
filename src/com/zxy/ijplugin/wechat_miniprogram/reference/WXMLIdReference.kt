@@ -1,14 +1,16 @@
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
-import com.intellij.psi.PsiElementResolveResult
-import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiPolyVariantReferenceBase
-import com.intellij.psi.ResolveResult
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
+import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.substring
 
 class WXMLIdReference(wxmlStringText: WXMLStringText) : PsiPolyVariantReferenceBase<WXMLStringText>(wxmlStringText) {
 
@@ -29,6 +31,32 @@ class WXMLIdReference(wxmlStringText: WXMLStringText) : PsiPolyVariantReferenceB
             }
         }
         return emptyArray()
+    }
+
+    override fun isReferenceTo(element: PsiElement): Boolean {
+        val cssId = this.element.text.substring(this.rangeInElement)
+        if (element is WXSSIdSelector && element.id == cssId) {
+            val project = this.element.project
+            val wxmlFile = this.element.containingFile.virtualFile
+            val wxssFile = findRelateFile(wxmlFile, RelateFileType.WXSS)
+            if (this.containsSelector(element, wxssFile)) {
+                return true
+            }
+            val appWXSSFile = findAppFile(project, RelateFileType.WXSS)
+            if (this.containsSelector(element, appWXSSFile)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun containsSelector(selector: WXSSIdSelector, wxssFile: VirtualFile?): Boolean {
+        val psiManager = PsiManager.getInstance(selector.project)
+        val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
+        val wxssPsiFiles = WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile as WXSSPsiFile)
+        return wxssPsiFiles.any {
+            PsiTreeUtil.findChildrenOfType(it, WXSSIdSelector::class.java).contains(selector)
+        }
     }
 
 }
