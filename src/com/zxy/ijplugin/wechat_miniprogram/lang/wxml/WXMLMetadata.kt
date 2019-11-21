@@ -65,7 +65,8 @@ object WXMLMetadata {
                     "template",
                     arrayOf(
                             A("is", arrayOf(T.STRING)),
-                            A("name", arrayOf(T.STRING))
+                            A("name", arrayOf(T.STRING)),
+                            A("data", arrayOf(T.OBJECT))
                     )
             ),
             E("import", arrayOf(A("src", arrayOf(T.STRING)))),
