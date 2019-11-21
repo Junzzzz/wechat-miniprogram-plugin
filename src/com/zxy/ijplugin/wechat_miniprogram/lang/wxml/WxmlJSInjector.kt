@@ -42,9 +42,9 @@ class WxmlJSInjector : MultiHostInjector {
             // wxs 标签的属性不支持 {{}} 语法
             return
         }
-        if (PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)?.let {
-                    it.isEventHandler()
-                } == true && !DOUBLE_BRACE_REGEX.matches(psiElement.text)) {
+        if (PsiTreeUtil.getParentOfType(
+                        psiElement, WXMLAttribute::class.java
+                )?.isEventHandler() == true && !DOUBLE_BRACE_REGEX.matches(psiElement.text)) {
             // 此属性是事件
             // 并且属性值中没有双括号
             multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
