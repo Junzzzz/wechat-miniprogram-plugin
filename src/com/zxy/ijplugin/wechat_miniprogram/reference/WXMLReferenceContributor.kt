@@ -101,9 +101,4 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
         )
     }
 
-    private data class PathAttribute(
-            val tagName: String,
-            val attributeName: String
-    )
-
 }

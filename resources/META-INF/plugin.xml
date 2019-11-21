@@ -55,6 +55,12 @@
                 groupName="Wechat mini program"
                 shortName="WxmlWxsModuleImport"
                 enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXMLInvalidImportInspection"
+                displayName="Missing or invalid wxml import path"
+                groupName="Wechat mini program"
+                shortName="WXMLInvalidImport"
+                enabledByDefault="true" level="ERROR"/>
 
 
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
