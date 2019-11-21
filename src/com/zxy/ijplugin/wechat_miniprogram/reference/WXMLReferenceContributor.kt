@@ -18,7 +18,9 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
         // 描述可以被解析为路径的元素的属性
         private val PATH_ATTRIBUTES = arrayOf(
                 PathAttribute("wxs", "src"),
-                PathAttribute("image", "src")
+                PathAttribute("image", "src"),
+                PathAttribute("import", "src"),
+                PathAttribute("include", "src")
         )
 
         private fun matchPathAttribute(tagName: String, attributeName: String): Boolean {
