@@ -45,9 +45,15 @@
 
         <localInspection
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXSSInvalidImportInspection"
-                displayName="Missing or invalid import path"
+                displayName="Missing or invalid wxss import path"
                 groupName="Wechat mini program"
                 shortName="WXSSInvalidImport"
+                enabledByDefault="true" level="ERROR"/>
+        <localInspection
+                implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WxmlWxsModuleImportInspection"
+                displayName="Invalid wxs.src attribute"
+                groupName="Wechat mini program"
+                shortName="WxmlWxsModuleImport"
                 enabledByDefault="true" level="ERROR"/>
 
 
