@@ -635,29 +635,29 @@ object WXMLMetadata {
             E(
                     "map",
                     arrayOf(
-                            A("longitude", arrayOf(T.NUMBER),null,true),
-                            A("latitude", arrayOf(T.NUMBER),null,true),
-                            A("scale", arrayOf(T.NUMBER),16),
+                            A("longitude", arrayOf(T.NUMBER), null, true),
+                            A("latitude", arrayOf(T.NUMBER), null, true),
+                            A("scale", arrayOf(T.NUMBER), 16),
                             A("markers", arrayOf(T.ARRAY)),
                             A("polyline", arrayOf(T.ARRAY)),
                             A("circles", arrayOf(T.ARRAY)),
                             A("include-points", arrayOf(T.ARRAY)),
-                            A("show-location", arrayOf(T.BOOLEAN),false),
+                            A("show-location", arrayOf(T.BOOLEAN), false),
                             A("polygons", arrayOf(T.ARRAY)),
                             A("subkey", arrayOf(T.STRING)),
-                            A("layer-style", arrayOf(T.NUMBER),1),
-                            A("rotate", arrayOf(T.NUMBER),0),
-                            A("skew", arrayOf(T.NUMBER),0),
-                            A("enable-3D", arrayOf(T.BOOLEAN),false),
-                            A("show-compass", arrayOf(T.BOOLEAN),false),
-                            A("show-scale", arrayOf(T.BOOLEAN),false),
-                            A("enable-overlooking", arrayOf(T.BOOLEAN),false),
-                            A("enable-zoom", arrayOf(T.BOOLEAN),true),
-                            A("enable-scroll", arrayOf(T.BOOLEAN),true),
-                            A("enable-rotate", arrayOf(T.BOOLEAN),true),
-                            A("enable-satellite", arrayOf(T.BOOLEAN),true),
-                            A("enable-traffic", arrayOf(T.BOOLEAN),true),
-                            A("setting",arrayOf(T.OBJECT))
+                            A("layer-style", arrayOf(T.NUMBER), 1),
+                            A("rotate", arrayOf(T.NUMBER), 0),
+                            A("skew", arrayOf(T.NUMBER), 0),
+                            A("enable-3D", arrayOf(T.BOOLEAN), false),
+                            A("show-compass", arrayOf(T.BOOLEAN), false),
+                            A("show-scale", arrayOf(T.BOOLEAN), false),
+                            A("enable-overlooking", arrayOf(T.BOOLEAN), false),
+                            A("enable-zoom", arrayOf(T.BOOLEAN), true),
+                            A("enable-scroll", arrayOf(T.BOOLEAN), true),
+                            A("enable-rotate", arrayOf(T.BOOLEAN), true),
+                            A("enable-satellite", arrayOf(T.BOOLEAN), true),
+                            A("enable-traffic", arrayOf(T.BOOLEAN), true),
+                            A("setting", arrayOf(T.OBJECT))
                     ),
                     arrayOf(
                             "markertap",
@@ -672,11 +672,46 @@ object WXMLMetadata {
             E(
                     "canvas",
                     arrayOf(
-                            A("type",arrayOf(T.STRING)),
-                            A("canvas-id",arrayOf(T.STRING)),
-                            A("disable-scroll",arrayOf(T.STRING))
+                            A("type", arrayOf(T.STRING)),
+                            A("canvas-id", arrayOf(T.STRING)),
+                            A("disable-scroll", arrayOf(T.STRING))
                     ),
                     arrayOf("error")
+            ),
+            E(
+                    "ad",
+                    arrayOf(
+                            A("unit-id", arrayOf(T.STRING), null, true),
+                            A("ad-intervals", arrayOf(T.NUMBER))
+                    ),
+                    arrayOf("load", "error", "close")
+            ),
+            E(
+                    "official-account",
+                    events = arrayOf("load", "error")
+            ),
+            E(
+                    "open-data",
+                    arrayOf(
+                            // 文档中type不是必填属性
+                            A(
+                                    "type", arrayOf(T.STRING), null, true,
+                                    arrayOf(
+                                            "groupName", "userNickName", "userAvatarUrl", "userGender", "userCity",
+                                            "userProvince", "userCountry", "userLanguage"
+                                    )
+                            ),
+                            A("open-gid", arrayOf(T.STRING)),
+                            A("lang", arrayOf(T.STRING), "en", false, arrayOf("zh_CN", "zh_TW", "en")),
+                            A("default-text", arrayOf(T.STRING)),
+                            A("default-avatar", arrayOf(T.STRING))
+                    ),
+                    arrayOf("error")
+            ),
+            E(
+                    "web-view",
+                    arrayOf(A("src",arrayOf(T.STRING))),
+                    arrayOf("message","load","error")
             )
     )
 
