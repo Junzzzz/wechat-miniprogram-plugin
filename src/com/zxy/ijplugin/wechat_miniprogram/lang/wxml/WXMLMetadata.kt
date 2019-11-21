@@ -59,6 +59,18 @@ typealias T = WXMLElementAttributeDescriptor.ValueType
 
 object WXMLMetadata {
     val ELEMENT_DESCRIPTORS = arrayOf(
+            // 特殊的标签
+            E("block"),
+            E(
+                    "template",
+                    arrayOf(
+                            A("is", arrayOf(T.STRING)),
+                            A("name", arrayOf(T.STRING))
+                    )
+            ),
+            E("import", arrayOf(A("src", arrayOf(T.STRING)))),
+            E("include", arrayOf(A("src", arrayOf(T.STRING)))),
+
             E(
                     "view",
                     arrayOf(
@@ -595,7 +607,7 @@ object WXMLMetadata {
                             A("muted", arrayOf(T.BOOLEAN), false),
                             A("initial-time", arrayOf(T.NUMBER), 0),
                             A("page-gesture", arrayOf(T.BOOLEAN), false),
-                            A("direction", arrayOf(T.NUMBER),null,false, arrayOf("0","90","-90")),
+                            A("direction", arrayOf(T.NUMBER), null, false, arrayOf("0", "90", "-90")),
                             A("show-progress", arrayOf(T.BOOLEAN), true),
                             A("show-fullscreen-btn", arrayOf(T.BOOLEAN), true),
                             A("show-play-btn", arrayOf(T.BOOLEAN), true),
