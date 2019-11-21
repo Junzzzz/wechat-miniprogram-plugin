@@ -31,6 +31,7 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
     }
 
     override fun registerReferenceProviders(psiReferenceRegistrar: PsiReferenceRegistrar) {
+        // 解析wxml中的id
         psiReferenceRegistrar.registerReferenceProvider(
                 PlatformPatterns.psiElement(WXMLStringText::class.java),
                 object : PsiReferenceProvider() {
@@ -53,6 +54,7 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                 }
         )
 
+        // 解析wxml中的class
         psiReferenceRegistrar.registerReferenceProvider(
                 PlatformPatterns.psiElement(WXMLStringText::class.java),
                 object : PsiReferenceProvider() {
@@ -99,6 +101,27 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                     }
                 }
         )
+
+        // 解析wxml中的template.is属性
+        psiReferenceRegistrar.registerReferenceProvider(
+                PlatformPatterns.psiElement(WXMLStringText::class.java),
+                object : PsiReferenceProvider() {
+                    override fun getReferencesByElement(
+                            psiElement: PsiElement, p1: ProcessingContext
+                    ): Array<PsiReference> {
+                        psiElement as WXMLStringText
+                        val wxmlAttribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
+                        if (wxmlAttribute != null && wxmlAttribute.name == "is") {
+                            val wxmlElement = PsiTreeUtil.getParentOfType(wxmlAttribute, WXMLElement::class.java)
+                            if (wxmlElement != null && wxmlElement.tagName == "template") {
+                                return arrayOf(WXMLTemplateIsReference(psiElement))
+                            }
+                        }
+                        return PsiReference.EMPTY_ARRAY
+                    }
+                }
+        )
+
     }
 
 }
