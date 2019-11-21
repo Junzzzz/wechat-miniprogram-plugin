@@ -631,6 +631,43 @@ object WXMLMetadata {
                             "play", "pause", "ended", "timeupdate", "fullscreenchange", "waiting", "error", "progress",
                             "loadedmetadata"
                     )
+            ),
+            E(
+                    "map",
+                    arrayOf(
+                            A("longitude", arrayOf(T.NUMBER),null,true),
+                            A("latitude", arrayOf(T.NUMBER),null,true),
+                            A("scale", arrayOf(T.NUMBER),16),
+                            A("markers", arrayOf(T.ARRAY)),
+                            A("polyline", arrayOf(T.ARRAY)),
+                            A("circles", arrayOf(T.ARRAY)),
+                            A("include-points", arrayOf(T.ARRAY)),
+                            A("show-location", arrayOf(T.BOOLEAN),false),
+                            A("polygons", arrayOf(T.ARRAY)),
+                            A("subkey", arrayOf(T.STRING)),
+                            A("layer-style", arrayOf(T.NUMBER),1),
+                            A("rotate", arrayOf(T.NUMBER),0),
+                            A("skew", arrayOf(T.NUMBER),0),
+                            A("enable-3D", arrayOf(T.BOOLEAN),false),
+                            A("show-compass", arrayOf(T.BOOLEAN),false),
+                            A("show-scale", arrayOf(T.BOOLEAN),false),
+                            A("enable-overlooking", arrayOf(T.BOOLEAN),false),
+                            A("enable-zoom", arrayOf(T.BOOLEAN),true),
+                            A("enable-scroll", arrayOf(T.BOOLEAN),true),
+                            A("enable-rotate", arrayOf(T.BOOLEAN),true),
+                            A("enable-satellite", arrayOf(T.BOOLEAN),true),
+                            A("enable-traffic", arrayOf(T.BOOLEAN),true),
+                            A("setting",arrayOf(T.OBJECT))
+                    ),
+                    arrayOf(
+                            "markertap",
+                            "labeltap",
+                            "controltap",
+                            "callouttap",
+                            "updated",
+                            "regionchange",
+                            "poitap"
+                    )
             )
     )
 
