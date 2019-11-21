@@ -43,6 +43,13 @@
         <!--        <renameHandler implementation="com.zxy.ijplugin.wechat_miniprogram.rename.WXSSIdRenameHandler"/>-->
         <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
 
+        <localInspection
+                implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXSSInvalidImportInspection"
+                displayName="Missing or invalid import path"
+                groupName="Wechat mini program"
+                shortName="WXSSInvalidImport"
+                enabledByDefault="true" level="ERROR"/>
+
 
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
