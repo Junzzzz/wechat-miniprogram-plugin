@@ -38,8 +38,11 @@ class WxmlJSInjector : MultiHostInjector {
             multiHostRegistrar: MultiHostRegistrar
     ) {
         val element = PsiTreeUtil.getParentOfType(psiElement, WXMLElement::class.java)
-        if (element == null || element.tagName == "wxs") {
-            // wxs 标签的属性不支持 {{}} 语法
+        if (element == null || element.tagName == "wxs" || element.tagName == "include" || element.tagName == "import"
+                || (element.tagName == "template" && PsiTreeUtil.getParentOfType(
+                        psiElement, WXMLAttribute::class.java
+                )?.name == "name")) {
+            // wxs等特殊标签 标签的属性不支持 {{}} 语法
             return
         }
         if (PsiTreeUtil.getParentOfType(
