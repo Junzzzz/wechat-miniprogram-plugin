@@ -25,7 +25,7 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
 
         private fun matchPathAttribute(tagName: String, attributeName: String): Boolean {
             return PATH_ATTRIBUTES.any {
-                it.tagName == tagName && it.attributeName == it.attributeName
+                it.tagName == tagName && it.attributeName == attributeName
             }
         }
     }
