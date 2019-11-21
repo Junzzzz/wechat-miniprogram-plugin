@@ -63,7 +63,7 @@ ATTRIBUTE_VALUE_LITERAL = {ALPHA}({ALPHA}|"-"|"_"|{DIGIT})*
 ATTRIBUTE_NAME = {ALPHA}({ALPHA}|-)*
 WHITE_SPACE_AND_CRLF =     ({CRLF}|{WHITE_SPACE})+
 HASH = #([0-9a-fA-F]{3}|[0-9a-fA-F]{6})
-NUMBER = {DIGIT}*\.{DIGIT}+ | {DIGIT}+(\.{DIGIT}+)?
+NUMBER = "-"?({DIGIT}*\.{DIGIT}+ | {DIGIT}+(\.{DIGIT}+)?)
 NUMBER_UNIT = {ALPHA}+ | %
 NUMBER_WITH_UNIT = {NUMBER}{NUMBER_UNIT}
 FUNCTION_NAME = {IDENTIFIER}
@@ -82,6 +82,7 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
     }
 
 }
+"!important" { return WXSSTypes.IMPORTANT_KEYWORD;}
 
 // 选择器
 <YYINITIAL> "#"|"."|{ELEMENT_NAME} {
