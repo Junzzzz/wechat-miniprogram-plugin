@@ -38,7 +38,7 @@ class WXMLTagPairFoldingBuilder : FoldingBuilderEx() {
             if (startLineNumber == endLineNumber) {
                 null
             } else {
-                val startFoldOffset = startTag.node.findChildByType(WXMLTypes.TAG_NAME)!!.textRange.endOffset
+                val startFoldOffset = startTag.node.findChildByType(WXMLTypes.TAG_NAME)?.textRange?.endOffset?:return@map null
                 val endFoldOffset = endTag.textRange.endOffset
                 FoldingDescriptor(openedElement.node, TextRange(startFoldOffset, endFoldOffset))
             }

@@ -33,3 +33,9 @@ fun WXMLAttribute.isEventHandler(): Boolean {
         name.startsWith(it)
     }
 }
+
+fun WXMLElement.findAttribute(name:String):WXMLAttribute?{
+    return PsiTreeUtil.findChildrenOfType(this,WXMLAttribute::class.java).find {
+        it.name == name
+    }
+}
