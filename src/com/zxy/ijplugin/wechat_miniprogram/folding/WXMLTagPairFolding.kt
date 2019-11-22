@@ -7,13 +7,13 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLOpenedElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 
 /**
  * 可折叠wxml的成对标签
  * 只要开始标签和结束标签不在同一行上
- * TODO BUG
  */
 class WXMLTagPairFoldingBuilder : FoldingBuilderEx() {
     override fun getPlaceholderText(p0: ASTNode): String? {
@@ -25,6 +25,10 @@ class WXMLTagPairFoldingBuilder : FoldingBuilderEx() {
     ): Array<FoldingDescriptor> {
         val openedElements = PsiTreeUtil.findChildrenOfType(rootElement, WXMLOpenedElement::class.java)
         return openedElements.map { openedElement ->
+            if ((openedElement.parent as? WXMLElement)?.tagName == "include") {
+                // 忽略 include 标签
+                return@map null
+            }
             val startTag = openedElement.startTag
             val endTag = openedElement.endTag ?: return@map null
             val startTagOffset = startTag.textOffset
