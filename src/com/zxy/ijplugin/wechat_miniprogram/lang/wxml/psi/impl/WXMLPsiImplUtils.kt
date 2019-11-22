@@ -4,6 +4,7 @@ import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
 
 object WXMLPsiImplUtils {
 
@@ -80,12 +81,12 @@ object WXMLPsiImplUtils {
 
     @JvmStatic
     fun getName(element: WXMLStringText): String? {
-        return element.text
+        return element.nameIdentifier?.text
     }
 
     @JvmStatic
     fun getNameIdentifier(element: WXMLStringText): PsiElement? {
-        return element
+        return if (WXMLModuleUtils.isTemplateNameAttributeStringText(element)) element else null
     }
 
     @JvmStatic

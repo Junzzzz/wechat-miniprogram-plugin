@@ -79,7 +79,7 @@ object WXMLModuleUtils {
         return findTemplateDefinitions(wxmlElements)
     }
 
-    fun findTemplateDefinitions(wxmlElements: Collection<WXMLElement>): List<WXMLStringText> {
+    private fun findTemplateDefinitions(wxmlElements: Collection<WXMLElement>): List<WXMLStringText> {
         return wxmlElements.filter { wxmlElement ->
             wxmlElement.tagName == "template"
         }.mapNotNull { wxmlElement ->
@@ -103,6 +103,12 @@ object WXMLModuleUtils {
                 )?.references?.lastOrNull()?.resolve() is WXMLPsiFile
             }
         }
+    }
+
+    fun isTemplateNameAttributeStringText(wxmlStringText: WXMLStringText): Boolean {
+        return PsiTreeUtil.getParentOfType(wxmlStringText,WXMLAttribute::class.java)?.let {
+            it.name == "name" && PsiTreeUtil.getParentOfType(it,WXMLElement::class.java)?.tagName == "template"
+        }==true
     }
 
 }
