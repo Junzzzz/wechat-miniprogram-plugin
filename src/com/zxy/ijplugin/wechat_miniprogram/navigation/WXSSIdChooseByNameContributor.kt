@@ -1,4 +1,4 @@
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
+package com.zxy.ijplugin.wechat_miniprogram.navigation
 
 import com.intellij.navigation.ChooseByNameContributor
 import com.intellij.navigation.NavigationItem
@@ -7,6 +7,8 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl.WXSSIdSelectorImpl
 
 
@@ -26,7 +28,9 @@ class WXSSIdChooseByNameContributor : ChooseByNameContributor {
     }
 
     private fun getIdSelectorsByProject(project: Project): List<WXSSIdSelectorImpl> {
-        val virtualFiles = FileTypeIndex.getFiles(WXSSFileType.INSTANCE, GlobalSearchScope.allScope(project))
+        val virtualFiles = FileTypeIndex.getFiles(
+                WXSSFileType.INSTANCE, GlobalSearchScope.allScope(project)
+        )
         return virtualFiles.flatMap { virtualFile ->
             val wxssFile = PsiManager.getInstance(project).findFile(virtualFile) as WXSSPsiFile?
             wxssFile?.let {

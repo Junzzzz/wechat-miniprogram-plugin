@@ -73,7 +73,7 @@
         <colorProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.line_mark.WXSSElementColorProvider"/>
         <gotoSymbolContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSIdChooseByNameContributor"/>
+                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXSSIdChooseByNameContributor"/>
         <gotoSymbolContributor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXSSClassChooseByNameContributor"/>
         <lang.commenter language="WXSS"
