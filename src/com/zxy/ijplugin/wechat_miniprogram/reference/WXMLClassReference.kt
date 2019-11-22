@@ -87,4 +87,31 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
         }
     }
 
+    override fun getVariants(): Array<Any> {
+        val result = arrayListOf<WXSSClassSelector>()
+        val psiManager = PsiManager.getInstance(this.element.project)
+        val wxssFile = findRelateFile(this.element.containingFile.originalFile.virtualFile,RelateFileType.WXSS)
+        val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
+        if (wxssPsiFile is WXSSPsiFile){
+            result.addAll(findClassSelectorFromFileAndImports(wxssPsiFile ))
+        }
+        findAppFile(this.element.project, RelateFileType.WXSS)?.let {
+            val appWXSSPsiFile = psiManager.findFile(it)
+            if (appWXSSPsiFile is WXSSPsiFile) {
+                result.addAll(findClassSelectorFromFileAndImports(appWXSSPsiFile))
+            }
+        }
+        return result.toTypedArray()
+    }
+
+    private fun findClassSelectorFromFileAndImports(wxssPsiFile: WXSSPsiFile): List<WXSSClassSelector> {
+        return WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile).flatMap {
+            findClassSelectorFromFile(it)
+        }.distinct()
+    }
+
+    private fun findClassSelectorFromFile(wxssPsiFile: WXSSPsiFile): MutableCollection<WXSSClassSelector> {
+        return PsiTreeUtil.findChildrenOfType(wxssPsiFile, WXSSClassSelector::class.java)
+    }
+
 }
