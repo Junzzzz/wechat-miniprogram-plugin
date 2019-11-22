@@ -63,6 +63,7 @@ class WXMLCompletionContributor : CompletionContributor() {
                 }
         )
 
+        // 自动完成标签名以及必填的属性
         this.extend(
                 CompletionType.BASIC,
                 PlatformPatterns.psiElement().afterLeafSkipping(
@@ -78,8 +79,47 @@ class WXMLCompletionContributor : CompletionContributor() {
                                 completionParameters.offset - 1
                         )!!
                         completionResultSet.withPrefixMatcher(prevElement.text)
-                                .addAllElements(WXMLMetadata.ELEMENT_DESCRIPTORS.map {
-                                    LookupElementBuilder.create(it.name)
+                                .addAllElements(WXMLMetadata.ELEMENT_DESCRIPTORS.map { wxmlElementDescriptor ->
+                                    val requiredElements = wxmlElementDescriptor.attributeDescriptors.filter {
+                                        it.required
+                                    }
+                                    if (requiredElements.isEmpty()) {
+                                        LookupElementBuilder.create(wxmlElementDescriptor.name)
+                                    } else {
+                                        LookupElementBuilder.create(wxmlElementDescriptor.name)
+                                                .withInsertHandler { insertionContext, _ ->
+                                                    val editor = insertionContext.editor
+                                                    val offset = editor.caretModel.offset
+                                                    var result = ""
+                                                    var afterOffset: Int? = null
+                                                    requiredElements.forEach {
+                                                        val key = it.key
+                                                        when {
+                                                            WXMLAttributeCompletionProvider.isDoubleBraceForInsert(
+                                                                    it
+                                                            ) -> {
+                                                                result += " $key=\"{{}}\""
+                                                                if (afterOffset == null) {
+                                                                    afterOffset = offset + result.length - 3
+                                                                }
+                                                            }
+                                                            WXMLAttributeCompletionProvider.isOnlyNameForInsert(it) -> {
+                                                                result += " $key=\"\""
+                                                                if (afterOffset == null) {
+                                                                    afterOffset = offset + result.length - 1
+                                                                }
+                                                            }
+                                                            else -> {
+                                                                result += " $key"
+                                                            }
+                                                        }
+                                                    }
+                                                    insertionContext.document.insertString(offset, result)
+                                                    if (afterOffset != null) {
+                                                        editor.caretModel.moveToOffset(afterOffset!!)
+                                                    }
+                                                }
+                                    }
                                 })
                     }
                 }
@@ -115,6 +155,36 @@ private fun wxmlAttributeIsEnumerable(
 class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>() {
     companion object {
         val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elseif", "wx:else", "wx:key", "wx:if")
+        /**
+         * 忽略公共的属性的标签名
+         */
+        val IGNORE_COMMON_ATTRIBUTE_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include")
+        /**
+         * 忽略wx属性的标签名
+         */
+        val IGNORE_WX_ATTRIBUTE_TAG_NAMES = arrayOf("template", "wxs", "import", "include")
+        /**
+         * 忽略公共事件的标签名
+         */
+        val IGNORE_COMMON_EVENT_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include")
+
+        internal fun isDoubleBraceForInsert(
+                wxmlElementAttributeDescriptor: WXMLElementAttributeDescriptor
+        ): Boolean {
+            return wxmlElementAttributeDescriptor.types.contains(
+                    WXMLElementAttributeDescriptor.ValueType.NUMBER
+            ) && !wxmlElementAttributeDescriptor.types.contains(
+                    WXMLElementAttributeDescriptor.ValueType.STRING
+            )
+        }
+
+        internal fun isOnlyNameForInsert(
+                wxmlElementAttributeDescriptor: WXMLElementAttributeDescriptor
+        ): Boolean {
+            return wxmlElementAttributeDescriptor.types.contains(
+                    WXMLElementAttributeDescriptor.ValueType.BOOLEAN
+            ) && wxmlElementAttributeDescriptor.default == false
+        }
     }
 
     /**
@@ -157,12 +227,6 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             completionParameters: CompletionParameters, processingContext: ProcessingContext,
             completionResultSet: CompletionResultSet
     ) {
-        // 提供固定的wx前缀完成
-        completionResultSet.addAllElements(
-                WX_ATTRIBUTES.map {
-                    LookupElementBuilder.create(it).withInsertHandler(DoubleBraceInsertHandler())
-                })
-
         // 根据组件名称进行完成
         val wxmlElement = PsiTreeUtil.getParentOfType(
                 completionParameters.position, WXMLElement::class.java
@@ -187,13 +251,25 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             completionResultSet.addAllElements(createLookupElementsFromEvents(elementDescriptor.events))
         }
 
-        // 公共属性
-        completionResultSet.addAllElements(WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.map {
-            createLookupElementFromAttribute(it)
-        })
+        if (IGNORE_WX_ATTRIBUTE_TAG_NAMES.contains(tagName)) {
+            // 提供固定的wx前缀完成
+            completionResultSet.addAllElements(
+                    WX_ATTRIBUTES.map {
+                        LookupElementBuilder.create(it).withInsertHandler(DoubleBraceInsertHandler())
+                    })
+        }
 
-        // 公共事件
-        completionResultSet.addAllElements(createLookupElementsFromEvents(WXMLMetadata.COMMON_ELEMENT_EVENTS))
+        if (!IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(tagName)) {
+            // 公共属性
+            completionResultSet.addAllElements(WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.map {
+                createLookupElementFromAttribute(it)
+            })
+        }
+
+        if (!IGNORE_COMMON_EVENT_TAG_NAMES.contains(tagName)) {
+            // 公共事件
+            completionResultSet.addAllElements(createLookupElementsFromEvents(WXMLMetadata.COMMON_ELEMENT_EVENTS))
+        }
     }
 
     private fun createLookupElementsFromEvents(events: Array<String>): List<LookupElementBuilder> {
@@ -210,18 +286,12 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             wxmlElementAttributeDescriptor: WXMLElementAttributeDescriptor
     ): LookupElementBuilder {
         return when {
-            wxmlElementAttributeDescriptor.types.contains(
-                    WXMLElementAttributeDescriptor.ValueType.BOOLEAN
-            ) && wxmlElementAttributeDescriptor.default == false -> {
+            isOnlyNameForInsert(wxmlElementAttributeDescriptor) -> {
                 // 属性的默认值为false
                 // 只插入属性名称
                 return LookupElementBuilder.create(wxmlElementAttributeDescriptor.key)
             }
-            wxmlElementAttributeDescriptor.types.contains(
-                    WXMLElementAttributeDescriptor.ValueType.NUMBER
-            ) && !wxmlElementAttributeDescriptor.types.contains(
-                    WXMLElementAttributeDescriptor.ValueType.STRING
-            ) -> LookupElementBuilder.create(
+            isDoubleBraceForInsert(wxmlElementAttributeDescriptor) -> LookupElementBuilder.create(
                     wxmlElementAttributeDescriptor.key
             ).withInsertHandler(DoubleBraceInsertHandler())
             else -> LookupElementBuilder.create(
@@ -229,4 +299,6 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             ).withInsertHandler(DoubleQuotaInsertHandler(wxmlAttributeIsEnumerable(wxmlElementAttributeDescriptor)))
         }
     }
+
 }
+
