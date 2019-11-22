@@ -114,7 +114,7 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                         if (wxmlAttribute != null && wxmlAttribute.name == "is") {
                             val wxmlElement = PsiTreeUtil.getParentOfType(wxmlAttribute, WXMLElement::class.java)
                             if (wxmlElement != null && wxmlElement.tagName == "template") {
-                                return arrayOf(WXMLTemplateNameReference(psiElement))
+                                return arrayOf(WXMLTemplateIsAttributeReference(psiElement))
                             }
                         }
                         return PsiReference.EMPTY_ARRAY

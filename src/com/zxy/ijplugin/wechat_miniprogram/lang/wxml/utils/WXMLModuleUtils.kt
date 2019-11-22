@@ -21,7 +21,22 @@ object WXMLModuleUtils {
             return it
         }
         // 找到所有的import的文件引用
-        val fileReferences = elements.asSequence().filter {
+        val fileReferences = findImportedFileReferences(elements)
+        for (fileReference in fileReferences) {
+            val resolveFile = fileReference.resolve()
+            if (resolveFile is WXMLPsiFile) {
+                findTemplateDefinitionWithSingleFile(resolveFile, templateName).let {
+                    return it
+                }
+            }
+        }
+        return null
+    }
+
+    private fun findImportedFileReferences(
+            elements: Collection<WXMLElement>
+    ): Sequence<FileReference> {
+        return elements.asSequence().filter {
             it.tagName == "import"
         }.map { wxmlElement ->
             PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java).find {
@@ -34,15 +49,6 @@ object WXMLModuleUtils {
                 it is FileReference
             }
         }.filterIsInstance<FileReference>()
-        for (fileReference in fileReferences) {
-            val resolveFile = fileReference.resolve()
-            if (resolveFile is WXMLPsiFile) {
-                findTemplateDefinitionWithSingleFile(resolveFile, templateName).let {
-                    return it
-                }
-            }
-        }
-        return null
     }
 
     private fun findTemplateDefinitionWithSingleFile(wxmlPsiFile: WXMLPsiFile, templateName: String): WXMLStringText? {
@@ -109,6 +115,17 @@ object WXMLModuleUtils {
         return PsiTreeUtil.getParentOfType(wxmlStringText,WXMLAttribute::class.java)?.let {
             it.name == "name" && PsiTreeUtil.getParentOfType(it,WXMLElement::class.java)?.tagName == "template"
         }==true
+    }
+
+    fun findTemplateDefinitionsWithImports(wxmlPsiFile: WXMLPsiFile): List<WXMLStringText> {
+        val results = arrayListOf<WXMLStringText>()
+        val elements = PsiTreeUtil.findChildrenOfType(wxmlPsiFile, WXMLElement::class.java)
+        results.addAll(findTemplateDefinitions(elements))
+        val fileReferences = this.findImportedFileReferences(elements)
+        results.addAll(fileReferences.mapNotNull { it.resolve()  }.mapNotNull { it as? WXMLPsiFile }.toList().toTypedArray().flatMap {
+            findTemplateDefinitions(it)
+        })
+        return results
     }
 
 }

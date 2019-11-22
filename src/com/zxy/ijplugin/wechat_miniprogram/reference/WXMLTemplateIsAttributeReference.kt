@@ -7,7 +7,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.contentRange
 
-class WXMLTemplateNameReference(element: WXMLStringText) :
+class WXMLTemplateIsAttributeReference(element: WXMLStringText) :
         PsiReferenceBase<WXMLStringText>(element, element.contentRange()) {
 
     override fun resolve(): PsiElement? {
@@ -15,8 +15,12 @@ class WXMLTemplateNameReference(element: WXMLStringText) :
         return WXMLModuleUtils.findTemplateDefinition(wxmlPsiFile as WXMLPsiFile, this.element.text)
     }
 
-    override fun isReferenceTo(element: PsiElement): Boolean {
-        return super.isReferenceTo(element)
+    override fun getVariants(): Array<Any> {
+        return WXMLModuleUtils.findTemplateDefinitionsWithImports(element.containingFile as WXMLPsiFile).toTypedArray()
+    }
+
+    override fun isSoft(): Boolean {
+        return false
     }
 
 }
