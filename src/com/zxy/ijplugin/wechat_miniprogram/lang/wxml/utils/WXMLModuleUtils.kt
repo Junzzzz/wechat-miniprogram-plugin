@@ -59,12 +59,12 @@ object WXMLModuleUtils {
         }
         for (templateElement in templateElements) {
             val attributes = PsiTreeUtil.findChildrenOfType(templateElement, WXMLAttribute::class.java)
-            val isAttribute = attributes.find {
+            val nameAttribute = attributes.find {
                 it.name == "name"
             }
-            if (isAttribute != null) {
+            if (nameAttribute != null) {
                 val stringText = PsiTreeUtil.findChildOfType(
-                        isAttribute, WXMLStringText::class.java
+                        nameAttribute, WXMLStringText::class.java
                 )
                 if (stringText != null && stringText.text == templateName) {
                     return stringText
@@ -72,6 +72,37 @@ object WXMLModuleUtils {
             }
         }
         return null
+    }
+
+    fun findTemplateDefinitions(wxmlPsiFile: WXMLPsiFile): List<WXMLStringText> {
+        val wxmlElements = PsiTreeUtil.findChildrenOfType(wxmlPsiFile, WXMLElement::class.java)
+        return findTemplateDefinitions(wxmlElements)
+    }
+
+    fun findTemplateDefinitions(wxmlElements: Collection<WXMLElement>): List<WXMLStringText> {
+        return wxmlElements.filter { wxmlElement ->
+            wxmlElement.tagName == "template"
+        }.mapNotNull { wxmlElement ->
+            PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java).find {
+                it.name == "name"
+            }
+        }.mapNotNull {
+            PsiTreeUtil.findChildOfType(
+                    it, WXMLStringText::class.java
+            )
+        }
+    }
+
+    fun findValidIncludeTags(wxmlElements: Collection<WXMLElement>): List<WXMLElement> {
+        return wxmlElements.filter { wxmlElement ->
+            wxmlElement.tagName == "include" && PsiTreeUtil.findChildrenOfType(
+                    wxmlElement, WXMLAttribute::class.java
+            ).any {
+                it.name == "src" && PsiTreeUtil.findChildOfType(
+                        it, WXMLStringText::class.java
+                )?.references?.lastOrNull()?.resolve() is WXMLPsiFile
+            }
+        }
     }
 
 }

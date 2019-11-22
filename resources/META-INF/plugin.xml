@@ -112,6 +112,8 @@
         <editorFactoryListener implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagNameSynchronizer"/>
         <lang.foldingBuilder language="WXML"
                              implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLTagPairFoldingBuilder"/>
+        <lang.foldingBuilder language="WXML"
+                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLIncludeTagFolding"/>
         <breadcrumbsInfoProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.breadcrumbs.WXMLElementBreadcrumbsProvider"/>
         <lang.formatter language="WXML"
@@ -134,6 +136,10 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WxmlJsModuleFileIncludeProvider"/>
         <lang.findUsagesProvider language="WXML"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXMLFindUsageProvider"/>
+        <gotoSymbolContributor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXMLTemplateDefinitionChooseByNameContributor"/>
+        <lang.refactoringSupport language="WXML"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLTemplateNameRefactoring"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
