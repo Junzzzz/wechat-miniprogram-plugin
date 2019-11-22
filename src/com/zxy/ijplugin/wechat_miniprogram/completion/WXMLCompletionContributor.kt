@@ -98,15 +98,18 @@ class WXMLCompletionContributor : CompletionContributor() {
                                                 }
                                             }
                                             WXMLAttributeCompletionProvider.isOnlyNameForInsert(it) -> {
+                                                result += " $key"
+                                            }
+                                            else -> {
                                                 result += " $key=\"\""
                                                 if (afterOffset == null) {
                                                     afterOffset = offset + result.length - 1
                                                 }
                                             }
-                                            else -> {
-                                                result += " $key"
-                                            }
                                         }
+                                    }
+                                    if (afterOffset == null) {
+                                        afterOffset = offset + result.length
                                     }
                                     insertionContext.document.insertString(offset, result)
                                     if (afterOffset != null) {
