@@ -15,21 +15,9 @@ class WXMLIdReference(wxmlStringText: WXMLStringText) : PsiPolyVariantReferenceB
 
     override fun multiResolve(p0: Boolean): Array<ResolveResult> {
         val id = this.element.text
-        val project = this.element.project
-        val wxmlFile = this.element.containingFile.virtualFile
-        // 在wxml文件附近找同名的wxss文件
-        val wxssFile = findRelateFile(wxmlFile, RelateFileType.WXSS)
-        val psiManager = PsiManager.getInstance(project)
-        if (wxssFile != null) {
-            val wxssPsiFile = psiManager.findFile(wxssFile)
-            if (wxssPsiFile != null) {
-                val idSelectors = PsiTreeUtil.findChildrenOfType(wxssPsiFile, WXSSIdSelector::class.java)
-                return idSelectors.filter { id == it.id }.map {
-                    PsiElementResolveResult(it)
-                }.toTypedArray()
-            }
-        }
-        return emptyArray()
+        return getIdSelectorsFromRelatedWxssFile().filter { id == it.id }.map {
+            PsiElementResolveResult(it)
+        }.toTypedArray()
     }
 
     override fun isReferenceTo(element: PsiElement): Boolean {
@@ -51,6 +39,25 @@ class WXMLIdReference(wxmlStringText: WXMLStringText) : PsiPolyVariantReferenceB
         return wxssPsiFiles.any {
             PsiTreeUtil.findChildrenOfType(it, WXSSIdSelector::class.java).contains(selector)
         }
+    }
+
+    private fun getIdSelectorsFromRelatedWxssFile(): MutableCollection<WXSSIdSelector> {
+        val project = this.element.project
+        val wxmlFile = this.element.containingFile.originalFile.virtualFile
+        // 在wxml文件附近找同名的wxss文件
+        val wxssFile = findRelateFile(wxmlFile, RelateFileType.WXSS)
+        val psiManager = PsiManager.getInstance(project)
+        if (wxssFile != null) {
+            val wxssPsiFile = psiManager.findFile(wxssFile)
+            if (wxssPsiFile != null) {
+                return PsiTreeUtil.findChildrenOfType(wxssPsiFile, WXSSIdSelector::class.java)
+            }
+        }
+        return mutableListOf()
+    }
+
+    override fun getVariants(): Array<Any> {
+        return getIdSelectorsFromRelatedWxssFile().toTypedArray()
     }
 
 }
