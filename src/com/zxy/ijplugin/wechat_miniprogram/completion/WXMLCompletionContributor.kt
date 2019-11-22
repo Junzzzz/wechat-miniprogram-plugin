@@ -231,7 +231,7 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             completionResultSet.addAllElements(createLookupElementsFromEvents(elementDescriptor.events))
         }
 
-        if (IGNORE_WX_ATTRIBUTE_TAG_NAMES.contains(tagName)) {
+        if (!IGNORE_WX_ATTRIBUTE_TAG_NAMES.contains(tagName)) {
             // 提供固定的wx前缀完成
             completionResultSet.addAllElements(
                     WX_ATTRIBUTES.map {
