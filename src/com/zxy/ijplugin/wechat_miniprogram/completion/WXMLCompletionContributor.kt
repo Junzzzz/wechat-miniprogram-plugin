@@ -4,17 +4,23 @@ import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.patterns.PlatformPatterns
+import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import com.intellij.util.containers.stream
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
+import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
+import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
 
 class WXMLCompletionContributor : CompletionContributor() {
 
@@ -70,7 +76,7 @@ class WXMLCompletionContributor : CompletionContributor() {
                 PlatformPatterns.psiElement(WXMLTypes.START_TAG_START)
         ), object : CompletionProvider<CompletionParameters>() {
             override fun addCompletions(
-                    p0: CompletionParameters, p1: ProcessingContext, completionResultSet: CompletionResultSet
+                    completionParameters: CompletionParameters, p1: ProcessingContext, completionResultSet: CompletionResultSet
             ) {
                 // 获取所有组件名称
                 completionResultSet.addAllElements(WXMLMetadata.ELEMENT_DESCRIPTORS.map { wxmlElementDescriptor ->
@@ -118,6 +124,23 @@ class WXMLCompletionContributor : CompletionContributor() {
                                 }
                     }
                 })
+                val jsonFile = findRelateFile(completionParameters.originalFile.virtualFile, RelateFileType.JSON)
+                if (jsonFile!==null){
+                    val psiManager = PsiManager.getInstance(completionParameters.position.project)
+                    val jsonPsiFile = psiManager.findFile(jsonFile)
+                    if (jsonPsiFile!=null && jsonPsiFile is JsonFile){
+                        ComponentJsonUtils.getUsingComponentItems(jsonPsiFile)?.map {
+                            val lookupElement = LookupElementBuilder.create(it.name)
+                            val stringValue = it.value
+                            if (stringValue is JsonStringLiteral){
+                                lookupElement.withTailText(stringValue.value)
+                            }
+                            lookupElement
+                        }?.let {
+                            completionResultSet.addAllElements(it)
+                        }
+                    }
+                }
             }
         })
     }
