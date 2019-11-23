@@ -6,10 +6,8 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferen
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
 class WXMLReferenceContributor : PsiReferenceContributor() {
@@ -116,6 +114,26 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                             if (wxmlElement != null && wxmlElement.tagName == "template") {
                                 return arrayOf(WXMLTemplateIsAttributeReference(psiElement))
                             }
+                        }
+                        return PsiReference.EMPTY_ARRAY
+                    }
+                }
+        )
+
+        // 解析wxml tag
+        // 如果tag在json文件中注册
+        psiReferenceRegistrar.registerReferenceProvider(
+                PlatformPatterns.psiElement(WXMLTag::class.java),
+                object : PsiReferenceProvider() {
+                    override fun getReferencesByElement(
+                            psiElement: PsiElement, p1: ProcessingContext
+                    ): Array<PsiReference> {
+                        psiElement as WXMLTag
+                        val tagNameNode = psiElement.getTagNameNode()
+                        if (tagNameNode != null && WXMLMetadata.ELEMENT_DESCRIPTORS.none {
+                                    tagNameNode.text == it.name
+                                }) {
+                            return arrayOf(WXMLTagReference(psiElement))
                         }
                         return PsiReference.EMPTY_ARRAY
                     }

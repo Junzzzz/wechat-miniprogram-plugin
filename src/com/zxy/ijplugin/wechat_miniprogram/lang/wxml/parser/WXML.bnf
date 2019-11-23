@@ -29,17 +29,21 @@ text ::= CONTENT | CRLF {
 element ::= closedElement| openedElement  {
     methods=[getTagName]
 }
-closedElement ::= START_TAG_START TAG_NAME attributes? EMPTY_ELEMENT_END
+closedElement ::= START_TAG_START TAG_NAME attributes? EMPTY_ELEMENT_END {
+    extends= "com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag"
+}
 openedElement ::= startTag elementContent? endTag {
     pin=startTag
 }
 startTag ::= START_TAG_START TAG_NAME attributes? START_TAG_END {
     methods = [getEndTag]
     pin = 1
+    extends= "com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag"
 }
 endTag ::= END_TAG_START TAG_NAME END_TAG_END {
     methods = [getStartTag]
     pin = 1
+    extends= "com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag"
 }
 private attributes ::= attribute+
 attribute ::= ATTRIBUTE_NAME (EQ attributeValue)? {
