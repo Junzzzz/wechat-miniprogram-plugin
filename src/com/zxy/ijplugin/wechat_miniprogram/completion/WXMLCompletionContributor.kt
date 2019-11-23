@@ -124,6 +124,8 @@ class WXMLCompletionContributor : CompletionContributor() {
                                 }
                     }
                 })
+
+                // 自定义组件
                 val jsonFile = findRelateFile(completionParameters.originalFile.virtualFile, RelateFileType.JSON)
                 if (jsonFile!==null){
                     val psiManager = PsiManager.getInstance(completionParameters.position.project)
