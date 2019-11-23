@@ -5,9 +5,12 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonProperty
 import com.intellij.json.psi.JsonStringLiteral
+import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiManager
+import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
@@ -19,7 +22,9 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
+import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
 
 class WXMLCompletionContributor : CompletionContributor() {
@@ -76,7 +81,8 @@ class WXMLCompletionContributor : CompletionContributor() {
                 PlatformPatterns.psiElement(WXMLTypes.START_TAG_START)
         ), object : CompletionProvider<CompletionParameters>() {
             override fun addCompletions(
-                    completionParameters: CompletionParameters, p1: ProcessingContext, completionResultSet: CompletionResultSet
+                    completionParameters: CompletionParameters, p1: ProcessingContext,
+                    completionResultSet: CompletionResultSet
             ) {
                 // 获取所有组件名称
                 completionResultSet.addAllElements(WXMLMetadata.ELEMENT_DESCRIPTORS.map { wxmlElementDescriptor ->
@@ -127,14 +133,14 @@ class WXMLCompletionContributor : CompletionContributor() {
 
                 // 自定义组件
                 val jsonFile = findRelateFile(completionParameters.originalFile.virtualFile, RelateFileType.JSON)
-                if (jsonFile!==null){
+                if (jsonFile !== null) {
                     val psiManager = PsiManager.getInstance(completionParameters.position.project)
                     val jsonPsiFile = psiManager.findFile(jsonFile)
-                    if (jsonPsiFile!=null && jsonPsiFile is JsonFile){
+                    if (jsonPsiFile != null && jsonPsiFile is JsonFile) {
                         ComponentJsonUtils.getUsingComponentItems(jsonPsiFile)?.map {
                             val lookupElement = LookupElementBuilder.create(it.name)
                             val stringValue = it.value
-                            if (stringValue is JsonStringLiteral){
+                            if (stringValue is JsonStringLiteral) {
                                 lookupElement.withTailText(stringValue.value)
                             }
                             lookupElement
@@ -241,9 +247,9 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         val wxmlAttributeNames = PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java)
                 .map(WXMLAttribute::getName)
 
-        val elementDescriptor = WXMLMetadata.ELEMENT_DESCRIPTORS.stream().filter { it.name == tagName }
-                .findFirst().orElse(null)
+        val elementDescriptor = WXMLMetadata.ELEMENT_DESCRIPTORS.find { it.name == tagName }
         if (elementDescriptor != null) {
+            // 自带组件
             val attributes = elementDescriptor.attributeDescriptors
                     // 过滤掉元素上已存在的类型
                     .filter { !wxmlAttributeNames.contains(it.key) }
@@ -254,6 +260,27 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
 
             //添加组件对应的事件
             completionResultSet.addAllElements(createLookupElementsFromEvents(elementDescriptor.events))
+        } else {
+            // 尝试寻找自定义组件
+            val componentNameJsonLiteral = PsiTreeUtil.findChildOfType(
+                    wxmlElement, WXMLTag::class.java
+            )?.reference?.resolve() as? JsonStringLiteral
+            val lastComponentPathReference = (componentNameJsonLiteral?.parent as? JsonProperty)?.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>
+            val jsFile = lastComponentPathReference?.multiResolve(
+                    false
+            )?.mapNotNull { it.element }?.find { it is JSFile } as? JSFile
+            jsFile?.let {
+                ComponentJsUtils.findPropertiesItems(jsFile)
+            }?.mapNotNull {
+                LookupElementBuilder.create(it.name ?: return@mapNotNull null)
+                        .withInsertHandler(
+                                if (ComponentJsUtils.findTypeByPropertyValue(
+                                                it
+                                        ) != "String") DoubleBraceInsertHandler() else DoubleQuotaInsertHandler(false)
+                        )
+            }?.let {
+                completionResultSet.addAllElements(it)
+            }
         }
 
         if (!IGNORE_WX_ATTRIBUTE_TAG_NAMES.contains(tagName)) {

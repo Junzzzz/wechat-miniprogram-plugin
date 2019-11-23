@@ -56,11 +56,6 @@ class WechatMiniProgramJSONReferenceContributor : PsiReferenceContributor() {
                                                                 PsiElementResolveResult(it)
                                                             }.toTypedArray()
 
-                                                    override fun handleElementRename(
-                                                            newElementName: String
-                                                    ): PsiElement {
-                                                        return super.handleElementRename(newElementName)
-                                                    }
                                                 }
                                                 references[fileReferences.size - 1] = lastFileReference
                                                 return references

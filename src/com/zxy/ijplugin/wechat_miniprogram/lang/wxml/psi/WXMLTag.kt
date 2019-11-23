@@ -20,4 +20,7 @@ open class WXMLTag(node:ASTNode) : ContributedReferenceHost, ASTWrapperPsiElemen
         return this.getTagNameNode()?.text
     }
 
+    override fun getReference(): PsiReference? {
+        return this.references.firstOrNull()
+    }
 }
