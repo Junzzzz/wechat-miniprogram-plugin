@@ -5,12 +5,9 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonProperty
 import com.intellij.json.psi.JsonStringLiteral
-import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
@@ -262,13 +259,10 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             completionResultSet.addAllElements(createLookupElementsFromEvents(elementDescriptor.events))
         } else {
             // 尝试寻找自定义组件
-            val componentNameJsonLiteral = PsiTreeUtil.findChildOfType(
+            val wxmlTag = PsiTreeUtil.findChildOfType(
                     wxmlElement, WXMLTag::class.java
-            )?.reference?.resolve() as? JsonStringLiteral
-            val lastComponentPathReference = (componentNameJsonLiteral?.parent as? JsonProperty)?.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>
-            val jsFile = lastComponentPathReference?.multiResolve(
-                    false
-            )?.mapNotNull { it.element }?.find { it is JSFile } as? JSFile
+            )
+            val jsFile = wxmlTag?.getDefinitionJsFile()
             jsFile?.let {
                 ComponentJsUtils.findPropertiesItems(jsFile)
             }?.mapNotNull {

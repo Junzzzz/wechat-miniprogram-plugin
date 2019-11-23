@@ -40,6 +40,11 @@ object WXMLPsiImplUtils {
         return element.node.firstChildNode.text
     }
 
+    @JvmStatic
+    fun getReferences(element: WXMLAttribute): Array<out PsiReference> {
+        return PsiReferenceService.getService().getContributedReferences(element)
+    }
+
     /*text*/
     @JvmStatic
     fun isValidHost(element: WXMLText): Boolean {

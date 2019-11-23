@@ -47,7 +47,8 @@ endTag ::= END_TAG_START TAG_NAME END_TAG_END {
 }
 private attributes ::= attribute+
 attribute ::= ATTRIBUTE_NAME (EQ attributeValue)? {
-    methods= [getName]
+    methods= [getName getReferences]
+    implements = ["com.intellij.psi.ContributedReferenceHost"]
 }
 private attributeValue ::= string
 string ::= STRING_START string_text? STRING_END
