@@ -710,8 +710,33 @@ object WXMLMetadata {
             ),
             E(
                     "web-view",
-                    arrayOf(A("src",arrayOf(T.STRING))),
-                    arrayOf("message","load","error")
+                    arrayOf(A("src", arrayOf(T.STRING))),
+                    arrayOf("message", "load", "error")
+            ),
+            E(
+                    "navigation-bar",
+                    arrayOf(
+                            A("title", arrayOf(T.STRING)),
+                            A("loading", arrayOf(T.BOOLEAN), false),
+                            A("front-color", arrayOf(T.STRING)),
+                            A("background-color", arrayOf(T.STRING)),
+                            A("color-animation-duration", arrayOf(T.NUMBER), 0),
+                            A("color-animation-timing-func", arrayOf(T.STRING, T.NUMBER), "linear")
+                    )
+            ),
+            E(
+                    "page-meta",
+                    arrayOf(
+                            A("background-text-style",arrayOf(T.STRING)),
+                            A("background-color",arrayOf(T.STRING)),
+                            A("background-color-top",arrayOf(T.STRING)),
+                            A("background-color-bottom",arrayOf(T.STRING)),
+                            A("scroll-top",arrayOf(T.STRING)),
+                            A("scroll-duration", arrayOf(T.NUMBER), 300),
+                            A("page-style",arrayOf(T.STRING)),
+                            A("root-font-size",arrayOf(T.STRING))
+                    ),
+                    arrayOf("resize","scroll","scrollone")
             )
     )
 
@@ -729,11 +754,15 @@ object WXMLMetadata {
 
     val INNER_ELEMENT_NAMES = arrayOf("text")
 
-    val ARIA_ATTRIBUTE = arrayOf("aria-hidden",	"aria-role",	"aria-label","aria-checked",	"aria-disabled",
-            "aria-describedby",	"aria-expanded",	"aria-haspopup",	"aria-selected",	"aria-required",
-            "aria-orientation","aria-valuemin",	"aria-valuemax",	"aria-valuenow",	"aria-readonly",
-            "aria-multiselectable",	"aria-controls",	"tabindex",	"aria-labelledby",	"aria-orientation",
-            "aria-multiselectable",	"aria-labelledby")
+    val ARIA_ATTRIBUTE = arrayOf(
+            "aria-hidden", "aria-role", "aria-label", "aria-checked", "aria-disabled",
+            "aria-describedby", "aria-expanded", "aria-haspopup", "aria-selected", "aria-required",
+            "aria-orientation", "aria-valuemin", "aria-valuemax", "aria-valuenow", "aria-readonly",
+            "aria-multiselectable", "aria-controls", "tabindex", "aria-labelledby", "aria-orientation",
+            "aria-multiselectable", "aria-labelledby"
+    )
 
-    val NATIVE_COMPONENTS = arrayOf("camera","canvas","input","live-player","live-pusher","map","textarea","video")
+    val NATIVE_COMPONENTS = arrayOf(
+            "camera", "canvas", "input", "live-player", "live-pusher", "map", "textarea", "video"
+    )
 }
