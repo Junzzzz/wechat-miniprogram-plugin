@@ -38,16 +38,18 @@ class WxmlJSInjector : MultiHostInjector {
             multiHostRegistrar: MultiHostRegistrar
     ) {
         val element = PsiTreeUtil.getParentOfType(psiElement, WXMLElement::class.java)
+        val attribute = PsiTreeUtil.getParentOfType(
+                psiElement, WXMLAttribute::class.java
+        )
+        val attributeName = attribute?.name
         if (element == null || element.tagName == "wxs" || element.tagName == "include" || element.tagName == "import"
-                || (element.tagName == "template" && PsiTreeUtil.getParentOfType(
-                        psiElement, WXMLAttribute::class.java
-                )?.name == "name")) {
+                || (element.tagName == "template" && attributeName == "name")
+                || attributeName == "wx:for-item" || attributeName == "wx:key" || attributeName == "wx:for-index") {
             // wxs等特殊标签 标签的属性不支持 {{}} 语法
+            // wx:for 相关的一些辅助属性不支持 {{}} 语法
             return
         }
-        if (PsiTreeUtil.getParentOfType(
-                        psiElement, WXMLAttribute::class.java
-                )?.isEventHandler() == true && !DOUBLE_BRACE_REGEX.matches(psiElement.text)) {
+        if (attribute?.isEventHandler() == true && !DOUBLE_BRACE_REGEX.matches(psiElement.text)) {
             // 此属性是事件
             // 并且属性值中没有双括号
             multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
