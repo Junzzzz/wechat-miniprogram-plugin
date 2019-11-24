@@ -79,6 +79,7 @@ class WXMLCompletionContributor : CompletionContributor() {
 
         // 输入一个元素开始符号后
         // 自动完成标签名以及必填的属性
+        // TODO 输入WXML_TAG_NAME 不能匹配
         this.extend(
                 CompletionType.BASIC, PlatformPatterns.psiElement().afterLeafSkipping(
                 PlatformPatterns.alwaysFalse<Any>(),
@@ -135,11 +136,11 @@ class WXMLCompletionContributor : CompletionContributor() {
                     }
                 })
                 // 自定义组件
-                val jsonFile = findRelateFile(completionParameters.originalFile.virtualFile, RelateFileType.JSON)
-                if (jsonFile !== null) {
+                val currentJsonFile = findRelateFile(completionParameters.originalFile.virtualFile, RelateFileType.JSON)
+                if (currentJsonFile !== null) {
                     val psiManager = PsiManager.getInstance(completionParameters.position.project)
-                    val currentJsonFile = psiManager.findFile(jsonFile)
-                    if (currentJsonFile != null && currentJsonFile is JsonFile) {
+                    val currentJsonPsiFile = psiManager.findFile(currentJsonFile)
+                    if (currentJsonPsiFile != null && currentJsonPsiFile is JsonFile) {
 
                         // 项目中所有的组件配置文件
                         val jsonFiles = FilenameIndex.getAllFilesByExt(completionParameters.position.project, "json")
@@ -148,10 +149,10 @@ class WXMLCompletionContributor : CompletionContributor() {
                                 }.filterIsInstance<JsonFile>().filter {
                                     ComponentJsonUtils.isComponentConfiguration(it)
                                 }.filter {
-                                    it != currentJsonFile
+                                    it != currentJsonPsiFile
                                 }
                         val usingComponentsObjectValue = ComponentJsonUtils.getUsingComponentPropertyValue(
-                                currentJsonFile
+                                currentJsonPsiFile
                         )
                         val usingComponentItems = usingComponentsObjectValue?.propertyList
                         val usingComponentMap = usingComponentItems
@@ -176,7 +177,7 @@ class WXMLCompletionContributor : CompletionContributor() {
                             if (configComponentName == null) {
 
                                 val componentPath = VfsUtilCore.findRelativePath(
-                                        jsonFile.virtualFile, currentJsonFile.virtualFile, '/'
+                                        jsonFile.virtualFile, currentJsonPsiFile.virtualFile, '/'
                                 ) ?: jsonFile.virtualFile.path.replace(
                                         Regex("\\.${JsonFileType.INSTANCE.defaultExtension}$"), ""
                                 )
