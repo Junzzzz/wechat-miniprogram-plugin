@@ -4,11 +4,17 @@ import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.json.JsonElementTypes
+import com.intellij.json.JsonFileType
+import com.intellij.json.psi.JsonElementGenerator
 import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonStringLiteral
+import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiManager
+import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import com.intellij.util.containers.stream
@@ -73,7 +79,8 @@ class WXMLCompletionContributor : CompletionContributor() {
 
         // 输入一个元素开始符号后
         // 自动完成标签名以及必填的属性
-        this.extend(CompletionType.BASIC, PlatformPatterns.psiElement().afterLeafSkipping(
+        this.extend(
+                CompletionType.BASIC, PlatformPatterns.psiElement().afterLeafSkipping(
                 PlatformPatterns.alwaysFalse<Any>(),
                 PlatformPatterns.psiElement(WXMLTypes.START_TAG_START)
         ), object : CompletionProvider<CompletionParameters>() {
@@ -127,23 +134,81 @@ class WXMLCompletionContributor : CompletionContributor() {
                                 }
                     }
                 })
-
                 // 自定义组件
                 val jsonFile = findRelateFile(completionParameters.originalFile.virtualFile, RelateFileType.JSON)
                 if (jsonFile !== null) {
                     val psiManager = PsiManager.getInstance(completionParameters.position.project)
-                    val jsonPsiFile = psiManager.findFile(jsonFile)
-                    if (jsonPsiFile != null && jsonPsiFile is JsonFile) {
-                        ComponentJsonUtils.getUsingComponentItems(jsonPsiFile)?.map {
-                            val lookupElement = LookupElementBuilder.create(it.name)
-                            val stringValue = it.value
-                            if (stringValue is JsonStringLiteral) {
-                                lookupElement.withTailText(stringValue.value)
+                    val currentJsonFile = psiManager.findFile(jsonFile)
+                    if (currentJsonFile != null && currentJsonFile is JsonFile) {
+
+                        // 项目中所有的组件配置文件
+                        val jsonFiles = FilenameIndex.getAllFilesByExt(completionParameters.position.project, "json")
+                                .mapNotNull {
+                                    psiManager.findFile(it)
+                                }.filterIsInstance<JsonFile>().filter {
+                                    ComponentJsonUtils.isComponentConfiguration(it)
+                                }.filter {
+                                    it != currentJsonFile
+                                }
+                        val usingComponentsObjectValue = ComponentJsonUtils.getUsingComponentPropertyValue(
+                                currentJsonFile
+                        )
+                        val usingComponentItems = usingComponentsObjectValue?.propertyList
+                        val usingComponentMap = usingComponentItems
+                                ?.associateBy({ jsonProperty ->
+                                    (jsonProperty.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>)?.multiResolve(
+                                            false
+                                    )?.map {
+                                        it.element
+                                    }?.find {
+                                        it is JsonFile
+                                    }?.let {
+                                        it as JsonFile
+                                    }
+                                }, { it.name })
+                                ?.filter { it.key != null }
+                        completionResultSet.addAllElements(jsonFiles.mapNotNull { jsonFile ->
+                            val configComponentName = usingComponentMap?.get(jsonFile)
+                            val rootPath = ProjectFileIndex.SERVICE.getInstance(
+                                    completionParameters.position.project
+                            ).getContentRootForFile(jsonFile.virtualFile)?.path ?: return@mapNotNull null
+                            val componentPathStartWithRoot = jsonFile.virtualFile.path.removePrefix(rootPath)
+                            if (configComponentName == null) {
+
+                                val componentPath = VfsUtilCore.findRelativePath(
+                                        jsonFile.virtualFile, currentJsonFile.virtualFile, '/'
+                                ) ?: jsonFile.virtualFile.path.replace(
+                                        Regex("\\.${JsonFileType.INSTANCE.defaultExtension}$"), ""
+                                )
+
+                                // 没有注册的组件
+                                LookupElementBuilder.create(jsonFile.virtualFile.nameWithoutExtension)
+                                        .withTailText(componentPathStartWithRoot)
+                                        .withInsertHandler { _, lookupElement ->
+                                            // 在配置文件中注册组件
+                                            val jsonElementGenerator = JsonElementGenerator(
+                                                    completionParameters.position.project
+                                            )
+                                            val closeBrace = usingComponentsObjectValue?.node?.findChildByType(
+                                                    JsonElementTypes.R_CURLY
+                                            )?.psi
+                                            if (usingComponentItems?.isEmpty() != true) {
+                                                usingComponentsObjectValue?.addBefore(
+                                                        jsonElementGenerator.createComma(), closeBrace
+                                                )
+                                            }
+                                            usingComponentsObjectValue?.addBefore(
+                                                    jsonElementGenerator.createProperty(
+                                                            lookupElement.lookupString, "\"$componentPath\""
+                                                    ),
+                                                    closeBrace
+                                            )
+                                        }
+                            } else {
+                                LookupElementBuilder.create(configComponentName)
+                                        .withTailText(componentPathStartWithRoot)
                             }
-                            lookupElement
-                        }?.let {
-                            completionResultSet.addAllElements(it)
-                        }
+                        })
                     }
                 }
             }
