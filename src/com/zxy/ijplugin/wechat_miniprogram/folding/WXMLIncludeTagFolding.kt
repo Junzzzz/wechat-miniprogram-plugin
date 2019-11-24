@@ -16,7 +16,6 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.findAttribute
 
 class WXMLIncludeTagFolding : FoldingBuilderEx() {
     override fun getPlaceholderText(astNode: ASTNode): String? {
-        // TODO 使用引用文件的内容作为占位文字
         val psiElement = astNode.psi
         if (psiElement is WXMLElement) {
             val resolveResult = psiElement.findAttribute("src")?.string?.stringText?.references?.lastOrNull()?.resolve()
