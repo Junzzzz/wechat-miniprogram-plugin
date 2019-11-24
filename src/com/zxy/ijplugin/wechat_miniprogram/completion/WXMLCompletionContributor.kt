@@ -257,6 +257,13 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
 
             //添加组件对应的事件
             completionResultSet.addAllElements(createLookupElementsFromEvents(elementDescriptor.events))
+
+            if (!WXMLMetadata.NATIVE_COMPONENTS.contains(tagName)) {
+                // 无障碍访问属性
+                completionResultSet.addAllElements(WXMLMetadata.ARIA_ATTRIBUTE.map {
+                    LookupElementBuilder.create(it).withInsertHandler(DoubleQuotaInsertHandler(false))
+                })
+            }
         } else {
             // 尝试寻找自定义组件
             val wxmlTag = PsiTreeUtil.findChildOfType(

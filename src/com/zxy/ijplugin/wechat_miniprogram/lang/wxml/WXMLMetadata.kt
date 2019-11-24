@@ -728,4 +728,12 @@ object WXMLMetadata {
     )
 
     val INNER_ELEMENT_NAMES = arrayOf("text")
+
+    val ARIA_ATTRIBUTE = arrayOf("aria-hidden",	"aria-role",	"aria-label","aria-checked",	"aria-disabled",
+            "aria-describedby",	"aria-expanded",	"aria-haspopup",	"aria-selected",	"aria-required",
+            "aria-orientation","aria-valuemin",	"aria-valuemax",	"aria-valuenow",	"aria-readonly",
+            "aria-multiselectable",	"aria-controls",	"tabindex",	"aria-labelledby",	"aria-orientation",
+            "aria-multiselectable",	"aria-labelledby")
+
+    val NATIVE_COMPONENTS = arrayOf("camera","canvas","input","live-player","live-pusher","map","textarea","video")
 }
