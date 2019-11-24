@@ -1,24 +1,18 @@
 package com.zxy.ijplugin.wechat_miniprogram.reference.usage
 
 import com.intellij.openapi.application.QueryExecutorBase
-import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiReference
-import com.intellij.psi.css.CssClass
-import com.intellij.psi.css.CssSelectorSuffix
-import com.intellij.psi.css.usages.CssElementsSearcher
 import com.intellij.psi.impl.search.PsiSearchHelperImpl
-import com.intellij.psi.search.*
+import com.intellij.psi.search.PsiSearchHelper
+import com.intellij.psi.search.SingleTargetRequestResultProcessor
+import com.intellij.psi.search.TextOccurenceProcessor
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.util.Processor
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
-import org.apache.batik.css.engine.sac.CSSElementSelector
 import java.util.*
-import kotlin.collections.ArrayList
 
 class WXSSElementSearcher :
         QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters>(true) {
@@ -38,7 +32,6 @@ class WXSSElementSearcher :
             p: ReferencesSearch.SearchParameters, consumer: Processor<in PsiReference>,
             options: EnumSet<PsiSearchHelperImpl.Options>, textToSearch: String
     ) {
-        // TODO 解析文件的import
         val scope = p.effectiveSearchScope
         val singleTargetRequestResultProcessor = SingleTargetRequestResultProcessor(
                 p.elementToSearch
