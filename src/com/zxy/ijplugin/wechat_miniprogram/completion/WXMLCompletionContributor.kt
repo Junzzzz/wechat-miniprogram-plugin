@@ -9,7 +9,6 @@ import com.intellij.json.JsonFileType
 import com.intellij.json.psi.JsonElementGenerator
 import com.intellij.json.psi.JsonFile
 import com.intellij.openapi.roots.ProjectFileIndex
-import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiPolyVariantReferenceBase
@@ -173,18 +172,13 @@ class WXMLCompletionContributor : CompletionContributor() {
                             val rootPath = ProjectFileIndex.SERVICE.getInstance(
                                     completionParameters.position.project
                             ).getContentRootForFile(jsonFile.virtualFile)?.path ?: return@mapNotNull null
-                            val componentPathStartWithRoot = jsonFile.virtualFile.path.removePrefix(rootPath)
+                            val componentPath = jsonFile.virtualFile.path.removePrefix(rootPath).replace(
+                                    Regex("\\.${JsonFileType.INSTANCE.defaultExtension}$"), ""
+                            )
                             if (configComponentName == null) {
-
-                                val componentPath = VfsUtilCore.findRelativePath(
-                                        jsonFile.virtualFile, currentJsonPsiFile.virtualFile, '/'
-                                ) ?: jsonFile.virtualFile.path.replace(
-                                        Regex("\\.${JsonFileType.INSTANCE.defaultExtension}$"), ""
-                                )
-
                                 // 没有注册的组件
                                 LookupElementBuilder.create(jsonFile.virtualFile.nameWithoutExtension)
-                                        .withTailText(componentPathStartWithRoot)
+                                        .withTailText(componentPath)
                                         .withInsertHandler { _, lookupElement ->
                                             // 在配置文件中注册组件
                                             val jsonElementGenerator = JsonElementGenerator(
@@ -207,7 +201,7 @@ class WXMLCompletionContributor : CompletionContributor() {
                                         }
                             } else {
                                 LookupElementBuilder.create(configComponentName)
-                                        .withTailText(componentPathStartWithRoot)
+                                        .withTailText(componentPath)
                             }
                         })
                     }
