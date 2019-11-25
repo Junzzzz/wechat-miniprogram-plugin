@@ -202,7 +202,7 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
                     if (configComponentName == null) {
                         // 没有注册的组件
                         LookupElementBuilder.create(jsonFile.virtualFile.nameWithoutExtension)
-                                .withTailText(componentPath)
+                                .withTypeText(componentPath)
                                 .withInsertHandler { _, lookupElement ->
                                     // 在配置文件中注册组件
                                     usingComponentsObjectValue?.let {
@@ -211,7 +211,7 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
                                 }
                     } else {
                         LookupElementBuilder.create(configComponentName)
-                                .withTailText(componentPath)
+                                .withTypeText(componentPath)
                     }
                 })
             }
