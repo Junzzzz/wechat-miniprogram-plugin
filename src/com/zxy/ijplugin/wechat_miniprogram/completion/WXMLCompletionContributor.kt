@@ -351,7 +351,7 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
                 ComponentJsUtils.findComponentExternalClasses(it)
             }?.map {
                 LookupElementBuilder.create(it)
-                        .withInsertHandler(DoubleQuotaInsertHandler(false))
+                        .withInsertHandler(DoubleQuotaInsertHandler(true))
                         .withTypeText("Component.externalClasses")
             }?.let {
                 completionResultSet.addAllElements(it)
