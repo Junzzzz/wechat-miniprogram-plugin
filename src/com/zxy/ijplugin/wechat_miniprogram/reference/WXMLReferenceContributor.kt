@@ -8,6 +8,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
+import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
 class WXMLReferenceContributor : PsiReferenceContributor() {
@@ -60,7 +61,9 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                             psiElement: PsiElement, p1: ProcessingContext
                     ): Array<PsiReference> {
                         val attribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
-                        if (attribute != null && attribute.name == "class") {
+                        if (attribute != null && (attribute.name == "class" || ComponentWxmlUtils.isExternalClassesAttribute(
+                                        attribute
+                                ))) {
                             val stringContentNodes = psiElement.node.getChildren(
                                     TokenSet.create(WXMLTypes.STRING_CONTENT)
                             )
@@ -144,11 +147,13 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
         // 引用js文件中的properties配置
         psiReferenceRegistrar.registerReferenceProvider(
                 PlatformPatterns.psiElement(WXMLAttribute::class.java),
-                object:PsiReferenceProvider(){
-                    override fun getReferencesByElement(psiElement: PsiElement, p1: ProcessingContext): Array<PsiReference> {
+                object : PsiReferenceProvider() {
+                    override fun getReferencesByElement(
+                            psiElement: PsiElement, p1: ProcessingContext
+                    ): Array<PsiReference> {
                         psiElement as WXMLAttribute
-                        val wxmlTag = PsiTreeUtil.getParentOfType(psiElement,WXMLTag::class.java)
-                        if (wxmlTag != null && wxmlTag.reference is WXMLTagReference){
+                        val wxmlTag = PsiTreeUtil.getParentOfType(psiElement, WXMLTag::class.java)
+                        if (wxmlTag != null && wxmlTag.reference is WXMLTagReference) {
                             return arrayOf(WXMLAttributeReference(psiElement))
                         }
                         return PsiReference.EMPTY_ARRAY
