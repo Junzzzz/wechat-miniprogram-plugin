@@ -1,6 +1,6 @@
 {
   "title": "JSON schema for the Wechat mini program app configuration file",
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "pagesDefinition": {
       "properties": {
@@ -15,7 +15,7 @@
     },
     "windowDefinition": {
       "properties": {
-        "compilerOptions": {
+        "window": {
           "type": "object",
           "description": "Global window setting",
           "properties": {
@@ -141,7 +141,7 @@
     },
     "networkTimeoutDefinition": {
       "properties": {
-        "references": {
+        "networkTimeout": {
           "type": "object",
           "description": "Timeout time for various network requests, in milliseconds",
           "properties": {
@@ -169,39 +169,98 @@
         }
       }
     },
-    "debug": {
-      "type": "boolean",
-      "description": "Whether to enable debug mode, it is off by default.",
-      "default": false
+    "debugDefinition": {
+      "properties": {
+        "debug": {
+          "type": "boolean",
+          "default": false
+        }
+      }
     },
-    "subpackages": {
-      "type": "array",
-      "description": "Configuration for sub packages",
-      "items": {
-        "type": "object",
-        "properties": {
-          "root": {
-            "type": "string",
-            "description": "Root dir for sub package"
-          },
-          "name": {
-            "type": "string",
-            "description": "Name for sub package"
-          },
-          "pages": {
-            "type": "array",
-            "description": "Subcontract page path, relative to subcontracting root directory",
-            "items": {
-              "type": "string"
-            }
-          },
-          "independent": {
-            "type": "boolean",
-            "description": "whether it is independent subcontracting"
-          },
-          "plugins": {
+    "subpackagesDefinition": {
+      "properties": {
+        "subpackages": {
+          "type": "array",
+          "description": "Configuration for sub packages",
+          "items": {
             "type": "object",
-            "items": {
+            "properties": {
+              "root": {
+                "type": "string",
+                "description": "Root dir for sub package"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name for sub package"
+              },
+              "pages": {
+                "type": "array",
+                "description": "Subcontract page path, relative to subcontracting root directory",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "independent": {
+                "type": "boolean",
+                "description": "whether it is independent subcontracting"
+              },
+              "pluginsDefinition": {
+                "type": "object",
+                "items": {
+                  "type": "object",
+                  "items": {
+                    "properties": {
+                      "version": {
+                        "type": "string",
+                        "description": "specify the version of the plugin"
+                      },
+                      "provider": {
+                        "type": "string",
+                        "description": "plugin provider"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "functionalPagesDefinition": {
+      "properties": {
+        "functionalPages": {
+          "type": "boolean",
+          "description": "Whether to enable the plugin function page, it is off by default.",
+          "default": false
+        }
+      }
+    },
+    "workersDefinition": {
+      "properties": {
+        "workers": {
+          "type": "string",
+          "description": "the directory where the worker code is placed"
+        }
+      }
+    },
+    "requiredBackgroundModesDefinition": {
+      "properties": {
+        "requiredBackgroundModes": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Ability to use in the background, such as \"music playback\""
+        }
+      }
+    },
+    "pluginsDefinition": {
+      "properties": {
+        "plugins": {
+          "type": "object",
+          "patternProperties": {
+            ".+": {
               "type": "object",
               "items": {
                 "properties": {
@@ -219,40 +278,123 @@
           }
         }
       }
-    },
-    "functionalPages": {
-      "type": "boolean",
-      "description": "Whether to enable the plugin function page, it is off by default."
-    },
-    "workers": {
-      "type": "string",
-      "description": "the directory where the worker code is placed"
-    },
-    "requiredBackgroundModes": {
-      "type": "array",
-      "items": {
-        "type": "array"
-      },
-      "description": "Ability to use in the background, such as \"music playback\""
-    },
-    "plugins": {
+    }
+  },
+  "type": "object",
+  "allOf": [
+    {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/pagesDefinition"
+        },
+        {
+          "$ref": "#/definitions/windowDefinition"
+        },
+        {
+          "$ref": "#/definitions/tabBarDefinition"
+        },
+        {
+          "$ref": "#/definitions/networkTimeoutDefinition"
+        },
+        {
+          "$ref": "#/definitions/subpackagesDefinition"
+        },
+        {
+          "$ref": "#/definitions/functionalPagesDefinition"
+        },
+        {
+          "$ref": "#/definitions/workersDefinition"
+        },
+        {
+          "$ref": "#/definitions/requiredBackgroundModesDefinition"
+        },
+        {
+          "$ref": "#/definitions/pluginsDefinition"
+        }
+      ]
+    }
+  ],
+  "properties": {
+    "preloadRule": {
       "type": "object",
-      "items": {
-        "type": "object",
-        "items": {
+      "patternProperties": {
+        ".+": {
+          "type": "object",
           "properties": {
-            "version": {
+            "network": {
               "type": "string",
-              "description": "specify the version of the plugin"
+              "description": "Pre download under specified network",
+              "default": "wifi"
             },
-            "provider": {
-              "type": "string",
-              "description": "plugin provider"
+            "packages": {
+              "type": "array",
+              "description": "After entering the page, pre-download the root or name of the sub-package. \"__APP__\" indicates the main package.",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "packages"
+          ]
+        }
+      }
+    },
+    "resizable": {
+      "description": "Enable screen rotation support on your ipad",
+      "type": "boolean",
+      "default": false
+    },
+    "navigateToMiniProgramAppIdList": {
+      "type": "array",
+      "description": "When the applet needs to use the wx.navigateToMiniProgram interface to jump to other applets, you need to declare the list of applets appId to be jumped in the configuration file, and allow up to 10",
+      "items": {
+        "type": "string"
+      }
+    },
+    "usingComponents": {
+      "type": "object",
+      "description": "Global custom component"
+    },
+    "permission": {
+      "type": "object",
+      "description": "Applet interface permission related settings",
+      "patternProperties": {
+        "^scope\\\\.[A-Za-z0-9\\\\.-]+": {
+          "type": "object",
+          "properties": {
+            "desc": {
+              "type": "string"
             }
           }
         }
+      },
+      "additionalProperties": false
+    },
+    "sitemapLocation": {
+      "type": "string",
+      "description": "indicate the location of sitemap json"
+    },
+    "style": {
+      "type": "string",
+      "enum": [
+        "v2"
+      ],
+      "description": "Style version for \"button icon radio checkbox switch slider\""
+    },
+    "useExtendedLib": {
+      "type": "object",
+      "description": "Specify the extension library to reference",
+      "properties": {
+        "kbone": {
+          "type": "boolean",
+          "default": false
+        },
+        "weui": {
+          "type": "boolean",
+          "default": false
+        }
       }
     }
-  },
-  "type": "object"
+  }
 }

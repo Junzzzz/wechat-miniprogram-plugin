@@ -113,3 +113,4 @@ settings.gradle
 /gen/
 
 note.md
+/.idea/jarRepositories.xml
