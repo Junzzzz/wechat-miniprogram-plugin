@@ -4,16 +4,11 @@ import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.json.JsonElementTypes
-import com.intellij.json.JsonFileType
-import com.intellij.json.psi.JsonElementGenerator
 import com.intellij.json.psi.JsonFile
-import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.PsiWhiteSpace
-import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import com.intellij.util.containers.stream
@@ -28,6 +23,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
 
 class WXMLCompletionContributor : CompletionContributor() {
 
@@ -170,19 +166,17 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
         // 自定义组件
         val currentJsonFile = findRelateFile(completionParameters.originalFile.virtualFile, RelateFileType.JSON)
         if (currentJsonFile !== null) {
-            val psiManager = PsiManager.getInstance(completionParameters.position.project)
+            val project = completionParameters.position.project
+            val psiManager = PsiManager.getInstance(project)
             val currentJsonPsiFile = psiManager.findFile(currentJsonFile)
             if (currentJsonPsiFile != null && currentJsonPsiFile is JsonFile) {
 
                 // 项目中所有的组件配置文件
-                val jsonFiles = FilenameIndex.getAllFilesByExt(completionParameters.position.project, "json")
-                        .mapNotNull {
-                            psiManager.findFile(it)
-                        }.filterIsInstance<JsonFile>().filter {
-                            ComponentJsonUtils.isComponentConfiguration(it)
-                        }.filter {
-                            it != currentJsonPsiFile
-                        }
+                val jsonFiles = ComponentJsonUtils.getAllComponentConfigurationFile(
+                        project
+                ).filter {
+                    it != currentJsonPsiFile
+                }
                 val usingComponentsObjectValue = ComponentJsonUtils.getUsingComponentPropertyValue(
                         currentJsonPsiFile
                 )
@@ -202,35 +196,18 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
                         ?.filter { it.key != null }
                 cloneCompletionResultSet.addAllElements(jsonFiles.mapNotNull { jsonFile ->
                     val configComponentName = usingComponentMap?.get(jsonFile)
-                    val rootPath = ProjectFileIndex.SERVICE.getInstance(
-                            completionParameters.position.project
-                    ).getContentRootForFile(jsonFile.virtualFile)?.path ?: return@mapNotNull null
-                    val componentPath = jsonFile.virtualFile.path.removePrefix(rootPath).replace(
-                            Regex("\\.${JsonFileType.INSTANCE.defaultExtension}$"), ""
-                    )
+                    val componentPath = (jsonFile.virtualFile.getPathRelativeToRootRemoveExt(
+                            project
+                    ) ?: return@mapNotNull null)
                     if (configComponentName == null) {
                         // 没有注册的组件
                         LookupElementBuilder.create(jsonFile.virtualFile.nameWithoutExtension)
                                 .withTailText(componentPath)
                                 .withInsertHandler { _, lookupElement ->
                                     // 在配置文件中注册组件
-                                    val jsonElementGenerator = JsonElementGenerator(
-                                            completionParameters.position.project
-                                    )
-                                    val closeBrace = usingComponentsObjectValue?.node?.findChildByType(
-                                            JsonElementTypes.R_CURLY
-                                    )?.psi
-                                    if (usingComponentItems?.isEmpty() != true) {
-                                        usingComponentsObjectValue?.addBefore(
-                                                jsonElementGenerator.createComma(), closeBrace
-                                        )
+                                    usingComponentsObjectValue?.let {
+                                        ComponentJsonUtils.registerComponent(usingComponentsObjectValue, jsonFile)
                                     }
-                                    usingComponentsObjectValue?.addBefore(
-                                            jsonElementGenerator.createProperty(
-                                                    lookupElement.lookupString, "\"$componentPath\""
-                                            ),
-                                            closeBrace
-                                    )
                                 }
                     } else {
                         LookupElementBuilder.create(configComponentName)
