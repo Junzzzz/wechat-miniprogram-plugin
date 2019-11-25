@@ -25,6 +25,7 @@ import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
 
+// TODO app.json usingComponents
 class WXMLCompletionContributor : CompletionContributor() {
 
     init {
