@@ -4,13 +4,13 @@ import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonProperty
 import com.intellij.json.psi.JsonStringLiteral
-import com.intellij.lang.javascript.JavaScriptFileType
+import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.intellij.util.ProcessingContext
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 
 class WechatMiniProgramJSONReferenceContributor : PsiReferenceContributor() {
 
@@ -41,7 +41,7 @@ class WechatMiniProgramJSONReferenceContributor : PsiReferenceContributor() {
                                             if (psiDirectory is PsiDirectory) {
                                                 val references = fileReferences.map { it as PsiReference }
                                                         .toTypedArray()
-                                                // 最后一个引用可能解析出多个文件 js|wxss|wxml
+                                                // 最后一个引用可能解析出多个文件 js|wxss|wxml|json
                                                 val lastFileReference = object :
                                                         PsiPolyVariantReferenceBase<JsonStringLiteral>(
                                                                 psiElement, last.rangeInElement
@@ -49,9 +49,10 @@ class WechatMiniProgramJSONReferenceContributor : PsiReferenceContributor() {
                                                     override fun multiResolve(p0: Boolean): Array<ResolveResult> =
                                                             psiDirectory.files.filter {
                                                                 it.virtualFile.nameWithoutExtension == filename
-                                                                        && (it.virtualFile.extension == JavaScriptFileType.DEFAULT_EXTENSION
-                                                                        || it.virtualFile.extension == WXMLFileType.INSTANCE.defaultExtension
-                                                                        || it.virtualFile.extension == WXSSFileType.INSTANCE.defaultExtension)
+                                                                        && (it is JSFile
+                                                                        || it is WXMLPsiFile
+                                                                        || it is WXSSPsiFile
+                                                                        || it is JsonFile)
                                                             }.map {
                                                                 PsiElementResolveResult(it)
                                                             }.toTypedArray()
