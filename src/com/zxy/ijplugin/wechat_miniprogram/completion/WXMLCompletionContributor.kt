@@ -332,6 +332,7 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
                     wxmlElement, WXMLTag::class.java
             )
             val jsFile = wxmlTag?.getDefinitionJsFile()
+            // 根据js中的properties配置项提供完成
             jsFile?.let {
                 ComponentJsUtils.findPropertiesItems(jsFile)
             }?.mapNotNull {
@@ -340,7 +341,18 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
                                 if (ComponentJsUtils.findTypeByPropertyValue(
                                                 it
                                         ) != "String") DoubleBraceInsertHandler() else DoubleQuotaInsertHandler(false)
-                        )
+                        ).withTypeText("Component.properties")
+            }?.let {
+                completionResultSet.addAllElements(it)
+            }
+
+            // 根据js中的externalClasses配置项提供完成
+            jsFile?.let {
+                ComponentJsUtils.findComponentExternalClasses(it)
+            }?.map {
+                LookupElementBuilder.create(it)
+                        .withInsertHandler(DoubleQuotaInsertHandler(false))
+                        .withTypeText("Component.externalClasses")
             }?.let {
                 completionResultSet.addAllElements(it)
             }
