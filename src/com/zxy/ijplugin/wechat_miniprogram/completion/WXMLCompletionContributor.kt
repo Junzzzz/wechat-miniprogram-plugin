@@ -203,7 +203,7 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
                         // 没有注册的组件
                         LookupElementBuilder.create(jsonFile.virtualFile.nameWithoutExtension)
                                 .withTypeText(componentPath)
-                                .withInsertHandler { _, lookupElement ->
+                                .withInsertHandler { _, _ ->
                                     // 在配置文件中注册组件
                                     usingComponentsObjectValue?.let {
                                         ComponentJsonUtils.registerComponent(usingComponentsObjectValue, jsonFile)
