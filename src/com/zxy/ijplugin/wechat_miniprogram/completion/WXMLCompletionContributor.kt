@@ -21,6 +21,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
+import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
@@ -75,7 +76,6 @@ class WXMLCompletionContributor : CompletionContributor() {
 
         // 输入一个元素开始符号后
         // 自动完成标签名以及必填的属性
-        // TODO 输入WXML_TAG_NAME 不能匹配
         this.extend(
                 CompletionType.BASIC,
                 PlatformPatterns.psiElement().afterLeafSkipping(
@@ -181,7 +181,12 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
                 val usingComponentsObjectValue = ComponentJsonUtils.getUsingComponentPropertyValue(
                         currentJsonPsiFile
                 )
-                val usingComponentItems = usingComponentsObjectValue?.propertyList
+                val appJsonUsingComponentsObjectValue = AppJsonUtils.findUsingComponentsValue(project)
+                val usingComponentItems = usingComponentsObjectValue?.propertyList?.apply {
+                    appJsonUsingComponentsObjectValue?.propertyList?.let {
+                        this.addAll(it)
+                    }
+                }
                 val usingComponentMap = usingComponentItems
                         ?.associateBy({ jsonProperty ->
                             (jsonProperty.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>)?.multiResolve(
