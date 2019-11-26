@@ -4,6 +4,7 @@ import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonProperty
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiManager
@@ -14,6 +15,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLClosedElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStartTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLVisitor
+import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.contentRange
 import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
@@ -55,12 +57,19 @@ class WXMLUnknownTagInspection : WXMLInspectionBase() {
                 val currentJsonPsiFile = currentJsonFile?.let {
                     psiManager.findFile(it)
                 } as? JsonFile
-                val usingComponentItems = currentJsonPsiFile?.let {
-                    ComponentJsonUtils.getUsingComponentItems(it)
+                val usingComponentItems = mutableListOf<JsonProperty>().apply {
+                    currentJsonPsiFile?.let {
+                        ComponentJsonUtils.getUsingComponentItems(it)
+                    }?.let {
+                        this.addAll(it)
+                    }
+                    AppJsonUtils.findUsingComponentItems(project)?.let {
+                        this.addAll(it)
+                    }
                 }
-                if (usingComponentItems?.any {
+                if (!usingComponentItems.any {
                             it.name == tagName
-                        } != true) {
+                        }) {
                     // 没有注册的标签
                     val jsonConfigurationFiles = ComponentJsonUtils.getAllComponentConfigurationFile(project).filter {
                         it != currentJsonPsiFile
