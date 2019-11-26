@@ -21,11 +21,17 @@
           "properties": {
             "backgroundTextStyle": {
               "description": "Specify style for window background text",
-              "type": "string"
+              "type": "string",
+              "default": "dark",
+              "enum": [
+                "dark",
+                "light"
+              ]
             },
             "navigationBarBackgroundColor": {
               "description": "Specify color for navigation bar background",
-              "type": "string"
+              "type": "string",
+              "default": "#000000"
             },
             "navigationBarTitleText": {
               "description": "Specify text for navigation bar title",
@@ -33,15 +39,26 @@
             },
             "navigationBarTextStyle": {
               "type": "string",
-              "description": "Specify color for navigation bar text"
+              "description": "Specify color for navigation bar text",
+              "default": "white",
+              "enum": [
+                "white",
+                "black"
+              ]
             },
             "backgroundColor": {
               "description": "Specify color for window background",
-              "type": "string"
+              "type": "string",
+              "default": "#ffffff"
             },
             "navigationStyle": {
               "description": "Specify style for navigation bar",
-              "type": "string"
+              "type": "string",
+              "default": "default",
+              "enum": [
+                "custom",
+                "default"
+              ]
             },
             "backgroundColorTop": {
               "description": "Background color of the top window, only iOS support",
@@ -49,19 +66,28 @@
             },
             "backgroundColorBottom": {
               "description": "Background color of the bottom window, only iOS support",
-              "type": "string"
+              "type": "string",
+              "default": "#ffffff"
             },
             "enablePullDownRefresh": {
               "description": "Whether to enable global pull-down refresh",
-              "type": "boolean"
+              "type": "boolean",
+              "default": "false"
             },
             "onReachBottomDistance": {
               "description": "The distance from the bottom of the page when the page pull-up event is triggered, in px.",
-              "type": "boolean"
+              "type": "boolean",
+              "default": 50
             },
             "pageOrientation": {
               "description": "Specify file to store incremental compilation information.",
-              "type": "number"
+              "type": "number",
+              "default": "portrait",
+              "enum": [
+                "portrait",
+                "auto",
+                "landscape"
+              ]
             }
           }
         }
@@ -88,7 +114,11 @@
             "borderStyle": {
               "description": "The color of the top border of the tabbar, only supports black / white",
               "type": "string",
-              "default": "black"
+              "default": "black",
+              "enum": [
+                "black",
+                "white"
+              ]
             },
             "list": {
               "description": "A list of tab configuration",
@@ -122,7 +152,11 @@
             "position": {
               "description": "The position for the tab",
               "type": "string",
-              "default": "bottom"
+              "default": "bottom",
+              "enum": [
+                "bottom",
+                "top"
+              ]
             },
             "custom": {
               "description": "whether to use a custom tab bar",
