@@ -2,6 +2,7 @@ package com.zxy.ijplugin.wechat_miniprogram.utils
 
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
+import com.intellij.json.psi.JsonProperty
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
@@ -20,4 +21,7 @@ object AppJsonUtils {
         }
     }
 
+    fun findUsingComponentItems(project: Project): MutableList<JsonProperty>? {
+        return findUsingComponentsValue(project)?.propertyList
+    }
 }
