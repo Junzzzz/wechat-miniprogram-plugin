@@ -5,6 +5,7 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonProperty
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiPolyVariantReferenceBase
@@ -26,7 +27,6 @@ import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
 
-// TODO app.json usingComponents
 class WXMLCompletionContributor : CompletionContributor() {
 
     init {
@@ -182,13 +182,17 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
                         currentJsonPsiFile
                 )
                 val appJsonUsingComponentsObjectValue = AppJsonUtils.findUsingComponentsValue(project)
-                val usingComponentItems = usingComponentsObjectValue?.propertyList?.apply {
+                // 从app.json 和 相关的json文件中手机usingComponents
+                val usingComponentItems = mutableListOf<JsonProperty>().apply {
+                    usingComponentsObjectValue?.propertyList?.let {
+                        this.addAll(it)
+                    }
                     appJsonUsingComponentsObjectValue?.propertyList?.let {
                         this.addAll(it)
                     }
                 }
                 val usingComponentMap = usingComponentItems
-                        ?.associateBy({ jsonProperty ->
+                        .associateBy({ jsonProperty ->
                             (jsonProperty.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>)?.multiResolve(
                                     false
                             )?.map {
@@ -199,9 +203,9 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
                                 it as JsonFile
                             }
                         }, { it.name })
-                        ?.filter { it.key != null }
+                        .filter { it.key != null }
                 cloneCompletionResultSet.addAllElements(jsonFiles.mapNotNull { jsonFile ->
-                    val configComponentName = usingComponentMap?.get(jsonFile)
+                    val configComponentName = usingComponentMap[jsonFile]
                     val componentPath = (jsonFile.virtualFile.getPathRelativeToRootRemoveExt(
                             project
                     ) ?: return@mapNotNull null)
