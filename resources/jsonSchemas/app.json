@@ -388,7 +388,13 @@
     },
     "usingComponents": {
       "type": "object",
-      "description": "Global custom component"
+      "description": "Global custom component",
+      "patternProperties": {
+        ".+": {
+          "type": "string",
+          "description": "The path of component"
+        }
+      }
     },
     "permission": {
       "type": "object",
