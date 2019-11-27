@@ -114,3 +114,5 @@ settings.gradle
 
 note.md
 /.idea/jarRepositories.xml
+/idea-flex.skeleton
+/jflex-1.7.0-2.jar
