@@ -59,7 +59,7 @@ IDENTIFIER = {IDENTIFIER_START} ({IDENTIFIER_START}|{DIGIT})*
 <YYINITIAL> {
     "</" {yybegin(END_TAG_START);return WXMLTypes.END_TAG_START;}
     "<"  {yybegin(START_TAG_START);return WXMLTypes.START_TAG_START;}
-    [^"<"]+ {
+    [^"<"\n\t\f\ ][^<]*[^"<"\n\t\f\ ]? {
         return WXMLTypes.CONTENT;
     }
 }
