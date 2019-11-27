@@ -145,6 +145,12 @@ object WXMLMetadata {
             E("import", arrayOf(A("src", arrayOf(T.STRING), null, true))),
             E("include", arrayOf(A("src", arrayOf(T.STRING), null, true))),
             E("wxs", arrayOf(A("module", arrayOf(T.STRING)), A("src", arrayOf(T.STRING)))),
+            E(
+                    "slot",
+                    arrayOf(
+                            A("name", arrayOf(T.STRING))
+                    )
+            ),
 
             E(
                     "view",
