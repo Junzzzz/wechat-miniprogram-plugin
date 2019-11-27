@@ -6,10 +6,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl.WXMLStringTextImpl
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 
 class WXMLTemplateDefinitionChooseByNameContributor : ChooseByNameContributor {
     override fun getItemsByName(
@@ -26,7 +26,7 @@ class WXMLTemplateDefinitionChooseByNameContributor : ChooseByNameContributor {
 
     private fun getTemplateDefinition(project: Project): List<WXMLStringTextImpl> {
         val virtualFiles = FileTypeIndex.getFiles(
-                WXSSFileType.INSTANCE, GlobalSearchScope.allScope(project)
+                WXMLFileType.INSTANCE, GlobalSearchScope.allScope(project)
         )
         return virtualFiles.flatMap { virtualFile ->
             val wxmlPsiFile = PsiManager.getInstance(project).findFile(virtualFile) as WXMLPsiFile?
