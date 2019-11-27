@@ -234,6 +234,25 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                 }
         )
 
+        psiReferenceRegistrar.registerReferenceProvider(
+                PlatformPatterns.psiElement(WXMLStringText::class.java),
+                object : PsiReferenceProvider() {
+                    override fun getReferencesByElement(
+                            psiElement: PsiElement, p1: ProcessingContext
+                    ): Array<PsiReference> {
+                        psiElement as WXMLStringText
+                        val wxmlAttribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
+                        if (wxmlAttribute != null && wxmlAttribute.name == "slot") {
+                            val stringText = wxmlAttribute.string?.stringText
+                            if (stringText != null) {
+                                return arrayOf(WXMLNamedSlotReference(stringText))
+                            }
+                        }
+                        return PsiReference.EMPTY_ARRAY
+                    }
+                }
+        )
+
     }
 
 }
