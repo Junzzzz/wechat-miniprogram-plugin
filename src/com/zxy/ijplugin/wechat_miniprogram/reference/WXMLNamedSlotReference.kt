@@ -18,6 +18,12 @@ class WXMLNamedSlotReference(element: WXMLStringText) :
 
     override fun resolve(): PsiElement? {
         val slotName = element.text
+        return getNamedSlots()?.find {
+            it.text == slotName
+        }
+    }
+
+    private fun getNamedSlots(): List<WXMLStringText>? {
         return PsiTreeUtil.getParentOfType(element, WXMLElement::class.java)?.let {
             // 获取父元素
             PsiTreeUtil.findChildOfType(PsiTreeUtil.getParentOfType(it, WXMLElement::class.java), WXMLTag::class.java)
@@ -33,9 +39,11 @@ class WXMLNamedSlotReference(element: WXMLStringText) :
             }
         }?.mapNotNull {
             it.string?.stringText
-        }?.find {
-            it.text == slotName
-        }
+        }?.toList()
+    }
+
+    override fun getVariants(): Array<Any> {
+        return (getNamedSlots() ?: emptyList()).toTypedArray()
     }
 
 }
