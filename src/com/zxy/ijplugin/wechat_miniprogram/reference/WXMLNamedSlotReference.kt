@@ -43,7 +43,7 @@ class WXMLNamedSlotReference(element: WXMLStringText) :
     }
 
     override fun getVariants(): Array<Any> {
-        return (getNamedSlots() ?: emptyList()).toTypedArray()
+        return (getNamedSlots() ?: emptyList()).map { it.text }.toTypedArray()
     }
 
 }
