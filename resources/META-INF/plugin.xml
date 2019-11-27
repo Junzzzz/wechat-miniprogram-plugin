@@ -3,7 +3,30 @@
     <name>Wechat mini program support</name>
     <vendor url="https://gitee.com/zxy_c/wechat-miniprogram-plugin">Gitee</vendor>
 
-    <description>微信小程序支持，wxml、wxss、wxs三种文件支持，语法解析，代码完成，快速创建文件</description>
+    <description><![CDATA[
+        支持<a href="https://developers.weixin.qq.com/miniprogram/introduction/">微信小程序</a>项目
+
+        <h3>开始使用</h3>
+
+        <ul>
+            <li>打开微信小程序项目</li>
+            <li>确保存在project.config.json配置文件</li>
+            <li>现在，你可以使用本插件提供的全部功能</li>
+        </ul>
+
+        <h3>主要功能</h3>
+
+        <ul>
+            <li>wxml/wxss/wxs文件支持</li>
+            <li>创建微信小程序组件以及页面</li>
+            <li>相关文件导航</li>
+            <li>微信小程序自定义组件支持</li>
+            <li>微信小程序配置文件支持</li>
+            <li>代码检查以及自动修复</li>
+        </ul>
+
+        详细的使用文档以及功能说明请访问<a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis">Gitee Wiki</a>
+        ]]</description>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
