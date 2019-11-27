@@ -95,10 +95,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
-import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
+import com.zxy.ijplugin.wechat_miniprogram.utils.*
 
 class WXMLCompletionContributor : CompletionContributor() {
 
@@ -414,7 +411,7 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             val wxmlTag = PsiTreeUtil.findChildOfType(
                     wxmlElement, WXMLTag::class.java
             )
-            val jsFile = wxmlTag?.getDefinitionJsFile()
+            val jsFile = wxmlTag?.let { ComponentWxmlUtils.findCustomComponentDefinitionJsFile(wxmlTag) }
             // 根据js中的properties配置项提供完成
             jsFile?.let {
                 ComponentJsUtils.findPropertiesItems(jsFile)

@@ -73,7 +73,13 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.utils
 
+import com.intellij.json.psi.JsonProperty
+import com.intellij.json.psi.JsonStringLiteral
+import com.intellij.lang.javascript.psi.JSFile
+import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.util.PsiTreeUtil
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 
@@ -83,9 +89,33 @@ object ComponentWxmlUtils {
      * 判断一个wxml属性是否是自定义组件配置的externalClasses
      */
     fun isExternalClassesAttribute(attribute: WXMLAttribute): Boolean {
-        return PsiTreeUtil.getParentOfType(attribute, WXMLTag::class.java)?.getDefinitionJsFile()?.let {
+        return PsiTreeUtil.getParentOfType(
+                attribute, WXMLTag::class.java
+        )?.let { this.findCustomComponentDefinitionJsFile(it) }?.let {
             ComponentJsUtils.findComponentExternalClasses(it)?.contains(attribute.name)
         } == true
+    }
+
+    /**
+     * 获取一个WXMLTag作为自定义组件的wxml文件
+     */
+    fun findCustomComponentDefinitionWxmlFile(wxmlTag: WXMLTag): WXMLPsiFile? {
+        return this.findCustomComponentDefinitionFiles(wxmlTag)?.find { it is WXMLPsiFile } as? WXMLPsiFile
+    }
+
+    /**
+     * 获取一个WXMLTag作为自定义组件的js文件
+     */
+    fun findCustomComponentDefinitionJsFile(wxmlTag: WXMLTag): JSFile? {
+        return this.findCustomComponentDefinitionFiles(wxmlTag)?.find { it is JSFile } as? JSFile
+    }
+
+    private fun findCustomComponentDefinitionFiles(wxmlTag: WXMLTag): List<PsiFile>? {
+        val componentNameJsonLiteral = wxmlTag.reference?.resolve() as? JsonStringLiteral
+        val lastComponentPathReference = (componentNameJsonLiteral?.parent as? JsonProperty)?.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>
+        return lastComponentPathReference?.multiResolve(
+                false
+        )?.mapNotNull { it.element as? PsiFile }
     }
 
 }

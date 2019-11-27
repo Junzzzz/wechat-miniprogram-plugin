@@ -101,10 +101,6 @@ open class WXMLTag(node:ASTNode) : ContributedReferenceHost, ASTWrapperPsiElemen
         return this.references.firstOrNull()
     }
 
-    /**
-     * 如果这是自定义组件
-     * 那么获取它所在的js文件
-     */
     fun getDefinitionJsFile():JSFile?{
         val componentNameJsonLiteral = this.reference?.resolve() as? JsonStringLiteral
         val lastComponentPathReference = (componentNameJsonLiteral?.parent as? JsonProperty)?.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>
