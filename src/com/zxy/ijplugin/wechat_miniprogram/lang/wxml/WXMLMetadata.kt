@@ -823,7 +823,8 @@ object WXMLMetadata {
             A("id", arrayOf(T.STRING)),
             A("class", arrayOf(T.STRING)),
             A("style", arrayOf(T.STRING)),
-            A("hidden", arrayOf(T.BOOLEAN), false)
+            A("hidden", arrayOf(T.BOOLEAN), false),
+            A("slot", arrayOf(T.STRING))
     )
 
     val COMMON_ELEMENT_EVENTS = arrayOf(
