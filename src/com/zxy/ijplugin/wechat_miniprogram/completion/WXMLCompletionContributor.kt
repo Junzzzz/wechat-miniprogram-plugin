@@ -311,7 +311,7 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         /**
          * 忽略公共的属性的标签名
          */
-        val IGNORE_COMMON_ATTRIBUTE_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include")
+        val IGNORE_COMMON_ATTRIBUTE_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
         /**
          * 忽略wx属性的标签名
          */
@@ -319,7 +319,7 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         /**
          * 忽略公共事件的标签名
          */
-        val IGNORE_COMMON_EVENT_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include")
+        val IGNORE_COMMON_EVENT_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
 
         internal fun isDoubleBraceForInsert(
                 wxmlElementAttributeDescriptor: WXMLElementAttributeDescriptor
