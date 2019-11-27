@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.zxy.ijplugin.wechat-miniprogram</id>
     <name>Wechat mini program support</name>
-    <vendor email="15200948109@163.com" url="https://gitee.com/">My Gitee</vendor>
+    <vendor url="https://gitee.com/zxy_c/wechat-miniprogram-plugin">My Gitee</vendor>
 
     <description>微信小程序支持，wxml、wxss、wxs三种文件支持，语法解析，代码完成，快速创建文件</description>
 
