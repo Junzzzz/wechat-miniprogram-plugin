@@ -9,7 +9,7 @@
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
     <version>1.0.0</version>
-    <idea-version since-build="182.711"/>
+    <idea-version since-build="192.4257"/>
 
     <actions>
         <action class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramPageAction"
