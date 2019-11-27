@@ -26,7 +26,7 @@
         </ul>
 
         详细的使用文档以及功能说明请访问<a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis">Gitee Wiki</a>
-        ]]</description>
+        ]]></description>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
