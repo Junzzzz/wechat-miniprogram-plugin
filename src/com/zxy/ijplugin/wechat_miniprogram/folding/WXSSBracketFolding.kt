@@ -71,54 +71,38 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.utils
+package com.zxy.ijplugin.wechat_miniprogram.folding
 
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.lang.ASTNode
+import com.intellij.lang.folding.FoldingBuilderEx
+import com.intellij.lang.folding.FoldingDescriptor
+import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
-
-fun String.substring(textRange: TextRange): String {
-    return this.substring(textRange.startOffset, textRange.endOffset)
-}
-
-fun String.replace(textRange: TextRange, replaceString: CharSequence): String {
-    return this.replaceRange(textRange.startOffset, textRange.endOffset, replaceString)
-}
-
-fun IntRange.toTextRange(): TextRange {
-    return TextRange(this.first, this.last + 1)
-}
-
-fun PsiElement.contentRange(): TextRange {
-    return TextRange(0, this.textLength)
-}
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStyleStatementSection
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
+import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
 /**
- * 获取一个文件相对于项目根目录的路径
- * 以'/'开头
+ * 支持对WXSS中的花括号进行折叠
  */
-fun VirtualFile.getPathRelativeToRoot(project: Project): String? {
-    val rootPath = ProjectFileIndex.SERVICE.getInstance(
-            project
-    ).getContentRootForFile(this)?.path ?: return null
-    return this.path.removePrefix(rootPath)
-}
+class WXSSBracketFolding : FoldingBuilderEx() {
 
-/**
- * 获取一个文件相对于项目根目录的路径
- * 移除扩展名
- * @see getPathRelativeToRoot
- */
-fun VirtualFile.getPathRelativeToRootRemoveExt(project: Project): String? {
-    return this.getPathRelativeToRoot(project)?.removeSuffix(".${this.extension}")
-}
+    override fun getPlaceholderText(p0: ASTNode): String? {
+        return "..."
+    }
 
-/**
- * @see PsiTreeUtil.findChildrenOfType
- */
-inline fun <reified T : PsiElement> PsiElement.findChildrenOfType(): MutableCollection<T> {
-    return PsiTreeUtil.findChildrenOfType(this, T::class.java)
+    override fun buildFoldRegions(rootElement: PsiElement, document: Document, p2: Boolean): Array<FoldingDescriptor> {
+        val styleStatementSections = rootElement.findChildrenOfType<WXSSStyleStatementSection>()
+        return styleStatementSections.mapNotNull { wxssStyleStatementSection ->
+            val node = wxssStyleStatementSection.node
+            val leftBracket = node.findChildByType(WXSSTypes.LEFT_BRACKET) ?: return@mapNotNull null
+            val rightBracket = node.findChildByType(WXSSTypes.RIGHT_BRACKET) ?: return@mapNotNull null
+            FoldingDescriptor(node, TextRange(leftBracket.textRange.endOffset, rightBracket.textRange.startOffset))
+        }.toTypedArray()
+    }
+
+    override fun isCollapsedByDefault(p0: ASTNode): Boolean {
+        return false
+    }
 }

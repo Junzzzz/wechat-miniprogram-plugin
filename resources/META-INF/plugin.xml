@@ -117,6 +117,8 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXSSReferenceContributor"/>
         <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLClassSelectorManipulator"/>
+        <lang.foldingBuilder language="WXSS"
+                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXSSBracketFolding"/>
 
         <fileType name="WXML" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
