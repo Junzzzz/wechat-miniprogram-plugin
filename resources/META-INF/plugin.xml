@@ -54,13 +54,6 @@
         <gotoRelatedProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WechatMiniProgramGotoRelatedProvider"/>
 
-        <internalFileTemplate name="Wechat mini program page js file(Component API)"/>
-        <internalFileTemplate name="Wechat mini program page json file(Component API)"/>
-        <internalFileTemplate name="Wechat mini program page js file(Page API)"/>
-        <internalFileTemplate name="Wechat mini program page json file(Page API)"/>
-        <internalFileTemplate name="Wechat mini program component js file"/>
-        <internalFileTemplate name="Wechat mini program component json file"/>
-
         <renamePsiElementProcessor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLClassRenamePsiElementProcessor"/>
         <!--        <renameHandler implementation="com.zxy.ijplugin.wechat_miniprogram.rename.WXSSIdRenameHandler"/>-->
