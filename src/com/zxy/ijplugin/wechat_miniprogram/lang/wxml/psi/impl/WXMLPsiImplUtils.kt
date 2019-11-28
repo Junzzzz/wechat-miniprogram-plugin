@@ -164,7 +164,9 @@ object WXMLPsiImplUtils {
 
     @JvmStatic
     fun getNameIdentifier(element: WXMLStringText): PsiElement? {
-        return if (WXMLModuleUtils.isTemplateNameAttributeStringText(element)) element else null
+        return if (WXMLModuleUtils.isTemplateNameAttributeStringText(
+                        element
+                ) || WXMLModuleUtils.isSlotNameAttributeStringText(element)) element else null
     }
 
     @JvmStatic
