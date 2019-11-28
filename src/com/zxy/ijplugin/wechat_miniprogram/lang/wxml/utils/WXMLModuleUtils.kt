@@ -185,9 +185,19 @@ object WXMLModuleUtils {
     }
 
     fun isTemplateNameAttributeStringText(wxmlStringText: WXMLStringText): Boolean {
-        return PsiTreeUtil.getParentOfType(wxmlStringText,WXMLAttribute::class.java)?.let {
-            it.name == "name" && PsiTreeUtil.getParentOfType(it,WXMLElement::class.java)?.tagName == "template"
-        }==true
+        return isMatchTagNameAndAttributeName(wxmlStringText, "template", "name")
+    }
+
+    fun isSlotNameAttributeStringText(wxmlStringText: WXMLStringText): Boolean {
+        return isMatchTagNameAndAttributeName(wxmlStringText, "slot", "name")
+    }
+
+    private fun isMatchTagNameAndAttributeName(
+            wxmlStringText: WXMLStringText, tagName: String, attributeName: String
+    ): Boolean {
+        return PsiTreeUtil.getParentOfType(wxmlStringText, WXMLAttribute::class.java)?.let {
+            it.name == attributeName && PsiTreeUtil.getParentOfType(it, WXMLElement::class.java)?.tagName == tagName
+        } == true
     }
 
     fun findTemplateDefinitionsWithImports(wxmlPsiFile: WXMLPsiFile): List<WXMLStringText> {
