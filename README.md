@@ -23,7 +23,7 @@ wechat-miniprogram-plugin
 安装
 ---
 - 通过IDE搜索并找到**Wechat mini program support**插件安装(目前未发布至插件库)
-- 下载发行版，在IDE中选择从磁盘安装
+- 下载[发行版](https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases)，在IDE中选择从磁盘安装
 
 使用
 ---
