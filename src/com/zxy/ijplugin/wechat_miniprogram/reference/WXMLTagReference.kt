@@ -73,9 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
-import a.h.it
 import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonProperty
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
