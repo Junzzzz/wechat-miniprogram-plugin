@@ -80,22 +80,34 @@ import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.*
+import com.zxy.ijplugin.wechat_miniprogram.utils.findChildOfType
 
 object WXSSElementFactory {
 
-    fun createClass(project: Project, className:String):ASTNode{
+    fun createClass(project: Project, className: String): ASTNode {
         return createClassSelector(project, ".$className").node.findChildByType(WXSSTypes.CLASS)!!
     }
 
-    fun createClassSelector(project: Project, text: String): WXSSClassSelector {
-        val file = createDummyFile(project,"""
+    fun createStyleDefinition(project: Project, text: String): WXSSStyleDefinition {
+        return createDummyFile(
+                project, """
             $text
-        """.trimIndent())
+        """.trimIndent()
+        ).findChildOfType()!!
+    }
+
+    fun createClassSelector(project: Project, text: String): WXSSClassSelector {
+        val file = createDummyFile(
+                project, """
+            $text
+        """.trimIndent()
+        )
         return PsiTreeUtil.findChildOfType(file, WXSSClassSelector::class.java)!!
     }
 
-    fun createId(project: Project, id:String): ASTNode {
-        val file = createDummyFile(project,"""
+    fun createId(project: Project, id: String): ASTNode {
+        val file = createDummyFile(
+                project, """
             #$id{
                 
             }

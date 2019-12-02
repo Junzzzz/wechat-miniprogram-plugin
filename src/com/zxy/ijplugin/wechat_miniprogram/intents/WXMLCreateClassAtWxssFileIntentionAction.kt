@@ -71,44 +71,107 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.reference
+package com.zxy.ijplugin.wechat_miniprogram.intents
 
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonProperty
+import com.intellij.codeInsight.intention.IntentionAction
+import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiReferenceBase
+import com.intellij.psi.codeStyle.CodeStyleManager
+import com.intellij.psi.util.elementType
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
+import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
-import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSElementFactory
+import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLClassReference
 
-class WXMLTagReference(element: WXMLTag) :
-        PsiReferenceBase<WXMLTag>(element,element.getTagNameNode()?.psi?.textRangeInParent) {
+abstract class WXMLCreateClassAtWxssFileIntentionAction : IntentionAction, PsiElementBaseIntentionAction() {
 
-    override fun resolve(): PsiElement? {
-        val tagName = element.getTagName()?:return null
-        val wxmlPsiFile = this.element.containingFile
-        val jsonFile = findRelateFile(wxmlPsiFile.originalFile.virtualFile, RelateFileType.JSON)?:return null
-        val psiManager = PsiManager.getInstance(this.element.project)
-        val jsonPsiFile = psiManager.findFile(jsonFile) as? JsonFile?:return null
-        // 找到usingComponents的配置
-        val usingComponentItems = mutableListOf<JsonProperty>().apply {
-            ComponentJsonUtils.getUsingComponentItems(jsonPsiFile)?.let {
-                this.addAll(it)
-            }
-            AppJsonUtils.findUsingComponentItems(element.project)?.let {
-                this.addAll(it)
-            }
-        }
-        return usingComponentItems.find {
-            it.name == tagName
-        }?.nameElement
+    protected lateinit var className: String
+    protected lateinit var wxssPsiFile: WXSSPsiFile
+
+
+    final override fun getFamilyName(): String {
+        return "Create Class Selector"
     }
 
-    override fun isSoft(): Boolean {
+    final override fun startInWriteAction(): Boolean {
+        return true
+    }
+
+    final override fun invoke(project: Project, p1: Editor?, p2: PsiElement) {
+        this.wxssPsiFile.add(
+                WXSSElementFactory.createStyleDefinition(
+                        project, """
+.$className{
+            
+}
+        """.trimIndent()
+                )
+        )
+        CodeStyleManager.getInstance(project).reformat(this.wxssPsiFile)
+    }
+}
+
+class WXMLCreateClassAtComponentWxssFileIntentionAction : WXMLCreateClassAtWxssFileIntentionAction() {
+
+    override fun getText(): String {
+        return "Create Class Selector At Component WXSS File"
+    }
+
+    override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
+        if (psiElement.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
+        val reference = psiElement.containingFile.findReferenceAt(editor.caretModel.offset)
+        if (reference is WXMLClassReference) {
+            if (reference.multiResolve(false).isEmpty()) {
+                val className = reference.canonicalText
+                val wxssVirtualFile = findRelateFile(
+                        psiElement.containingFile.virtualFile, RelateFileType.WXSS
+                )
+                val wxssPsiFile = wxssVirtualFile?.let { it ->
+                    PsiManager.getInstance(psiElement.project).findFile(
+                            it
+                    )
+                }?.let {
+                    it as? WXSSPsiFile
+                } ?: return false
+                super.wxssPsiFile = wxssPsiFile
+                super.className = className
+                return true
+            }
+        }
         return false
     }
 
+}
+
+class WXMLCreateClassAtAppWxssFileIntentionAction : WXMLCreateClassAtWxssFileIntentionAction() {
+
+    override fun getText(): String {
+        return "Create Class Selector At app.wxss"
+    }
+
+    override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
+        if (psiElement.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
+        val reference = psiElement.containingFile.findReferenceAt(editor.caretModel.offset)
+        if (reference is WXMLClassReference) {
+            findAppFile(psiElement.project, RelateFileType.WXSS)?.let {
+                PsiManager.getInstance(psiElement.project).findFile(
+                        it
+                )
+            }?.let {
+                it as WXSSPsiFile
+            }?.let {
+                super.wxssPsiFile = it
+                super.className = reference.canonicalText
+                return true
+            }
+        }
+        return false
+
+    }
 }

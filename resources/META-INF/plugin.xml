@@ -59,6 +59,17 @@
         <!--        <renameHandler implementation="com.zxy.ijplugin.wechat_miniprogram.rename.WXSSIdRenameHandler"/>-->
         <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
 
+        <intentionAction>
+            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtAppWxssFileIntentionAction
+            </className>
+            <category>Wechat mini program</category>
+        </intentionAction>
+        <intentionAction>
+            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtComponentWxssFileIntentionAction
+            </className>
+            <category>Wechat mini program</category>
+        </intentionAction>
+
         <localInspection
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXSSInvalidImportInspection"
                 displayName="Missing or invalid wxss import path"

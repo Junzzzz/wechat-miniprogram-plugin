@@ -122,3 +122,17 @@ fun VirtualFile.getPathRelativeToRootRemoveExt(project: Project): String? {
 inline fun <reified T : PsiElement> PsiElement.findChildrenOfType(): MutableCollection<T> {
     return PsiTreeUtil.findChildrenOfType(this, T::class.java)
 }
+
+/**
+ * @see PsiTreeUtil.findChildOfType
+ */
+inline fun <reified T : PsiElement> PsiElement.findChildOfType(): T? {
+    return PsiTreeUtil.findChildOfType(this, T::class.java)
+}
+
+/**
+ * @see PsiTreeUtil.getParentOfType
+ */
+inline fun <reified T : PsiElement> PsiElement.getParentOfType(): T? {
+    return PsiTreeUtil.getParentOfType(this, T::class.java)
+}
