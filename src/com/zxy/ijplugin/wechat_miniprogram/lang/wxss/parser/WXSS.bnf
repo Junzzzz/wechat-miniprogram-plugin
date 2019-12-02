@@ -135,7 +135,7 @@ classSelector ::= DOT CLASS {
     mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
     pin = 1
 }
-styleStatementSection ::= LEFT_BRACKET styleStatementCollection RIGHT_BRACKET {
+styleStatementSection ::= LEFT_BRACKET styleStatementCollection? RIGHT_BRACKET {
     pin = 1
 }
 styleStatementCollection ::= (styleStatement SEMICOLON)* styleStatement? {
