@@ -1,32 +1,42 @@
 <idea-plugin>
     <id>com.zxy.ijplugin.wechat-miniprogram</id>
     <name>Wechat mini program support</name>
-    <vendor url="https://gitee.com/zxy_c/wechat-miniprogram-plugin">Gitee</vendor>
+    <vendor url="https://gitee.com/zxy_c/wechat-miniprogram-plugin">ZXY</vendor>
 
     <description><![CDATA[
-        支持<a href="https://developers.weixin.qq.com/miniprogram/introduction/">微信小程序</a>项目
+        Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> WeChat Mini Program </a> project
 
-        <h3>开始使用</h3>
-
+                 <h3> Get started </h3>
         <ul>
-            <li>打开微信小程序项目</li>
-            <li>确保存在project.config.json配置文件</li>
-            <li>现在，你可以使用本插件提供的全部功能</li>
+            <li> Open WeChat Mini Program Project</li>
+            <li> Ensure that the project.config.json configuration file exists</li>
+            <li> Now you can use all the features provided by this plugin</li>
         </ul>
 
-        <h3>主要功能</h3>
+                 <h3> Main functions </h3>
 
+                
         <ul>
-            <li>wxml/wxss/wxs文件支持</li>
-            <li>创建微信小程序组件以及页面</li>
-            <li>相关文件导航</li>
-            <li>微信小程序自定义组件支持</li>
-            <li>微信小程序配置文件支持</li>
-            <li>代码检查以及自动修复</li>
+            <li> wxml / wxss / wxs file support</li>
+            <li> Create WeChat applet components and pages</li>
+            <li> Relevant file navigation</li>
+            <li> WeChat applet custom component support</li>
+            <li> WeChat applet configuration file support</li>
+            <li> Code inspection and automatic repairs</li>
         </ul>
 
-        详细的使用文档以及功能说明请访问<a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis">Gitee Wiki</a>
+                 For detailed usage documents and function descriptions, please visit <a
+                href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis"> Gitee Wiki </a>
         ]]></description>
+
+    <change-notes>
+        <![CDATA[
+        <h3>1.1</h3>
+        <ul>
+            <li>Support create wxss class selector from wxml file</li>
+        </ul>
+        ]]>
+    </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
