@@ -82,22 +82,22 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 object WXSSBlockFactory {
 
     fun createBlock(node: ASTNode, codeStyleSettings: CodeStyleSettings): Block {
-        return when {
-            node.elementType is IFileElementType -> WXSSFileBlock(node, codeStyleSettings)
-            node.elementType == WXSSTypes.STYLE_DEFINITION -> WXSSStyleDefinitionBlock(node, codeStyleSettings)
-            node.elementType == WXSSTypes.FONT_DEFINITION -> WXSSFontDefinitionBlock(node, codeStyleSettings)
+        return when (node.elementType) {
+            is IFileElementType -> WXSSFileBlock(node, codeStyleSettings)
+            WXSSTypes.STYLE_DEFINITION -> WXSSStyleDefinitionBlock(node, codeStyleSettings)
+            WXSSTypes.FONT_DEFINITION -> WXSSFontDefinitionBlock(node, codeStyleSettings)
 //            node.elementType == WXSSTypes.STYLE_STATEMENT_SECTION -> WXSSStyleStatementSectionBlock(
 //                    node, codeStyleSettings
 //            )
-            node.elementType == WXSSTypes.SELECTOR_GROUP -> WXSSSelectorGroupBlock(
+            WXSSTypes.SELECTOR_GROUP -> WXSSSelectorGroupBlock(
                     node, codeStyleSettings = codeStyleSettings
             )
-            node.elementType == WXSSTypes.STYLE_STATEMENT_COLLECTION -> WXSSStyleStatementCollectionBlock(
+            WXSSTypes.STYLE_STATEMENT_COLLECTION -> WXSSStyleStatementCollectionBlock(
                     node, codeStyleSettings
             )
-            node.elementType == WXSSTypes.RIGHT_BRACKET -> WXSSRightBracketBlock(node, codeStyleSettings)
-            node.elementType == WXSSTypes.ATTRIBUTE_VALUE -> WXSSAttributeValueBlock(node, codeStyleSettings)
-            node.elementType == WXSSTypes.STYLE_STATEMENT -> WXSSStyleStatementBlock(node, codeStyleSettings)
+            WXSSTypes.RIGHT_BRACKET -> WXSSRightBracketBlock(node, codeStyleSettings)
+            WXSSTypes.ATTRIBUTE_VALUE -> WXSSAttributeValueBlock(node, codeStyleSettings)
+            WXSSTypes.STYLE_STATEMENT -> WXSSStyleStatementBlock(node, codeStyleSettings)
             else -> WXSSDefaultBlock(node, codeStyleSettings = codeStyleSettings)
         }
     }
