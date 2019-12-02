@@ -138,7 +138,7 @@ classSelector ::= DOT CLASS {
 styleStatementSection ::= LEFT_BRACKET styleStatementCollection? RIGHT_BRACKET {
     pin = 1
 }
-styleStatementCollection ::= (styleStatement SEMICOLON)* styleStatement? {
+styleStatementCollection ::= styleStatement (SEMICOLON styleStatement)* SEMICOLON? {
     pin = styleStatement
 }
 styleStatement ::= ATTRIBUTE_NAME COLON attributeValue IMPORTANT_KEYWORD?{
