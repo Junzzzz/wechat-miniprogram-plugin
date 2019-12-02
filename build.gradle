@@ -64,7 +64,11 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 }
 
 runIde{
-    version 'IU-LATEST-EAP-SNAPSHOT'
+
+}
+
+buildPlugin{
+    version '192.7142.36'
 }
 
 dependencies {
