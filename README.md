@@ -20,6 +20,8 @@ wechat-miniprogram-plugin
 **JetBrains**产品兼容性：
 支持内核版本在`192.4257`之后的所有产品
 
+在[Wiki](https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis)中浏览更多功能
+
 安装
 ---
 - 通过IDE搜索并找到**Wechat mini program support**插件安装
