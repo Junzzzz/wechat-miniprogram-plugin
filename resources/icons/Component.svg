@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <rect id="frame" width="16"
+          height="16" fill="none"/>
+    <g fill="none" fill-rule="evenodd">
+    <path fill="rgb(7, 193, 96)" fill-opacity=".6"
+          d="M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0"/>
+    <path fill="rgb(7, 193, 96)"
+          fill-opacity=".6"
+          d="M1 1h6v6H1z"/>
+    <path
+            fill="rgb(7, 193, 96)" fill-opacity=".6" d="M8 1h6v6H8z"/>
+    <path fill="rgb(7, 193, 96)" fill-opacity=".6"
+          d="M1 8h6v6H1z"/>
+    <path fill="#231F20"
+          fill-opacity=".7"
+          d="M13.333 12.855c-.313.306-.648.464-1.266.478-.693.015-1.4-.48-1.4-1.333 0-.858.647-1.333 1.4-1.333.565 0 .965.123 1.2.37l.41-.48C13.22 10.18 12.86 10 12.065 10 10.893 10 10 10.906 10 12c0 1.122.91 2 2.001 2 .86 0 1.348-.271 1.743-.68l-.41-.465z"/>
+    </g>
+</svg>
