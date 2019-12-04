@@ -35,13 +35,18 @@
         <ul>
             <li>Support create wxss class selector from wxml file</li>
         </ul>
+        <h3>1.2</h3>
+        <ul>
+            <li>Create page will be automatically registered in app.json</li>
+            <li>Added, "pages" configuration item path analysis in app.json</li>
+        </ul>
         ]]>
     </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.1.1</version>
+    <version>1.2</version>
     <idea-version since-build="192.4257"/>
 
     <actions>
