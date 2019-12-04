@@ -81,4 +81,6 @@ public interface WechatMiniProgramIcons {
 
     Icon COMPONENT = IconLoader.getIcon("/icons/Component.svg");
 
+    Icon PAGE = IconLoader.getIcon("/icons/Page.svg");
+
 }

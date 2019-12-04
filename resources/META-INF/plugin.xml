@@ -56,7 +56,9 @@
         <action id="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction"
                 class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction"
                 text="Create Wechat Mini Program Component"
-                description="Create wechat mini program component (wxml,js,json,wxss)">
+                description="Create wechat mini program component (wxml,js,json,wxss)"
+                icon="WechatMiniProgramIcons.PAGE"
+        >
             <add-to-group group-id="NewGroup" anchor="first"/>
         </action>
 
