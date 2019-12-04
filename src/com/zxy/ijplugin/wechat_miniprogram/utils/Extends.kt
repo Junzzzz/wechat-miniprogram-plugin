@@ -113,7 +113,13 @@ fun VirtualFile.getPathRelativeToRoot(project: Project): String? {
  * @see getPathRelativeToRoot
  */
 fun VirtualFile.getPathRelativeToRootRemoveExt(project: Project): String? {
-    return this.getPathRelativeToRoot(project)?.removeSuffix(".${this.extension}")
+    return this.getPathRelativeToRoot(project)?.let {
+        if (this.isDirectory){
+            it
+        }else{
+            it.removeSuffix(".${this.extension}")
+        }
+    }
 }
 
 /**

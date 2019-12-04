@@ -73,9 +73,16 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.action
 
+import com.intellij.json.psi.JsonFile
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.psi.PsiDirectory
+import com.intellij.psi.PsiManager
 import com.intellij.ui.layout.panel
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
+import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
+import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
 import javax.swing.JComponent
 import javax.swing.JTextField
 import kotlin.properties.Delegates
@@ -84,19 +91,36 @@ import kotlin.properties.Delegates
  * 创建微信小程序页面
  * 可选是否使用Component API
  */
-class CreateWechatMiniProgramPageAction : CreateWechatMiniProgramFileGroupAction<CreateWechatMiniProgramPageAction.Dialog>() {
+class CreateWechatMiniProgramPageAction :
+        CreateWechatMiniProgramFileGroupAction<CreateWechatMiniProgramPageAction.Dialog>() {
     override fun getActionName(): String {
         return NAME
     }
 
-    private lateinit var pageName:String
+    private lateinit var pageName: String
 
     private var isComponentApi by Delegates.notNull<Boolean>()
 
-    private val apiName:String
+    private val apiName: String
         get() {
-            return  if (this.isComponentApi) "Component" else "Page"
+            return if (this.isComponentApi) "Component" else "Page"
         }
+
+    override fun created(psiDirectory: PsiDirectory) {
+        val project = psiDirectory.project
+        val dirPath = psiDirectory.virtualFile.getPathRelativeToRootRemoveExt(
+                project
+        )?.removePrefix("/")
+        if (dirPath != null) {
+            findAppFile(project, RelateFileType.JSON)?.let {
+                val jsonPsiFile = PsiManager.getInstance(project).findFile(it) as? JsonFile
+                if (jsonPsiFile != null) {
+                    // 在app.json中注册该页面
+                    AppJsonUtils.registerPage(jsonPsiFile, "$dirPath/$pageName")
+                }
+            }
+        }
+    }
 
     override fun onDialogConfirm(dialog: Dialog) {
         isComponentApi = dialog.useComponentApi
@@ -123,7 +147,7 @@ class CreateWechatMiniProgramPageAction : CreateWechatMiniProgramFileGroupAction
         return pageName
     }
 
-    companion object{
+    companion object {
         const val NAME = "Wechat Mini Program Page"
     }
 
@@ -152,7 +176,7 @@ class CreateWechatMiniProgramPageAction : CreateWechatMiniProgramFileGroupAction
                     preferredFocusedComponent
                 }
                 row {
-                    checkBox("Use component API",{useComponentApi},{useComponentApi=it})
+                    checkBox("Use component API", { useComponentApi }, { useComponentApi = it })
                 }
             }
         }

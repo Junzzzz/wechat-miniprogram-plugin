@@ -73,9 +73,8 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.utils
 
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonObject
-import com.intellij.json.psi.JsonProperty
+import com.intellij.json.JsonElementTypes
+import com.intellij.json.psi.*
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
@@ -96,5 +95,31 @@ object AppJsonUtils {
 
     fun findUsingComponentItems(project: Project): MutableList<JsonProperty>? {
         return findUsingComponentsValue(project)?.propertyList
+    }
+
+    fun registerPage(appJsonFile: JsonFile, pagePath: String) {
+        val project = appJsonFile.project
+        val root = appJsonFile.topLevelValue as? JsonObject ?: return
+        val pagesProperty = root.findProperty("pages") ?: return
+        val pages = pagesProperty.value as? JsonArray ?: return
+
+        val valueList = pages.valueList
+        val string = "\"$pagePath\""
+        if (valueList.none {
+                    it.text == string
+                }) {
+            // 不存在才会写入app.json的pages数组
+            val jsonElementGenerator = JsonElementGenerator(
+                    project
+            )
+            val closeBracket = pages.node?.findChildByType(
+                    JsonElementTypes.R_BRACKET
+            )?.psi
+            if (valueList.isNotEmpty()) {
+                pages.addBefore(jsonElementGenerator.createComma(), closeBracket)
+            }
+            pages.addBefore(jsonElementGenerator.createStringLiteral(pagePath), closeBracket)
+        }
+
     }
 }

@@ -132,7 +132,7 @@ abstract class CreateWechatMiniProgramFileGroupAction<T : DialogWrapper> : Wecha
                     )
                     psiDirectory.add(wxmlFile)
                     psiDirectory.add(wxssFile)
-
+                    this.created(psiDirectory)
                     // 当文件创建完成之后  wxmlFile 获得焦点
                     FileEditorManager.getInstance(project).openFile(wxmlFile.virtualFile, true)
                 } catch (e: Exception) {
@@ -149,6 +149,10 @@ abstract class CreateWechatMiniProgramFileGroupAction<T : DialogWrapper> : Wecha
         }
     }
 
+    open fun created(psiDirectory: PsiDirectory) {
+
+    }
+
     abstract fun onDialogConfirm(dialog: T)
 
     abstract fun createDialog(project: Project): T
@@ -159,9 +163,9 @@ abstract class CreateWechatMiniProgramFileGroupAction<T : DialogWrapper> : Wecha
 
     abstract fun getJsonComponentTemplate(): String
 
-    abstract fun getFileName():String
+    abstract fun getFileName(): String
 
-    abstract fun getActionName():String
+    abstract fun getActionName(): String
 
     private fun getPsiDirectory(
             anActionEvent: AnActionEvent
