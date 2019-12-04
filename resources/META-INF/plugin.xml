@@ -41,7 +41,7 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.1</version>
+    <version>1.1.1</version>
     <idea-version since-build="192.4257"/>
 
     <actions>
