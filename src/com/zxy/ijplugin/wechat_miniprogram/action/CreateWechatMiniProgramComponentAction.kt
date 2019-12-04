@@ -86,7 +86,7 @@ class CreateWechatMiniProgramComponentAction :
         CreateWechatMiniProgramFileGroupAction<CreateWechatMiniProgramComponentAction.Dialog>() {
 
     companion object {
-        const val NAME = "Create Wechat Mini Program Component"
+        const val NAME = "Wechat Mini Program Component"
     }
 
     private lateinit var componentName: String
@@ -125,7 +125,7 @@ class CreateWechatMiniProgramComponentAction :
 
         init {
             init()
-            this.title = NAME
+            this.title = "Create $NAME"
         }
 
         private lateinit var preferredFocusedComponent: JComponent

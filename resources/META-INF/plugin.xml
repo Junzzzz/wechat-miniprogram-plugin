@@ -47,7 +47,7 @@
     <actions>
         <action class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramPageAction"
                 id="CreateWechatMiniProgramPageAction"
-                text="Create Wechat Mini Program Page"
+                text="Wechat Mini Program Page"
                 description="Create wechat mini program page (wxml js css json)"
                 icon="WechatMiniProgramIcons.COMPONENT"
         >
@@ -55,7 +55,7 @@
         </action>
         <action id="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction"
                 class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction"
-                text="Create Wechat Mini Program Component"
+                text="Wechat Mini Program Component"
                 description="Create wechat mini program component (wxml,js,json,wxss)"
                 icon="WechatMiniProgramIcons.PAGE"
         >

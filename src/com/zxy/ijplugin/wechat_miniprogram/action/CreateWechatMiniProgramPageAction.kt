@@ -124,7 +124,7 @@ class CreateWechatMiniProgramPageAction : CreateWechatMiniProgramFileGroupAction
     }
 
     companion object{
-        const val NAME = "Create Wechat Mini Program Page"
+        const val NAME = "Wechat Mini Program Page"
     }
 
     class Dialog(project: Project) : DialogWrapper(project, false) {
@@ -138,7 +138,7 @@ class CreateWechatMiniProgramPageAction : CreateWechatMiniProgramFileGroupAction
 
         init {
             init()
-            this.title = NAME
+            this.title = "Create $NAME"
         }
 
         private lateinit var preferredFocusedComponent: JComponent
