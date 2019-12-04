@@ -73,15 +73,15 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonObject
-import com.intellij.json.psi.JsonProperty
-import com.intellij.json.psi.JsonStringLiteral
+import com.intellij.json.psi.*
 import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.intellij.util.ProcessingContext
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
+import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 
@@ -105,39 +105,7 @@ class WechatMiniProgramJSONReferenceContributor : PsiReferenceContributor() {
                                 val wrapObject = usingComponentsProperty.parent
                                 if (wrapObject is JsonObject && wrapObject.parent is JsonFile) {
                                     val fileReferences = FileReferenceSet(psiElement).allReferences
-                                    if (fileReferences.isNotEmpty()) {
-                                        val last = fileReferences.last()!!
-                                        if (last.resolve() == null && fileReferences.size >= 2) {
-                                            // 没有文件扩展名 最后一个引用无法解析出文件
-                                            val filename = last.text
-                                            val psiDirectory = fileReferences[fileReferences.size - 2].resolve()
-                                            if (psiDirectory is PsiDirectory) {
-                                                val references = fileReferences.map { it as PsiReference }
-                                                        .toTypedArray()
-                                                // 最后一个引用可能解析出多个文件 js|wxss|wxml|json
-                                                val lastFileReference = object :
-                                                        PsiPolyVariantReferenceBase<JsonStringLiteral>(
-                                                                psiElement, last.rangeInElement
-                                                        ) {
-                                                    override fun multiResolve(p0: Boolean): Array<ResolveResult> =
-                                                            psiDirectory.files.filter {
-                                                                it.virtualFile.nameWithoutExtension == filename
-                                                                        && (it is JSFile
-                                                                        || it is WXMLPsiFile
-                                                                        || it is WXSSPsiFile
-                                                                        || it is JsonFile)
-                                                            }.map {
-                                                                PsiElementResolveResult(it)
-                                                            }.toTypedArray()
-
-                                                }
-                                                references[fileReferences.size - 1] = lastFileReference
-                                                return references
-                                            }
-                                        } else {
-                                            return fileReferences
-                                        }
-                                    }
+                                    return handlerFileReferences(psiElement, fileReferences)
                                 }
                             }
                         }
@@ -145,6 +113,74 @@ class WechatMiniProgramJSONReferenceContributor : PsiReferenceContributor() {
                     }
                 }
         )
+
+        // 小程序的app.json配置文件中的pages配置项
+        // 解析被注册的page的路径
+        psiReferenceRegistrar.registerReferenceProvider(PlatformPatterns.psiElement(JsonStringLiteral::class.java),
+                object : PsiReferenceProvider() {
+                    override fun getReferencesByElement(
+                            psiElement: PsiElement, processingContext: ProcessingContext
+                    ): Array<out PsiReference> {
+                        psiElement as JsonStringLiteral
+                        val parentArray = psiElement.parent
+                        if (findAppFile(
+                                        psiElement.project, RelateFileType.JSON
+                                ) == psiElement.containingFile.originalFile.virtualFile) {
+                            // 确定是app.json
+                            if (parentArray is JsonArray) {
+                                val parentProperty = parentArray.parent
+                                if (parentProperty is JsonProperty && parentProperty.name == "pages") {
+                                    val rootObject = parentProperty.parent
+                                    if (rootObject is JsonObject && rootObject.parent is JsonFile) {
+                                        // 确定是app.json下的pages配置项
+                                        val fileReferences = FileReferenceSet(psiElement).allReferences
+                                        return handlerFileReferences(psiElement,fileReferences)
+                                    }
+                                }
+                            }
+                        }
+                        return PsiReference.EMPTY_ARRAY
+                    }
+
+                })
     }
 
+}
+
+internal fun handlerFileReferences(psiElement: JsonStringLiteral, fileReferences: Array<out FileReference>): Array<out PsiReference> {
+    if (fileReferences.isNotEmpty()) {
+        val last = fileReferences.last()
+        if (last.resolve() == null && fileReferences.size >= 2) {
+            // 没有文件扩展名 最后一个引用无法解析出文件
+            val filename = last.text
+            // 获取倒数第二项
+            // 解析出文件夹
+            val psiDirectory = fileReferences[fileReferences.size - 2].resolve()
+            if (psiDirectory is PsiDirectory) {
+                val references = fileReferences.map { it as PsiReference }
+                        .toTypedArray()
+                // 最后一个引用可能解析出多个文件 js|wxss|wxml|json
+                val lastFileReference = object : PsiPolyVariantReferenceBase<JsonStringLiteral>(
+                                psiElement, last.rangeInElement
+                        ) {
+                    override fun multiResolve(p0: Boolean): Array<ResolveResult> =
+                            psiDirectory.files.filter {
+                                it.virtualFile.nameWithoutExtension == filename
+                                        && (it is JSFile
+                                        || it is WXMLPsiFile
+                                        || it is WXSSPsiFile
+                                        || it is JsonFile)
+                            }.map {
+                                PsiElementResolveResult(it)
+                            }.toTypedArray()
+
+                }
+                references[fileReferences.size - 1] = lastFileReference
+                return references
+            }
+        } else {
+            return fileReferences
+        }
+    }
+    return PsiReference.EMPTY_ARRAY
 }
