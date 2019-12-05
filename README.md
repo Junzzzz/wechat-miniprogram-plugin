@@ -24,6 +24,7 @@ wechat-miniprogram-plugin
 
 安装
 ---
+可通过一下两种方式安装，在这之前请确保安装并启用了**JavaScript**和**Css**插件
 - 通过IDE搜索并找到**Wechat mini program support**插件安装
 - 下载[发行版](https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases)，在IDE中选择从磁盘安装
 
