@@ -73,13 +73,154 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.document
 
+import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonObject
+import com.intellij.json.psi.JsonProperty
+import com.intellij.lang.documentation.DocumentationMarkup.*
 import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiManager
+import com.intellij.psi.PsiNamedElement
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 
-class WXMLElementDocumentProvider:DocumentationProvider {
+class WXMLElementDocumentProvider : DocumentationProvider {
 
     override fun getQuickNavigateInfo(element: PsiElement, originalElement: PsiElement): String? {
+        if (originalElement is WXMLTag) {
+            val name = originalElement.getTagName()
+            val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
+                it.name == name
+            }
+            return if (wxmlElementDescriptor != null) {
+                this.buildQuickNavigateInfoFromElementDescriptor(wxmlElementDescriptor)
+            } else {
+                null
+            }
+        }
         return null
+    }
+
+    private fun buildQuickNavigateInfoFromElementDescriptor(wxmlElementDescriptor: WXMLElementDescriptor): String {
+        return "Element <code>${wxmlElementDescriptor.name}</code> ${wxmlElementDescriptor.description ?: ""}"
+    }
+
+    override fun getUrlFor(element: PsiElement, originalElement: PsiElement): MutableList<String> {
+        if (isInsideJsonConfigFile(element)) {
+            if (element.parent?.parent == element.containingFile) {
+                val name = originalElement.text
+                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
+                    it.name == name
+                }
+                return wxmlElementDescriptor?.url?.let {
+                    mutableListOf(it)
+                } ?: mutableListOf()
+            }
+        }
+        return mutableListOf()
+    }
+
+    override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
+        if (isInsideJsonConfigFile(element)) {
+            if (element.parent?.parent == element.containingFile) {
+                element as PsiNamedElement
+                val name = element.name
+                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
+                    it.name == name
+                }
+                return if (wxmlElementDescriptor != null) {
+                    this.generateDocFromElementDescriptor(wxmlElementDescriptor)
+                } else {
+                    null
+                }
+            }
+        }
+        return null
+    }
+
+    private fun generateDocFromElementDescriptor(wxmlElementDescriptor: WXMLElementDescriptor): String {
+        val stringBuilder = StringBuilder()
+        // 头部
+        stringBuilder.append("<div class='definition'><pre>")
+                .append(wxmlElementDescriptor.name)
+                .append("</pre>")
+        if (wxmlElementDescriptor.description != null) {
+            stringBuilder.append("<pre>")
+                    .append(wxmlElementDescriptor.description)
+                    .append("</pre>")
+        }
+        stringBuilder.append("</div>")
+
+        // 内容
+        stringBuilder.append(CONTENT_START)
+        if (wxmlElementDescriptor.attributeDescriptors.isNotEmpty()) {
+            // 属性信息表头
+            stringBuilder.append("<table class='sections'  border=\"1px\" cellspacing=\"10\" style='width: 680px'>")
+            stringBuilder.append(
+                    """<thead>
+                        |<tr>
+|<td align='center' style='word-break: keep-all;'>属性名</td>
+|<td align='center' style='word-break: keep-all;'>类型</td>
+|<td align='center' style='word-break: keep-all;'>默认值</td>
+|<td align='center' style='word-break: keep-all;'>是否必填</td>
+|<td align='center' style='word-break: keep-all;'>有效值</td>
+|</tr>
+|</thead>""".trimMargin()
+            )
+            wxmlElementDescriptor.attributeDescriptors.forEach { wxmlElementAttributeDescriptor ->
+                stringBuilder.append("<tr>")
+                        .append("<td align='center' valign='top' style='word-break: keep-all;'>")
+                        .append(wxmlElementAttributeDescriptor.key)
+                        .append(SECTION_END)
+                        .append("<td align='center' valign='top' style='word-break: keep-all;'>")
+                        .append(wxmlElementAttributeDescriptor.types.joinToString("|"))
+                        .append(SECTION_END)
+                        .append("<td align='center' valign='top' style='word-break: keep-all;'>")
+                        .append(wxmlElementAttributeDescriptor.default ?: "-")
+                        .append(SECTION_END)
+                        .append("<td align='center' valign='top' style='word-break: keep-all;'>")
+                        .append(if (wxmlElementAttributeDescriptor.required) "是" else "否")
+                        .append(SECTION_END)
+                        .append("<td align='center' valign='top' style='word-break: keep-all;'>")
+                        .append(wxmlElementAttributeDescriptor.enums.let {
+                            if (it.isNotEmpty()) {
+                                it.joinToString(" ")
+                            } else {
+                                "-"
+                            }
+                        })
+                        .append(SECTION_END)
+                        .append("</tr>")
+            }
+            stringBuilder.append(SECTIONS_END)
+        }
+        stringBuilder.append(CONTENT_END)
+
+        return stringBuilder.toString()
+    }
+
+    override fun getDocumentationElementForLink(
+            psiManager: PsiManager?, link: String?, context: PsiElement?
+    ): PsiElement? {
+        return super.getDocumentationElementForLink(psiManager, link, context)
+    }
+
+    /**
+     * 判断一个元素是否是json的字符串，
+     * 并且位于elementDescriptions.json文件中
+     */
+    private fun isInsideJsonConfigFile(element: PsiElement): Boolean {
+        if (element is JsonProperty) {
+            val jsonFile = element.containingFile
+            if (jsonFile is JsonFile && jsonFile.name == "elementDescriptions.json") {
+                val topLevelValue = jsonFile.topLevelValue
+                if (topLevelValue is JsonObject) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
 }

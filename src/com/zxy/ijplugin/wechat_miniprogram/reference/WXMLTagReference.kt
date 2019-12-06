@@ -78,10 +78,11 @@ import com.intellij.psi.PsiReferenceBase
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 
-class WXMLTagReference(element:WXMLTag): PsiReferenceBase<WXMLTag>(element,element.getTagNameNode()?.psi?.textRangeInParent) {
+class WXMLTagReference(element: WXMLTag) :
+        PsiReferenceBase<WXMLTag>(element, element.getTagNameNode()?.psi?.textRangeInParent) {
     override fun resolve(): PsiElement? {
-        val tagName = element.getTagName()?:return null
-        return WXMLMetadata.ELEMENT_DESCRIPTORS.find {
+        val tagName = element.getTagName() ?: return null
+        return WXMLMetadata.getElementDescriptors(element.project).find {
             it.name == tagName
         }?.jsonProperty
     }

@@ -203,7 +203,8 @@
 
         <psi.referenceContributor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WechatMiniProgramJSONReferenceContributor"/>
-        <lang.documentationProvider language="WXML" implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementDocumentProvider"/>
+        <lang.documentationProvider language="WXML"
+                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementDocumentProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
@@ -219,4 +220,5 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLElementResolveScopeProvider"/>
     </extensions>
 
+<project-components><component><implementation-class>com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata</implementation-class></component></project-components>
 </idea-plugin>

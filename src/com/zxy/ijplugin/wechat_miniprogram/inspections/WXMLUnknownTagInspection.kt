@@ -116,7 +116,7 @@ class WXMLUnknownTagInspection : WXMLInspectionBase() {
             private fun visitTag(wxmlTag: WXMLTag) {
                 val tagNameNode = wxmlTag.getTagNameNode() ?: return
                 val tagName = tagNameNode.text
-                if (WXMLMetadata.ELEMENT_DESCRIPTORS.any {
+                if (WXMLMetadata.getElementDescriptors(wxmlTag.project).any {
                             it.name == tagName
                         }) {
                     // 是自带组件

@@ -126,7 +126,7 @@ class WXMLCompletionContributor : CompletionContributor() {
                         )!!
                         val wxmlAttribute = PsiTreeUtil.findChildOfType(wxmlElement, WXMLAttribute::class.java)!!
                         val tagName = wxmlElement.tagName
-                        val attribute = WXMLMetadata.ELEMENT_DESCRIPTORS.stream().filter { it.name == tagName }
+                        val attribute = WXMLMetadata.getElementDescriptors(wxmlElement.project).stream().filter { it.name == tagName }
                                 .findFirst()
                                 .map { it.attributeDescriptors }
                                 .orElse(emptyArray())
@@ -189,7 +189,7 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
         } ?: completionResultSet
 
         // 获取所有组件名称
-        cloneCompletionResultSet.addAllElements(WXMLMetadata.ELEMENT_DESCRIPTORS.map { wxmlElementDescriptor ->
+        cloneCompletionResultSet.addAllElements(WXMLMetadata.getElementDescriptors(completionParameters.position.project).map { wxmlElementDescriptor ->
             val requiredElements = wxmlElementDescriptor.attributeDescriptors.filter {
                 it.required
             }
@@ -386,7 +386,7 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         val wxmlAttributeNames = PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java)
                 .map(WXMLAttribute::getName)
 
-        val elementDescriptor = WXMLMetadata.ELEMENT_DESCRIPTORS.find { it.name == tagName }
+        val elementDescriptor = WXMLMetadata.getElementDescriptors(completionParameters.position.project).find { it.name == tagName }
         if (elementDescriptor != null) {
             // 自带组件
             val attributes = elementDescriptor.attributeDescriptors
