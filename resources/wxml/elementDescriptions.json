@@ -19,7 +19,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "引用了模板的名称，对应template的name属性。"
       },
       {
         "key": "name",
@@ -30,7 +30,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "模板的名称"
       },
       {
         "key": "data",
@@ -41,7 +41,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "模板的数据"
       }
     ],
     "events": [],
@@ -61,7 +61,7 @@
         "required": true,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "导入的wxml文件的路径"
       }
     ],
     "events": [],
@@ -80,7 +80,7 @@
         "required": true,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "要包含的wxml文件的路径"
       }
     ],
     "events": [],
@@ -100,7 +100,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "此wxs模块的名称"
       },
       {
         "key": "src",
@@ -111,7 +111,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "引入的wxs文件的路径"
       }
     ],
     "events": [],
@@ -130,7 +130,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "此插槽的名称"
       }
     ],
     "events": [],
@@ -148,9 +148,9 @@
         ],
         "default": "none",
         "required": false,
-        "enums": [],
-        "requiredInEnums": true,
-        "description": null
+        "enums": ["none"],
+        "requiredInEnums": false,
+        "description": "指定按下去的样式类。当 hover-class=\"none\" 时，没有点击态效果"
       },
       {
         "key": "hover-stop-propagation",
@@ -161,7 +161,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定是否阻止本节点的祖先节点出现点击态"
       },
       {
         "key": "hover-start-time",
@@ -172,7 +172,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "按住后多久出现点击态，单位毫秒"
       },
       {
         "key": "hover-stay-time",
@@ -183,7 +183,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "手指松开后点击态保留时间，单位毫秒"
       }
     ],
     "events": [],
@@ -203,7 +203,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "图标路径，支持临时路径、网络地址（1.6.0起支持）、云文件ID（2.2.3起支持）。暂不支持base64格式。"
       }
     ],
     "events": [
@@ -227,7 +227,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "设置顶部滚动偏移量，仅在设置了 overflow-y: scroll 成为滚动元素后生效"
       }
     ],
     "events": [],
@@ -247,7 +247,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当里面的movable-view设置为支持双指缩放时，设置此值可将缩放手势生效区域修改为整个movable-area"
       }
     ],
     "events": [],
@@ -267,7 +267,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "movable-view的移动方向，属性值有all、vertical、horizontal、none"
       },
       {
         "key": "inertia",
@@ -278,7 +278,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "movable-view是否带有惯性"
       },
       {
         "key": "out-of-bounds",
@@ -289,7 +289,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "超过可移动区域后，movable-view是否还可以移动"
       },
       {
         "key": "x",
@@ -300,7 +300,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "定义x轴方向的偏移，如果x的值不在可移动范围内，会自动移动到可移动范围；改变x的值会触发动画"
       },
       {
         "key": "y",
@@ -311,7 +311,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "定义y轴方向的偏移，如果y的值不在可移动范围内，会自动移动到可移动范围；改变y的值会触发动画"
       },
       {
         "key": "damping",
@@ -322,7 +322,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "阻尼系数，用于控制x或y改变时的动画和过界回弹的动画，值越大移动越快"
       },
       {
         "key": "friction",
@@ -333,7 +333,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "摩擦系数，用于控制惯性滑动的动画，值越大摩擦力越大，滑动越快停止；必须大于0，否则会被设置成默认值"
       },
       {
         "key": "disabled",
@@ -344,7 +344,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否禁用"
       },
       {
         "key": "scale",
@@ -355,7 +355,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否支持双指缩放，默认缩放手势生效区域是在movable-view内"
       },
       {
         "key": "scale-min",
@@ -366,7 +366,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "定义缩放倍数最小值"
       },
       {
         "key": "scale-max",
@@ -377,7 +377,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "定义缩放倍数最大值"
       },
       {
         "key": "scale-value",
@@ -388,7 +388,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "定义缩放倍数，取值范围为 0.5 - 10"
       },
       {
         "key": "animation",
@@ -399,7 +399,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否使用动画"
       }
     ],
     "events": [
@@ -424,7 +424,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "允许横向滚动"
       },
       {
         "key": "scroll-y",
@@ -435,7 +435,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "允许纵向滚动"
       },
       {
         "key": "upper-threshold",
@@ -447,7 +447,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "距顶部/左边多远时，触发 <code>scrolltoupper</code> 事件"
       },
       {
         "key": "lower-threshold",
@@ -459,7 +459,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "距底部/右边多远时，触发 <code>scrolltolower</code> 事件"
       },
       {
         "key": "scroll-top",
@@ -471,7 +471,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "设置竖向滚动条位置"
       },
       {
         "key": "scroll-bottom",
@@ -483,7 +483,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "设置横向滚动条位置"
       },
       {
         "key": "scroll-into-view",
@@ -494,7 +494,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "值应为某子元素id（id不能以数字开头）。设置哪个方向可滚动，则在哪个方向滚动到该元素"
       },
       {
         "key": "scroll-with-animation",
@@ -505,7 +505,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "在设置滚动条位置时使用动画过渡"
       },
       {
         "key": "enable-back-to-top",
@@ -516,7 +516,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "iOS点击顶部状态栏、安卓双击标题栏时，滚动条返回顶部，只支持竖向"
       },
       {
         "key": "enable-flex",
@@ -527,7 +527,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "启用 flexbox 布局。开启后，当前节点声明了 display: flex 就会成为 flex container，并作用于其孩子节点。"
       },
       {
         "key": "scroll-anchoring",
@@ -538,7 +538,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "开启 scroll anchoring 特性，即控制滚动位置不随内容变化而抖动，仅在 iOS 下生效，安卓下可参考 CSS overflow-anchor 属性。"
       }
     ],
     "events": [
@@ -562,7 +562,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否显示面板指示点"
       },
       {
         "key": "indicator-color",
@@ -573,7 +573,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指示点颜色"
       },
       {
         "key": "indicator-active-color",
@@ -584,7 +584,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当前选中的指示点颜色"
       },
       {
         "key": "autoplay",
@@ -595,7 +595,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否自动切换"
       },
       {
         "key": "current",
@@ -606,18 +606,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
-      },
-      {
-        "key": "interval",
-        "types": [
-          "NUMBER"
-        ],
-        "default": 0,
-        "required": false,
-        "enums": [],
-        "requiredInEnums": true,
-        "description": null
+        "description": "当前所在滑块的 index"
       },
       {
         "key": "interval",
@@ -628,7 +617,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "自动切换时间间隔"
       },
       {
         "key": "duration",
@@ -639,7 +628,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "滑动动画时长"
       },
       {
         "key": "circular",
@@ -650,7 +639,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否采用衔接滑动"
       },
       {
         "key": "vertical",
@@ -661,7 +650,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "滑动方向是否为纵向"
       },
       {
         "key": "previous-margin",
@@ -672,9 +661,10 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "前边距，可用于露出前一项的一小部分，接受 <code>px</code> 和 <code>rpx</code> 值"
       },
       {
+        "description": "后边距，可用于露出后一项的一小部分，接受 <code>px</code> 和 <code>rpx</code> 值",
         "key": "next-margin",
         "types": [
           "STRING"
@@ -682,8 +672,7 @@
         "default": "0px",
         "required": false,
         "enums": [],
-        "requiredInEnums": true,
-        "description": null
+        "requiredInEnums": true
       },
       {
         "key": "display-multiple-items",
@@ -694,7 +683,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "同时显示的滑块数量"
       },
       {
         "key": "skip-hidden-item-layout",
@@ -705,7 +694,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否跳过未显示的滑块布局，设为 true 可优化复杂情况下的滑动性能，但会丢失隐藏状态滑块的布局信息"
       },
       {
         "key": "easing-function",
@@ -722,7 +711,7 @@
           "easeInOutCubic"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定 swiper 切换缓动动画类型"
       }
     ],
     "events": [
@@ -746,7 +735,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "该 swiper-item 的标识符"
       }
     ],
     "events": [],
