@@ -4,9 +4,11 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "description": "仅作为逻辑渲染的容器"
   },
   "template": {
+    "description": "WXML提供模板（template），可以在模板中定义代码片段，然后在不同的地方调用。",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/reference/wxml/template.html",
     "attributeDescriptors": [
       {
         "key": "is",
@@ -44,10 +46,11 @@
     ],
     "events": [],
     "canOpen": true,
-    "canClose": false,
-    "description": null
+    "canClose": false
   },
   "import": {
+    "description": "import可以在该文件中使用目标文件定义的template",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/reference/wxml/import.html",
     "attributeDescriptors": [
       {
         "key": "src",
@@ -63,10 +66,10 @@
     ],
     "events": [],
     "canOpen": true,
-    "canClose": false,
-    "description": null
+    "canClose": false
   },
   "include": {
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/reference/wxml/import.html",
     "attributeDescriptors": [
       {
         "key": "src",
@@ -83,9 +86,10 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "description": "include 可以将目标文件除了 <template/> <wxs/> 外的整个代码引入，相当于是拷贝到 include 位置"
   },
   "wxs": {
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxs/",
     "attributeDescriptors": [
       {
         "key": "module",
@@ -113,7 +117,7 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "description": "在wxml中嵌入wxs脚本"
   },
   "slot": {
     "attributeDescriptors": [
@@ -132,9 +136,10 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "description": "自定义组件中可嵌入内容"
   },
   "view": {
+    "description": "视图容器",
     "attributeDescriptors": [
       {
         "key": "hover-class",
@@ -184,9 +189,10 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/view.html"
   },
   "cover-image": {
+    "description": "覆盖在原生组件之上的图片视图。可覆盖的原生组件同<code>cover-view</code>，支持嵌套在<code>cover-view</code>里。",
     "attributeDescriptors": [
       {
         "key": "src",
@@ -206,9 +212,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/cover-image.html"
   },
   "cover-view": {
+    "description": "覆盖在原生组件之上的文本视图",
     "attributeDescriptors": [
       {
         "key": "scroll-top",
@@ -226,9 +233,10 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/cover-view.html"
   },
   "movable-area": {
+    "description": "movable-view的可移动区域",
     "attributeDescriptors": [
       {
         "key": "scale-area",
@@ -245,9 +253,10 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/movable-area.html"
   },
   "movable-view": {
+    "description": "可移动的视图容器，在页面中可以拖拽滑动。",
     "attributeDescriptors": [
       {
         "key": "direction",
@@ -401,9 +410,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/movable-view.html"
   },
   "scroll-view": {
+    "description": "可滚动视图区域。使用竖向滚动时，需要给scroll-view一个固定高度，通过 WXSS 设置 height。组件属性的长度单位默认为px，2.4.0起支持传入单位(rpx/px)。",
     "attributeDescriptors": [
       {
         "key": "scroll-view",
@@ -538,9 +548,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/scroll-view.html"
   },
   "swiper": {
+    "description": "滑块视图容器。其中只可放置swiper-item组件，否则会导致未定义的行为。",
     "attributeDescriptors": [
       {
         "key": "indicator-dots",
@@ -721,9 +732,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/swiper.html"
   },
   "swiper-item": {
+    "description": "仅可放置在swiper组件中，宽高自动设置为100%。",
     "attributeDescriptors": [
       {
         "key": "item-id",
@@ -740,9 +752,10 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/swiper-item.html"
   },
   "icon": {
+    "description": "图标。组件属性的长度单位默认为px，2.4.0起支持传入单位(rpx/px)。",
     "attributeDescriptors": [
       {
         "key": "type",
@@ -792,9 +805,10 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/icon.html"
   },
   "progress": {
+    "description": "进度条。组件属性的长度单位默认为px，2.4.0起支持传入单位(rpx/px)。",
     "attributeDescriptors": [
       {
         "key": "percent",
@@ -930,9 +944,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/progress.html"
   },
   "rich-text": {
+    "description": "富文本",
     "attributeDescriptors": [
       {
         "key": "nodes",
@@ -965,9 +980,10 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/rich-text.html"
   },
   "text": {
+    "description": "文本",
     "attributeDescriptors": [
       {
         "key": "selectable",
@@ -1010,9 +1026,10 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/text.html"
   },
   "button": {
+    "description": "按钮",
     "attributeDescriptors": [
       {
         "key": "size",
@@ -1245,9 +1262,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/button.html"
   },
   "checkbox": {
+    "description": "多选项目",
     "attributeDescriptors": [
       {
         "key": "value",
@@ -1297,18 +1315,20 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/checkbox.html"
   },
   "checkbox-group": {
+    "description": "多项选择器，内部由多个checkbox组成。",
     "attributeDescriptors": [],
     "events": [
       "change"
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/checkbox-group.html"
   },
   "editor": {
+    "description": "富文本编辑器，可以对图片、文字进行编辑。",
     "attributeDescriptors": [
       {
         "key": "read-only",
@@ -1375,9 +1395,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/editor.html"
   },
   "form": {
+    "description": "表单。将组件内的用户输入的switch input checkbox slider radio picker 提交。",
     "attributeDescriptors": [
       {
         "key": "report-submit",
@@ -1408,9 +1429,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/form.html"
   },
   "input": {
+    "description": "输入框。该组件是原生组件，使用时请注意相关限制",
     "attributeDescriptors": [
       {
         "key": "value",
@@ -1609,9 +1631,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/input.html"
   },
   "label": {
+    "description": "用来改进表单组件的可用性。",
     "attributeDescriptors": [
       {
         "key": "for",
@@ -1628,9 +1651,10 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/label.html"
   },
   "picker": {
+    "description": "从底部弹起的滚动选择器。",
     "attributeDescriptors": [
       {
         "key": "mode",
@@ -1751,9 +1775,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/picker.html"
   },
   "picker-view": {
+    "description": "嵌入页面的滚动选择器。其中只可放置 picker-view-column组件，其它节点不会显示。",
     "attributeDescriptors": [
       {
         "key": "value",
@@ -1818,16 +1843,18 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/picker-view.html"
   },
   "picker-view-column": {
+    "description": "滚动选择器子项。仅可放置于picker-view中，其孩子节点的高度会自动设置成与picker-view的选中框的高度一致",
     "attributeDescriptors": [],
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/picker-view-column.html"
   },
   "radio": {
+    "description": "单选项目",
     "attributeDescriptors": [
       {
         "key": "value",
@@ -1877,18 +1904,20 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/radio.html"
   },
   "radio-group": {
+    "description": "单项选择器，内部由多个 radio 组成。",
     "attributeDescriptors": [],
     "events": [
       "change"
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/radio-group.html"
   },
   "slider": {
+    "description": "滑动选择器。",
     "attributeDescriptors": [
       {
         "key": "min",
@@ -2029,9 +2058,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/slider.html"
   },
   "switch": {
+    "description": "开关选择器。",
     "attributeDescriptors": [
       {
         "key": "checked",
@@ -2086,9 +2116,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/switch.html"
   },
   "textarea": {
+    "description": "多行输入框。该组件是原生组件，使用时请注意相关限制。",
     "attributeDescriptors": [
       {
         "key": "value",
@@ -2277,9 +2308,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/textarea.html"
   },
   "functional-page-navigator": {
+    "description": "仅在插件中有效，用于跳转到插件功能页。",
     "attributeDescriptors": [
       {
         "key": "version",
@@ -2330,9 +2362,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/functional-page-navigator.html"
   },
   "navigator": {
+    "description": "页面链接。",
     "attributeDescriptors": [
       {
         "key": "target",
@@ -2488,9 +2521,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/navigator.html"
   },
   "audio": {
+    "description": "音频。1.6.0版本开始，该组件不再维护。建议使用能力更强的 wx.createInnerAudioContext 接口",
     "attributeDescriptors": [
       {
         "key": "id",
@@ -2579,9 +2613,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/audio.html"
   },
   "camera": {
+    "description": "系统相机。扫码二维码功能，需升级微信客户端至6.7.3。需要用户授权 <code>scope.camera</code>。",
     "attributeDescriptors": [
       {
         "key": "mode",
@@ -2651,9 +2686,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/camera.html"
   },
   "image": {
+    "description": "图片。支持JPG、PNG、SVG、WEBP格式，2.3.0 起支持云文件ID。",
     "attributeDescriptors": [
       {
         "key": "src",
@@ -2731,9 +2767,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/image.html"
   },
   "live-player": {
+    "description": "实时音视频播放（v2.9.1 起支持同层渲染）。相关api：<code>wx.createLivePlayerContext</code>",
     "attributeDescriptors": [
       {
         "key": "src",
@@ -2887,9 +2924,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/live-player.html"
   },
   "live-pusher": {
+    "description": "实时音视频录制（v2.9.1 起支持同层渲染）。需要用户授权 <code>scope.camera</code>、<code>scope.record</code>。",
     "attributeDescriptors": [
       {
         "key": "url",
@@ -3128,9 +3166,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/live-pusher.html"
   },
   "video": {
+    "description": "视频（v2.4.0 起支持同层渲染）。相关api：wx.createVideoContext",
     "attributeDescriptors": [
       {
         "key": "src",
@@ -3466,9 +3505,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/video.html"
   },
   "map": {
+    "description": "地图（v2.7.0 起支持同层渲染）。相关api wx.createMapContext。",
     "attributeDescriptors": [
       {
         "key": "longitude",
@@ -3735,9 +3775,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/map.html"
   },
   "canvas": {
+    "description": "画布（2d 接口 v2.9.0 起支持同层渲染）。相关api：wx.createCanvasContext。",
     "attributeDescriptors": [
       {
         "key": "type",
@@ -3778,9 +3819,11 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html"
   },
   "ad": {
+    "description": "Banner 广告。",
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/ad.html",
     "attributeDescriptors": [
       {
         "key": "unit-id",
@@ -3811,10 +3854,10 @@
       "close"
     ],
     "canOpen": true,
-    "canClose": false,
-    "description": null
+    "canClose": false
   },
   "official-account": {
+    "description": "公众号关注组件。当用户扫小程序码打开小程序时，开发者可在小程序内配置公众号关注组件，方便用户快捷关注公众号，可嵌套在原生组件内。",
     "attributeDescriptors": [],
     "events": [
       "load",
@@ -3822,9 +3865,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/official-account.html"
   },
   "open-data": {
+    "description": "用于展示微信开放的数据。",
     "attributeDescriptors": [
       {
         "key": "type",
@@ -3900,9 +3944,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/open-data.html"
   },
   "web-view": {
+    "description": "承载网页的容器。会自动铺满整个小程序页面，个人类型的小程序暂不支持使用。",
     "attributeDescriptors": [
       {
         "key": "src",
@@ -3923,9 +3968,10 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/web-view.html"
   },
   "navigation-bar": {
+    "description": "页面导航条配置节点，用于指定导航栏的一些属性。只能是 page-meta 组件内的第一个节点，需要配合它一同使用。",
     "attributeDescriptors": [
       {
         "key": "title",
@@ -3998,9 +4044,10 @@
     "events": [],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/navigation-bar.html"
   },
   "page-meta": {
+    "description": "页面属性配置节点，用于指定页面的一些属性、监听页面事件。只能是页面内的第一个节点。可以配合 navigation-bar 组件一同使用。",
     "attributeDescriptors": [
       {
         "key": "background-text-style",
@@ -4098,6 +4145,6 @@
     ],
     "canOpen": true,
     "canClose": false,
-    "description": null
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/page-meta.html"
   }
 }

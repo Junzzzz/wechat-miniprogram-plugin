@@ -79,7 +79,8 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonProperty
-import com.intellij.openapi.project.ProjectManager
+import com.intellij.openapi.components.ProjectComponent
+import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.utils.ResourceUtils
 
@@ -88,7 +89,8 @@ class WXMLElementDescriptionValue(
         val events: Array<String> = emptyArray(),
         val canOpen: Boolean = true,
         val canClose: Boolean = false,
-        val description: String? = null
+        val description: String? = null,
+        val url:String? = null
 )
 
 data class WXMLElementDescriptor constructor(
@@ -98,6 +100,7 @@ data class WXMLElementDescriptor constructor(
         val canOpen: Boolean = true,
         val canClose: Boolean = false,
         val description: String? = null,
+        val url:String? = null,
         val jsonProperty: JsonProperty
 ) {
     override fun equals(other: Any?): Boolean {
@@ -123,7 +126,8 @@ data class WXMLElementAttributeDescriptor @JsonCreator constructor(
         val required: Boolean = false,
         val enums: Array<String> = emptyArray(),
         val requiredInEnums: Boolean = true,
-        val description: String? = null
+        val description: String? = null,
+        val url:String? = null
 ) {
 
     enum class ValueType {
@@ -150,12 +154,11 @@ data class WXMLElementAttributeDescriptor @JsonCreator constructor(
 typealias A = WXMLElementAttributeDescriptor
 typealias T = WXMLElementAttributeDescriptor.ValueType
 
-object WXMLMetadata {
+class WXMLMetadata(private val project: Project) : ProjectComponent {
 
-    val ELEMENT_DESCRIPTORS by lazy {
+    private val elementDescriptors by lazy {
         ResourceUtils.findWXMLMetaDataFile()?.let {
-            PsiManager.getInstance(ProjectManager.getInstance().defaultProject).findFile(it) as? JsonFile
-//            PsiFileFactory.getInstance(ProjectManager.getInstance().defaultProject).createFileFromText(it.path,JsonFileType.INSTANCE,LoadTextUtil.loadText(it)) as? JsonFile
+            PsiManager.getInstance(this.project).findFile(it) as? JsonFile
         }?.let { jsonFile ->
             val root = jsonFile.topLevelValue as? JsonObject
             val objectMapper = jacksonObjectMapper()
@@ -172,37 +175,46 @@ object WXMLMetadata {
                             it.canOpen,
                             it.canClose,
                             it.description,
+                            it.url,
                             jsonProperty
                     )
                 }
             }
-        }?: emptyList()
+        } ?: emptyList()
     }
 
-    val COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS = arrayOf(
-            A("id", arrayOf(T.STRING)),
-            A("class", arrayOf(T.STRING)),
-            A("style", arrayOf(T.STRING)),
-            A("hidden", arrayOf(T.BOOLEAN), false),
-            A("slot", arrayOf(T.STRING))
-    )
+    companion object {
 
-    val COMMON_ELEMENT_EVENTS = arrayOf(
-            "touchstart", "touchmove", "touchcancel", "touchend", "tap", "longpress", "longtap", "transitionend",
-            "animationstart", "animationiteration", "animationend", "touchforcechange"
-    )
+        fun getElementDescriptors(project: Project): List<WXMLElementDescriptor> {
+            return project.getComponent(WXMLMetadata::class.java).elementDescriptors
+        }
 
-    val INNER_ELEMENT_NAMES = arrayOf("text")
+        val COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS = arrayOf(
+                A("id", arrayOf(T.STRING)),
+                A("class", arrayOf(T.STRING)),
+                A("style", arrayOf(T.STRING)),
+                A("hidden", arrayOf(T.BOOLEAN), false),
+                A("slot", arrayOf(T.STRING))
+        )
 
-    val ARIA_ATTRIBUTE = arrayOf(
-            "aria-hidden", "aria-role", "aria-label", "aria-checked", "aria-disabled",
-            "aria-describedby", "aria-expanded", "aria-haspopup", "aria-selected", "aria-required",
-            "aria-orientation", "aria-valuemin", "aria-valuemax", "aria-valuenow", "aria-readonly",
-            "aria-multiselectable", "aria-controls", "tabindex", "aria-labelledby", "aria-orientation",
-            "aria-multiselectable", "aria-labelledby"
-    )
+        val COMMON_ELEMENT_EVENTS = arrayOf(
+                "touchstart", "touchmove", "touchcancel", "touchend", "tap", "longpress", "longtap", "transitionend",
+                "animationstart", "animationiteration", "animationend", "touchforcechange"
+        )
 
-    val NATIVE_COMPONENTS = arrayOf(
-            "camera", "canvas", "input", "live-player", "live-pusher", "map", "textarea", "video"
-    )
+        val INNER_ELEMENT_NAMES = arrayOf("text")
+
+        val ARIA_ATTRIBUTE = arrayOf(
+                "aria-hidden", "aria-role", "aria-label", "aria-checked", "aria-disabled",
+                "aria-describedby", "aria-expanded", "aria-haspopup", "aria-selected", "aria-required",
+                "aria-orientation", "aria-valuemin", "aria-valuemax", "aria-valuenow", "aria-readonly",
+                "aria-multiselectable", "aria-controls", "tabindex", "aria-labelledby", "aria-orientation",
+                "aria-multiselectable", "aria-labelledby"
+        )
+
+        val NATIVE_COMPONENTS = arrayOf(
+                "camera", "canvas", "input", "live-player", "live-pusher", "map", "textarea", "video"
+        )
+
+    }
 }
