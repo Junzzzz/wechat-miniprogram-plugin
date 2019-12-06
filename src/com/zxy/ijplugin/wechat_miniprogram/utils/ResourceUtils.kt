@@ -71,138 +71,14 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
+package com.zxy.ijplugin.wechat_miniprogram.utils
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonObject
-import com.intellij.json.psi.JsonProperty
-import com.intellij.openapi.project.ProjectManager
-import com.intellij.psi.PsiManager
-import com.zxy.ijplugin.wechat_miniprogram.utils.ResourceUtils
+import com.intellij.openapi.vfs.VfsUtil
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.util.ResourceUtil
 
-class WXMLElementDescriptionValue(
-        val attributeDescriptors: Array<WXMLElementAttributeDescriptor> = emptyArray(),
-        val events: Array<String> = emptyArray(),
-        val canOpen: Boolean = true,
-        val canClose: Boolean = false,
-        val description: String? = null
-)
-
-data class WXMLElementDescriptor constructor(
-        val name: String,
-        val attributeDescriptors: Array<WXMLElementAttributeDescriptor> = emptyArray(),
-        val events: Array<String> = emptyArray(),
-        val canOpen: Boolean = true,
-        val canClose: Boolean = false,
-        val description: String? = null,
-        val jsonProperty: JsonProperty
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as WXMLElementDescriptor
-
-        if (name != other.name) return false
-
-        return true
+object ResourceUtils {
+    fun findWXMLMetaDataFile(): VirtualFile? {
+        return VfsUtil.findFileByURL(ResourceUtil.getResource(ResourceUtils.javaClass, "wxml", "elementDescriptions.json"))
     }
-
-    override fun hashCode(): Int {
-        return name.hashCode()
-    }
-}
-
-data class WXMLElementAttributeDescriptor @JsonCreator constructor(
-        val key: String,
-        val types: Array<ValueType> = emptyArray(),
-        val default: Any? = null,
-        val required: Boolean = false,
-        val enums: Array<String> = emptyArray(),
-        val requiredInEnums: Boolean = true,
-        val description: String? = null
-) {
-
-    enum class ValueType {
-        STRING, NUMBER, BOOLEAN,
-        COLOR, ARRAY, OBJECT
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as WXMLElementAttributeDescriptor
-
-        if (key != other.key) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return key.hashCode()
-    }
-}
-
-typealias A = WXMLElementAttributeDescriptor
-typealias T = WXMLElementAttributeDescriptor.ValueType
-
-object WXMLMetadata {
-
-    val ELEMENT_DESCRIPTORS by lazy {
-        ResourceUtils.findWXMLMetaDataFile()?.let {
-            PsiManager.getInstance(ProjectManager.getInstance().defaultProject).findFile(it) as? JsonFile
-//            PsiFileFactory.getInstance(ProjectManager.getInstance().defaultProject).createFileFromText(it.path,JsonFileType.INSTANCE,LoadTextUtil.loadText(it)) as? JsonFile
-        }?.let { jsonFile ->
-            val root = jsonFile.topLevelValue as? JsonObject
-            val objectMapper = jacksonObjectMapper()
-            root?.propertyList?.mapNotNull { jsonProperty ->
-                val jsonPropertyValue = jsonProperty.value as? JsonObject
-                val value = jsonPropertyValue?.let {
-                    objectMapper.readValue<WXMLElementDescriptionValue>(jsonPropertyValue.text)
-                }
-                value?.let {
-                    WXMLElementDescriptor(
-                            jsonProperty.name,
-                            it.attributeDescriptors,
-                            it.events,
-                            it.canOpen,
-                            it.canClose,
-                            it.description,
-                            jsonProperty
-                    )
-                }
-            }
-        }?: emptyList()
-    }
-
-    val COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS = arrayOf(
-            A("id", arrayOf(T.STRING)),
-            A("class", arrayOf(T.STRING)),
-            A("style", arrayOf(T.STRING)),
-            A("hidden", arrayOf(T.BOOLEAN), false),
-            A("slot", arrayOf(T.STRING))
-    )
-
-    val COMMON_ELEMENT_EVENTS = arrayOf(
-            "touchstart", "touchmove", "touchcancel", "touchend", "tap", "longpress", "longtap", "transitionend",
-            "animationstart", "animationiteration", "animationend", "touchforcechange"
-    )
-
-    val INNER_ELEMENT_NAMES = arrayOf("text")
-
-    val ARIA_ATTRIBUTE = arrayOf(
-            "aria-hidden", "aria-role", "aria-label", "aria-checked", "aria-disabled",
-            "aria-describedby", "aria-expanded", "aria-haspopup", "aria-selected", "aria-required",
-            "aria-orientation", "aria-valuemin", "aria-valuemax", "aria-valuenow", "aria-readonly",
-            "aria-multiselectable", "aria-controls", "tabindex", "aria-labelledby", "aria-orientation",
-            "aria-multiselectable", "aria-labelledby"
-    )
-
-    val NATIVE_COMPONENTS = arrayOf(
-            "camera", "canvas", "input", "live-player", "live-pusher", "map", "textarea", "video"
-    )
 }

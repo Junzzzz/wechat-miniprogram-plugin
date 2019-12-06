@@ -1,0 +1,4103 @@
+{
+  "block": {
+    "attributeDescriptors": [],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "template": {
+    "attributeDescriptors": [
+      {
+        "key": "is",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "name",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "data",
+        "types": [
+          "OBJECT"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "import": {
+    "attributeDescriptors": [
+      {
+        "key": "src",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "include": {
+    "attributeDescriptors": [
+      {
+        "key": "src",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "wxs": {
+    "attributeDescriptors": [
+      {
+        "key": "module",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "src",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "slot": {
+    "attributeDescriptors": [
+      {
+        "key": "name",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "view": {
+    "attributeDescriptors": [
+      {
+        "key": "hover-class",
+        "types": [
+          "STRING"
+        ],
+        "default": "none",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hover-stop-propagation",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hover-start-time",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 50,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hover-stay-time",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 400,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "cover-image": {
+    "attributeDescriptors": [
+      {
+        "key": "src",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "load",
+      "error"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "cover-view": {
+    "attributeDescriptors": [
+      {
+        "key": "scroll-top",
+        "types": [
+          "STRING",
+          "NUMBER"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "movable-area": {
+    "attributeDescriptors": [
+      {
+        "key": "scale-area",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "movable-view": {
+    "attributeDescriptors": [
+      {
+        "key": "direction",
+        "types": [
+          "STRING"
+        ],
+        "default": "none",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "inertia",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "out-of-bounds",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "x",
+        "types": [
+          "NUMBER"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "y",
+        "types": [
+          "NUMBER"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "damping",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 20,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "friction",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 2,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "disabled",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scale",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scale-min",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 0.5,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scale-max",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 10,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scale-value",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 1,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "animation",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "change",
+      "scale",
+      "htouchmove",
+      "vtouchmove"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "scroll-view": {
+    "attributeDescriptors": [
+      {
+        "key": "scroll-view",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scroll-y",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "upper-threshold",
+        "types": [
+          "NUMBER",
+          "STRING"
+        ],
+        "default": 50,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "lower-threshold",
+        "types": [
+          "NUMBER",
+          "STRING"
+        ],
+        "default": 50,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scroll-top",
+        "types": [
+          "NUMBER",
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scroll-bottom",
+        "types": [
+          "NUMBER",
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scroll-into-view",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scroll-with-animation",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-back-to-top",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-flex",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scroll-anchoring",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "scrolltoupper",
+      "scrolltolower",
+      "scroll"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "swiper": {
+    "attributeDescriptors": [
+      {
+        "key": "indicator-dots",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "indicator-color",
+        "types": [
+          "COLOR"
+        ],
+        "default": "rgba(0, 0, 0, .3)",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "indicator-active-color",
+        "types": [
+          "COLOR"
+        ],
+        "default": "#000000",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "autoplay",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "current",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 0,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "interval",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 0,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "interval",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 5000,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "duration",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 500,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "circular",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "vertical",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "previous-margin",
+        "types": [
+          "STRING"
+        ],
+        "default": "0px",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "next-margin",
+        "types": [
+          "STRING"
+        ],
+        "default": "0px",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "display-multiple-items",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 1,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "skip-hidden-item-layout",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "easing-function",
+        "types": [
+          "STRING"
+        ],
+        "default": "default",
+        "required": false,
+        "enums": [
+          "default",
+          "linear",
+          "easeInCubic",
+          "easeOutCubic",
+          "easeInOutCubic"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "change",
+      "transition",
+      "animationfinish"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "swiper-item": {
+    "attributeDescriptors": [
+      {
+        "key": "item-id",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "icon": {
+    "attributeDescriptors": [
+      {
+        "key": "type",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [
+          "success",
+          "success_no_circle",
+          "info",
+          "warn",
+          "waiting",
+          "cancel",
+          "download",
+          "search",
+          "clear"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "size",
+        "types": [
+          "STRING",
+          "NUMBER"
+        ],
+        "default": 23,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "color",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "progress": {
+    "attributeDescriptors": [
+      {
+        "key": "percent",
+        "types": [
+          "NUMBER"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-info",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "border-radius",
+        "types": [
+          "NUMBER",
+          "STRING"
+        ],
+        "default": 0,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "font-size",
+        "types": [
+          "NUMBER",
+          "STRING"
+        ],
+        "default": 16,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "stroke-width",
+        "types": [
+          "NUMBER",
+          "STRING"
+        ],
+        "default": 6,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "color",
+        "types": [
+          "STRING"
+        ],
+        "default": "#09BB07",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "activeColor",
+        "types": [
+          "STRING"
+        ],
+        "default": "#09BB07",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "backgroundColor",
+        "types": [
+          "STRING"
+        ],
+        "default": "#EBEBEB",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "active",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "active-mode",
+        "types": [
+          "STRING"
+        ],
+        "default": "backwards",
+        "required": false,
+        "enums": [
+          "forwards",
+          "backwards"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "duration",
+        "types": [
+          "NUMBER",
+          "STRING"
+        ],
+        "default": 30,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "activeend"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "rich-text": {
+    "attributeDescriptors": [
+      {
+        "key": "nodes",
+        "types": [
+          "ARRAY",
+          "STRING"
+        ],
+        "default": [],
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "space",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [
+          "ensp",
+          "emsp",
+          "nbsp"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "text": {
+    "attributeDescriptors": [
+      {
+        "key": "selectable",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "space",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [
+          "ensp",
+          "emsp",
+          "nbsp"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "decode",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "button": {
+    "attributeDescriptors": [
+      {
+        "key": "size",
+        "types": [
+          "STRING"
+        ],
+        "default": "default",
+        "required": false,
+        "enums": [
+          "default",
+          "mini"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "type",
+        "types": [
+          "STRING"
+        ],
+        "default": "default",
+        "required": false,
+        "enums": [
+          "primary",
+          "default",
+          "warn"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "plain",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "disabled",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "loading",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "from-type",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [
+          "submit",
+          "reset"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "open-type",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [
+          "contact",
+          "share",
+          "getPhoneNumber",
+          "getUserInfo",
+          "launchApp",
+          "openSetting",
+          "feedback"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hover-class",
+        "types": [
+          "STRING"
+        ],
+        "default": "button-hover",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hover-stop-propagation",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hover-start-time",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 20,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hover-stay-time",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 70,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "lang",
+        "types": [
+          "STRING"
+        ],
+        "default": "en",
+        "required": false,
+        "enums": [
+          "en",
+          "zh_CN",
+          "zh_TW"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "session-from",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "send-message-title",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "send-message-img",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "send-message-path",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "app-parameter",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-message-card",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "getuserinfo",
+      "contact",
+      "getphonenumber",
+      "error",
+      "opensetting",
+      "launchapp"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "checkbox": {
+    "attributeDescriptors": [
+      {
+        "key": "value",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "disabled",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "checked",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "color",
+        "types": [
+          "COLOR"
+        ],
+        "default": "#09BB07",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "checkbox-group": {
+    "attributeDescriptors": [],
+    "events": [
+      "change"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "editor": {
+    "attributeDescriptors": [
+      {
+        "key": "read-only",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "placeholder",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-img-size",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-img-toolbar",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-img-resize",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "ready",
+      "focus",
+      "blur",
+      "input",
+      "statuschange"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "form": {
+    "attributeDescriptors": [
+      {
+        "key": "report-submit",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "report-submit-timeout",
+        "types": [
+          "NUMBER"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "submit",
+      "reset"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "input": {
+    "attributeDescriptors": [
+      {
+        "key": "value",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "type",
+        "types": [
+          "STRING"
+        ],
+        "default": "text",
+        "required": false,
+        "enums": [
+          "text",
+          "number",
+          "idcard",
+          "digit"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "password",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "placeholder",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "placeholder-style",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "placeholder-class",
+        "types": [
+          "STRING"
+        ],
+        "default": "input-placeholder",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "disabled",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "maxlength",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 140,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "cursor-spacing",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 0,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "focus",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "confirm-type",
+        "types": [
+          "STRING"
+        ],
+        "default": "done",
+        "required": false,
+        "enums": [
+          "send",
+          "search",
+          "next",
+          "go",
+          "done"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "confirm-hold",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "cursor",
+        "types": [
+          "NUMBER"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "selection-end",
+        "types": [
+          "NUMBER"
+        ],
+        "default": -1,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "adjust-position",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hold-keyboard",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "input",
+      "focus",
+      "blur",
+      "confirm",
+      "keyboardheightchange"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "label": {
+    "attributeDescriptors": [
+      {
+        "key": "for",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "picker": {
+    "attributeDescriptors": [
+      {
+        "key": "mode",
+        "types": [
+          "STRING"
+        ],
+        "default": "selector",
+        "required": false,
+        "enums": [
+          "selector",
+          "multiSelector",
+          "time",
+          "date",
+          "region"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "disabled",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "range",
+        "types": [
+          "ARRAY",
+          "OBJECT"
+        ],
+        "default": [],
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "range-key",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "value",
+        "types": [
+          "NUMBER",
+          "ARRAY"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "start",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "fields",
+        "types": [
+          "STRING"
+        ],
+        "default": "day",
+        "required": false,
+        "enums": [
+          "year",
+          "month",
+          "day"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "start",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "custom-item",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "cancel",
+      "change",
+      "columnchange"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "picker-view": {
+    "attributeDescriptors": [
+      {
+        "key": "value",
+        "types": [
+          "ARRAY"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "indicator-style",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "indicator-class",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "mask-style",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "mask-class",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "change",
+      "pickstart",
+      "pickend"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "picker-view-column": {
+    "attributeDescriptors": [],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "radio": {
+    "attributeDescriptors": [
+      {
+        "key": "value",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "checked",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "disabled",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "color",
+        "types": [
+          "COLOR"
+        ],
+        "default": "#09BB07",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "radio-group": {
+    "attributeDescriptors": [],
+    "events": [
+      "change"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "slider": {
+    "attributeDescriptors": [
+      {
+        "key": "min",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 0,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "max",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 100,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "step",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 1,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "disabled",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "value",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 1,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "color",
+        "types": [
+          "COLOR"
+        ],
+        "default": "#e9e9e9",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "selected-color",
+        "types": [
+          "COLOR"
+        ],
+        "default": "#1aad19",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "activeColor",
+        "types": [
+          "COLOR"
+        ],
+        "default": "#1aad19",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "backgroundColor",
+        "types": [
+          "COLOR"
+        ],
+        "default": "#e9e9e9",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "block-size",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 1,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "block-color",
+        "types": [
+          "COLOR"
+        ],
+        "default": "#FFFFFF",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-value",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "change",
+      "changing"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "switch": {
+    "attributeDescriptors": [
+      {
+        "key": "checked",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "disabled",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "type",
+        "types": [
+          "STRING"
+        ],
+        "default": "switch",
+        "required": false,
+        "enums": [
+          "switch",
+          "checkbox"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "color",
+        "types": [
+          "COLOR"
+        ],
+        "default": "#04BE02",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "change"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "textarea": {
+    "attributeDescriptors": [
+      {
+        "key": "value",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "placeholder",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "placeholder-style",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "placeholder-class",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "checked",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "maxlength",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 140,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "focus",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "auto-height",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "fixed",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "cursor-spacing",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 140,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "cursor",
+        "types": [
+          "NUMBER"
+        ],
+        "default": -140,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-confirm-bar",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "selection-start",
+        "types": [
+          "NUMBER"
+        ],
+        "default": -1,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "selection-end",
+        "types": [
+          "NUMBER"
+        ],
+        "default": -1,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "adjust-position",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hold-keyboard",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "focus",
+      "blur",
+      "linechange",
+      "input",
+      "confirm",
+      "keyboardheightchange"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "functional-page-navigator": {
+    "attributeDescriptors": [
+      {
+        "key": "version",
+        "types": [
+          "STRING"
+        ],
+        "default": "release",
+        "required": false,
+        "enums": [
+          "release",
+          "develop",
+          "trial"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "name",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [
+          "loginAndGetUserInfo",
+          "requestPayment",
+          "chooseAddress"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "args",
+        "types": [
+          "OBJECT"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "success",
+      "fail",
+      "cancel"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "navigator": {
+    "attributeDescriptors": [
+      {
+        "key": "target",
+        "types": [
+          "STRING"
+        ],
+        "default": "self",
+        "required": false,
+        "enums": [
+          "miniProgram",
+          "self"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "url",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "open-type",
+        "types": [
+          "STRING"
+        ],
+        "default": "navigate",
+        "required": false,
+        "enums": [
+          "redirect",
+          "navigate",
+          "switchTab",
+          "reLaunch",
+          "navigateBack",
+          "exit"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "url",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 1,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "app-id",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "path",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "extra-data",
+        "types": [
+          "OBJECT"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "version",
+        "types": [
+          "STRING"
+        ],
+        "default": "release",
+        "required": false,
+        "enums": [
+          "release",
+          "develop",
+          "trial"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hover-class",
+        "types": [
+          "STRING"
+        ],
+        "default": "navigator-hover",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hover-stop-propagation",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hover-start-time",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 50,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "hover-stay-time",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 600,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "success",
+      "fail",
+      "complete"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "audio": {
+    "attributeDescriptors": [
+      {
+        "key": "id",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "src",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "loop",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "controls",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "poster",
+        "types": [
+          "STRING"
+        ],
+        "default": "未知音频",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "name",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "author",
+        "types": [
+          "STRING"
+        ],
+        "default": "未知作者",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "error",
+      "play",
+      "pause",
+      "timeupdate",
+      "ended"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "camera": {
+    "attributeDescriptors": [
+      {
+        "key": "mode",
+        "types": [
+          "STRING"
+        ],
+        "default": "normal",
+        "required": false,
+        "enums": [
+          "scanCode",
+          "normal"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "device-position",
+        "types": [
+          "STRING"
+        ],
+        "default": "back",
+        "required": false,
+        "enums": [
+          "front",
+          "back"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "flash",
+        "types": [
+          "STRING"
+        ],
+        "default": "auto",
+        "required": false,
+        "enums": [
+          "auto",
+          "on",
+          "off",
+          "torch"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "frame-size",
+        "types": [
+          "STRING"
+        ],
+        "default": "medium",
+        "required": false,
+        "enums": [
+          "small",
+          "large",
+          "medium"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "stop",
+      "error",
+      "initdone",
+      "scancode"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "image": {
+    "attributeDescriptors": [
+      {
+        "key": "src",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "mode",
+        "types": [
+          "STRING"
+        ],
+        "default": "back",
+        "required": false,
+        "enums": [
+          "scaleToFill",
+          "aspectFit",
+          "widthFix",
+          "aspectFill",
+          "top",
+          "bottom",
+          "center",
+          "left",
+          "right",
+          "top left",
+          "top right",
+          "bottom left",
+          "bottom right"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "webp",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "lazy-load",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-menu-by-longpress",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "error",
+      "load"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "live-player": {
+    "attributeDescriptors": [
+      {
+        "key": "src",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "mode",
+        "types": [
+          "STRING"
+        ],
+        "default": "live",
+        "required": false,
+        "enums": [
+          "mode",
+          "RTC"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "autoplay",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "muted",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "orientation",
+        "types": [
+          "STRING"
+        ],
+        "default": "vertical",
+        "required": false,
+        "enums": [
+          "horizontal",
+          "vertical"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "object-fit",
+        "types": [
+          "STRING"
+        ],
+        "default": "contain",
+        "required": false,
+        "enums": [
+          "fillCrop",
+          "contain"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "background-mute",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "min-cache",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 1,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "max-cache",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 3,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "sound-mode",
+        "types": [
+          "STRING"
+        ],
+        "default": "speaker",
+        "required": false,
+        "enums": [
+          "ear",
+          "speaker"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "auto-pause-if-navigate",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "auto-pause-if-open-native",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "fullscreenchange",
+      "statechange",
+      "netstatus"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "live-pusher": {
+    "attributeDescriptors": [
+      {
+        "key": "url",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "mode",
+        "types": [
+          "STRING"
+        ],
+        "default": "RTC",
+        "required": false,
+        "enums": [
+          "SD",
+          "HD",
+          "FHD",
+          "RTC"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "autopush",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-camera",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "auto-focus",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "orientation",
+        "types": [
+          "STRING"
+        ],
+        "default": "vertical",
+        "required": false,
+        "enums": [
+          "horizontal",
+          "vertical"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "beauty",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 0,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "whiteness",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 0,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "aspect",
+        "types": [
+          "STRING"
+        ],
+        "default": "9:16",
+        "required": false,
+        "enums": [
+          "3:4",
+          "9:16"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "background-mute",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "min-bitrate",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 200,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "max-bitrate",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 1000,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "audio-quality",
+        "types": [
+          "STRING"
+        ],
+        "default": "high",
+        "required": false,
+        "enums": [
+          "high",
+          "low"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "waiting-image",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "waiting-image-hash",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "zoom",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "device-position",
+        "types": [
+          "STRING"
+        ],
+        "default": "front",
+        "required": false,
+        "enums": [
+          "back",
+          "front"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "background-mute",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "mirror",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "statechange",
+      "netstatus",
+      "error",
+      "bgmstart",
+      "bgmprogress",
+      "bgmcomplete"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "video": {
+    "attributeDescriptors": [
+      {
+        "key": "src",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "duration",
+        "types": [
+          "NUMBER"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "controls",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "danmu-list",
+        "types": [
+          "ARRAY",
+          "OBJECT"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "danmu-btn",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-danmu",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "autoplay",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "loop",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "muted",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "initial-time",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 0,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "page-gesture",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "direction",
+        "types": [
+          "NUMBER"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [
+          "0",
+          "90",
+          "-90"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-progress",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-fullscreen-btn",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-play-btn",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-center-play-btn",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-progress-gesture",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "object-fit",
+        "types": [
+          "STRING"
+        ],
+        "default": "9:16",
+        "required": false,
+        "enums": [
+          "contain",
+          "fill",
+          "cover"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "poster",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-mute-btn",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "title",
+        "types": [
+          "STRING"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "play-btn-position",
+        "types": [
+          "STRING"
+        ],
+        "default": "bottom",
+        "required": false,
+        "enums": [
+          "center",
+          "bottom"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-play-gesture",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "auto-pause-if-navigate",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "auto-pause-if-open-native",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "vslide-gesture",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "vslide-gesture-in-fullscreen",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "ad-unit-id",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "play",
+      "pause",
+      "ended",
+      "timeupdate",
+      "fullscreenchange",
+      "waiting",
+      "error",
+      "progress",
+      "loadedmetadata"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "map": {
+    "attributeDescriptors": [
+      {
+        "key": "longitude",
+        "types": [
+          "NUMBER"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "latitude",
+        "types": [
+          "NUMBER"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scale",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 16,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "markers",
+        "types": [
+          "ARRAY"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "polyline",
+        "types": [
+          "ARRAY"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "circles",
+        "types": [
+          "ARRAY"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "include-points",
+        "types": [
+          "ARRAY"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-location",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "polygons",
+        "types": [
+          "ARRAY"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "subkey",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "layer-style",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 1,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "rotate",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 0,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "skew",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 0,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-3D",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-compass",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "show-scale",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-overlooking",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-zoom",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-scroll",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-rotate",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-satellite",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "enable-traffic",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "setting",
+        "types": [
+          "OBJECT"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "markertap",
+      "labeltap",
+      "controltap",
+      "callouttap",
+      "updated",
+      "regionchange",
+      "poitap"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "canvas": {
+    "attributeDescriptors": [
+      {
+        "key": "type",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "canvas-id",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "disable-scroll",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "error"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "ad": {
+    "attributeDescriptors": [
+      {
+        "key": "unit-id",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "ad-intervals",
+        "types": [
+          "NUMBER"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "load",
+      "error",
+      "close"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "official-account": {
+    "attributeDescriptors": [],
+    "events": [
+      "load",
+      "error"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "open-data": {
+    "attributeDescriptors": [
+      {
+        "key": "type",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [
+          "groupName",
+          "userNickName",
+          "userAvatarUrl",
+          "userGender",
+          "userCity",
+          "userProvince",
+          "userCountry",
+          "userLanguage"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "open-gid",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "lang",
+        "types": [
+          "STRING"
+        ],
+        "default": "en",
+        "required": false,
+        "enums": [
+          "zh_CN",
+          "zh_TW",
+          "en"
+        ],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "default-text",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "default-avatar",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "error"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "web-view": {
+    "attributeDescriptors": [
+      {
+        "key": "src",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "message",
+      "load",
+      "error"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "navigation-bar": {
+    "attributeDescriptors": [
+      {
+        "key": "title",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "loading",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "front-color",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "background-color",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "color-animation-duration",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 0,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "color-animation-timing-func",
+        "types": [
+          "STRING",
+          "NUMBER"
+        ],
+        "default": "linear",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  },
+  "page-meta": {
+    "attributeDescriptors": [
+      {
+        "key": "background-text-style",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "background-color",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "background-color-top",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "background-color-bottom",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scroll-top",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "scroll-duration",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 300,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "page-style",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      },
+      {
+        "key": "root-font-size",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": null
+      }
+    ],
+    "events": [
+      "resize",
+      "scroll",
+      "scrollone"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "description": null
+  }
+}
