@@ -156,40 +156,24 @@ class WXMLElementDocumentProvider : DocumentationProvider {
         stringBuilder.append(CONTENT_START)
         if (wxmlElementDescriptor.attributeDescriptors.isNotEmpty()) {
             // 属性信息表头
-            stringBuilder.append("<table class='sections'  border=\"1px\" cellspacing=\"10\" style='width: 680px'>")
+            stringBuilder.append(SECTIONS_START)
             stringBuilder.append(
                     """<thead>
                         |<tr>
-|<td align='center' style='word-break: keep-all;'>属性名</td>
-|<td align='center' style='word-break: keep-all;'>类型</td>
-|<td align='center' style='word-break: keep-all;'>默认值</td>
-|<td align='center' style='word-break: keep-all;'>是否必填</td>
-|<td align='center' style='word-break: keep-all;'>有效值</td>
+|<td>属性</td>
+|<td>描述</td>
 |</tr>
 |</thead>""".trimMargin()
             )
             wxmlElementDescriptor.attributeDescriptors.forEach { wxmlElementAttributeDescriptor ->
                 stringBuilder.append("<tr>")
-                        .append("<td align='center' valign='top' style='word-break: keep-all;'>")
+                        .append(SECTION_START)
+                        .append(GRAYED_START)
                         .append(wxmlElementAttributeDescriptor.key)
+                        .append(GRAYED_END)
                         .append(SECTION_END)
-                        .append("<td align='center' valign='top' style='word-break: keep-all;'>")
-                        .append(wxmlElementAttributeDescriptor.types.joinToString("|"))
-                        .append(SECTION_END)
-                        .append("<td align='center' valign='top' style='word-break: keep-all;'>")
-                        .append(wxmlElementAttributeDescriptor.default ?: "-")
-                        .append(SECTION_END)
-                        .append("<td align='center' valign='top' style='word-break: keep-all;'>")
-                        .append(if (wxmlElementAttributeDescriptor.required) "是" else "否")
-                        .append(SECTION_END)
-                        .append("<td align='center' valign='top' style='word-break: keep-all;'>")
-                        .append(wxmlElementAttributeDescriptor.enums.let {
-                            if (it.isNotEmpty()) {
-                                it.joinToString(" ")
-                            } else {
-                                "-"
-                            }
-                        })
+                        .append(SECTION_START)
+                        .append(wxmlElementAttributeDescriptor.description?:"")
                         .append(SECTION_END)
                         .append("</tr>")
             }

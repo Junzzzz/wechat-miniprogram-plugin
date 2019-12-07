@@ -148,7 +148,9 @@
         ],
         "default": "none",
         "required": false,
-        "enums": ["none"],
+        "enums": [
+          "none"
+        ],
         "requiredInEnums": false,
         "description": "指定按下去的样式类。当 hover-class=\"none\" 时，没有点击态效果"
       },
@@ -765,7 +767,7 @@
           "clear"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "icon的类型"
       },
       {
         "key": "size",
@@ -777,7 +779,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "icon的大小"
       },
       {
         "key": "color",
@@ -788,7 +790,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "icon的颜色"
       }
     ],
     "events": [],
@@ -808,7 +810,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "百分比0~100"
       },
       {
         "key": "show-info",
@@ -819,7 +821,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "在进度条右侧显示百分比"
       },
       {
         "key": "border-radius",
@@ -831,7 +833,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "圆角大小"
       },
       {
         "key": "font-size",
@@ -843,7 +845,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "右侧百分比字体大小"
       },
       {
         "key": "stroke-width",
@@ -855,7 +857,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "进度条线的宽度"
       },
       {
         "key": "color",
@@ -866,7 +868,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "进度条颜色"
       },
       {
         "key": "activeColor",
@@ -877,7 +879,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "已选择的进度条的颜色"
       },
       {
         "key": "backgroundColor",
@@ -888,7 +890,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "未选择的进度条的颜色"
       },
       {
         "key": "active",
@@ -899,7 +901,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "进度条从左往右的动画"
       },
       {
         "key": "active-mode",
@@ -913,7 +915,7 @@
           "backwards"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "backwards: 动画从头播；forwards：动画从上次结束点接着播"
       },
       {
         "key": "duration",
@@ -925,7 +927,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "进度增加1%所需毫秒数"
       }
     ],
     "events": [
@@ -948,7 +950,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "节点列表/HTML String"
       },
       {
         "key": "space",
@@ -963,7 +965,7 @@
           "nbsp"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "显示连续空格"
       }
     ],
     "events": [],
@@ -983,7 +985,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "文本是否可选"
       },
       {
         "key": "space",
@@ -998,7 +1000,7 @@
           "nbsp"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "显示连续空格"
       },
       {
         "key": "decode",
@@ -1009,7 +1011,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否解码"
       }
     ],
     "events": [],
@@ -1032,7 +1034,7 @@
           "mini"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "按钮的大小"
       },
       {
         "key": "type",
@@ -1047,7 +1049,7 @@
           "warn"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "按钮的样式类型"
       },
       {
         "key": "plain",
@@ -1058,7 +1060,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "按钮是否镂空，背景色透明"
       },
       {
         "key": "disabled",
@@ -1069,7 +1071,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否禁用"
       },
       {
         "key": "loading",
@@ -1080,7 +1082,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "名称前是否带 loading 图标"
       },
       {
         "key": "from-type",
@@ -1094,7 +1096,7 @@
           "reset"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "用于 form 组件，点击分别会触发 form 组件的 submit/reset 事件"
       },
       {
         "key": "open-type",
@@ -1113,7 +1115,7 @@
           "feedback"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "微信开放能力"
       },
       {
         "key": "hover-class",
@@ -1124,7 +1126,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定按钮按下去的样式类"
       },
       {
         "key": "hover-stop-propagation",
@@ -1135,7 +1137,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定是否阻止本节点的祖先节点出现点击态"
       },
       {
         "key": "hover-start-time",
@@ -1146,7 +1148,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "按住后多久出现点击态，单位毫秒"
       },
       {
         "key": "hover-stay-time",
@@ -1157,7 +1159,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "手指松开后点击态保留时间，单位毫秒"
       },
       {
         "key": "lang",
@@ -1172,7 +1174,7 @@
           "zh_TW"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定返回用户信息的语言"
       },
       {
         "key": "session-from",
@@ -1183,7 +1185,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "会话来源，open-type=\"contact\"时有效"
       },
       {
         "key": "send-message-title",
@@ -1194,7 +1196,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "会话内消息卡片标题，open-type=\"contact\"时有效"
       },
       {
         "key": "send-message-img",
@@ -1205,7 +1207,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "会话内消息卡片图片，open-type=\"contact\"时有效"
       },
       {
         "key": "send-message-path",
@@ -1216,7 +1218,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "会话内消息卡片点击跳转小程序路径，open-type=\"contact\"时有效"
       },
       {
         "key": "app-parameter",
@@ -1227,7 +1229,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "打开 APP 时，向 APP 传递的参数，open-type=launchApp时有效"
       },
       {
         "key": "show-message-card",
@@ -1238,7 +1240,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否显示会话内消息卡片，设置此参数为 true，用户进入客服会话会在右下角显示\"可能要发送的小程序\"提示，用户点击后可以快速发送小程序消息，open-type=\"contact\"时有效"
       }
     ],
     "events": [
@@ -1265,7 +1267,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "checkbox标识"
       },
       {
         "key": "disabled",
@@ -1276,7 +1278,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否禁用"
       },
       {
         "key": "checked",
@@ -1287,7 +1289,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当前是否选中，可用来设置默认选中"
       },
       {
         "key": "color",
@@ -1298,7 +1300,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "checkbox的颜色"
       }
     ],
     "events": [],
@@ -1328,7 +1330,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "设置编辑器为只读"
       },
       {
         "key": "placeholder",
@@ -1339,7 +1341,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "提示信息"
       },
       {
         "key": "show-img-size",
@@ -1350,7 +1352,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "点击图片时显示图片大小控件"
       },
       {
         "key": "show-img-toolbar",
@@ -1361,7 +1363,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "点击图片时显示工具栏控件"
       },
       {
         "key": "show-img-resize",
@@ -1372,7 +1374,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "点击图片时显示修改尺寸控件"
       }
     ],
     "events": [
@@ -1398,7 +1400,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否返回 formId 用于发送<a href=\"https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/template-message.html\">模板消息</a>"
       },
       {
         "key": "report-submit-timeout",
@@ -1409,7 +1411,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "等待一段时间（毫秒数）以确认 formId 是否生效"
       }
     ],
     "events": [
@@ -1432,7 +1434,7 @@
         "required": true,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "输入框的初始内容"
       },
       {
         "key": "type",
@@ -1448,7 +1450,7 @@
           "digit"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "input 的类型"
       },
       {
         "key": "password",
@@ -1459,7 +1461,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否是密码类型"
       },
       {
         "key": "placeholder",
@@ -1470,7 +1472,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "输入框为空时占位符"
       },
       {
         "key": "placeholder-style",
@@ -1481,7 +1483,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定 placeholder 的样式"
       },
       {
         "key": "placeholder-class",
@@ -1492,7 +1494,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定 placeholder 的样式类"
       },
       {
         "key": "disabled",
@@ -1503,7 +1505,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否禁用"
       },
       {
         "key": "maxlength",
@@ -1514,7 +1516,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "最大输入长度，设置为 -1 的时候不限制最大长度"
       },
       {
         "key": "cursor-spacing",
@@ -1525,7 +1527,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定光标与键盘的距离，取 input 距离底部的距离和 cursor-spacing 指定的距离的最小值作为光标与键盘的距离"
       },
       {
         "key": "focus",
@@ -1536,7 +1538,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "自动聚焦，拉起键盘"
       },
       {
         "key": "confirm-type",
@@ -1553,7 +1555,7 @@
           "done"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "设置键盘右下角按钮的文字，仅在type='text'时生效"
       },
       {
         "key": "confirm-hold",
@@ -1564,7 +1566,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "点击键盘右下角按钮时是否保持键盘不收起"
       },
       {
         "key": "cursor",
@@ -1575,7 +1577,18 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定focus时的光标位置"
+      },
+      {
+        "key": "selection-start",
+        "types": [
+          "NUMBER"
+        ],
+        "default": -1,
+        "description": "光标起始位置，自动聚集时有效，需与selection-end搭配使用",
+        "requiredInEnums": true,
+        "enums": [],
+        "required": false
       },
       {
         "key": "selection-end",
@@ -1586,7 +1599,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "光标结束位置，自动聚集时有效，需与selection-start搭配使用"
       },
       {
         "key": "adjust-position",
@@ -1597,7 +1610,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "键盘弹起时，是否自动上推页面"
       },
       {
         "key": "hold-keyboard",
@@ -1608,7 +1621,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "focus时，点击页面的时候不收起键盘"
       }
     ],
     "events": [
@@ -1634,7 +1647,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "绑定控件的 id"
       }
     ],
     "events": [],
@@ -1660,7 +1673,7 @@
           "region"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "选择器类型"
       },
       {
         "key": "disabled",
@@ -1671,7 +1684,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否禁用"
       },
       {
         "key": "range",
@@ -1683,7 +1696,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "mode 为 selector 或 multiSelector 时，range 有效"
       },
       {
         "key": "range-key",
@@ -1694,7 +1707,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当 range 是一个 Object Array 时，通过 range-key 来指定 Object 中 key 的值作为选择器显示内容"
       },
       {
         "key": "value",
@@ -1706,10 +1719,10 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "表示选择了 range 中的第几个（下标从 0 开始）"
       },
       {
-        "key": "start",
+        "key": "end",
         "types": [
           "STRING"
         ],
@@ -1717,7 +1730,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "表示有效日期范围的结束，字符串格式为\"YYYY-MM-DD\""
       },
       {
         "key": "fields",
@@ -1732,7 +1745,7 @@
           "day"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "表示选择器的粒度"
       },
       {
         "key": "start",
@@ -1743,7 +1756,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "表示有效日期范围的开始，字符串格式为\"YYYY-MM-DD\""
       },
       {
         "key": "custom-item",
@@ -1754,7 +1767,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当mode=region，可为每一列的顶部添加一个自定义的项"
       }
     ],
     "events": [
@@ -1778,7 +1791,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "数组中的数字依次表示 picker-view 内的 picker-view-column 选择的第几项（下标从 0 开始），数字大于 picker-view-column 可选项长度时，选择最后一项。"
       },
       {
         "key": "indicator-style",
@@ -1789,7 +1802,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "设置选择器中间选中框的样式"
       },
       {
         "key": "indicator-class",
@@ -1800,7 +1813,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "设置选择器中间选中框的类名"
       },
       {
         "key": "mask-style",
@@ -1811,7 +1824,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "设置蒙层的样式"
       },
       {
         "key": "mask-class",
@@ -1822,7 +1835,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "设置蒙层的类名"
       }
     ],
     "events": [
@@ -1854,7 +1867,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "radio 标识"
       },
       {
         "key": "checked",
@@ -1865,7 +1878,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当前是否选中"
       },
       {
         "key": "disabled",
@@ -1876,7 +1889,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否禁用"
       },
       {
         "key": "color",
@@ -1887,7 +1900,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "radio的颜色"
       }
     ],
     "events": [],
@@ -1917,7 +1930,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "最小值"
       },
       {
         "key": "max",
@@ -1928,7 +1941,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "最大值"
       },
       {
         "key": "step",
@@ -1939,7 +1952,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "步长，取值必须大于 0，并且可被(max - min)整除"
       },
       {
         "key": "disabled",
@@ -1950,7 +1963,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否禁用"
       },
       {
         "key": "value",
@@ -1961,7 +1974,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当前取值"
       },
       {
         "key": "color",
@@ -1972,7 +1985,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "背景条的颜色（请使用 backgroundColor）"
       },
       {
         "key": "selected-color",
@@ -1983,7 +1996,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "已选择的颜色（请使用 activeColor）"
       },
       {
         "key": "activeColor",
@@ -1994,7 +2007,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "已选择的颜色"
       },
       {
         "key": "backgroundColor",
@@ -2005,7 +2018,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "背景条的颜色"
       },
       {
         "key": "block-size",
@@ -2016,7 +2029,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "滑块的大小，取值范围为 12 - 28"
       },
       {
         "key": "block-color",
@@ -2027,7 +2040,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "滑块的颜色"
       },
       {
         "key": "show-value",
@@ -2038,7 +2051,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否显示当前 value"
       }
     ],
     "events": [
@@ -2061,7 +2074,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否选中"
       },
       {
         "key": "disabled",
@@ -2072,7 +2085,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否禁用"
       },
       {
         "key": "type",
@@ -2086,7 +2099,7 @@
           "checkbox"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "样式，有效值：switch, checkbox"
       },
       {
         "key": "color",
@@ -2097,7 +2110,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "switch 的颜色"
       }
     ],
     "events": [
@@ -2119,7 +2132,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "输入框的内容"
       },
       {
         "key": "placeholder",
@@ -2130,7 +2143,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "输入框为空时占位符"
       },
       {
         "key": "placeholder-style",
@@ -2141,21 +2154,21 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定 placeholder 的样式"
       },
       {
         "key": "placeholder-class",
         "types": [
           "STRING"
         ],
-        "default": null,
+        "default": "text-placeholder",
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定 placeholder 的样式类"
       },
       {
-        "key": "checked",
+        "key": "disabled",
         "types": [
           "BOOLEAN"
         ],
@@ -2163,7 +2176,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否禁用"
       },
       {
         "key": "maxlength",
@@ -2174,7 +2187,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "最大输入长度，设置为 -1 的时候不限制最大长度"
       },
       {
         "key": "focus",
@@ -2185,7 +2198,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "获取焦点"
       },
       {
         "key": "auto-height",
@@ -2196,7 +2209,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否自动增高，设置auto-height时，style.height不生效"
       },
       {
         "key": "fixed",
@@ -2207,7 +2220,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "如果 textarea 是在一个 position:fixed 的区域，需要显示指定属性 fixed 为 true"
       },
       {
         "key": "cursor-spacing",
@@ -2218,7 +2231,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定光标与键盘的距离"
       },
       {
         "key": "cursor",
@@ -2229,7 +2242,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定focus时的光标位置"
       },
       {
         "key": "show-confirm-bar",
@@ -2240,7 +2253,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否显示键盘上方带有”完成“按钮那一栏"
       },
       {
         "key": "selection-start",
@@ -2251,7 +2264,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "光标起始位置，自动聚集时有效，需与selection-end搭配使用"
       },
       {
         "key": "selection-end",
@@ -2262,7 +2275,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "光标结束位置，自动聚集时有效，需与selection-start搭配使用"
       },
       {
         "key": "adjust-position",
@@ -2273,7 +2286,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "键盘弹起时，是否自动上推页面"
       },
       {
         "key": "hold-keyboard",
@@ -2284,7 +2297,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "focus时，点击页面的时候不收起键盘"
       }
     ],
     "events": [
@@ -2315,7 +2328,7 @@
           "trial"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "跳转到的小程序版本，线上版本必须设置为 release"
       },
       {
         "key": "name",
@@ -2330,7 +2343,7 @@
           "chooseAddress"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "要跳转到的功能页"
       },
       {
         "key": "args",
@@ -2341,7 +2354,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "功能页参数，参数格式与具体功能页相关"
       }
     ],
     "events": [
@@ -2368,7 +2381,7 @@
           "self"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "在哪个目标上发生跳转，默认当前小程序"
       },
       {
         "key": "url",
@@ -2379,7 +2392,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当前小程序内的跳转链接"
       },
       {
         "key": "open-type",
@@ -2397,10 +2410,10 @@
           "exit"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "跳转方式"
       },
       {
-        "key": "url",
+        "key": "delta",
         "types": [
           "NUMBER"
         ],
@@ -2408,7 +2421,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当 open-type 为 'navigateBack' 时有效，表示回退的层数"
       },
       {
         "key": "app-id",
@@ -2419,7 +2432,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当target=\"miniProgram\"时有效，要打开的小程序 appId"
       },
       {
         "key": "path",
@@ -2430,7 +2443,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当target=\"miniProgram\"时有效，打开的页面路径，如果为空则打开首页"
       },
       {
         "key": "extra-data",
@@ -2441,7 +2454,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当<code>target=\"miniProgram\"</code>时有效，需要传递给目标小程序的数据，目标小程序可在 <code>App.onLaunch()</code>，<code>App.onShow()</code> 中获取到这份数据。"
       },
       {
         "key": "version",
@@ -2456,7 +2469,7 @@
           "trial"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "当target=\"miniProgram\"时有效，要打开的小程序版本"
       },
       {
         "key": "hover-class",
@@ -2467,7 +2480,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定点击时的样式类，当hover-class=\"none\"时，没有点击态效果"
       },
       {
         "key": "hover-stop-propagation",
@@ -2478,7 +2491,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定是否阻止本节点的祖先节点出现点击态"
       },
       {
         "key": "hover-start-time",
@@ -2489,7 +2502,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "按住后多久出现点击态，单位毫秒"
       },
       {
         "key": "hover-stay-time",
@@ -2500,7 +2513,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "手指松开后点击态保留时间，单位毫秒"
       }
     ],
     "events": [
@@ -2524,7 +2537,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "audio 组件的唯一标识符"
       },
       {
         "key": "src",
@@ -2535,7 +2548,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "要播放音频的资源地址"
       },
       {
         "key": "loop",
@@ -2546,7 +2559,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否循环播放"
       },
       {
         "key": "controls",
@@ -2557,7 +2570,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否显示默认控件"
       },
       {
         "key": "poster",
@@ -2568,7 +2581,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "默认控件上的音频封面的图片资源地址，如果 controls 属性值为 false 则设置 poster 无效"
       },
       {
         "key": "name",
@@ -2579,7 +2592,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "默认控件上的音频名字，如果 controls 属性值为 false 则设置 name 无效"
       },
       {
         "key": "author",
@@ -2590,7 +2603,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "默认控件上的作者名字，如果 controls 属性值为 false 则设置 author 无效"
       }
     ],
     "events": [
@@ -2619,7 +2632,7 @@
           "normal"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "应用模式，只在初始化时有效，不能动态变更"
       },
       {
         "key": "device-position",
@@ -2633,7 +2646,7 @@
           "back"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "摄像头朝向"
       },
       {
         "key": "flash",
@@ -2649,7 +2662,7 @@
           "torch"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "闪光灯模式"
       },
       {
         "key": "frame-size",
@@ -2664,7 +2677,7 @@
           "medium"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定期望的相机帧数据尺寸"
       }
     ],
     "events": [
@@ -2689,7 +2702,7 @@
         "required": true,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "图片资源地址"
       },
       {
         "key": "mode",
@@ -2714,7 +2727,7 @@
           "bottom right"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "图片裁剪、缩放的模式"
       },
       {
         "key": "webp",
@@ -2725,7 +2738,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否是webP格式"
       },
       {
         "key": "lazy-load",
@@ -2736,7 +2749,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "图片懒加载，在即将进入一定范围（上下三屏）时才开始加载"
       },
       {
         "key": "show-menu-by-longpress",
@@ -2747,7 +2760,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "开启长按图片显示识别小程序码菜单"
       }
     ],
     "events": [
@@ -2770,7 +2783,7 @@
         "required": true,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "音视频地址"
       },
       {
         "key": "mode",
@@ -2784,7 +2797,7 @@
           "RTC"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "模式"
       },
       {
         "key": "autoplay",
@@ -2795,7 +2808,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "自动播放"
       },
       {
         "key": "muted",
@@ -2806,7 +2819,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否静音"
       },
       {
         "key": "orientation",
@@ -2820,7 +2833,7 @@
           "vertical"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "画面方向"
       },
       {
         "key": "object-fit",
@@ -2834,7 +2847,7 @@
           "contain"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "填充模式，可选值有 contain，fillCrop"
       },
       {
         "key": "background-mute",
@@ -2845,7 +2858,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "进入后台时是否静音（已废弃，默认退台静音）"
       },
       {
         "key": "min-cache",
@@ -2856,7 +2869,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "最小缓冲区，单位s（RTC 模式推荐 0.2s）"
       },
       {
         "key": "max-cache",
@@ -2867,7 +2880,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "最大缓冲区，单位s（RTC 模式推荐 0.8s）"
       },
       {
         "key": "sound-mode",
@@ -2881,7 +2894,7 @@
           "speaker"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "声音输出方式"
       },
       {
         "key": "auto-pause-if-navigate",
@@ -2892,7 +2905,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当跳转到其它小程序页面时，是否自动暂停本页面的实时音视频播放"
       },
       {
         "key": "auto-pause-if-open-native",
@@ -2903,7 +2916,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当跳转到其它微信原生页面时，是否自动暂停本页面的实时音视频播放"
       }
     ],
     "events": [
@@ -2927,7 +2940,7 @@
         "required": true,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "推流地址"
       },
       {
         "key": "mode",
@@ -2943,7 +2956,7 @@
           "RTC"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "SD（标清）, HD（高清）, FHD（超清）, RTC（实时通话）"
       },
       {
         "key": "autopush",
@@ -2954,7 +2967,18 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "自动推流"
+      },
+      {
+        "key": "muted",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "是否静音"
       },
       {
         "key": "enable-camera",
@@ -2965,7 +2989,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "开启摄像头"
       },
       {
         "key": "auto-focus",
@@ -2976,7 +3000,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "自动聚集"
       },
       {
         "key": "orientation",
@@ -2990,7 +3014,7 @@
           "vertical"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "画面方向"
       },
       {
         "key": "beauty",
@@ -3001,7 +3025,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "美颜，取值范围 0-9 ，0 表示关闭"
       },
       {
         "key": "whiteness",
@@ -3012,7 +3036,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "美白，取值范围 0-9 ，0 表示关闭"
       },
       {
         "key": "aspect",
@@ -3026,7 +3050,7 @@
           "9:16"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "宽高比"
       },
       {
         "key": "background-mute",
@@ -3037,7 +3061,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "进入后台时是否静音"
       },
       {
         "key": "min-bitrate",
@@ -3048,7 +3072,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "最小码率"
       },
       {
         "key": "max-bitrate",
@@ -3059,7 +3083,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "最大码率"
       },
       {
         "key": "audio-quality",
@@ -3073,7 +3097,7 @@
           "low"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "高音质(48KHz)或低音质(16KHz)，值为high, low"
       },
       {
         "key": "waiting-image",
@@ -3084,7 +3108,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "进入后台时推流的等待画面"
       },
       {
         "key": "waiting-image-hash",
@@ -3095,7 +3119,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "等待画面资源的MD5值"
       },
       {
         "key": "zoom",
@@ -3106,7 +3130,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "调整焦距"
       },
       {
         "key": "device-position",
@@ -3120,7 +3144,7 @@
           "front"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "前置或后置，值为front, back"
       },
       {
         "key": "background-mute",
@@ -3131,7 +3155,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "进入后台时是否静音"
       },
       {
         "key": "mirror",
@@ -3142,7 +3166,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "设置推流画面是否镜像，产生的效果在 live-player 反应到"
       }
     ],
     "events": [
@@ -3169,7 +3193,7 @@
         "required": true,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "要播放视频的资源地址，支持云文件ID"
       },
       {
         "key": "duration",
@@ -3180,7 +3204,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定视频时长"
       },
       {
         "key": "controls",
@@ -3191,7 +3215,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否显示默认播放控件（播放/暂停按钮、播放进度、时间）"
       },
       {
         "key": "danmu-list",
@@ -3203,7 +3227,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "弹幕列表"
       },
       {
         "key": "danmu-btn",
@@ -3214,7 +3238,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否显示弹幕按钮，只在初始化时有效，不能动态变更"
       },
       {
         "key": "enable-danmu",
@@ -3225,7 +3249,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否展示弹幕，只在初始化时有效，不能动态变更"
       },
       {
         "key": "autoplay",
@@ -3236,7 +3260,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否自动播放"
       },
       {
         "key": "loop",
@@ -3247,7 +3271,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否循环播放"
       },
       {
         "key": "muted",
@@ -3258,7 +3282,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否静音播放"
       },
       {
         "key": "initial-time",
@@ -3269,7 +3293,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定视频初始播放位置"
       },
       {
         "key": "page-gesture",
@@ -3280,7 +3304,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "在非全屏模式下，是否开启亮度与音量调节手势（废弃，见 vslide-gesture）"
       },
       {
         "key": "direction",
@@ -3295,7 +3319,7 @@
           "-90"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "设置全屏时视频的方向，不指定则根据宽高比自动判断"
       },
       {
         "key": "show-progress",
@@ -3306,7 +3330,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "若不设置，宽度大于240时才会显示"
       },
       {
         "key": "show-fullscreen-btn",
@@ -3317,7 +3341,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否显示全屏按钮"
       },
       {
         "key": "show-play-btn",
@@ -3328,7 +3352,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否显示视频底部控制栏的播放按钮"
       },
       {
         "key": "show-center-play-btn",
@@ -3339,7 +3363,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否显示视频中间的播放按钮"
       },
       {
         "key": "enable-progress-gesture",
@@ -3350,7 +3374,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否开启控制进度的手势"
       },
       {
         "key": "object-fit",
@@ -3365,7 +3389,7 @@
           "cover"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "当视频大小与 video 容器大小不一致时，视频的表现形式"
       },
       {
         "key": "poster",
@@ -3376,7 +3400,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "视频封面的图片网络资源地址或云文件ID（2.3.0）。若 controls 属性值为 false 则设置 poster 无效"
       },
       {
         "key": "show-mute-btn",
@@ -3387,7 +3411,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否显示静音按钮"
       },
       {
         "key": "title",
@@ -3398,7 +3422,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "视频的标题，全屏时在顶部展示"
       },
       {
         "key": "play-btn-position",
@@ -3412,7 +3436,7 @@
           "bottom"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "播放按钮的位置"
       },
       {
         "key": "enable-play-gesture",
@@ -3423,7 +3447,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否开启播放手势，即双击切换播放/暂停"
       },
       {
         "key": "auto-pause-if-navigate",
@@ -3434,7 +3458,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当跳转到其它小程序页面时，是否自动暂停本页面的视频"
       },
       {
         "key": "auto-pause-if-open-native",
@@ -3445,7 +3469,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当跳转到其它微信原生页面时，是否自动暂停本页面的视频"
       },
       {
         "key": "vslide-gesture",
@@ -3456,7 +3480,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "在非全屏模式下，是否开启亮度与音量调节手势（同 page-gesture）"
       },
       {
         "key": "vslide-gesture-in-fullscreen",
@@ -3467,7 +3491,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "在全屏模式下，是否开启亮度与音量调节手势"
       },
       {
         "key": "ad-unit-id",
@@ -3478,7 +3502,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "视频前贴广告单元ID"
       }
     ],
     "events": [
@@ -3508,7 +3532,7 @@
         "required": true,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "中心经度"
       },
       {
         "key": "latitude",
@@ -3519,7 +3543,7 @@
         "required": true,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "中心纬度"
       },
       {
         "key": "scale",
@@ -3530,7 +3554,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "缩放级别，取值范围为3-20"
       },
       {
         "key": "markers",
@@ -3541,7 +3565,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "标记点"
       },
       {
         "key": "polyline",
@@ -3552,7 +3576,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "路线"
       },
       {
         "key": "circles",
@@ -3563,7 +3587,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "圆"
       },
       {
         "key": "include-points",
@@ -3574,7 +3598,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "缩放视野以包含所有给定的坐标点"
       },
       {
         "key": "show-location",
@@ -3585,7 +3609,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "显示带有方向的当前定位点"
       },
       {
         "key": "polygons",
@@ -3596,7 +3620,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "多边形"
       },
       {
         "key": "subkey",
@@ -3607,7 +3631,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "个性化地图使用的key"
       },
       {
         "key": "layer-style",
@@ -3618,7 +3642,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "个性化地图配置的 style，不支持动态修改"
       },
       {
         "key": "rotate",
@@ -3629,7 +3653,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "旋转角度，范围 0 ~ 360, 地图正北和设备 y 轴角度的夹角"
       },
       {
         "key": "skew",
@@ -3640,7 +3664,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "倾斜角度，范围 0 ~ 40 , 关于 z 轴的倾角"
       },
       {
         "key": "enable-3D",
@@ -3651,7 +3675,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "展示3D楼块(工具暂不支持）"
       },
       {
         "key": "show-compass",
@@ -3662,7 +3686,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "显示指南针"
       },
       {
         "key": "show-scale",
@@ -3673,7 +3697,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "显示比例尺，工具暂不支持"
       },
       {
         "key": "enable-overlooking",
@@ -3684,7 +3708,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "开启俯视"
       },
       {
         "key": "enable-zoom",
@@ -3695,7 +3719,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否支持缩放"
       },
       {
         "key": "enable-scroll",
@@ -3706,7 +3730,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否支持拖动"
       },
       {
         "key": "enable-rotate",
@@ -3717,7 +3741,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否支持旋转"
       },
       {
         "key": "enable-satellite",
@@ -3728,7 +3752,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否开启卫星图"
       },
       {
         "key": "enable-traffic",
@@ -3739,7 +3763,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否开启实时路况"
       },
       {
         "key": "setting",
@@ -3750,7 +3774,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "配置项"
       }
     ],
     "events": [
@@ -3778,7 +3802,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "指定 canvas 类型，支持 2d (2.9.0) 和 webgl (2.7.0)"
       },
       {
         "key": "canvas-id",
@@ -3789,7 +3813,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "canvas 组件的唯一标识符，若指定了 type 则无需再指定该属性"
       },
       {
         "key": "disable-scroll",
@@ -3800,7 +3824,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当在 canvas 中移动时且有绑定手势事件时，禁止屏幕滚动以及下拉刷新"
       }
     ],
     "events": [
@@ -3823,7 +3847,7 @@
         "required": true,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "广告单元id"
       },
       {
         "key": "ad-intervals",
@@ -3834,7 +3858,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "广告自动刷新的间隔时间，单位为秒，参数值必须大于等于30（该参数不传入时 Banner 广告不会自动刷新）"
       }
     ],
     "events": [
@@ -3877,7 +3901,7 @@
           "userLanguage"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "开放数据类型"
       },
       {
         "key": "open-gid",
@@ -3888,7 +3912,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "当 type=\"groupName\" 时生效, 群id"
       },
       {
         "key": "lang",
@@ -3903,7 +3927,7 @@
           "en"
         ],
         "requiredInEnums": true,
-        "description": null
+        "description": "当 type=\"user*\" 时生效，以哪种语言展示 userInfo"
       },
       {
         "key": "default-text",
@@ -3914,7 +3938,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "数据为空时的默认文案"
       },
       {
         "key": "default-avatar",
@@ -3925,7 +3949,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "用户头像为空时的默认图片，支持相对路径和网络图片路径"
       }
     ],
     "events": [
@@ -3947,7 +3971,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "webview 指向网页的链接"
       }
     ],
     "events": [
@@ -3971,7 +3995,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "导航条标题"
       },
       {
         "key": "loading",
@@ -3982,7 +4006,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "是否在导航条显示 loading 加载提示"
       },
       {
         "key": "front-color",
@@ -3993,7 +4017,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "导航条前景颜色值，包括按钮、标题、状态栏的颜色，仅支持 #ffffff 和 #000000"
       },
       {
         "key": "background-color",
@@ -4004,7 +4028,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "导航条背景颜色值，有效值为十六进制颜色"
       },
       {
         "key": "color-animation-duration",
@@ -4015,7 +4039,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "改变导航栏颜色时的动画时长，默认为 0 （即没有动画效果）"
       },
       {
         "key": "color-animation-timing-func",
@@ -4027,7 +4051,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "改变导航栏颜色时的动画方式"
       }
     ],
     "events": [],
@@ -4047,7 +4071,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "下拉背景字体、loading 图的样式，仅支持 dark 和 light"
       },
       {
         "key": "background-color",
@@ -4058,7 +4082,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "窗口的背景色，必须为十六进制颜色值"
       },
       {
         "key": "background-color-top",
@@ -4069,7 +4093,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "顶部窗口的背景色，必须为十六进制颜色值，仅 iOS 支持"
       },
       {
         "key": "background-color-bottom",
@@ -4080,7 +4104,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "底部窗口的背景色，必须为十六进制颜色值，仅 iOS 支持"
       },
       {
         "key": "scroll-top",
@@ -4091,7 +4115,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "滚动位置，可以使用 px 或者 rpx 为单位，在被设置时，页面会滚动到对应位置"
       },
       {
         "key": "scroll-duration",
@@ -4102,7 +4126,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "滚动动画时长"
       },
       {
         "key": "page-style",
@@ -4113,7 +4137,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "页面根节点样式，页面根节点是所有页面节点的祖先节点，相当于 HTML 中的 body 节点"
       },
       {
         "key": "root-font-size",
@@ -4124,7 +4148,7 @@
         "required": false,
         "enums": [],
         "requiredInEnums": true,
-        "description": null
+        "description": "页面的根字体大小，页面中的所有 rem 单位，将使用这个字体大小作为参考值，即 1rem 等于这个字体大小"
       }
     ],
     "events": [
