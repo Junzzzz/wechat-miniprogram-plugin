@@ -156,7 +156,7 @@ fun JsonObject.findStringArrayPropertyValue(key:String):Array<String>?{
         it as? JsonStringLiteral
     }?.map {
         it.value
-    }?.toTypedArray()?: emptyArray()
+    }?.toTypedArray()
 }
 
 fun JsonObject.findBooleanPropertyValue(key: String):Boolean?{
