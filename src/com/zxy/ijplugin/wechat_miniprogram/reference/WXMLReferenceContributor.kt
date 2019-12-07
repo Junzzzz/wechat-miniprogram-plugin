@@ -254,6 +254,7 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                 }
         )
 
+        // 解析wxml元素的slot属性a
         psiReferenceRegistrar.registerReferenceProvider(
                 PlatformPatterns.psiElement(WXMLStringText::class.java),
                 object : PsiReferenceProvider() {
@@ -272,7 +273,6 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                     }
                 }
         )
-
     }
 
 }

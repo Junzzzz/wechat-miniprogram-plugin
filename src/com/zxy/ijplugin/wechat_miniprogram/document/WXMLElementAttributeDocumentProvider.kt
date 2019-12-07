@@ -76,6 +76,9 @@ package com.zxy.ijplugin.wechat_miniprogram.document
 import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.psi.PsiElement
 
+/**
+ * 对wxml自带的组件的属性提供文档
+ */
 class WXMLElementAttributeDocumentProvider :DocumentationProvider{
 
     override fun getQuickNavigateInfo(element: PsiElement, originalElement: PsiElement): String? {
