@@ -247,14 +247,14 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                         psiElement as WXMLAttribute
                         val wxmlTag = PsiTreeUtil.getParentOfType(psiElement, WXMLTag::class.java)
                         if (wxmlTag != null && wxmlTag.reference is WXMLCustomComponentTagReference) {
-                            return arrayOf(WXMLAttributeReference(psiElement))
+                            return arrayOf(WXMLCustomComponentAttributeReference(psiElement))
                         }
                         return PsiReference.EMPTY_ARRAY
                     }
                 }
         )
 
-        // 解析wxml元素的slot属性a
+        // 解析wxml元素的slot属性
         psiReferenceRegistrar.registerReferenceProvider(
                 PlatformPatterns.psiElement(WXMLStringText::class.java),
                 object : PsiReferenceProvider() {
@@ -273,6 +273,26 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                     }
                 }
         )
+
+        // 解析wxml属性
+        // wxml自带标签的属性
+        psiReferenceRegistrar.registerReferenceProvider(
+                PlatformPatterns.psiElement(WXMLAttribute::class.java),
+                object : PsiReferenceProvider() {
+                    override fun getReferencesByElement(
+                            psiElement: PsiElement, context: ProcessingContext
+                    ): Array<out PsiReference> {
+                        psiElement as WXMLAttribute
+                        val wxmlTag = PsiTreeUtil.getParentOfType(psiElement, WXMLTag::class.java)
+                        if (wxmlTag != null && wxmlTag.reference is WXMLTagReference) {
+                            return arrayOf(WXMLAttributeReference(psiElement))
+                        }
+                        return PsiReference.EMPTY_ARRAY
+                    }
+
+                }
+        )
+
     }
 
 }

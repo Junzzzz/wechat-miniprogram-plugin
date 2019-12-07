@@ -76,20 +76,25 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.util.PsiTreeUtil
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 
-class WXMLAttributeReference(element: WXMLAttribute) :
-        PsiReferenceBase<WXMLAttribute>(element, element.firstChild.textRangeInParent) {
+class WXMLAttributeReference(psiElement: WXMLAttribute) :
+        PsiReferenceBase<WXMLAttribute>(psiElement, psiElement.firstChild.textRangeInParent) {
     override fun resolve(): PsiElement? {
-        val attributeName = this.element.name
         val wxmlTag = PsiTreeUtil.getParentOfType(this.element, WXMLTag::class.java)
-        return wxmlTag?.let { ComponentWxmlUtils.findCustomComponentDefinitionJsFile(it) }?.let { jsFile ->
-            ComponentJsUtils.findPropertiesItems(jsFile)?.find {
-                it.name == attributeName
+        if (wxmlTag != null) {
+            val tagName = wxmlTag.getTagName()
+            if (tagName != null) {
+                val attributeName = this.element.name
+                return WXMLMetadata.getElementDescriptors(element.project).find {
+                    it.name == tagName
+                }?.attributeDescriptorPresetElementAttributeDescriptors?.find {
+                    it.key == attributeName
+                }?.jsonObject
             }
-        }?.nameIdentifier
+        }
+        return null
     }
 }
