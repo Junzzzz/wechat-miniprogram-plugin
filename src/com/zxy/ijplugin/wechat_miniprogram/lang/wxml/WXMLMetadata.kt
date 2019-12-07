@@ -74,33 +74,20 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonObject
-import com.intellij.json.psi.JsonProperty
+import com.intellij.json.psi.*
 import com.intellij.openapi.components.ProjectComponent
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
-import com.zxy.ijplugin.wechat_miniprogram.utils.ResourceUtils
-
-class WXMLElementDescriptionValue(
-        val attributeDescriptors: Array<WXMLElementAttributeDescriptor> = emptyArray(),
-        val events: Array<String> = emptyArray(),
-        val canOpen: Boolean = true,
-        val canClose: Boolean = false,
-        val description: String? = null,
-        val url:String? = null
-)
+import com.zxy.ijplugin.wechat_miniprogram.utils.*
 
 data class WXMLElementDescriptor constructor(
         val name: String,
-        val attributeDescriptors: Array<WXMLElementAttributeDescriptor> = emptyArray(),
+        val attributeDescriptorPresetElementAttributeDescriptors: Array<WXMLPresetElementAttributeDescriptor> = emptyArray(),
         val events: Array<String> = emptyArray(),
         val canOpen: Boolean = true,
         val canClose: Boolean = false,
         val description: String? = null,
-        val url:String? = null,
+        val url: String? = null,
         val jsonProperty: JsonProperty
 ) {
     override fun equals(other: Any?): Boolean {
@@ -119,39 +106,13 @@ data class WXMLElementDescriptor constructor(
     }
 }
 
-data class WXMLElementAttributeDescriptor @JsonCreator constructor(
-        val key: String,
-        val types: Array<ValueType> = emptyArray(),
-        val default: Any? = null,
-        val required: Boolean = false,
-        val enums: Array<String> = emptyArray(),
-        val requiredInEnums: Boolean = true,
-        val description: String? = null,
-        val url:String? = null
-) {
+class WXMLPresetElementAttributeDescriptor @JsonCreator constructor(
+        key: String, types: Array<ValueType>, default: Any?, required: Boolean,
+        enums: Array<String>, requiredInEnums: Boolean, description: String?,
+        val jsonObject: JsonObject
+) : WXMLElementAttributeDescriptor(key, types, default, required, enums, requiredInEnums, description)
 
-    enum class ValueType {
-        STRING, NUMBER, BOOLEAN,
-        COLOR, ARRAY, OBJECT
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as WXMLElementAttributeDescriptor
-
-        if (key != other.key) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return key.hashCode()
-    }
-}
-
-typealias A = WXMLElementAttributeDescriptor
+typealias A = WXMLPresetElementAttributeDescriptor
 typealias T = WXMLElementAttributeDescriptor.ValueType
 
 class WXMLMetadata(private val project: Project) : ProjectComponent {
@@ -161,24 +122,47 @@ class WXMLMetadata(private val project: Project) : ProjectComponent {
             PsiManager.getInstance(this.project).findFile(it) as? JsonFile
         }?.let { jsonFile ->
             val root = jsonFile.topLevelValue as? JsonObject
-            val objectMapper = jacksonObjectMapper()
-            root?.propertyList?.mapNotNull { jsonProperty ->
-                val jsonPropertyValue = jsonProperty.value as? JsonObject
-                val value = jsonPropertyValue?.let {
-                    objectMapper.readValue<WXMLElementDescriptionValue>(jsonPropertyValue.text)
-                }
-                value?.let {
-                    WXMLElementDescriptor(
-                            jsonProperty.name,
-                            it.attributeDescriptors,
-                            it.events,
-                            it.canOpen,
-                            it.canClose,
-                            it.description,
-                            it.url,
-                            jsonProperty
-                    )
-                }
+            // 将psi文件读取为Object
+            root?.propertyList?.mapNotNull { elementJsonProperty ->
+                val elementJsonPropertyValue = elementJsonProperty.value as? JsonObject ?: return@mapNotNull null
+                val description = (elementJsonPropertyValue.findProperty(
+                        "description"
+                )?.value as? JsonStringLiteral)?.value
+                val events = elementJsonPropertyValue.findStringArrayPropertyValue("events") ?: emptyArray()
+                val canOpen = elementJsonPropertyValue.findBooleanPropertyValue("canOpen") ?: true
+                val canClose = elementJsonPropertyValue.findBooleanPropertyValue("canClose") ?: false
+                val url = elementJsonPropertyValue.findStringPropertyValue("url")
+                WXMLElementDescriptor(
+                        elementJsonProperty.name,
+                        elementJsonPropertyValue.findProperty(
+                                "attributeDescriptors"
+                        )?.let { attributeJsonProperty ->
+                            (attributeJsonProperty.value as? JsonArray)?.valueList?.mapNotNull { attributeJsonObject ->
+                                if (attributeJsonObject is JsonObject) {
+                                    WXMLPresetElementAttributeDescriptor(
+                                            attributeJsonObject.findStringPropertyValue("key")!!,
+                                            attributeJsonObject.findStringArrayPropertyValue("types")?.map {
+                                                WXMLElementAttributeDescriptor.ValueType.valueOf(it)
+                                            }?.toTypedArray() ?: emptyArray(),
+                                            attributeJsonObject.findPropertyValue("default"),
+                                            attributeJsonObject.findBooleanPropertyValue("required") ?: false,
+                                            attributeJsonObject.findStringArrayPropertyValue("enums") ?: emptyArray(),
+                                            attributeJsonObject.findBooleanPropertyValue("requiredInEnums") ?: true,
+                                            attributeJsonObject.findStringPropertyValue("description"),
+                                            attributeJsonObject
+                                    )
+                                } else {
+                                    null
+                                }
+                            }?.toTypedArray()
+                        } ?: emptyArray(),
+                        events,
+                        canOpen,
+                        canClose,
+                        description,
+                        url,
+                        elementJsonProperty
+                )
             }
         } ?: emptyList()
     }
@@ -190,11 +174,11 @@ class WXMLMetadata(private val project: Project) : ProjectComponent {
         }
 
         val COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS = arrayOf(
-                A("id", arrayOf(T.STRING)),
-                A("class", arrayOf(T.STRING)),
-                A("style", arrayOf(T.STRING)),
-                A("hidden", arrayOf(T.BOOLEAN), false),
-                A("slot", arrayOf(T.STRING))
+                WXMLElementAttributeDescriptor("id", arrayOf(T.STRING)),
+                WXMLElementAttributeDescriptor("class", arrayOf(T.STRING)),
+                WXMLElementAttributeDescriptor("style", arrayOf(T.STRING)),
+                WXMLElementAttributeDescriptor("hidden", arrayOf(T.BOOLEAN), false),
+                WXMLElementAttributeDescriptor("slot", arrayOf(T.STRING))
         )
 
         val COMMON_ELEMENT_EVENTS = arrayOf(
@@ -216,5 +200,35 @@ class WXMLMetadata(private val project: Project) : ProjectComponent {
                 "camera", "canvas", "input", "live-player", "live-pusher", "map", "textarea", "video"
         )
 
+    }
+}
+
+open class WXMLElementAttributeDescriptor(
+        val key: String,
+        val types: Array<ValueType> = emptyArray(),
+        val default: Any? = null,
+        val required: Boolean = false,
+        val enums: Array<String> = emptyArray(),
+        val requiredInEnums: Boolean = true,
+        val description: String? = null
+){
+    enum class ValueType {
+        STRING, NUMBER, BOOLEAN,
+        COLOR, ARRAY, OBJECT
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as WXMLPresetElementAttributeDescriptor
+
+        if (key != other.key) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return key.hashCode()
     }
 }

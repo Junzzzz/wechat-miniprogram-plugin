@@ -71,141 +71,98 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.document
+package com.zxy.ijplugin.wechat_miniprogram.utils
 
-import com.intellij.codeInsight.documentation.DocumentationManagerProtocol
-import com.intellij.json.psi.JsonProperty
-import com.intellij.lang.documentation.DocumentationMarkup.*
-import com.intellij.lang.documentation.DocumentationProvider
+import com.intellij.json.psi.JsonArray
+import com.intellij.json.psi.JsonBooleanLiteral
+import com.intellij.json.psi.JsonObject
+import com.intellij.json.psi.JsonStringLiteral
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiNamedElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
+import com.intellij.psi.util.PsiTreeUtil
+
+fun String.substring(textRange: TextRange): String {
+    return this.substring(textRange.startOffset, textRange.endOffset)
+}
+
+fun String.replace(textRange: TextRange, replaceString: CharSequence): String {
+    return this.replaceRange(textRange.startOffset, textRange.endOffset, replaceString)
+}
+
+fun IntRange.toTextRange(): TextRange {
+    return TextRange(this.first, this.last + 1)
+}
+
+fun PsiElement.contentRange(): TextRange {
+    return TextRange(0, this.textLength)
+}
 
 /**
- * 对WXML的自带组件提供文档
+ * 获取一个文件相对于项目根目录的路径
+ * 以'/'开头
  */
-class WXMLElementDocumentProvider : DocumentationProvider {
+fun VirtualFile.getPathRelativeToRoot(project: Project): String? {
+    val rootPath = ProjectFileIndex.SERVICE.getInstance(
+            project
+    ).getContentRootForFile(this)?.path ?: return null
+    return this.path.removePrefix(rootPath)
+}
 
-    override fun getQuickNavigateInfo(element: PsiElement, originalElement: PsiElement): String? {
-        if (originalElement is WXMLTag) {
-            val name = originalElement.getTagName()
-            val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
-                it.name == name
-            }
-            return if (wxmlElementDescriptor != null) {
-                this.buildQuickNavigateInfoFromElementDescriptor(wxmlElementDescriptor)
-            } else {
-                null
-            }
+/**
+ * 获取一个文件相对于项目根目录的路径
+ * 移除扩展名
+ * @see getPathRelativeToRoot
+ */
+fun VirtualFile.getPathRelativeToRootRemoveExt(project: Project): String? {
+    return this.getPathRelativeToRoot(project)?.let {
+        if (this.isDirectory){
+            it
+        }else{
+            it.removeSuffix(".${this.extension}")
         }
-        return null
     }
+}
 
-    private fun buildQuickNavigateInfoFromElementDescriptor(wxmlElementDescriptor: WXMLElementDescriptor): String {
-        return "Element <code>${wxmlElementDescriptor.name}</code> ${wxmlElementDescriptor.description ?: ""}"
-    }
+/**
+ * @see PsiTreeUtil.findChildrenOfType
+ */
+inline fun <reified T : PsiElement> PsiElement.findChildrenOfType(): MutableCollection<T> {
+    return PsiTreeUtil.findChildrenOfType(this, T::class.java)
+}
 
-    override fun getUrlFor(element: PsiElement, originalElement: PsiElement): MutableList<String> {
-        if (isInsideJsonConfigFile(element)) {
-            if (element.parent?.parent == element.containingFile) {
-                val name = originalElement.text
-                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
-                    it.name == name
-                }
-                return wxmlElementDescriptor?.url?.let {
-                    mutableListOf(it)
-                } ?: mutableListOf()
-            }
-        }
-        return mutableListOf()
-    }
+/**
+ * @see PsiTreeUtil.findChildOfType
+ */
+inline fun <reified T : PsiElement> PsiElement.findChildOfType(): T? {
+    return PsiTreeUtil.findChildOfType(this, T::class.java)
+}
 
-    override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
-        if (isInsideJsonConfigFile(element)) {
-            if (element.parent?.parent == element.containingFile) {
-                element as PsiNamedElement
-                val name = element.name
-                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
-                    it.name == name
-                }
-                return if (wxmlElementDescriptor != null) {
-                    this.generateDocFromElementDescriptor(wxmlElementDescriptor)
-                } else {
-                    null
-                }
-            }
-        }
-        return null
-    }
+/**
+ * @see PsiTreeUtil.getParentOfType
+ */
+inline fun <reified T : PsiElement> PsiElement.getParentOfType(): T? {
+    return PsiTreeUtil.getParentOfType(this, T::class.java)
+}
 
-    private fun generateDocFromElementDescriptor(wxmlElementDescriptor: WXMLElementDescriptor): String {
-        val stringBuilder = StringBuilder()
-        // 头部
-        stringBuilder.append("<div class='definition'><pre>")
-                .append(wxmlElementDescriptor.name)
-                .append("</pre>")
-        if (wxmlElementDescriptor.description != null) {
-            stringBuilder.append("<pre>")
-                    .append(wxmlElementDescriptor.description)
-                    .append("</pre>")
-        }
-        stringBuilder.append("</div>")
+fun JsonObject.findStringPropertyValue(key:String):String?{
+    return (this.findProperty(key)?.value as? JsonStringLiteral)?.value
+}
 
-        // 内容
-        stringBuilder.append(CONTENT_START)
-        if (wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.isNotEmpty()) {
-            // 属性信息表头
-            stringBuilder.append(SECTIONS_START)
-            stringBuilder.append(
-                    """<thead>
-                        |<tr>
-|<td>属性</td>
-|<td>描述</td>
-|</tr>
-|</thead>""".trimMargin()
-            )
-            wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.forEach { wxmlElementAttributeDescriptor ->
-                stringBuilder.append("<tr>")
-                        .append(SECTION_START)
-                        .append(GRAYED_START)
-                        .append("<a href='${DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL}element/${wxmlElementDescriptor.name}/attributes/${wxmlElementAttributeDescriptor.key}'>")
-                        .append(wxmlElementAttributeDescriptor.key)
-                        .append("</a>")
-                        .append(GRAYED_END)
-                        .append(SECTION_END)
-                        .append(SECTION_START)
-                        .append(wxmlElementAttributeDescriptor.description ?: "")
-                        .append(SECTION_END)
-                        .append("</tr>")
-            }
-            stringBuilder.append(SECTIONS_END)
-        }
-        stringBuilder.append(CONTENT_END)
+fun JsonObject.findStringArrayPropertyValue(key:String):Array<String>?{
+    return (this.findProperty(key)?.value as? JsonArray)?.valueList?.mapNotNull{
+        it as? JsonStringLiteral
+    }?.map {
+        it.value
+    }?.toTypedArray()?: emptyArray()
+}
 
-        return stringBuilder.toString()
-    }
+fun JsonObject.findBooleanPropertyValue(key: String):Boolean?{
+    return (this.findProperty(key)?.value as? JsonBooleanLiteral)?.value
+}
 
-    override fun getDocumentationElementForLink(
-            psiManager: PsiManager, link: String, element: PsiElement
-    ): PsiElement? {
-        // 点击元素文档中的某一属性
-        // 这个属性对应的文档
-        if (isInsideJsonConfigFile(element) && element is JsonProperty) {
-            if (element.parent?.parent == element.containingFile) {
-                val name = element.name
-                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
-                    it.name == name
-                }
-                val attributeName = link.removePrefix("element/$name/attributes/")
-                return wxmlElementDescriptor?.attributeDescriptorPresetElementAttributeDescriptors?.find {
-                    it.key == attributeName
-                }?.jsonObject
-            }
-        }
-        return null
-    }
-
+fun JsonObject.findPropertyValue(key:String):Any?{
+    return findStringArrayPropertyValue(key)?:findStringArrayPropertyValue(key)?:findBooleanPropertyValue(key)
 }

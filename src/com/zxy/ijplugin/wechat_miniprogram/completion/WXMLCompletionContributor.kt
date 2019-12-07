@@ -128,7 +128,7 @@ class WXMLCompletionContributor : CompletionContributor() {
                         val tagName = wxmlElement.tagName
                         val attribute = WXMLMetadata.getElementDescriptors(wxmlElement.project).stream().filter { it.name == tagName }
                                 .findFirst()
-                                .map { it.attributeDescriptors }
+                                .map { it.attributeDescriptorPresetElementAttributeDescriptors }
                                 .orElse(emptyArray())
                                 .stream()
                                 .filter { it.key == wxmlAttribute.name }
@@ -171,8 +171,8 @@ class WXMLCompletionContributor : CompletionContributor() {
 }
 
 private fun wxmlAttributeIsEnumerable(
-        attribute: WXMLElementAttributeDescriptor
-) = attribute.enums.isNotEmpty() && attribute.types.size == 1 && attribute.types[0] == WXMLElementAttributeDescriptor.ValueType.STRING && attribute.requiredInEnums
+        attributePresetElementAttributeDescriptor: WXMLElementAttributeDescriptor
+) = attributePresetElementAttributeDescriptor.enums.isNotEmpty() && attributePresetElementAttributeDescriptor.types.size == 1 && attributePresetElementAttributeDescriptor.types[0] == WXMLElementAttributeDescriptor.ValueType.STRING && attributePresetElementAttributeDescriptor.requiredInEnums
 
 open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParameters>() {
 
@@ -190,7 +190,7 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
 
         // 获取所有组件名称
         cloneCompletionResultSet.addAllElements(WXMLMetadata.getElementDescriptors(completionParameters.position.project).map { wxmlElementDescriptor ->
-            val requiredElements = wxmlElementDescriptor.attributeDescriptors.filter {
+            val requiredElements = wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.filter {
                 it.required
             }
             if (requiredElements.isEmpty()) {
@@ -319,21 +319,21 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         val IGNORE_COMMON_EVENT_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
 
         internal fun isDoubleBraceForInsert(
-                wxmlElementAttributeDescriptor: WXMLElementAttributeDescriptor
+                wxmlPresetElementAttributeDescriptor: WXMLElementAttributeDescriptor
         ): Boolean {
-            return wxmlElementAttributeDescriptor.types.contains(
+            return wxmlPresetElementAttributeDescriptor.types.contains(
                     WXMLElementAttributeDescriptor.ValueType.NUMBER
-            ) && !wxmlElementAttributeDescriptor.types.contains(
+            ) && !wxmlPresetElementAttributeDescriptor.types.contains(
                     WXMLElementAttributeDescriptor.ValueType.STRING
             )
         }
 
         internal fun isOnlyNameForInsert(
-                wxmlElementAttributeDescriptor: WXMLElementAttributeDescriptor
+                wxmlPresetElementAttributeDescriptor: WXMLElementAttributeDescriptor
         ): Boolean {
-            return wxmlElementAttributeDescriptor.types.contains(
+            return wxmlPresetElementAttributeDescriptor.types.contains(
                     WXMLElementAttributeDescriptor.ValueType.BOOLEAN
-            ) && wxmlElementAttributeDescriptor.default == false
+            ) && wxmlPresetElementAttributeDescriptor.default == false
         }
     }
 
@@ -389,12 +389,12 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         val elementDescriptor = WXMLMetadata.getElementDescriptors(completionParameters.position.project).find { it.name == tagName }
         if (elementDescriptor != null) {
             // 自带组件
-            val attributes = elementDescriptor.attributeDescriptors
+            val attributes = elementDescriptor.attributeDescriptorPresetElementAttributeDescriptors
                     // 过滤掉元素上已存在的类型
                     .filter { !wxmlAttributeNames.contains(it.key) }
             // 添加组件对应的属性
             completionResultSet.addAllElements(attributes.map {
-                createLookupElementFromAttribute(it)
+                createLookupElementFromCommonAttribute(it)
             })
 
             //添加组件对应的事件
@@ -449,7 +449,7 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         if (!IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(tagName)) {
             // 公共属性
             completionResultSet.addAllElements(WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.map {
-                createLookupElementFromAttribute(it)
+                createLookupElementFromCommonAttribute(it)
             })
         }
 
@@ -469,7 +469,7 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         }.toList()
     }
 
-    private fun createLookupElementFromAttribute(
+    private fun createLookupElementFromCommonAttribute(
             wxmlElementAttributeDescriptor: WXMLElementAttributeDescriptor
     ): LookupElementBuilder {
         return when {

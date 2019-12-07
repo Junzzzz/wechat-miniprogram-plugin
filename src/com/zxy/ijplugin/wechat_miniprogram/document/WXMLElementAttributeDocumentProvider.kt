@@ -73,139 +73,17 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.document
 
-import com.intellij.codeInsight.documentation.DocumentationManagerProtocol
-import com.intellij.json.psi.JsonProperty
-import com.intellij.lang.documentation.DocumentationMarkup.*
 import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiNamedElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 
-/**
- * 对WXML的自带组件提供文档
- */
-class WXMLElementDocumentProvider : DocumentationProvider {
+class WXMLElementAttributeDocumentProvider :DocumentationProvider{
 
     override fun getQuickNavigateInfo(element: PsiElement, originalElement: PsiElement): String? {
-        if (originalElement is WXMLTag) {
-            val name = originalElement.getTagName()
-            val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
-                it.name == name
-            }
-            return if (wxmlElementDescriptor != null) {
-                this.buildQuickNavigateInfoFromElementDescriptor(wxmlElementDescriptor)
-            } else {
-                null
-            }
-        }
         return null
-    }
-
-    private fun buildQuickNavigateInfoFromElementDescriptor(wxmlElementDescriptor: WXMLElementDescriptor): String {
-        return "Element <code>${wxmlElementDescriptor.name}</code> ${wxmlElementDescriptor.description ?: ""}"
-    }
-
-    override fun getUrlFor(element: PsiElement, originalElement: PsiElement): MutableList<String> {
-        if (isInsideJsonConfigFile(element)) {
-            if (element.parent?.parent == element.containingFile) {
-                val name = originalElement.text
-                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
-                    it.name == name
-                }
-                return wxmlElementDescriptor?.url?.let {
-                    mutableListOf(it)
-                } ?: mutableListOf()
-            }
-        }
-        return mutableListOf()
     }
 
     override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
-        if (isInsideJsonConfigFile(element)) {
-            if (element.parent?.parent == element.containingFile) {
-                element as PsiNamedElement
-                val name = element.name
-                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
-                    it.name == name
-                }
-                return if (wxmlElementDescriptor != null) {
-                    this.generateDocFromElementDescriptor(wxmlElementDescriptor)
-                } else {
-                    null
-                }
-            }
-        }
-        return null
-    }
-
-    private fun generateDocFromElementDescriptor(wxmlElementDescriptor: WXMLElementDescriptor): String {
-        val stringBuilder = StringBuilder()
-        // 头部
-        stringBuilder.append("<div class='definition'><pre>")
-                .append(wxmlElementDescriptor.name)
-                .append("</pre>")
-        if (wxmlElementDescriptor.description != null) {
-            stringBuilder.append("<pre>")
-                    .append(wxmlElementDescriptor.description)
-                    .append("</pre>")
-        }
-        stringBuilder.append("</div>")
-
-        // 内容
-        stringBuilder.append(CONTENT_START)
-        if (wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.isNotEmpty()) {
-            // 属性信息表头
-            stringBuilder.append(SECTIONS_START)
-            stringBuilder.append(
-                    """<thead>
-                        |<tr>
-|<td>属性</td>
-|<td>描述</td>
-|</tr>
-|</thead>""".trimMargin()
-            )
-            wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.forEach { wxmlElementAttributeDescriptor ->
-                stringBuilder.append("<tr>")
-                        .append(SECTION_START)
-                        .append(GRAYED_START)
-                        .append("<a href='${DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL}element/${wxmlElementDescriptor.name}/attributes/${wxmlElementAttributeDescriptor.key}'>")
-                        .append(wxmlElementAttributeDescriptor.key)
-                        .append("</a>")
-                        .append(GRAYED_END)
-                        .append(SECTION_END)
-                        .append(SECTION_START)
-                        .append(wxmlElementAttributeDescriptor.description ?: "")
-                        .append(SECTION_END)
-                        .append("</tr>")
-            }
-            stringBuilder.append(SECTIONS_END)
-        }
-        stringBuilder.append(CONTENT_END)
-
-        return stringBuilder.toString()
-    }
-
-    override fun getDocumentationElementForLink(
-            psiManager: PsiManager, link: String, element: PsiElement
-    ): PsiElement? {
-        // 点击元素文档中的某一属性
-        // 这个属性对应的文档
-        if (isInsideJsonConfigFile(element) && element is JsonProperty) {
-            if (element.parent?.parent == element.containingFile) {
-                val name = element.name
-                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
-                    it.name == name
-                }
-                val attributeName = link.removePrefix("element/$name/attributes/")
-                return wxmlElementDescriptor?.attributeDescriptorPresetElementAttributeDescriptors?.find {
-                    it.key == attributeName
-                }?.jsonObject
-            }
-        }
-        return null
+        return super.generateDoc(element, originalElement)
     }
 
 }

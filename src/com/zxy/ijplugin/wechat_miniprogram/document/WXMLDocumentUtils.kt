@@ -71,74 +71,26 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.utils
+package com.zxy.ijplugin.wechat_miniprogram.document
 
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.roots.ProjectFileIndex
-import com.intellij.openapi.util.TextRange
-import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonObject
+import com.intellij.json.psi.JsonProperty
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
-
-fun String.substring(textRange: TextRange): String {
-    return this.substring(textRange.startOffset, textRange.endOffset)
-}
-
-fun String.replace(textRange: TextRange, replaceString: CharSequence): String {
-    return this.replaceRange(textRange.startOffset, textRange.endOffset, replaceString)
-}
-
-fun IntRange.toTextRange(): TextRange {
-    return TextRange(this.first, this.last + 1)
-}
-
-fun PsiElement.contentRange(): TextRange {
-    return TextRange(0, this.textLength)
-}
 
 /**
- * 获取一个文件相对于项目根目录的路径
- * 以'/'开头
+ * 判断一个元素是否是json的字符串，
+ * 并且位于elementDescriptions.json文件中
  */
-fun VirtualFile.getPathRelativeToRoot(project: Project): String? {
-    val rootPath = ProjectFileIndex.SERVICE.getInstance(
-            project
-    ).getContentRootForFile(this)?.path ?: return null
-    return this.path.removePrefix(rootPath)
-}
-
-/**
- * 获取一个文件相对于项目根目录的路径
- * 移除扩展名
- * @see getPathRelativeToRoot
- */
-fun VirtualFile.getPathRelativeToRootRemoveExt(project: Project): String? {
-    return this.getPathRelativeToRoot(project)?.let {
-        if (this.isDirectory){
-            it
-        }else{
-            it.removeSuffix(".${this.extension}")
+internal fun isInsideJsonConfigFile(element: PsiElement): Boolean {
+    if (element is JsonProperty) {
+        val jsonFile = element.containingFile
+        if (jsonFile is JsonFile && jsonFile.name == "elementDescriptions.json") {
+            val topLevelValue = jsonFile.topLevelValue
+            if (topLevelValue is JsonObject) {
+                return true
+            }
         }
     }
-}
-
-/**
- * @see PsiTreeUtil.findChildrenOfType
- */
-inline fun <reified T : PsiElement> PsiElement.findChildrenOfType(): MutableCollection<T> {
-    return PsiTreeUtil.findChildrenOfType(this, T::class.java)
-}
-
-/**
- * @see PsiTreeUtil.findChildOfType
- */
-inline fun <reified T : PsiElement> PsiElement.findChildOfType(): T? {
-    return PsiTreeUtil.findChildOfType(this, T::class.java)
-}
-
-/**
- * @see PsiTreeUtil.getParentOfType
- */
-inline fun <reified T : PsiElement> PsiElement.getParentOfType(): T? {
-    return PsiTreeUtil.getParentOfType(this, T::class.java)
+    return false
 }
