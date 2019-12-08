@@ -73,16 +73,18 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.document
 
+import com.intellij.codeInsight.documentation.DocumentationManager
 import com.intellij.codeInsight.documentation.DocumentationManagerProtocol
-import com.intellij.json.psi.JsonProperty
+import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.lang.documentation.DocumentationMarkup.*
 import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiNamedElement
+import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
 
 /**
  * 对WXML的自带组件提供文档
@@ -110,7 +112,7 @@ class WXMLElementDocumentProvider : DocumentationProvider {
 
     override fun getUrlFor(element: PsiElement, originalElement: PsiElement): MutableList<String> {
         if (isInsideJsonConfigFile(element)) {
-            if (element.parent?.parent == element.containingFile) {
+            if (element.parent?.parent?.parent == element.containingFile) {
                 val name = originalElement.text
                 val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
                     it.name == name
@@ -124,10 +126,9 @@ class WXMLElementDocumentProvider : DocumentationProvider {
     }
 
     override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
-        if (isInsideJsonConfigFile(element)) {
-            if (element.parent?.parent == element.containingFile) {
-                element as PsiNamedElement
-                val name = element.name
+        if (isInsideJsonConfigFile(element) && element is JsonStringLiteral) {
+            if (element.parent?.parent?.parent == element.containingFile) {
+                val name = element.value
                 val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
                     it.name == name
                 }
@@ -171,7 +172,7 @@ class WXMLElementDocumentProvider : DocumentationProvider {
                 stringBuilder.append("<tr>")
                         .append(SECTION_START)
                         .append(GRAYED_START)
-                        .append("<a href='${DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL}element/${wxmlElementDescriptor.name}/attributes/${wxmlElementAttributeDescriptor.key}'>")
+                        .append("<a href='${DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL}elements/${wxmlElementDescriptor.name}/attributes/${wxmlElementAttributeDescriptor.key}'>")
                         .append(wxmlElementAttributeDescriptor.key)
                         .append("</a>")
                         .append(GRAYED_END)
@@ -193,16 +194,25 @@ class WXMLElementDocumentProvider : DocumentationProvider {
     ): PsiElement? {
         // 点击元素文档中的某一属性
         // 这个属性对应的文档
-        if (isInsideJsonConfigFile(element) && element is JsonProperty) {
-            if (element.parent?.parent == element.containingFile) {
-                val name = element.name
+        if (isInsideJsonConfigFile(element) && element is JsonStringLiteral) {
+            if (element.parent?.parent?.parent == element.containingFile) {
+
+                val tagName = element.value
                 val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
-                    it.name == name
+                    it.name == tagName
                 }
-                val attributeName = link.removePrefix("element/$name/attributes/")
-                return wxmlElementDescriptor?.attributeDescriptorPresetElementAttributeDescriptors?.find {
+                val attributeName = link.removePrefix("elements/$tagName/attributes/")
+                val definedElement = wxmlElementDescriptor?.attributeDescriptorPresetElementAttributeDescriptors?.find {
                     it.key == attributeName
-                }?.jsonObject
+                }?.definedElement
+
+                // 将打开一个内存中的元素的文档
+                definedElement?.putUserData(
+                        DocumentationManager.ORIGINAL_ELEMENT_KEY, SmartPointerManagerImpl.createPointer(
+                        WXMLElementFactory.createAttributeName(element.project, attributeName, tagName)
+                )
+                )
+                return definedElement
             }
         }
         return null

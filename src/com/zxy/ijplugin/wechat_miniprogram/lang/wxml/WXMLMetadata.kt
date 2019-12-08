@@ -74,7 +74,10 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.intellij.json.psi.*
+import com.intellij.json.psi.JsonArray
+import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonObject
+import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.openapi.components.ProjectComponent
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
@@ -88,7 +91,7 @@ data class WXMLElementDescriptor constructor(
         val canClose: Boolean = false,
         val description: String? = null,
         val url: String? = null,
-        val jsonProperty: JsonProperty
+        val definedElement: JsonStringLiteral
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -109,7 +112,7 @@ data class WXMLElementDescriptor constructor(
 class WXMLPresetElementAttributeDescriptor @JsonCreator constructor(
         key: String, types: Array<ValueType>, default: Any?, required: Boolean,
         enums: Array<String>, requiredInEnums: Boolean, description: String?,
-        val jsonObject: JsonObject
+        val definedElement: JsonStringLiteral
 ) : WXMLElementAttributeDescriptor(key, types, default, required, enums, requiredInEnums, description)
 
 typealias A = WXMLPresetElementAttributeDescriptor
@@ -149,7 +152,7 @@ class WXMLMetadata(private val project: Project) : ProjectComponent {
                                             attributeJsonObject.findStringArrayPropertyValue("enums") ?: emptyArray(),
                                             attributeJsonObject.findBooleanPropertyValue("requiredInEnums") ?: true,
                                             attributeJsonObject.findStringPropertyValue("description"),
-                                            attributeJsonObject
+                                            attributeJsonObject.findProperty("key")!!.value as JsonStringLiteral
                                     )
                                 } else {
                                     null
@@ -161,7 +164,7 @@ class WXMLMetadata(private val project: Project) : ProjectComponent {
                         canClose,
                         description,
                         url,
-                        elementJsonProperty
+                        elementJsonProperty.nameElement as JsonStringLiteral
                 )
             }
         } ?: emptyList()
@@ -211,7 +214,7 @@ open class WXMLElementAttributeDescriptor(
         val enums: Array<String> = emptyArray(),
         val requiredInEnums: Boolean = true,
         val description: String? = null
-){
+) {
     enum class ValueType {
         STRING, NUMBER, BOOLEAN,
         COLOR, ARRAY, OBJECT

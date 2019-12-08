@@ -75,7 +75,7 @@ package com.zxy.ijplugin.wechat_miniprogram.document
 
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
-import com.intellij.json.psi.JsonProperty
+import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.psi.PsiElement
 
 /**
@@ -83,7 +83,7 @@ import com.intellij.psi.PsiElement
  * 并且位于elementDescriptions.json文件中
  */
 internal fun isInsideJsonConfigFile(element: PsiElement): Boolean {
-    if (element is JsonProperty) {
+    if (element is JsonStringLiteral) {
         val jsonFile = element.containingFile
         if (jsonFile is JsonFile && jsonFile.name == "elementDescriptions.json") {
             val topLevelValue = jsonFile.topLevelValue

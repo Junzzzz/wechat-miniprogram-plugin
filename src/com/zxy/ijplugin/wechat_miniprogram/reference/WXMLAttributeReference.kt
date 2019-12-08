@@ -92,7 +92,7 @@ class WXMLAttributeReference(psiElement: WXMLAttribute) :
                     it.name == tagName
                 }?.attributeDescriptorPresetElementAttributeDescriptors?.find {
                     it.key == attributeName
-                }?.jsonObject
+                }?.definedElement
             }
         }
         return null

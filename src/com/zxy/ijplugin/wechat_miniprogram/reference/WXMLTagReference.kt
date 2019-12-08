@@ -84,6 +84,6 @@ class WXMLTagReference(element: WXMLTag) :
         val tagName = element.getTagName() ?: return null
         return WXMLMetadata.getElementDescriptors(element.project).find {
             it.name == tagName
-        }?.jsonProperty
+        }?.definedElement
     }
 }

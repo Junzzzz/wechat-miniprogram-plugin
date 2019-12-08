@@ -74,19 +74,32 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLClosedElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLText
+import com.zxy.ijplugin.wechat_miniprogram.utils.findChildOfType
 
 object WXMLElementFactory {
+
+    fun createAttributeName(project: Project, attributeName: String, tagName: String = "text"): PsiElement {
+        val psiFile = createDummyFile(
+                project, """
+            <$tagName $attributeName/>
+        """.trimIndent()
+        )
+        return psiFile.findChildOfType<WXMLAttribute>()?.firstChild!!
+    }
 
     fun createStringText(project: Project, text: String): WXMLStringText {
         val psiFile = createDummyFile(
                 project, """
-            <a a="$text"/>
+            <text a="$text"/>
         """.trimIndent()
         )
         return PsiTreeUtil.findChildOfType(psiFile, WXMLStringText::class.java)!!
@@ -100,6 +113,15 @@ object WXMLElementFactory {
     private fun createDummyFile(project: Project, fileContent: String): PsiFile {
         val name = "dummy.wxml"
         return PsiFileFactory.getInstance(project).createFileFromText(name, WXMLFileType.INSTANCE, fileContent)
+    }
+
+    fun createTagName(project: Project, elementName: String): PsiElement {
+        val psiFile = createDummyFile(
+                project, """
+            <$elementName/>
+        """.trimIndent()
+        )
+        return psiFile.findChildOfType<WXMLClosedElement>()?.firstChild?.nextSibling!!
     }
 
 }
