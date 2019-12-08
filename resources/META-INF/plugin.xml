@@ -79,10 +79,12 @@
         <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
 
         <intentionAction>
+            <descriptionDirectoryName>WXMLCreateClassAtAppWxssFileIntentionAction</descriptionDirectoryName>
             <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtAppWxssFileIntentionAction</className>
             <category>Wechat mini program</category>
         </intentionAction>
         <intentionAction>
+            <descriptionDirectoryName>WXMLCreateClassAtComponentWxssFileIntentionAction</descriptionDirectoryName>
             <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtComponentWxssFileIntentionAction</className>
             <category>Wechat mini program</category>
         </intentionAction>
