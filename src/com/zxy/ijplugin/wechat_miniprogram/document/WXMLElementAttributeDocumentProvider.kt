@@ -83,7 +83,6 @@ import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl
-import com.intellij.psi.util.elementType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
@@ -113,7 +112,7 @@ class WXMLElementAttributeDocumentProvider : DocumentationProvider {
     }
 
     override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
-        if (element is JsonStringLiteral && element.containingFile.name == "elementDescriptions.json" && (originalElement == null || originalElement.elementType == WXMLTypes.ATTRIBUTE_NAME)) {
+        if (element is JsonStringLiteral && element.containingFile.name == "elementDescriptions.json" && (originalElement == null || originalElement.node.elementType == WXMLTypes.ATTRIBUTE_NAME)) {
             val elementName = (element.parent?.parent?.parent?.parent?.parent?.parent as? JsonProperty)?.name
                     ?: return null
             val jsonObject = element.parent?.parent as? JsonObject ?: return null

@@ -83,7 +83,6 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.codeStyle.CodeStyleManager
-import com.intellij.psi.util.elementType
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
@@ -133,7 +132,7 @@ class WXMLCreateClassAtComponentWxssFileIntentionAction : WXMLCreateClassAtWxssF
     }
 
     override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
-        if (psiElement.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
+        if (psiElement.node.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
         val reference = psiElement.containingFile.findReferenceAt(editor.caretModel.offset)
         if (reference is WXMLClassReference) {
             if (reference.multiResolve(false).isEmpty()) {
@@ -165,7 +164,7 @@ class WXMLCreateClassAtAppWxssFileIntentionAction : WXMLCreateClassAtWxssFileInt
     }
 
     override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
-        if (psiElement.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
+        if (psiElement.node.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
         val reference = psiElement.containingFile.findReferenceAt(editor.caretModel.offset)
         if (reference is WXMLClassReference && reference.multiResolve(false).isEmpty()) {
             findAppFile(psiElement.project, RelateFileType.WXSS)?.let {
