@@ -44,6 +44,7 @@
         <ul>
             <li>Added the ability to view WXML component documents</li>
             <li>Added details for creating class selector intent</li>
+            <li>wxml file can insert comments correctly</li>
         </ul>
         ]]>
     </change-notes>
@@ -199,6 +200,8 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXMLTemplateDefinitionChooseByNameContributor"/>
         <lang.refactoringSupport language="WXML"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLTemplateNameRefactoring"/>
+        <lang.commenter language="WXML"
+                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLCommenter"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
