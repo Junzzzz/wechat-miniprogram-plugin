@@ -95,7 +95,6 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isEventHandler
 
-// TODO  参考Vue插件
 class WxmlJsSpecificHandlersFactory : JavaScriptSpecificHandlersFactory() {
 
     override fun createReferenceExpressionResolver(
@@ -123,7 +122,6 @@ class WxmlJsReferenceExpressionResolver(
         if (myReferencedName == null) return ResolveResult.EMPTY_ARRAY
         val project = expression.project
         if (myQualifier == null) {
-            // TODO 优先尝试解析wxs module和wx:for创建的变量
             val psiManager = PsiManager.getInstance(project)
             val injectionHost = InjectedLanguageManager.getInstance(project).getInjectionHost(
                     expression
