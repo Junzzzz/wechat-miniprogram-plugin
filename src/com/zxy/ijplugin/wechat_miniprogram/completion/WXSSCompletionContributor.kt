@@ -85,8 +85,10 @@ import com.intellij.util.ProcessingContext
 import com.intellij.xml.util.ColorSampleLookupValue
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage.UNITS
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSAttachElementType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStyleStatement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue
 
 
 class WXSSCompletionContributor : CompletionContributor() {
@@ -102,9 +104,10 @@ class WXSSCompletionContributor : CompletionContributor() {
     }
 
     init {
+        // wxss的属性名
         extend(
                 CompletionType.BASIC,
-                PlatformPatterns.psiElement(WXSSTypes.ATTRIBUTE_NAME)
+                PlatformPatterns.psiElement(WXSSTypes.IDENTIFIER)
                         .withLanguage(WXSSLanguage.INSTANCE),
                 object : CompletionProvider<CompletionParameters>() {
                     public override fun addCompletions(
@@ -112,26 +115,28 @@ class WXSSCompletionContributor : CompletionContributor() {
                             context: ProcessingContext,
                             resultSet: CompletionResultSet
                     ) {
-
-                        resultSet.addAllElements(
-                                WXSS_PROPERTY_NAMES.map {
-                                    LookupElementBuilder.create(it).withInsertHandler { insertionContext, _ ->
-                                        val editor = insertionContext.editor
-                                        val offset = editor.caretModel.offset
-                                        insertionContext.document.insertString(offset, ": ;")
-                                        editor.caretModel.moveToOffset(offset + 2)
-                                        AutoPopupController.getInstance(insertionContext.project)
-                                                .autoPopupMemberLookup(insertionContext.editor, null)
+                        if (parameters.position.parent is WXSSStyleStatement) {
+                            resultSet.addAllElements(
+                                    WXSS_PROPERTY_NAMES.map {
+                                        LookupElementBuilder.create(it).withInsertHandler { insertionContext, _ ->
+                                            val editor = insertionContext.editor
+                                            val offset = editor.caretModel.offset
+                                            insertionContext.document.insertString(offset, ": ;")
+                                            editor.caretModel.moveToOffset(offset + 2)
+                                            AutoPopupController.getInstance(insertionContext.project)
+                                                    .autoPopupMemberLookup(insertionContext.editor, null)
+                                        }
                                     }
-                                }
-                        )
+                            )
+                        }
                     }
                 }
         )
 
+        // 对css的属性值进行自动完成
         extend(
                 CompletionType.BASIC,
-                PlatformPatterns.psiElement(WXSSTypes.ATTRIBUTE_VALUE_LITERAL)
+                PlatformPatterns.psiElement(WXSSTypes.IDENTIFIER)
                         .withLanguage(WXSSLanguage.INSTANCE),
                 object : CompletionProvider<CompletionParameters>() {
                     public override fun addCompletions(
@@ -140,44 +145,64 @@ class WXSSCompletionContributor : CompletionContributor() {
                             resultSet: CompletionResultSet
                     ) {
                         val position = parameters.position
-                        val styleStatement = PsiTreeUtil.getParentOfType(position, WXSSStyleStatement::class.java)
-                        val propertyName = styleStatement?.firstChild?.text ?: return
-                        CssElementDescriptorFactory.getDescriptor(propertyName)?.let {
-                            it.allVariants.filter { variant -> variant !== null && (variant !is String || variant.isNotEmpty()) }
-                                    .filter { variant ->
-                                        // 过滤掉带浏览器前缀的
-                                        variant !is String || !variant.startsWith("-")
-                                    }
-                                    .forEach { variant ->
-                                        if (variant is LookupElement) {
-                                            resultSet.addElement(variant)
-                                        } else if (variant is ColorSampleLookupValue) {
-                                            if (variant.value.startsWith("#")) {
-                                                resultSet.addElement(LookupElementBuilder.create(variant.name))
-                                            }
-                                        } else {
-                                            resultSet.addElement(
-                                                    LookupElementBuilder.create(
-                                                            variant
-                                                    )
-                                            )
+                        if (position.parent is WXSSValue) {
+                            val styleStatement = PsiTreeUtil.getParentOfType(position, WXSSStyleStatement::class.java)
+                            val propertyName = styleStatement?.firstChild?.text ?: return
+                            CssElementDescriptorFactory.getDescriptor(propertyName)?.let {
+                                it.allVariants.filter { variant -> variant !== null && (variant !is String || variant.isNotEmpty()) }
+                                        .filter { variant ->
+                                            // 过滤掉带浏览器前缀的
+                                            variant !is String || !variant.startsWith("-")
                                         }
-                                    }
+                                        .forEach { variant ->
+                                            if (variant is LookupElement) {
+                                                resultSet.addElement(variant)
+                                            } else if (variant is ColorSampleLookupValue) {
+                                                if (variant.value.startsWith("#")) {
+                                                    resultSet.addElement(LookupElementBuilder.create(variant.name))
+                                                }
+                                            } else {
+                                                resultSet.addElement(
+                                                        LookupElementBuilder.create(
+                                                                variant
+                                                        )
+                                                )
+                                            }
+                                        }
+                            }
                         }
                     }
                 }
         )
 
         // 自动完成数字单位
-        extend(CompletionType.BASIC,PlatformPatterns.psiElement(WXSSTypes.NUMBER_UNIT),object :
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(WXSSTypes.IDENTIFIER), object :
                 CompletionProvider<CompletionParameters>() {
-            override fun addCompletions(completionParameters: CompletionParameters, processingContext: ProcessingContext, completionResultSet: CompletionResultSet) {
-                completionResultSet.addAllElements(UNITS.map {
-                    LookupElementBuilder.create(it)
-                })
+            override fun addCompletions(
+                    completionParameters: CompletionParameters, processingContext: ProcessingContext,
+                    completionResultSet: CompletionResultSet
+            ) {
+                val preElement = completionParameters.position.prevSibling
+                if (preElement?.node?.elementType == WXSSTypes.NUMBER) {
+                    completionResultSet.addAllElements(UNITS.map {
+                        LookupElementBuilder.create(it)
+                    })
+                }
             }
         })
 
+        // 自动完成At关键字
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(WXSSAttachElementType.AT_KEYWORD), object :
+                CompletionProvider<CompletionParameters>() {
+            override fun addCompletions(
+                    completionParameters: CompletionParameters, processingContext: ProcessingContext,
+                    completionResultSet: CompletionResultSet
+            ) {
+                completionResultSet.addAllElements(
+                        listOf("import", "keyframes", "font-face").map(LookupElementBuilder::create)
+                )
+            }
+        })
 
     }
 }
