@@ -81,7 +81,6 @@ import com.intellij.psi.search.SearchScope
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSItemPresentation
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
@@ -101,7 +100,7 @@ object WXSSPsiImplUtils {
 
     private fun getIdNodeByWXSSIdSelector(
             element: WXSSIdSelector
-    ) = element.node.findChildByType(WXSSTypes.ID)
+    ) = element.node.findChildByType(WXSSTypes.IDENTIFIER)
 
     @JvmStatic
     fun getPresentation(element: WXSSIdSelector): ItemPresentation {
@@ -187,7 +186,7 @@ object WXSSPsiImplUtils {
 
     private fun getClassNodeByWXSSClassSelector(
             wxssClassSelector: WXSSClassSelector
-    ) = wxssClassSelector.node.findChildByType(WXSSTypes.CLASS)
+    ) = wxssClassSelector.node.findChildByType(WXSSTypes.IDENTIFIER)
 
     @JvmStatic
     fun getClassName(wxssClassSelector: WXSSClassSelector): String? {

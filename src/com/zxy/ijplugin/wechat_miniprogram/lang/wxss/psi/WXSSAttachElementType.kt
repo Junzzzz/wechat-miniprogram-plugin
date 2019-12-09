@@ -71,8 +71,11 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi
 
-import com.intellij.psi.css.impl.util.CssHighlighter
+object WXSSAttachElementType {
 
-class WXSSSyntaxHighlighter : CssHighlighter()
+    @JvmField
+    val AT_KEYWORD = WXSSTokenType("AT_KEYWORD")
+
+}

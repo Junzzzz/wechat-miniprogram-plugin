@@ -85,7 +85,7 @@ import com.zxy.ijplugin.wechat_miniprogram.utils.findChildOfType
 object WXSSElementFactory {
 
     fun createClass(project: Project, className: String): ASTNode {
-        return createClassSelector(project, ".$className").node.findChildByType(WXSSTypes.CLASS)!!
+        return createClassSelector(project, ".$className").node.findChildByType(WXSSTypes.IDENTIFIER)!!
     }
 
     fun createStyleDefinition(project: Project, text: String): WXSSStyleDefinition {
@@ -112,7 +112,7 @@ object WXSSElementFactory {
                 
             }
         """.trimIndent())
-        return PsiTreeUtil.findChildOfType(file,WXSSIdSelector::class.java)!!.node.findChildByType(WXSSTypes.ID)!!
+        return PsiTreeUtil.findChildOfType(file,WXSSIdSelector::class.java)!!.node.findChildByType(WXSSTypes.IDENTIFIER)!!
     }
 
     fun createValue(project:Project, value:String): WXSSValue {

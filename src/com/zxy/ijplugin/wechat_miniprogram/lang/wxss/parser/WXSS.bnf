@@ -100,7 +100,8 @@
   ]
 }
 
-wxssFile ::= (import | styleDefinition | CRLF | fontDefinition)*
+wxssFile ::= (import | styleDefinition | CRLF | atPrefixDefinition)*
+private atPrefixDefinition ::= fontDefinition | keyframesDefinition
 import ::= (IMPORT_KEYWORD string SEMICOLON) {
     pin = 1
 }
@@ -122,14 +123,14 @@ selectorGroup ::= (selectors (COMMA selectors)*) {
     pin = selectors
 }
 selectors ::= (selector)+
-selector ::= (idSelector | classSelector | ELEMENT_NAME)(PSEUDO_SELECTOR)?
-idSelector ::= NUMBER_SIGN ID {
+selector ::= (idSelector | classSelector | IDENTIFIER)(PSEUDO_SELECTOR)?
+idSelector ::= NUMBER_SIGN IDENTIFIER {
     implements="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"
     methods=[getPresentation getId getNameIdentifier setName getName getIcon getReference getTextOffset getReferences getUseScope]
     mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
     pin = 1
 }
-classSelector ::= DOT CLASS {
+classSelector ::= DOT IDENTIFIER {
     implements=["com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"]
     methods=[getPresentation getClassName getNameIdentifier setName getName getIcon getReference getTextOffset getReferences getUseScope]
     mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
@@ -141,21 +142,27 @@ styleStatementSection ::= LEFT_BRACKET styleStatementCollection? RIGHT_BRACKET {
 styleStatementCollection ::= styleStatement (SEMICOLON styleStatement)* SEMICOLON? {
     pin = styleStatement
 }
-styleStatement ::= ATTRIBUTE_NAME COLON attributeValue IMPORTANT_KEYWORD?{
+styleStatement ::= IDENTIFIER COLON attributeValue IMPORTANT_KEYWORD?{
     pin = 1
 }
 attributeValue ::= valueGroup (COMMA valueGroup)*
 private valueGroup ::= (value)+
-value ::= (HASH | function | numericalValue | string | ATTRIBUTE_VALUE_LITERAL | UNICODE_RANGE)
-function ::= FUNCTION_NAME LEFT_PARENTHESES functionArgs? RIGHT_PARENTHESES {
+value ::= (HASH | function | numericalValue | string | IDENTIFIER | UNICODE_RANGE)
+function ::= IDENTIFIER LEFT_PARENTHESES functionArgs? RIGHT_PARENTHESES {
     pin = 2
 }
 functionArgs ::= (functionArgGroup (COMMA functionArgGroup)*)
 private functionArgGroup ::= (functionArg)+
 functionArg ::= (HASH | numericalValue | string )
-numericalValue ::= NUMBER NUMBER_UNIT?
-
+numericalValue ::= NUMBER IDENTIFIER?
 
 fontDefinition ::= FONT_FACE_KEYWORD styleStatementSection {
     pin = 1
 }
+
+keyframesDefinition ::= KEYFRAMES_KEYWORD IDENTIFIER LEFT_BRACKET keyframe* RIGHT_BRACKET{
+    pin = 1
+}
+keyframe ::= keyframeSelectors styleStatementSection
+private keyframeSelectors ::= (keyframeSelector (COMMA keyframeSelector)*)
+keyframeSelector ::= "to" | "from" | numericalValue

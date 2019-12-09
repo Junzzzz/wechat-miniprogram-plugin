@@ -91,7 +91,7 @@ class WXSSStyleStatementBlock(node: ASTNode, codeStyleSettings: CodeStyleSetting
 
     override fun getSpacing(p0: Block?, p1: Block): Spacing? {
         return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
-                .before(WXSSTypes.ATTRIBUTE_NAME)
+                .before(WXSSTypes.IDENTIFIER)
                 .spaces(0)
                 .after(WXSSTypes.COLON)
                 .spaces(1)

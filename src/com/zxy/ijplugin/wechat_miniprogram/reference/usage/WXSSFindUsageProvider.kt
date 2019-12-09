@@ -90,7 +90,7 @@ class WXSSFindUsageProvider : FindUsagesProvider {
     override fun getWordsScanner(): WordsScanner? {
         return DefaultWordsScanner(
                 FlexAdapter(_WXSSLexer(null)),
-                TokenSet.create(WXSSTypes.CLASS, WXSSTypes.ID, WXSSTypes.ELEMENT_NAME),
+                TokenSet.create(WXSSTypes.IDENTIFIER),
                 TokenSet.create(WXSSTypes.COMMENT),
                 TokenSet.EMPTY
         )
