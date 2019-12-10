@@ -46,13 +46,19 @@
             <li>Added details for creating class selector intent</li>
             <li>wxml file can insert comments correctly</li>
         </ul>
+        <h4>1.4</h4>
+        <ul>
+            <li>wxss and wxml syntax highlighting based on xml and css</li>
+            <li>wxss adds support for @keyframes keywords</li>
+            <li>wxss added autocomplete for @keywords</li>
+        </ul>
         ]]>
     </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.3.1</version>
+    <version>1.4</version>
     <idea-version since-build="192.4257"/>
 
     <actions>
