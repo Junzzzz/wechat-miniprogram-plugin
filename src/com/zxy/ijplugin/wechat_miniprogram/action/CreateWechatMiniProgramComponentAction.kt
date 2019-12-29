@@ -134,9 +134,9 @@ class CreateWechatMiniProgramComponentAction :
             return panel {
                 row {
                     label("Page name:")
-                    JTextField("")
-                    preferredFocusedComponent = textField({ componentName }, { componentName = it }).component
-                    preferredFocusedComponent
+                    textField({ componentName }, { componentName = it }).apply {
+                        preferredFocusedComponent = this.component
+                    }
                 }
             }
         }

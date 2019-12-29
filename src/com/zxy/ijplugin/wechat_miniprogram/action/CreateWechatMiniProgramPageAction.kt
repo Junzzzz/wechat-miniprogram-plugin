@@ -171,9 +171,9 @@ class CreateWechatMiniProgramPageAction :
             return panel {
                 row {
                     label("Page name:")
-                    JTextField("")
-                    preferredFocusedComponent = textField({ pageName }, { pageName = it }).component
-                    preferredFocusedComponent
+                    textField({ pageName }, { pageName = it }).apply {
+                        preferredFocusedComponent = this.component
+                    }
                 }
                 row {
                     checkBox("Use component API", { useComponentApi }, { useComponentApi = it })
