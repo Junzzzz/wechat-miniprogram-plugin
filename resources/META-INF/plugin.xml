@@ -58,8 +58,8 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.4.1</version>
-    <idea-version since-build="192.4257"/>
+    <version>1.4.2</version>
+    <idea-version since-build="193.2723"/>
 
     <actions>
         <action class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramPageAction"
