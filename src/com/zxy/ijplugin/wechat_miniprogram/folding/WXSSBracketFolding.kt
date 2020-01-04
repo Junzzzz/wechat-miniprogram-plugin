@@ -98,7 +98,12 @@ class WXSSBracketFolding : FoldingBuilderEx() {
             val node = wxssStyleStatementSection.node
             val leftBracket = node.findChildByType(WXSSTypes.LEFT_BRACKET) ?: return@mapNotNull null
             val rightBracket = node.findChildByType(WXSSTypes.RIGHT_BRACKET) ?: return@mapNotNull null
-            FoldingDescriptor(node, TextRange(leftBracket.textRange.endOffset, rightBracket.textRange.startOffset))
+            val textRange = TextRange(leftBracket.textRange.endOffset, rightBracket.textRange.startOffset)
+            // 如果花括号中没有内容则忽略
+            if (textRange.isEmpty) {
+                return@mapNotNull null
+            }
+            FoldingDescriptor(node, textRange)
         }.toTypedArray()
     }
 
