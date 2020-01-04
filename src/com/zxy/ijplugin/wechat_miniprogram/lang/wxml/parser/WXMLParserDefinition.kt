@@ -93,7 +93,7 @@ class WXMLParserDefinition : ParserDefinition {
 
     companion object {
         val iFileElementType = IFileElementType(WXMLLanguage.INSTANCE)
-        val COMMENTS = TokenSet.create(WXMLTypes.COMMENT_START, WXMLTypes.COMMENT_CONTENT, WXMLTypes.COMMONT_END)
+        val COMMENTS = TokenSet.create(WXMLTypes.COMMENT)
         val STRINGS = TokenSet.create(WXMLTypes.STRING)
     }
 

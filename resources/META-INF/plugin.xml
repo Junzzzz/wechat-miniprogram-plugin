@@ -52,6 +52,7 @@
             <li>wxss adds support for @keyframes keywords</li>
             <li>wxss added autocomplete for @keywords</li>
             <li>Fixed wxss curly brace folding bug</li>
+            <li>Fix wxml comment matching bug</li>
         </ul>
         ]]>
     </change-notes>
@@ -59,7 +60,7 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.4.3</version>
+    <version>1.4.4</version>
     <idea-version since-build="193.2723"/>
 
     <actions>
