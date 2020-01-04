@@ -87,7 +87,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 class WXSSFindUsageProvider : FindUsagesProvider {
 
-    override fun getWordsScanner(): WordsScanner? {
+    override fun getWordsScanner(): DefaultWordsScanner {
         return DefaultWordsScanner(
                 FlexAdapter(_WXSSLexer(null)),
                 TokenSet.create(WXSSTypes.IDENTIFIER),

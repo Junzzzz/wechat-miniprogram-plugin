@@ -22,7 +22,7 @@ wechat-miniprogram-plugin
 - 代码检查以及自动修复
 
 **JetBrains**产品兼容性：
-支持内核版本在`192.4257`之后的所有产品
+支持内核版本在`193.2723`之后的所有产品
 
 在[Wiki](https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis)中浏览更多功能
 
