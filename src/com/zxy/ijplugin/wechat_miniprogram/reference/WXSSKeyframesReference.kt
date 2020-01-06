@@ -71,108 +71,39 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-{
-  parserClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WXSSParser"
+package com.zxy.ijplugin.wechat_miniprogram.reference
 
-  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElementResolveResult
+import com.intellij.psi.PsiPolyVariantReferenceBase
+import com.intellij.psi.ResolveResult
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSKeyframesDefinition
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
-  psiClassPrefix="WXSS"
-  psiImplClassSuffix="Impl"
-  psiPackage="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi"
-  psiImplPackage="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl"
+/**
+ * 动画的属性值的引用
+ */
+class WXSSKeyframesReference(wxssValue: WXSSValue) : PsiPolyVariantReferenceBase<WXSSValue>(wxssValue) {
 
-  elementTypeHolderClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes"
-  elementTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSElementType"
-  tokenTypeClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTokenType"
+    /**
+     * 关键帧可能会定义多个但以最近的一处为主
+     */
+    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+        val wxssFiles = WXSSModuleUtils.findImportedFilesWithSelf(
+                this.element.containingFile as? WXSSPsiFile ?: return ResolveResult.EMPTY_ARRAY
+        )
+        return wxssFiles.flatMap { wxssPsiFile ->
+            wxssPsiFile.findChildrenOfType<WXSSKeyframesDefinition>().mapNotNull {
+                PsiElementResolveResult(it.keyframesName ?: return@mapNotNull null)
+            }
+        }.toTypedArray()
+    }
 
-  psiImplUtilClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl.WXSSPsiImplUtils"
+    override fun isReferenceTo(element: PsiElement): Boolean {
+        return super.isReferenceTo(element)
+    }
 
-  tokens = [
-    COMMENT = 'regexp:/*..*/'
-    LEFT_BRACKET = '{'
-    RIGHT_BRACKET = '}'
-    LEFT_PARENTHESES = '('
-    RIGHT_PARENTHESES = ')'
-    STRING_START_DQ = '"'
-    STRING_START_SQ = "'"
-    STRING_END_DQ = '"'
-    STRING_END_SQ = "'"
-  ]
 }
-
-wxssFile ::= (import | styleDefinition | CRLF | atPrefixDefinition)*
-private atPrefixDefinition ::= fontDefinition | keyframesDefinition
-import ::= (IMPORT_KEYWORD string SEMICOLON) {
-    pin = 1
-}
-string ::= ( doubleQuoteString | singleQuoteString)
-private doubleQuoteString ::= STRING_START_DQ stringText? STRING_END_DQ {
-    pin = 1
-}
-private singleQuoteString ::= STRING_START_SQ stringText? STRING_END_SQ {
-    pin = 1
-}
-stringText ::= STRING_CONTENT {
-    implements = ["com.intellij.psi.ContributedReferenceHost" "com.intellij.psi.PsiLanguageInjectionHost" ]
-    methods =[createLiteralTextEscaper isValidHost updateText getReferences]
-}
-styleDefinition ::= selectorGroup  styleStatementSection {
-    pin = 1
-}
-selectorGroup ::= (selectors (COMMA selectors)*) {
-    pin = selectors
-}
-selectors ::= (selector)+
-selector ::= (idSelector | classSelector | IDENTIFIER)(PSEUDO_SELECTOR)?
-idSelector ::= NUMBER_SIGN IDENTIFIER {
-    implements="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"
-    methods=[getPresentation getId getNameIdentifier setName getName getIcon getReference getTextOffset getReferences getUseScope]
-    mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
-    pin = 1
-}
-classSelector ::= DOT IDENTIFIER {
-    implements=["com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"]
-    methods=[getPresentation getClassName getNameIdentifier setName getName getIcon getReference getTextOffset getReferences getUseScope]
-    mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
-    pin = 1
-}
-styleStatementSection ::= LEFT_BRACKET styleStatementCollection? RIGHT_BRACKET {
-    pin = 1
-}
-styleStatementCollection ::= styleStatement (SEMICOLON styleStatement)* SEMICOLON? {
-    pin = styleStatement
-}
-styleStatement ::= IDENTIFIER COLON attributeValue IMPORTANT_KEYWORD?{
-    pin = 1
-    methods=[getAttributeName]
-}
-attributeValue ::= valueGroup (COMMA valueGroup)*
-private valueGroup ::= (value)+
-value ::= (HASH | function | numericalValue | string | IDENTIFIER | UNICODE_RANGE){
-    implements = ["com.intellij.psi.ContributedReferenceHost"]
-    methods = [getReferences]
-}
-function ::= IDENTIFIER LEFT_PARENTHESES functionArgs? RIGHT_PARENTHESES {
-    pin = 2
-}
-functionArgs ::= (functionArgGroup (COMMA functionArgGroup)*)
-private functionArgGroup ::= (functionArg)+
-functionArg ::= (HASH | numericalValue | string )
-numericalValue ::= NUMBER IDENTIFIER?
-
-fontDefinition ::= FONT_FACE_KEYWORD styleStatementSection {
-    pin = 1
-}
-
-keyframesDefinition ::= KEYFRAMES_KEYWORD keyframesName LEFT_BRACKET keyframe* RIGHT_BRACKET{
-    pin = 1
-    methods = [getName]
-}
-keyframesName ::= IDENTIFIER {
-    implements="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"
-    mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
-    methods=[getNameIdentifier setName getName getUseScope]
-}
-keyframe ::= keyframeSelectors styleStatementSection
-private keyframeSelectors ::= (keyframeSelector (COMMA keyframeSelector)*)
-keyframeSelector ::= "to" | "from" | numericalValue

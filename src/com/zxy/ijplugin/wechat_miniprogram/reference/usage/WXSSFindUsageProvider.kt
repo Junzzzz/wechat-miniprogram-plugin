@@ -74,7 +74,6 @@
 package com.zxy.ijplugin.wechat_miniprogram.reference.usage
 
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner
-import com.intellij.lang.cacheBuilder.WordsScanner
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.lexer.FlexAdapter
 import com.intellij.psi.PsiElement

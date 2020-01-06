@@ -305,28 +305,54 @@ object WXSSPsiImplUtils {
     /*keyframesDefinition*/
     @JvmStatic
     fun getName(element: WXSSKeyframesDefinition): String? {
-        return getNameNode(element)?.text
+        return element.keyframesName?.name
     }
 
-    private fun getNameNode(
-            element: WXSSKeyframesDefinition
-    ) = element.node.findChildByType(WXSSTypes.IDENTIFIER)
-
+    /*wxss value*/
     @JvmStatic
-    fun setName(element: WXSSKeyframesDefinition) {
-        getNameIdentifier(element)?.let {
-            it.replace(WXSSElementFactory.createIdentity(element.project, it.text))
-        }
-    }
-
-    @JvmStatic
-    fun getNameIdentifier(element: WXSSKeyframesDefinition): PsiElement? {
-        return getNameNode(element)?.psi
-    }
-
-    @JvmStatic
-    fun getReferences(element: WXSSKeyframesDefinition): Array<out PsiReference> {
+    fun getReferences(element: WXSSValue): Array<out PsiReference> {
         return PsiReferenceService.getService().getContributedReferences(element)
+    }
+
+    /*wxss keyframesName*/
+    @JvmStatic
+    fun getName(element: WXSSKeyframesName): String? {
+        return element.text
+    }
+
+    @JvmStatic
+    fun setName(element: WXSSKeyframesName, name: String): PsiElement {
+        element.firstChild.replace(WXSSElementFactory.createIdentity(element.project, name))
+        return element
+    }
+
+    @JvmStatic
+    fun getNameIdentifier(element: WXSSKeyframesName): PsiElement? {
+        return element.firstChild
+    }
+
+    /**
+     * 关键帧的使用者在引用了自己或者当前文件以及app.wxss文件中
+     */
+    @JvmStatic
+    fun getUseScope(element: WXSSKeyframesName): SearchScope {
+        val psiFile = element.containingFile
+        if (psiFile is WXSSPsiFile) {
+            val result = hashSetOf(psiFile)
+            // 解析app.wxss
+            result.addAll(findAppFileWithImportedFiles(element.project))
+
+            return GlobalSearchScope.filesScope(
+                    element.project, result.map { it.virtualFile }.toMutableList().apply {
+
+                // 引入了自己的wxss文件
+                this.addAll(
+                        ReferencesSearch.search(
+                                psiFile
+                        ).filterIsInstance<FileReference>().mapNotNull { it.element.containingFile.virtualFile })
+            })
+        }
+        return GlobalSearchScope.EMPTY_SCOPE
     }
 
 }

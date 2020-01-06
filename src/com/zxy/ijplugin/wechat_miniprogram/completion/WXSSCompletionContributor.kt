@@ -89,6 +89,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage.UNITS
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.*
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.isAnimationNameStyleStatement
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
 
@@ -213,8 +214,7 @@ class WXSSCompletionContributor : CompletionContributor() {
                     ) {
                         val psiElement = parameters.position
                         val wxssStyleStatement = psiElement.parentOfType<WXSSStyleStatement>()?:return
-                        val attributeName = wxssStyleStatement.attributeName
-                        if (attributeName == "animation" || attributeName=="animation-name"){
+                        if (wxssStyleStatement.isAnimationNameStyleStatement()) {
                             val wxssFiles = WXSSModuleUtils.findImportedFilesWithSelf(
                                     psiElement.containingFile as? WXSSPsiFile ?: return
                             )
