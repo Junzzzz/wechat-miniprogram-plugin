@@ -123,10 +123,12 @@ class WXMLCompletionContributor : CompletionContributor() {
                         // 对WXML的枚举属性值提供完成
                         val wxmlElement = PsiTreeUtil.getParentOfType(
                                 stringContentElement, WXMLElement::class.java
-                        )!!
+                        ) ?: return
                         val wxmlAttribute = PsiTreeUtil.findChildOfType(wxmlElement, WXMLAttribute::class.java)!!
                         val tagName = wxmlElement.tagName
-                        val attribute = WXMLMetadata.getElementDescriptors(wxmlElement.project).stream().filter { it.name == tagName }
+                        val attribute = WXMLMetadata.getElementDescriptors(
+                                wxmlElement.project
+                        ).stream().filter { it.name == tagName }
                                 .findFirst()
                                 .map { it.attributeDescriptorPresetElementAttributeDescriptors }
                                 .orElse(emptyArray())
@@ -189,51 +191,52 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
         } ?: completionResultSet
 
         // 获取所有组件名称
-        cloneCompletionResultSet.addAllElements(WXMLMetadata.getElementDescriptors(completionParameters.position.project).map { wxmlElementDescriptor ->
-            val requiredElements = wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.filter {
-                it.required
-            }
-            if (requiredElements.isEmpty()) {
-                LookupElementBuilder.create(wxmlElementDescriptor.name)
-            } else {
-                LookupElementBuilder.create(wxmlElementDescriptor.name)
-                        .withInsertHandler { insertionContext, _ ->
-                            val editor = insertionContext.editor
-                            val offset = editor.caretModel.offset
-                            var result = ""
-                            var afterOffset: Int? = null
-                            requiredElements.forEach {
-                                val key = it.key
-                                when {
-                                    WXMLAttributeCompletionProvider.isDoubleBraceForInsert(
-                                            it
-                                    ) -> {
-                                        result += " $key=\"{{}}\""
-                                        if (afterOffset == null) {
-                                            afterOffset = offset + result.length - 3
+        cloneCompletionResultSet.addAllElements(
+                WXMLMetadata.getElementDescriptors(completionParameters.position.project).map { wxmlElementDescriptor ->
+                    val requiredElements = wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.filter {
+                        it.required
+                    }
+                    if (requiredElements.isEmpty()) {
+                        LookupElementBuilder.create(wxmlElementDescriptor.name)
+                    } else {
+                        LookupElementBuilder.create(wxmlElementDescriptor.name)
+                                .withInsertHandler { insertionContext, _ ->
+                                    val editor = insertionContext.editor
+                                    val offset = editor.caretModel.offset
+                                    var result = ""
+                                    var afterOffset: Int? = null
+                                    requiredElements.forEach {
+                                        val key = it.key
+                                        when {
+                                            WXMLAttributeCompletionProvider.isDoubleBraceForInsert(
+                                                    it
+                                            ) -> {
+                                                result += " $key=\"{{}}\""
+                                                if (afterOffset == null) {
+                                                    afterOffset = offset + result.length - 3
+                                                }
+                                            }
+                                            WXMLAttributeCompletionProvider.isOnlyNameForInsert(it) -> {
+                                                result += " $key"
+                                            }
+                                            else -> {
+                                                result += " $key=\"\""
+                                                if (afterOffset == null) {
+                                                    afterOffset = offset + result.length - 1
+                                                }
+                                            }
                                         }
                                     }
-                                    WXMLAttributeCompletionProvider.isOnlyNameForInsert(it) -> {
-                                        result += " $key"
+                                    if (afterOffset == null) {
+                                        afterOffset = offset + result.length
                                     }
-                                    else -> {
-                                        result += " $key=\"\""
-                                        if (afterOffset == null) {
-                                            afterOffset = offset + result.length - 1
-                                        }
+                                    insertionContext.document.insertString(offset, result)
+                                    if (afterOffset != null) {
+                                        editor.caretModel.moveToOffset(afterOffset!!)
                                     }
                                 }
-                            }
-                            if (afterOffset == null) {
-                                afterOffset = offset + result.length
-                            }
-                            insertionContext.document.insertString(offset, result)
-                            if (afterOffset != null) {
-                                editor.caretModel.moveToOffset(afterOffset!!)
-                            }
-                        }
-            }
-        })
+                    }
+                })
         // 自定义组件
         val currentJsonFile = findRelateFile(completionParameters.originalFile.virtualFile, RelateFileType.JSON)
         if (currentJsonFile !== null) {
@@ -386,7 +389,8 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         val wxmlAttributeNames = PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java)
                 .map(WXMLAttribute::getName)
 
-        val elementDescriptor = WXMLMetadata.getElementDescriptors(completionParameters.position.project).find { it.name == tagName }
+        val elementDescriptor = WXMLMetadata.getElementDescriptors(completionParameters.position.project)
+                .find { it.name == tagName }
         if (elementDescriptor != null) {
             // 自带组件
             val attributes = elementDescriptor.attributeDescriptorPresetElementAttributeDescriptors
