@@ -83,10 +83,7 @@ import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSItemPresentation
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStringText
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.*
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSElementFactory
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXSSClassSelectorSelfReference
@@ -291,6 +288,18 @@ object WXSSPsiImplUtils {
     @JvmStatic
     fun getReferences(element: WXSSStringText): Array<out PsiReference> {
         return PsiReferenceService.getService().getContributedReferences(element)
+    }
+
+    /*styleStatement*/
+    @JvmStatic
+    fun getAttributeName(element: WXSSStyleStatement): String? {
+        return element.firstChild?.text
+    }
+
+    /*keyframesDefinition*/
+    @JvmStatic
+    fun getName(element: WXSSKeyframesDefinition): String? {
+        return element.node.findChildByType(WXSSTypes.IDENTIFIER)?.text
     }
 
 }

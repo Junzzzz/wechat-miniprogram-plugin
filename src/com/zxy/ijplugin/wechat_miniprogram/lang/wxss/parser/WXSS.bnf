@@ -144,6 +144,7 @@ styleStatementCollection ::= styleStatement (SEMICOLON styleStatement)* SEMICOLO
 }
 styleStatement ::= IDENTIFIER COLON attributeValue IMPORTANT_KEYWORD?{
     pin = 1
+    methods=[getAttributeName]
 }
 attributeValue ::= valueGroup (COMMA valueGroup)*
 private valueGroup ::= (value)+
@@ -162,6 +163,7 @@ fontDefinition ::= FONT_FACE_KEYWORD styleStatementSection {
 
 keyframesDefinition ::= KEYFRAMES_KEYWORD IDENTIFIER LEFT_BRACKET keyframe* RIGHT_BRACKET{
     pin = 1
+    methods = [getName]
 }
 keyframe ::= keyframeSelectors styleStatementSection
 private keyframeSelectors ::= (keyframeSelector (COMMA keyframeSelector)*)

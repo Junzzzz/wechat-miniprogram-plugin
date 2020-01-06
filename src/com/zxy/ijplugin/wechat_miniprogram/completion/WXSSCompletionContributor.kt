@@ -81,14 +81,15 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.css.impl.util.table.CssDescriptorsUtil
 import com.intellij.psi.css.impl.util.table.CssElementDescriptorFactory
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.intellij.xml.util.ColorSampleLookupValue
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage.UNITS
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSAttachElementType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStyleStatement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.*
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
 
 class WXSSCompletionContributor : CompletionContributor() {
@@ -203,6 +204,30 @@ class WXSSCompletionContributor : CompletionContributor() {
                 )
             }
         })
+
+        // wxss 动画名称属性值
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(WXSSTypes.IDENTIFIER),
+                object : CompletionProvider<CompletionParameters>() {
+                    override fun addCompletions(
+                            parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
+                    ) {
+                        val psiElement = parameters.position
+                        val wxssStyleStatement = psiElement.parentOfType<WXSSStyleStatement>()?:return
+                        val attributeName = wxssStyleStatement.attributeName
+                        if (attributeName == "animation" || attributeName=="animation-name"){
+                            val wxssFiles = WXSSModuleUtils.findImportedFilesWithSelf(
+                                    psiElement.containingFile as? WXSSPsiFile ?: return
+                            )
+                            // 寻找可用的keyframes定义
+                            result.addAllElements(wxssFiles.flatMap { wxssPsiFile ->
+                                wxssPsiFile.findChildrenOfType<WXSSKeyframesDefinition>().mapNotNull {
+                                    it.name
+                                }
+                            }.map {LookupElementBuilder.create(it)})
+                        }
+                    }
+                }
+        )
 
     }
 }
