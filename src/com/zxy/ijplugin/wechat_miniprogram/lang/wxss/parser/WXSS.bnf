@@ -162,8 +162,10 @@ fontDefinition ::= FONT_FACE_KEYWORD styleStatementSection {
 }
 
 keyframesDefinition ::= KEYFRAMES_KEYWORD IDENTIFIER LEFT_BRACKET keyframe* RIGHT_BRACKET{
+    implements=["com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"]
+    mixin="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElementImpl"
     pin = 1
-    methods = [getName]
+    methods = [getNameIdentifier setName getName getReferences]
 }
 keyframe ::= keyframeSelectors styleStatementSection
 private keyframeSelectors ::= (keyframeSelector (COMMA keyframeSelector)*)

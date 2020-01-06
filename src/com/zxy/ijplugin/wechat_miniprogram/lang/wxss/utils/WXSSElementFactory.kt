@@ -75,6 +75,7 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils
 
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.util.PsiTreeUtil
@@ -83,6 +84,14 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.*
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildOfType
 
 object WXSSElementFactory {
+
+    fun createIdentity(project: Project, identity: String): PsiElement {
+        return createDummyFile(
+                project, """
+            $identity
+        """.trimIndent()
+        ).findChildOfType<WXSSSelector>()!!.firstChild!!
+    }
 
     fun createClass(project: Project, className: String): ASTNode {
         return createClassSelector(project, ".$className").node.findChildByType(WXSSTypes.IDENTIFIER)!!

@@ -75,17 +75,22 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl
 
 import com.intellij.icons.AllIcons
 import com.intellij.navigation.ItemPresentation
-import com.intellij.psi.*
+import com.intellij.psi.LiteralTextEscaper
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiReference
+import com.intellij.psi.PsiReferenceService
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.SearchScope
+import com.intellij.psi.search.searches.ReferencesSearch
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSItemPresentation
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.*
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSElementFactory
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils.findAppFileWithImportedFiles
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXSSClassSelectorSelfReference
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXSSIdSelectorSelfReference
 import javax.swing.Icon
@@ -248,21 +253,22 @@ object WXSSPsiImplUtils {
             val result = hashSetOf<WXSSPsiFile>()
             val wxssFilesWithImported = WXSSModuleUtils.findImportedFilesWithSelf(psiFile)
             result.addAll(wxssFilesWithImported)
-            val appWXSSFile = findAppFile(wxssClassSelector.project, RelateFileType.WXSS)
-            val psiManager = PsiManager.getInstance(wxssClassSelector.project)
-            val appWXSSPsiFile = appWXSSFile?.let { psiManager.findFile(appWXSSFile) }
-            if (appWXSSPsiFile is WXSSPsiFile) {
-                val appWXSSFileWithImported = appWXSSPsiFile.let { WXSSModuleUtils.findImportedFilesWithSelf(it) }
-                result.addAll(appWXSSFileWithImported)
-            }
 
+            // 解析app.wxss
+            result.addAll(findAppFileWithImportedFiles(wxssClassSelector.project))
 
             return GlobalSearchScope.filesScope(
                     wxssClassSelector.project, result.map { it.virtualFile }.toMutableList().apply {
-                // WXML文件
+                // 自己对应的WXML文件
                 findRelateFile(psiFile.virtualFile, RelateFileType.WXML)?.let {
                     this.add(it)
                 }
+
+                // 引入了自己的wxss文件
+                this.addAll(
+                        ReferencesSearch.search(
+                                psiFile
+                        ).filterIsInstance<FileReference>().mapNotNull { it.element.containingFile.virtualFile })
             })
         }
         return GlobalSearchScope.EMPTY_SCOPE
@@ -299,7 +305,28 @@ object WXSSPsiImplUtils {
     /*keyframesDefinition*/
     @JvmStatic
     fun getName(element: WXSSKeyframesDefinition): String? {
-        return element.node.findChildByType(WXSSTypes.IDENTIFIER)?.text
+        return getNameNode(element)?.text
+    }
+
+    private fun getNameNode(
+            element: WXSSKeyframesDefinition
+    ) = element.node.findChildByType(WXSSTypes.IDENTIFIER)
+
+    @JvmStatic
+    fun setName(element: WXSSKeyframesDefinition) {
+        getNameIdentifier(element)?.let {
+            it.replace(WXSSElementFactory.createIdentity(element.project, it.text))
+        }
+    }
+
+    @JvmStatic
+    fun getNameIdentifier(element: WXSSKeyframesDefinition): PsiElement? {
+        return getNameNode(element)?.psi
+    }
+
+    @JvmStatic
+    fun getReferences(element: WXSSKeyframesDefinition): Array<out PsiReference> {
+        return PsiReferenceService.getService().getContributedReferences(element)
     }
 
 }
