@@ -30,7 +30,7 @@ wechat-miniprogram-plugin
 ---
 可通过以下两种方式安装，在这之前请确保安装并启用了**JavaScript**和**CSS**插件
 - 通过IDE搜索并找到**Wechat mini program support**插件安装
-- 下载[发行版](https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases)，在IDE中选择从磁盘安装
+- 下载[发行版]附件中的jar文件(https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases)，在IDE中选择从磁盘安装
 
 使用
 ---
