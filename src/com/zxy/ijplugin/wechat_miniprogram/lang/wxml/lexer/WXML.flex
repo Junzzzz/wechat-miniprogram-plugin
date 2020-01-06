@@ -103,22 +103,26 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
      }
 }
 
-
-"<!--" {
-    this.saveBeforeCommentState();
-    yybegin(COMMENT);
-    return WXMLTypes.COMMENT_START;
-}
-
-<COMMENT> {
-    "-->" {
-        yybegin(this.beforeCommentState);
-        return WXMLTypes.COMMONT_END;
-    }
-    [^"-->"]+ {
-        return WXMLTypes.COMMENT_CONTENT;
+<YYINITIAL>{
+    "<!--"~"-->" {
+//        this.saveBeforeCommentState();
+        return WXMLTypes.COMMENT;
     }
 }
+
+//<COMMENT> {
+//    "<!--" {return WXMLTypes.COMMENT_START;}
+//    "-->" {
+//        yybegin(this.beforeCommentState);
+//        System.out.println("1");
+//        return WXMLTypes.COMMENT_END;
+//    }
+//    [^]+"-->" {
+//          System.out.println("2");
+//        yypushback(3);
+//        return WXMLTypes.COMMENT_CONTENT;
+//    }
+//}
 
 
 

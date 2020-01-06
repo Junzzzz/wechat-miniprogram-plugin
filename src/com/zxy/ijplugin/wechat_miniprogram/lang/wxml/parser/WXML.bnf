@@ -88,9 +88,7 @@
   psiImplUtilClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl.WXMLPsiImplUtils"
 
   tokens = [
-    COMMENT_START = '<!--'
-    COMMENT_CONTENT = 'regexp:<!--..-->'
-    COMMONT_END = '-->'
+    COMMENT = 'regexp:<!--..-->'
   ]
 }
 
