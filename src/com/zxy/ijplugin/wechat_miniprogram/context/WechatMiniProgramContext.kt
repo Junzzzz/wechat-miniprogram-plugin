@@ -84,7 +84,6 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
-import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 
@@ -99,15 +98,10 @@ fun isWechatMiniProgramContext(project: Project): Boolean {
         if (baseDir != null) {
             val projectConfigJsonFile = baseDir.children.find { it.name == "project.config.json" } ?: return false
             val fileContent = String(projectConfigJsonFile.contentsToByteArray())
-
-            val jsonFile = try {
-                PsiManager.getInstance(project).findFile(projectConfigJsonFile)
-            } catch (e: Exception) {
-                // 读取文件内容创建文件
-                PsiFileFactory.getInstance(project)
-                        .createFileFromText("project.config.json", JsonFileType.INSTANCE, fileContent)
-            } as? JsonFile ?: return false
-
+            // 读取文件内容创建文件
+            val jsonFile = PsiFileFactory.getInstance(project)
+                    .createFileFromText("project.config.json", JsonFileType.INSTANCE, fileContent)
+                    as? JsonFile ?: return false
 
             return ((jsonFile.children.getOrNull(0) as? JsonObject)?.propertyList?.find {
                 it.name == "compileType"
