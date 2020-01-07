@@ -124,6 +124,6 @@ fun findAppFile(project: Project, relateFileType: RelateFileType): VirtualFile? 
         if (baseDir != null) {
             return baseDir.findChild("app." + relateFileType.fileType.defaultExtension)
         }
-}
+    }
     return null
 }
