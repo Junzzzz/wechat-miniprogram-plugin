@@ -46,7 +46,7 @@
             <li>Added details for creating class selector intent</li>
             <li>wxml file can insert comments correctly</li>
         </ul>
-        <h4>1.4</h4>
+        <h3>1.4</h3>
         <ul>
             <li>wxss and wxml syntax highlighting based on xml and css</li>
             <li>wxss adds support for @keyframes keywords</li>
@@ -54,7 +54,7 @@
             <li>Fixed wxss curly brace folding bug</li>
             <li>Fix wxml comment matching bug</li>
         </ul>
-        <h4>1.5</h4>
+        <h3>1.5</h3>
         <ul>
             <li>Add references to wxss keyframes, code completion and lookup usage</li>
             <li>Fix a possible null pointer exception</li>
