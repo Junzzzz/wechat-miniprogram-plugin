@@ -74,12 +74,17 @@
 package com.zxy.ijplugin.wechat_miniprogram.context
 
 import com.intellij.json.JsonFileType
+import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonObject
+import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.lang.javascript.JavaScriptFileType
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFileFactory
+import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 
@@ -92,8 +97,21 @@ fun isWechatMiniProgramContext(project: Project): Boolean {
     if (basePath != null) {
         val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
         if (baseDir != null) {
-            val projectConfigJsonFile = baseDir.children.find { it.name == "project.config.json" }
-            return projectConfigJsonFile != null
+            val projectConfigJsonFile = baseDir.children.find { it.name == "project.config.json" } ?: return false
+            val fileContent = String(projectConfigJsonFile.contentsToByteArray())
+
+            val jsonFile = try {
+                PsiManager.getInstance(project).findFile(projectConfigJsonFile)
+            } catch (e: Exception) {
+                // 读取文件内容创建文件
+                PsiFileFactory.getInstance(project)
+                        .createFileFromText("project.config.json", JsonFileType.INSTANCE, fileContent)
+            } as? JsonFile ?: return false
+
+
+            return ((jsonFile.children.getOrNull(0) as? JsonObject)?.propertyList?.find {
+                it.name == "compileType"
+            }?.value as? JsonStringLiteral)?.value == "miniprogram"
         }
     }
     return false
