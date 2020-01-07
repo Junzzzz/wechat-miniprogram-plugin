@@ -110,10 +110,11 @@ enum class RelateFileType(val fileType: LanguageFileType) {
  * 找到指定的文件所对应的指定扩展的文件
  * 例如：
  * 已知一个wxss
- * 找到其对应的wxml文件
+ * 找到其对应的文件
+ * @param relateFileType 对应的文件类型
  */
 fun findRelateFile(originFile: VirtualFile, relateFileType: RelateFileType): VirtualFile? {
-    return originFile.parent.children.find { it.nameWithoutExtension == originFile.nameWithoutExtension && it.extension == relateFileType.fileType.defaultExtension }
+    return originFile.parent?.children?.find { it.nameWithoutExtension == originFile.nameWithoutExtension && it.extension == relateFileType.fileType.defaultExtension }
 }
 
 fun findAppFile(project: Project, relateFileType: RelateFileType): VirtualFile? {
@@ -123,6 +124,6 @@ fun findAppFile(project: Project, relateFileType: RelateFileType): VirtualFile? 
         if (baseDir != null) {
             return baseDir.findChild("app." + relateFileType.fileType.defaultExtension)
         }
-    }
+}
     return null
 }
