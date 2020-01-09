@@ -125,7 +125,7 @@ class WxmlJsReferenceExpressionResolver(
             val psiManager = PsiManager.getInstance(project)
             val injectionHost = InjectedLanguageManager.getInstance(project).getInjectionHost(
                     expression
-            )!!
+            ) ?: return ResolveResult.EMPTY_ARRAY
             val originFile = injectionHost.containingFile?.virtualFile?:return ResolveResult.EMPTY_ARRAY
             val jsFile = findRelateFile(
                     originFile, RelateFileType.JS
