@@ -80,6 +80,9 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 "," {return WXSSTypes.COMMA;}
 ";" {return WXSSTypes.SEMICOLON;}
 ":" {return WXSSTypes.COLON;}
+"+"|"-"|"*"|"/" {
+  return WXSSTypes.OPERATOR;
+}
 {NUMBER} { return WXSSTypes.NUMBER; }
 {NUMBER_UNIT} { return WXSSTypes.IDENTIFIER;}
 {HASH} { return WXSSTypes.HASH; }
@@ -87,9 +90,6 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 "." { return WXSSTypes.DOT; }
 (":"|"::")("before"|"after") { return WXSSTypes.PSEUDO_SELECTOR; }
 {UNICODE_RANGE} { yybegin(ATTRIBUTE_VALUE_END);return WXSSTypes.UNICODE_RANGE; }
-"+"|"-"|"*"|"/" {
-    return WXSSTypes.OPERATOR;
-}
 
 // string
 <STRING_START_SQ> {
