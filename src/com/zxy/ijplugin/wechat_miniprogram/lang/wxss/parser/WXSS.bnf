@@ -157,9 +157,16 @@ function ::= IDENTIFIER LEFT_PARENTHESES functionArgs? RIGHT_PARENTHESES {
 }
 functionArgs ::= (functionArgGroup (COMMA functionArgGroup)*)
 private functionArgGroup ::= (functionArg)+
-functionArg ::= (calcExpression|HASH | numericalValue | string )
+functionArg ::= (calcExpression | HASH  | string )
 numericalValue ::= NUMBER IDENTIFIER?
-calcExpression ::= numericalValue OPERATOR numericalValue
+calcExpression ::= calcExpressionItem (OPERATOR calcExpressionItem)*
+private calcExpressionItem ::= numericalValueGroup | parenthesesCalcExpressionItem
+private parenthesesCalcExpressionItem ::= LEFT_PARENTHESES numericalValueGroup RIGHT_PARENTHESES{
+    pin = 1
+}
+private numericalValueGroup ::= numericalValue (OPERATOR numericalValue)*{
+    pin = 1
+}
 fontDefinition ::= FONT_FACE_KEYWORD styleStatementSection {
     pin = 1
 }
