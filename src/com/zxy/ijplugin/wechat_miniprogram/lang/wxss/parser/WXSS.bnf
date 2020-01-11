@@ -157,9 +157,9 @@ function ::= IDENTIFIER LEFT_PARENTHESES functionArgs? RIGHT_PARENTHESES {
 }
 functionArgs ::= (functionArgGroup (COMMA functionArgGroup)*)
 private functionArgGroup ::= (functionArg)+
-functionArg ::= (HASH | numericalValue | string )
+functionArg ::= (calcExpression|HASH | numericalValue | string )
 numericalValue ::= NUMBER IDENTIFIER?
-
+calcExpression ::= numericalValue OPERATOR numericalValue
 fontDefinition ::= FONT_FACE_KEYWORD styleStatementSection {
     pin = 1
 }
