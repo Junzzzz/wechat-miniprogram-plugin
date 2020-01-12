@@ -91,7 +91,9 @@ class WXSSStyleStatementSectionBlock(node: ASTNode, private val codeStyleSetting
 
     override fun getSpacing(p0: Block?, p1: Block): Spacing? {
         return SpacingBuilder(this.codeStyleSettings, WXSSLanguage.INSTANCE)
-                .around(TokenSet.create(WXSSTypes.LEFT_BRACKET, WXSSTypes.RIGHT_BRACKET))
+                .after(WXSSTypes.LEFT_BRACKET)
+                .blankLines(0)
+                .before(WXSSTypes.RIGHT_BRACKET)
                 .blankLines(0)
                 .getSpacing(this, p0, p1)
     }

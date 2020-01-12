@@ -92,12 +92,13 @@ class WXSSAttributeValueBlock(node: ASTNode, private val codeStyleSettings: Code
 
     override fun getSpacing(p0: Block?, p1: Block): Spacing? {
         return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
-                .before(WXSSTypes.ATTRIBUTE_VALUE)
-                .spaces(1)
                 .before(TokenSet.create(WXSSTypes.COMMA))
                 .spaces(0)
-                .before(WXSSTypes.SEMICOLON)
-                .spaces(0)
+                .between(
+                        TokenSet.create(WXSSTypes.VALUE, WXSSTypes.FUNCTION),
+                        TokenSet.create(WXSSTypes.VALUE, WXSSTypes.FUNCTION)
+                )
+                .spaces(1)
                 .getSpacing(this, p0, p1)
     }
 
