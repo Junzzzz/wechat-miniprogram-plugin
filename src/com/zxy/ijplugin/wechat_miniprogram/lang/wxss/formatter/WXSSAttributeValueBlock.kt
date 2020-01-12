@@ -75,16 +75,16 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 
 import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
-import com.intellij.psi.TokenType
 import com.intellij.psi.codeStyle.CodeStyleSettings
+import com.intellij.psi.formatter.common.AbstractBlock
 import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
-import java.util.*
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue
 
-class WXSSAttributeValueBlock(node: ASTNode, codeStyleSettings: CodeStyleSettings) :
-        AbstractWXSSBlock(
-                node, Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, false), codeStyleSettings = codeStyleSettings
+class WXSSAttributeValueBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
+        AbstractBlock(
+                node, Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, false), null
         ) {
     override fun isLeaf(): Boolean {
         return false
@@ -102,20 +102,17 @@ class WXSSAttributeValueBlock(node: ASTNode, codeStyleSettings: CodeStyleSetting
     }
 
     override fun buildChildren(): MutableList<Block> {
-        val blocks = ArrayList<Block>()
-        var child: ASTNode? = node.firstChildNode
-        while (child != null) {
-            if (child.elementType !== TokenType.WHITE_SPACE) {
-                if (child.elementType === WXSSTypes.ATTRIBUTE_VALUE) {
-                    blocks.addAll(getChildrenByASTNode(child))
-                } else {
-                    val block = WXSSBlockFactory.createBlock(child, codeStyleSettings)
-                    blocks.add(block)
+        return this.node.getChildren(TokenSet.create(WXSSTypes.VALUE, WXSSTypes.COMMA)).mapNotNull {
+            if (it.elementType == WXSSTypes.VALUE) {
+                val psi = it.psi
+                if (psi is WXSSValue && psi.function != null) {
+                    WXSSFunctionBlock(psi.function!!.node, this.codeStyleSettings)
                 }
+            } else if (it.elementType == WXSSTypes.COMMA) {
+                WXSSLeafBlock(it)
             }
-            child = child.treeNext
-        }
-        return blocks
+            null
+        }.toMutableList()
     }
 
 }

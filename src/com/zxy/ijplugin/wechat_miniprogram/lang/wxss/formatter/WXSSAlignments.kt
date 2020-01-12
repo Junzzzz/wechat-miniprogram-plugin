@@ -77,6 +77,6 @@ import com.intellij.formatting.Alignment
 
 object WXSSAlignments {
 
-    val LEFT_ALIGNMENT = Alignment.createAlignment()
+    val LEFT_ALIGNMENT = Alignment.createAlignment()!!
 
 }

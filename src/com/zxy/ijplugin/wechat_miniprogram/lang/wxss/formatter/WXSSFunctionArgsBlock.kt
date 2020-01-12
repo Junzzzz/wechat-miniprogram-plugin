@@ -58,7 +58,7 @@
  *       i. Fill in the blanks in following statement, including insert your software name, the year of the first publication of your software, and your name identified as the copyright owner;
  *       ii. Create a file named “LICENSE” which contains the whole context of this License in the first directory of your software package;
  *       iii. Attach the statement to the appropriate annotated syntax at the beginning of each source file.
- *    
+ *
  *    Copyright (c) [2019] [name of copyright holder]
  *    [Software Name] is licensed under the Mulan PSL v1.
  *    You can use this software according to the terms and conditions of the Mulan PSL v1.
@@ -67,39 +67,48 @@
  *    THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  *    IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  *    PURPOSE.
- *    
+ *
  *    See the Mulan PSL v1 for more details.
  */
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 
 import com.intellij.formatting.Block
+import com.intellij.formatting.Spacing
+import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.tree.IFileElementType
+import com.intellij.psi.formatter.common.AbstractBlock
+import com.intellij.psi.tree.TokenSet
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSFunctionArg
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
-object WXSSBlockFactory {
-
-    fun createBlock(node: ASTNode, codeStyleSettings: CodeStyleSettings): Block {
-        return when (node.elementType) {
-            is IFileElementType -> WXSSFileBlock(node, codeStyleSettings)
-            WXSSTypes.STYLE_DEFINITION -> WXSSStyleDefinitionBlock(node, codeStyleSettings)
-            WXSSTypes.FONT_DEFINITION -> WXSSFontDefinitionBlock(node, codeStyleSettings)
-//            node.elementType == WXSSTypes.STYLE_STATEMENT_SECTION -> WXSSStyleStatementSectionBlock(
-//                    node, codeStyleSettings
-//            )
-            WXSSTypes.SELECTOR_GROUP -> WXSSSelectorGroupBlock(
-                    node, codeStyleSettings = codeStyleSettings
-            )
-            WXSSTypes.STYLE_STATEMENT_COLLECTION -> WXSSStyleStatementCollectionBlock(
-                    node, codeStyleSettings
-            )
-            WXSSTypes.RIGHT_BRACKET -> WXSSRightBracketBlock(node, codeStyleSettings)
-            WXSSTypes.ATTRIBUTE_VALUE -> WXSSAttributeValueBlock(node, codeStyleSettings)
-            WXSSTypes.STYLE_STATEMENT -> WXSSStyleStatementBlock(node, codeStyleSettings)
-            else -> WXSSDefaultBlock(node, codeStyleSettings = codeStyleSettings)
-        }
+class WXSSFunctionArgsBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
+        AbstractBlock(node, null, null) {
+    override fun isLeaf(): Boolean {
+        return false
     }
 
+    override fun getSpacing(child1: Block?, child2: Block): Spacing? {
+        return SpacingBuilder(this.codeStyleSettings, WXSSLanguage.INSTANCE)
+                .before(WXSSTypes.COMMA).spaces(0)
+                .after(WXSSTypes.COMMA).spaces(1)
+                .getSpacing(this, child1, child2)
+    }
+
+    override fun buildChildren(): MutableList<Block> {
+        return this.node.getChildren(TokenSet.create(WXSSTypes.FUNCTION_ARG, WXSSTypes.COMMA)).mapNotNull {
+            if (it.elementType == WXSSTypes.FUNCTION_ARG) {
+                val psi = it.psi
+                if (psi is WXSSFunctionArg && psi.calcExpression != null) {
+                    WXSSCalcExpressionBlock(it, this.codeStyleSettings)
+                } else {
+                    WXSSLeafBlock(node)
+                }
+            } else {
+                WXSSLeafBlock(node)
+            }
+        }.toMutableList()
+    }
 }

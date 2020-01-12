@@ -73,33 +73,38 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 
-import com.intellij.formatting.*
+import com.intellij.formatting.Block
+import com.intellij.formatting.Spacing
+import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
+import com.intellij.psi.formatter.common.AbstractBlock
 import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
-class WXSSFileBlock(node:ASTNode, codeStyleSettings: CodeStyleSettings) : AbstractWXSSBlock(
-        node, Wrap.createWrap(WrapType.NONE, false),
-        Alignment.createAlignment(),
-        codeStyleSettings
-) {
-
-    override fun isLeaf(): Boolean = false
-
-    override fun getSpacing(p0: Block?, p1: Block): Spacing? =
-            SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
-                    .around(
-                            TokenSet.create(
-                                    WXSSTypes.FONT_DEFINITION, WXSSTypes.IMPORT, WXSSTypes.STYLE_DEFINITION
-                            )
-                    )
-                    .blankLines(1)
-                    .getSpacing(this, p0, p1)
-
-    override fun getIndent(): Indent? {
-        return Indent.getNoneIndent()
+class WXSSCalcExpressionBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
+        AbstractBlock(node, null, null) {
+    override fun isLeaf(): Boolean {
+        return false
     }
 
+    override fun getSpacing(child1: Block?, child2: Block): Spacing? {
+        return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
+                .around(WXSSTypes.OPERATOR).spaces(1)
+                .after(WXSSTypes.LEFT_PARENTHESES).spaces(0)
+                .before(WXSSTypes.RIGHT_PARENTHESES).spaces(0)
+                .getSpacing(this, child1, child2)
+    }
+
+    override fun buildChildren(): MutableList<Block> {
+        return this.node.getChildren(
+                TokenSet.create(
+                        WXSSTypes.OPERATOR, WXSSTypes.NUMERICAL_VALUE, WXSSTypes.LEFT_PARENTHESES,
+                        WXSSTypes.RIGHT_PARENTHESES
+                )
+        ).map {
+            WXSSLeafBlock(it)
+        }.toMutableList()
+    }
 }

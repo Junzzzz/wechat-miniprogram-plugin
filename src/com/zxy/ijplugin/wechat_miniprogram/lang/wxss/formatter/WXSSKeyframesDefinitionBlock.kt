@@ -58,7 +58,7 @@
  *       i. Fill in the blanks in following statement, including insert your software name, the year of the first publication of your software, and your name identified as the copyright owner;
  *       ii. Create a file named “LICENSE” which contains the whole context of this License in the first directory of your software package;
  *       iii. Attach the statement to the appropriate annotated syntax at the beginning of each source file.
- *    
+ *
  *    Copyright (c) [2019] [name of copyright holder]
  *    [Software Name] is licensed under the Mulan PSL v1.
  *    You can use this software according to the terms and conditions of the Mulan PSL v1.
@@ -67,7 +67,7 @@
  *    THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  *    IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  *    PURPOSE.
- *    
+ *
  *    See the Mulan PSL v1 for more details.
  */
 
@@ -84,32 +84,29 @@ import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
-class WXSSStyleStatementBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
+class WXSSKeyframesDefinitionBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
         AbstractBlock(node, null, null) {
-
     override fun isLeaf(): Boolean {
         return false
     }
 
-    override fun getSpacing(p0: Block?, p1: Block): Spacing? {
-        return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
-                .before(WXSSTypes.COLON)
-                .spaces(0)
-                .after(WXSSTypes.COLON)
-                .spaces(1)
-                .before(WXSSTypes.IMPORTANT_KEYWORD)
-                .spaces(1)
-                .getSpacing(this, p0, p1)
+    override fun getSpacing(child1: Block?, child2: Block): Spacing? {
+        return SpacingBuilder(this.codeStyleSettings, WXSSLanguage.INSTANCE)
+                .after(WXSSTypes.KEYFRAMES_KEYWORD).spaces(1)
+                .after(WXSSTypes.KEYFRAMES_NAME).spaces(1)
+                .around(WXSSTypes.KEYFRAMES_NAME).lineBreakInCode()
+                .getSpacing(this, child1, child2)
     }
 
     override fun buildChildren(): MutableList<Block> {
         return this.node.getChildren(
                 TokenSet.create(
-                        WXSSTypes.IDENTIFIER, WXSSTypes.COLON, WXSSTypes.ATTRIBUTE_VALUE, WXSSTypes.IMPORT_KEYWORD
+                        WXSSTypes.KEYFRAMES_KEYWORD, WXSSTypes.KEYFRAMES_NAME, WXSSTypes.LEFT_BRACKET,
+                        WXSSTypes.KEYFRAME, WXSSTypes.RIGHT_BRACKET
                 )
         ).map {
-            if (it.elementType == WXSSTypes.ATTRIBUTE_VALUE) {
-                WXSSAttributeValueBlock(it, this.codeStyleSettings)
+            if (it.elementType == WXSSTypes.KEYFRAME) {
+                WXSSKeyframeBlock(it, this.codeStyleSettings)
             } else {
                 WXSSLeafBlock(it)
             }
@@ -117,8 +114,6 @@ class WXSSStyleStatementBlock(node: ASTNode, private val codeStyleSettings: Code
     }
 
     override fun getIndent(): Indent? {
-        return Indent.getSpaceIndent(0)
+        return Indent.getNoneIndent()
     }
-
 }
-

@@ -58,7 +58,7 @@
  *       i. Fill in the blanks in following statement, including insert your software name, the year of the first publication of your software, and your name identified as the copyright owner;
  *       ii. Create a file named “LICENSE” which contains the whole context of this License in the first directory of your software package;
  *       iii. Attach the statement to the appropriate annotated syntax at the beginning of each source file.
- *    
+ *
  *    Copyright (c) [2019] [name of copyright holder]
  *    [Software Name] is licensed under the Mulan PSL v1.
  *    You can use this software according to the terms and conditions of the Mulan PSL v1.
@@ -67,29 +67,63 @@
  *    THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  *    IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  *    PURPOSE.
- *    
+ *
  *    See the Mulan PSL v1 for more details.
  */
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 
-import com.intellij.formatting.*
+import com.intellij.formatting.Block
+import com.intellij.formatting.Spacing
+import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
+import com.intellij.psi.formatter.common.AbstractBlock
+import com.intellij.psi.tree.TokenSet
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
+class WXSSRootBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) : AbstractBlock(
+        node, null, null
+) {
 
-open class WXSSDefaultBlock(
-        node: ASTNode, wrap: Wrap = Wrap.createWrap(WrapType.NONE, false),
-        alignment: Alignment = Alignment.createAlignment(true),
-        codeStyleSettings: CodeStyleSettings
-) : AbstractWXSSBlock(node, wrap, alignment,codeStyleSettings) {
+    companion object {
+        private val GRAMMAR_ITEM_TOKENS = TokenSet.create(
+                WXSSTypes.FONT_DEFINITION, WXSSTypes.IMPORT,
+                WXSSTypes.STYLE_DEFINITION,
+                WXSSTypes.KEYFRAMES_DEFINITION
+        )
+    }
 
-    override fun isLeaf(): Boolean = true
+    override fun isLeaf(): Boolean = false
 
-    override fun getSpacing(p0: Block?, p1: Block): Spacing? = null
+    override fun getSpacing(p0: Block?, p1: Block): Spacing? {
+        return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
+                .around(GRAMMAR_ITEM_TOKENS)
+                .blankLines(1)
+                .getSpacing(this, p0, p1)
+    }
 
-    override fun getIndent(): Indent? = Indent.getNoneIndent()
-
-    override fun canBuildChildBlock(node: ASTNode): Boolean = false
+    override fun buildChildren(): MutableList<Block> {
+        return this.node.getChildren(GRAMMAR_ITEM_TOKENS).mapNotNull {
+            when (it.elementType) {
+                WXSSTypes.KEYFRAMES_DEFINITION -> {
+                    WXSSKeyframesDefinitionBlock(it, this.codeStyleSettings)
+                }
+                WXSSTypes.IMPORT -> {
+                    WXSSImportBlock(it, this.codeStyleSettings)
+                }
+                WXSSTypes.STYLE_DEFINITION -> {
+                    WXSSStyleDefinitionBlock(it, this.codeStyleSettings)
+                }
+                WXSSTypes.FONT_DEFINITION -> {
+                    WXSSFontDefinitionBlock(it, this.codeStyleSettings)
+                }
+                else -> {
+                    null
+                }
+            }
+        }.toMutableList()
+    }
 
 }

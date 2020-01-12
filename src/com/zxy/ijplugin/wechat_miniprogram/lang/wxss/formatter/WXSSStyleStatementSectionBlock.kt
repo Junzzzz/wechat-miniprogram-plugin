@@ -74,17 +74,17 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 
 import com.intellij.formatting.Block
-import com.intellij.formatting.Indent
 import com.intellij.formatting.Spacing
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
+import com.intellij.psi.formatter.common.AbstractBlock
 import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
-@Deprecated("这个块暂时没啥用")
-class WXSSStyleStatementSectionBlock(node: ASTNode, codeStyleSettings: CodeStyleSettings) :
-        AbstractWXSSBlock(node, codeStyleSettings = codeStyleSettings) {
+
+class WXSSStyleStatementSectionBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
+        AbstractBlock(node, null, null) {
     override fun isLeaf(): Boolean {
         return false
     }
@@ -96,8 +96,16 @@ class WXSSStyleStatementSectionBlock(node: ASTNode, codeStyleSettings: CodeStyle
                 .getSpacing(this, p0, p1)
     }
 
-    override fun getIndent(): Indent? {
-        return Indent.getNoneIndent()
+    override fun buildChildren(): MutableList<Block> {
+        return this.node.getChildren(
+                TokenSet.create(WXSSTypes.LEFT_BRACKET, WXSSTypes.STYLE_STATEMENT_COLLECTION, WXSSTypes.RIGHT_BRACKET)
+        ).map {
+            if (it.elementType == WXSSTypes.STYLE_STATEMENT_COLLECTION) {
+                WXSSStyleStatementCollectionBlock(it, this.codeStyleSettings)
+            } else {
+                WXSSLeafBlock(it)
+            }
+        }.toMutableList()
     }
 
 }

@@ -83,7 +83,7 @@ class WXSSFormattingModelBuilder : FormattingModelBuilder {
 
     override fun createModel(psiElement: PsiElement, codeStyleSettings: CodeStyleSettings): FormattingModel {
         return FormattingModelProvider.createFormattingModelForPsiFile(
-                psiElement.containingFile, WXSSBlockFactory.createBlock(psiElement.node,codeStyleSettings),
+                psiElement.containingFile, WXSSRootBlock(psiElement.node, codeStyleSettings),
                 codeStyleSettings
         )
     }

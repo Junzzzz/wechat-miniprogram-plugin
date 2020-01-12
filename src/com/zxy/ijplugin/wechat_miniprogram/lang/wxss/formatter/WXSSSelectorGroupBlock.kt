@@ -78,11 +78,13 @@ import com.intellij.formatting.Spacing
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
+import com.intellij.psi.formatter.common.AbstractBlock
+import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
-class WXSSSelectorGroupBlock(node: ASTNode, codeStyleSettings: CodeStyleSettings) :
-        AbstractWXSSBlock(node,alignment= WXSSAlignments.LEFT_ALIGNMENT, codeStyleSettings = codeStyleSettings) {
+class WXSSSelectorGroupBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
+        AbstractBlock(node, null, null) {
     override fun isLeaf(): Boolean {
         return false
     }
@@ -94,6 +96,16 @@ class WXSSSelectorGroupBlock(node: ASTNode, codeStyleSettings: CodeStyleSettings
                 .after(WXSSTypes.COMMA)
                 .spaces(1)
                 .getSpacing(this, p0, p1)
+    }
+
+    override fun buildChildren(): MutableList<Block> {
+        return this.node.getChildren(TokenSet.create(WXSSTypes.SELECTORS, WXSSTypes.COMMA)).map {
+            if (it.elementType == WXSSTypes.SELECTORS) {
+                WXSSSelectorsBlock(it, this.codeStyleSettings)
+            } else {
+                WXSSLeafBlock(it)
+            }
+        }.toMutableList()
     }
 
 }
