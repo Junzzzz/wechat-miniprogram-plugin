@@ -60,13 +60,18 @@
             <li>Fix a possible null pointer exception</li>
             <li>Fix the bug that the js library file may not be found on the first installation</li>
         </ul>
+        <h3>1.5</h3>
+        <ul>
+            <li>Rebuild WXSS formatter</li>
+            <li>Fix bug of calc function parsing error in wxss</li>
+        </ul>
         ]]>
     </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.5.2</version>
+    <version>1.6</version>
     <idea-version since-build="193.2723"/>
 
     <actions>
