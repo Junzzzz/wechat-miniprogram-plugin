@@ -78,6 +78,7 @@ import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.lang.javascript.JavaScriptFileType
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -103,9 +104,11 @@ fun isWechatMiniProgramContext(project: Project): Boolean {
                     .createFileFromText("project.config.json", JsonFileType.INSTANCE, fileContent)
                     as? JsonFile ?: return false
 
-            return ((jsonFile.children.getOrNull(0) as? JsonObject)?.propertyList?.find {
-                it.name == "compileType"
-            }?.value as? JsonStringLiteral)?.value == "miniprogram"
+            return runReadAction {
+                ((jsonFile.children.getOrNull(0) as? JsonObject)?.propertyList?.find {
+                    it.name == "compileType"
+                }?.value as? JsonStringLiteral)?.value == "miniprogram"
+            }
         }
     }
     return false
