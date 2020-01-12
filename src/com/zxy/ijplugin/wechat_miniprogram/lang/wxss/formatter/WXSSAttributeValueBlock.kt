@@ -108,7 +108,7 @@ class WXSSAttributeValueBlock(node: ASTNode, private val codeStyleSettings: Code
                 if (psi is WXSSValue && psi.function != null) {
                     WXSSFunctionBlock(psi.function!!.node, this.codeStyleSettings)
                 } else {
-                    null
+                    WXSSLeafBlock(it)
                 }
             } else if (it.elementType == WXSSTypes.COMMA) {
                 WXSSLeafBlock(it)

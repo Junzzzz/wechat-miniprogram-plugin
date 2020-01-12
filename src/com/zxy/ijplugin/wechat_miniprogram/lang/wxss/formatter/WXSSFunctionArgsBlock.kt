@@ -102,9 +102,9 @@ class WXSSFunctionArgsBlock(node: ASTNode, private val codeStyleSettings: CodeSt
             if (it.elementType == WXSSTypes.FUNCTION_ARG) {
                 val psi = it.psi
                 if (psi is WXSSFunctionArg && psi.calcExpression != null) {
-                    WXSSCalcExpressionBlock(psi.node, this.codeStyleSettings)
+                    WXSSCalcExpressionBlock(psi.calcExpression!!.node, this.codeStyleSettings)
                 } else {
-                    WXSSLeafBlock(node)
+                    WXSSLeafBlock(it)
                 }
             } else {
                 WXSSLeafBlock(node)
