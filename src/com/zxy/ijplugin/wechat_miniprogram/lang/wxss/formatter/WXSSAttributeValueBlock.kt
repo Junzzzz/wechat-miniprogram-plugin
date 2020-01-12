@@ -107,11 +107,14 @@ class WXSSAttributeValueBlock(node: ASTNode, private val codeStyleSettings: Code
                 val psi = it.psi
                 if (psi is WXSSValue && psi.function != null) {
                     WXSSFunctionBlock(psi.function!!.node, this.codeStyleSettings)
+                } else {
+                    null
                 }
             } else if (it.elementType == WXSSTypes.COMMA) {
                 WXSSLeafBlock(it)
+            } else {
+                null
             }
-            null
         }.toMutableList()
     }
 
