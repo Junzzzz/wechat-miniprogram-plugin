@@ -94,7 +94,8 @@ class WXSSKeyframesDefinitionBlock(node: ASTNode, private val codeStyleSettings:
         return SpacingBuilder(this.codeStyleSettings, WXSSLanguage.INSTANCE)
                 .after(WXSSTypes.KEYFRAMES_KEYWORD).spaces(1)
                 .after(WXSSTypes.KEYFRAMES_NAME).spaces(1)
-                .around(WXSSTypes.KEYFRAMES_NAME).lineBreakInCode()
+                .after(WXSSTypes.LEFT_BRACKET).lineBreakInCode()
+                .before(WXSSTypes.RIGHT_BRACKET).lineBreakInCode()
                 .getSpacing(this, child1, child2)
     }
 
