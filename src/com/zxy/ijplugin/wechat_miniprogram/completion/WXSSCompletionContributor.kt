@@ -77,19 +77,26 @@ import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.icons.AllIcons
 import com.intellij.patterns.PlatformPatterns
+import com.intellij.psi.PsiManager
 import com.intellij.psi.css.impl.util.table.CssDescriptorsUtil
 import com.intellij.psi.css.impl.util.table.CssElementDescriptorFactory
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.intellij.xml.util.ColorSampleLookupValue
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
+import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage.UNITS
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.*
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.isAnimationNameStyleStatement
+import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLClassReference
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
 
@@ -213,7 +220,7 @@ class WXSSCompletionContributor : CompletionContributor() {
                             parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
                     ) {
                         val psiElement = parameters.position
-                        val wxssStyleStatement = psiElement.parentOfType<WXSSStyleStatement>()?:return
+                        val wxssStyleStatement = psiElement.parentOfType<WXSSStyleStatement>() ?: return
                         if (wxssStyleStatement.isAnimationNameStyleStatement()) {
                             val wxssFiles = WXSSModuleUtils.findImportedFilesWithSelf(
                                     psiElement.containingFile as? WXSSPsiFile ?: return
@@ -223,11 +230,53 @@ class WXSSCompletionContributor : CompletionContributor() {
                                 wxssPsiFile.findChildrenOfType<WXSSKeyframesDefinition>().mapNotNull {
                                     it.name
                                 }
-                            }.map {LookupElementBuilder.create(it)})
+                            }.map { LookupElementBuilder.create(it) })
                         }
                     }
                 }
         )
+
+        // wxss 类名
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(WXSSTypes.IDENTIFIER),
+                object : CompletionProvider<CompletionParameters>() {
+                    override fun addCompletions(
+                            parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
+                    ) {
+                        val psiElement = parameters.position
+                        val wxssClassSelector = psiElement.parentOfType<WXSSClassSelector>() ?: return
+                        wxssClassSelector.references
+                        val wxssPsiFile = (psiElement.containingFile as? WXSSPsiFile) ?: return
+
+                        // 收集wxss文件中的所有可见的类名
+                        result.addAllElements(
+                                WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile).asSequence().flatMap {
+                                    it.findChildrenOfType<WXSSClassSelector>().asSequence()
+                                }.mapNotNull {
+                                    it.className
+                                }.distinct().map {
+                                    LookupElementBuilder.create(it).withPresentableText(".$it").withIcon(AllIcons.Xml.Css_class)
+                                }.toMutableList()
+                        )
+
+                        // 收集wxml文件中的所有可见的类名
+                        val wxmlVirtualFile = findRelateFile(wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.WXML)
+                                ?: return
+                        val wxmlPsiFile = PsiManager.getInstance(psiElement.project).findFile(
+                                wxmlVirtualFile
+                        ) as? WXMLPsiFile ?: return
+
+                        result.addAllElements(
+                                wxmlPsiFile.findChildrenOfType<WXMLStringText>().asSequence().flatMap { it.references.asSequence() }.filterIsInstance<WXMLClassReference>().map {
+                                    it.rangeInElement.substring(it.element.text)
+                                }.distinct().map {
+                                    LookupElementBuilder.create(it).withPresentableText(".$it").withIcon(AllIcons.Xml.Css_class)
+                                }.toMutableList()
+                        )
+                    }
+
+                })
+
+        // id
 
     }
 }
