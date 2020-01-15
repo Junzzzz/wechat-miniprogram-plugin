@@ -80,6 +80,7 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 "," {return WXSSTypes.COMMA;}
 ";" {return WXSSTypes.SEMICOLON;}
 ":" {return WXSSTypes.COLON;}
+">" {return WXSSTypes.RIGHT_ANGLE_BRACKETS;}
 "+"|"-"|"*"|"/" {
   return WXSSTypes.OPERATOR;
 }

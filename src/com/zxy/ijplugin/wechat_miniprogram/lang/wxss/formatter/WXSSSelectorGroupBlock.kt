@@ -99,10 +99,12 @@ class WXSSSelectorGroupBlock(node: ASTNode, private val codeStyleSettings: CodeS
     }
 
     override fun buildChildren(): MutableList<Block> {
-        return this.node.getChildren(TokenSet.create(WXSSTypes.SELECTORS, WXSSTypes.COMMA)).map {
-            if (it.elementType == WXSSTypes.SELECTORS) {
-                WXSSSelectorsBlock(it, this.codeStyleSettings)
-            } else {
+        return this.node.getChildren(
+                TokenSet.create(WXSSTypes.SELECTOR, WXSSTypes.COMMA)
+        ).map {
+            if (it.elementType == WXSSTypes.SELECTOR){
+                WXSSSelectorBlock(it,this.codeStyleSettings)
+            }else{
                 WXSSLeafBlock(it)
             }
         }.toMutableList()

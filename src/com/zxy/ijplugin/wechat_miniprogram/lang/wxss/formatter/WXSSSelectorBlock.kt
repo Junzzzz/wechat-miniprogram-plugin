@@ -83,20 +83,30 @@ import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
-class WXSSSelectorsBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
+class WXSSSelectorBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
         AbstractBlock(node, null, null) {
+    private val tokenSet = TokenSet.create(
+            WXSSTypes.RIGHT_ANGLE_BRACKETS, WXSSTypes.IDENTIFIER, WXSSTypes.CLASS_SELECTOR, WXSSTypes.ID_SELECTOR,
+            WXSSTypes.PSEUDO_SELECTOR
+    )
+
     override fun isLeaf(): Boolean {
-        return true
+        return this.node.getChildren(tokenSet).size == 1
     }
 
     override fun getSpacing(child1: Block?, child2: Block): Spacing? {
-        return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
-                .around(WXSSTypes.SELECTOR)
-                .spaces(1).getSpacing(this, child1, child2)
+        return SpacingBuilder(this.codeStyleSettings,WXSSLanguage.INSTANCE)
+                .around(WXSSTypes.RIGHT_ANGLE_BRACKETS)
+                .spaces(1)
+                .before(WXSSTypes.PSEUDO_SELECTOR)
+                .spaces(0)
+                .around(TokenSet.create(WXSSTypes.SELECTOR,WXSSTypes.IDENTIFIER,WXSSTypes.ID_SELECTOR))
+                .spaces(1)
+                .getSpacing(this,child1, child2)
     }
 
     override fun buildChildren(): MutableList<Block> {
-        return this.node.getChildren(TokenSet.create(WXSSTypes.SELECTOR)).map {
+        return this.node.getChildren(this.tokenSet).map {
             WXSSLeafBlock(it)
         }.toMutableList()
     }

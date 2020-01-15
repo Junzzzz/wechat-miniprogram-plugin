@@ -119,11 +119,14 @@ stringText ::= STRING_CONTENT {
 styleDefinition ::= selectorGroup  styleStatementSection {
     pin = 1
 }
-selectorGroup ::= (selectors (COMMA selectors)*) {
-    pin = selectors
+selectorGroup ::= (selector (COMMA selector)*) {
+    pin = selector
 }
-selectors ::= (selector)+
-selector ::= (idSelector | classSelector | IDENTIFIER)(PSEUDO_SELECTOR)?
+private basicSelector ::= idSelector | classSelector | IDENTIFIER
+private selectorEntry ::= basicSelector PSEUDO_SELECTOR?
+selector ::= selectorEntry (RIGHT_ANGLE_BRACKETS? selectorEntry)* {
+    pin=1
+}
 idSelector ::= NUMBER_SIGN IDENTIFIER {
     implements="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSNamedElement"
     methods=[getPresentation getId getNameIdentifier setName getName getIcon getReference getTextOffset getReferences getUseScope]
