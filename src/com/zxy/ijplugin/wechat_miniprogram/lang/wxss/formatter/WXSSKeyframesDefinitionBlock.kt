@@ -73,10 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 
-import com.intellij.formatting.Block
-import com.intellij.formatting.Indent
-import com.intellij.formatting.Spacing
-import com.intellij.formatting.SpacingBuilder
+import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.tree.TokenSet
@@ -99,6 +96,7 @@ class WXSSKeyframesDefinitionBlock(node: ASTNode, private val codeStyleSettings:
     }
 
     override fun buildChildren(): MutableList<Block> {
+        val keyframeBlockAlignment = Alignment.createAlignment()
         return this.node.getChildren(
                 TokenSet.create(
                         WXSSTypes.KEYFRAMES_KEYWORD, WXSSTypes.KEYFRAMES_NAME, WXSSTypes.LEFT_BRACKET,
@@ -106,7 +104,7 @@ class WXSSKeyframesDefinitionBlock(node: ASTNode, private val codeStyleSettings:
                 )
         ).map {
             if (it.elementType == WXSSTypes.KEYFRAME) {
-                WXSSKeyframeBlock(it, this.codeStyleSettings)
+                WXSSKeyframeBlock(it, this.codeStyleSettings, keyframeBlockAlignment)
             } else {
                 WXSSLeafBlock(it)
             }
@@ -115,5 +113,9 @@ class WXSSKeyframesDefinitionBlock(node: ASTNode, private val codeStyleSettings:
 
     override fun getIndent(): Indent? {
         return Indent.getNoneIndent()
+    }
+
+    override fun getChildIndent(): Indent? {
+        return Indent.getNormalIndent()
     }
 }

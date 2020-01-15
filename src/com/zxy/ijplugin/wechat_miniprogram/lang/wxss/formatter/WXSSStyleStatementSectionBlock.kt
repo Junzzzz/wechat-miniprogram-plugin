@@ -74,6 +74,7 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 
 import com.intellij.formatting.Block
+import com.intellij.formatting.Indent
 import com.intellij.formatting.Spacing
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
@@ -85,6 +86,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 class WXSSStyleStatementSectionBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
         AbstractBlock(node, null, null) {
+
     override fun isLeaf(): Boolean {
         return false
     }
@@ -106,6 +108,14 @@ class WXSSStyleStatementSectionBlock(node: ASTNode, private val codeStyleSetting
                 WXSSLeafBlock(it)
             }
         }.toMutableList()
+    }
+
+    override fun getChildIndent(): Indent? {
+        return Indent.getNormalIndent()
+    }
+
+    override fun getIndent(): Indent? {
+        return Indent.getNoneIndent()
     }
 
 }

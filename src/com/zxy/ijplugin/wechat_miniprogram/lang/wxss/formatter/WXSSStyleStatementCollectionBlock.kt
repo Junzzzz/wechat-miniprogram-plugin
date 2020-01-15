@@ -81,11 +81,13 @@ import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
-class WXSSStyleStatementCollectionBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
+class WXSSStyleStatementCollectionBlock(
+        node: ASTNode, private val codeStyleSettings: CodeStyleSettings
+) :
         AbstractBlock(
                 node,
                 Wrap.createWrap(WrapType.ALWAYS, true),
-                null
+                Alignment.createAlignment()
         ) {
     override fun isLeaf(): Boolean {
         return false
@@ -101,7 +103,7 @@ class WXSSStyleStatementCollectionBlock(node: ASTNode, private val codeStyleSett
     override fun buildChildren(): MutableList<Block> {
         return this.node.getChildren(TokenSet.create(WXSSTypes.STYLE_STATEMENT, WXSSTypes.SEMICOLON)).map {
             if (it.elementType == WXSSTypes.STYLE_STATEMENT) {
-                WXSSStyleStatementBlock(it, this.codeStyleSettings)
+                WXSSStyleStatementBlock(it, this.codeStyleSettings, this.alignment!!)
             } else {
                 WXSSLeafBlock(it)
             }

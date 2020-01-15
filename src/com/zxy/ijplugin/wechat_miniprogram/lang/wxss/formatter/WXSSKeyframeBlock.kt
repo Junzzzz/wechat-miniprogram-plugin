@@ -73,10 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 
-import com.intellij.formatting.Block
-import com.intellij.formatting.Indent
-import com.intellij.formatting.Spacing
-import com.intellij.formatting.SpacingBuilder
+import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.formatter.common.AbstractBlock
@@ -84,8 +81,8 @@ import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
-class WXSSKeyframeBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
-        AbstractBlock(node, null, null) {
+class WXSSKeyframeBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings, alignment: Alignment? = null) :
+        AbstractBlock(node, null, alignment) {
     override fun isLeaf(): Boolean {
         return false
     }
