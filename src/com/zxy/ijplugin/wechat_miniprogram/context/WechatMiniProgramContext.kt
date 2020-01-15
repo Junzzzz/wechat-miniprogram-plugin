@@ -99,13 +99,13 @@ fun isWechatMiniProgramContext(project: Project): Boolean {
         if (baseDir != null) {
             val projectConfigJsonFile = baseDir.children.find { it.name == "project.config.json" } ?: return false
             val fileContent = String(projectConfigJsonFile.contentsToByteArray())
-            // 读取文件内容创建文件
-            val jsonFile = PsiFileFactory.getInstance(project)
-                    .createFileFromText("project.config.json", JsonFileType.INSTANCE, fileContent)
-                    as? JsonFile ?: return false
 
             return runReadAction {
-                ((jsonFile.children.getOrNull(0) as? JsonObject)?.propertyList?.find {
+                // 读取文件内容创建文件
+                val jsonFile = PsiFileFactory.getInstance(project)
+                        .createFileFromText("project.config.json", JsonFileType.INSTANCE, fileContent)
+                        as? JsonFile
+                ((jsonFile?.children?.getOrNull(0) as? JsonObject)?.propertyList?.find {
                     it.name == "compileType"
                 }?.value as? JsonStringLiteral)?.value == "miniprogram"
             }
