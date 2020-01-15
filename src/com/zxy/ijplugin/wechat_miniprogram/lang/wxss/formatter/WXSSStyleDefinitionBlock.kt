@@ -79,13 +79,12 @@ import com.intellij.formatting.Spacing
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.formatter.common.AbstractBlock
 import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 open class WXSSStyleDefinitionBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
-        AbstractBlock(node, null, null) {
+        WXSSRootChildrenBlock(node) {
     override fun isLeaf(): Boolean = false
 
     override fun getSpacing(p0: Block?, p1: Block): Spacing? {
