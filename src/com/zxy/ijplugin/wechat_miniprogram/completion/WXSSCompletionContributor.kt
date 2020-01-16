@@ -89,6 +89,7 @@ import com.intellij.xml.util.ColorSampleLookupValue
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage.UNITS
@@ -98,6 +99,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.isAnimationNameStyleStatement
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLClassReference
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
+import icons.WechatMiniProgramIcons
 
 
 class WXSSCompletionContributor : CompletionContributor() {
@@ -303,6 +305,37 @@ class WXSSCompletionContributor : CompletionContributor() {
                         }.toMutableList())
                     }
 
+                }
+        )
+
+        // wxml tag
+        extend(
+                CompletionType.BASIC,
+                PlatformPatterns.psiElement(WXSSTypes.IDENTIFIER),
+                object :CompletionProvider<CompletionParameters>(){
+                    override fun addCompletions(
+                            parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
+                    ) {
+                        val psiElement = parameters.position
+                        if (psiElement.parent !is WXSSSelector) return
+
+                        // page 为隐藏的顶层元素
+                        result.addElement(LookupElementBuilder.create("page").withIcon(WechatMiniProgramIcons.PAGE))
+
+                        val wxssPsiFile = (psiElement.containingFile as? WXSSPsiFile) ?: return
+                        // 收集wxml文件中的所有可见的Id
+                        val wxmlVirtualFile = findRelateFile(wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.WXML)
+                                ?: return
+                        val wxmlPsiFile = PsiManager.getInstance(psiElement.project).findFile(
+                                wxmlVirtualFile
+                        ) as? WXMLPsiFile ?: return
+
+                        result.addAllElements(wxmlPsiFile.findChildrenOfType<WXMLElement>().mapNotNull {
+                            it.tagName
+                        }.distinct().map {
+                            LookupElementBuilder.create(it).withIcon(AllIcons.Xml.Html5)
+                        })
+                    }
                 }
         )
 
