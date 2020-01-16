@@ -301,7 +301,7 @@ class WXSSCompletionContributor : CompletionContributor() {
                         }.map {
                             it.rangeInElement.substring(it.element.text)
                         }.distinct().map {
-                            LookupElementBuilder.create(it).withPresentableText("#$it")
+                            LookupElementBuilder.create(it).withPresentableText("#$it").withIcon(AllIcons.Xml.Html_id)
                         }.toMutableList())
                     }
 
