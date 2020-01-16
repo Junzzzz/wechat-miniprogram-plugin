@@ -77,86 +77,50 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
+import com.intellij.psi.SmartPointerManager
+import com.intellij.psi.SmartPsiElementPointer
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLClassReference
+import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLIdReference
 
+class WXMLCreateIdAtWxssFileIntentionAction() : WXMLCreateSelectorAtWxssFileIntentionAction() {
+    lateinit var smartPsiElementPointer: SmartPsiElementPointer<WXSSPsiFile>
 
-abstract class WXMLCreateClassAtWxssFileIntentionAction : WXMLCreateSelectorAtWxssFileIntentionAction() {
+    private lateinit var id:String
 
-    protected lateinit var className: String
-
-    override lateinit var wxssPsiFile: WXSSPsiFile
-
-    final override fun getFamilyName(): String {
-        return "Create Class Selector"
-    }
+    override val wxssPsiFile: WXSSPsiFile
+        get() = this.smartPsiElementPointer.element!!
 
     override fun getSelectorText(): String {
-        return ".${this.className}"
+        return "#$id"
     }
 
-
-}
-
-class WXMLCreateClassAtComponentWxssFileIntentionAction : WXMLCreateClassAtWxssFileIntentionAction() {
+    override fun getFamilyName(): String {
+        return "Create Id Selector"
+    }
 
     override fun getText(): String {
-        return "Create Class Selector At Component WXSS File"
+        return "Create Id Selector At Component WXSS File"
     }
 
     override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
         if (psiElement.node.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
         val reference = psiElement.containingFile.findReferenceAt(editor.caretModel.offset)
-        if (reference is WXMLClassReference) {
-            if (reference.multiResolve(false).isEmpty()) {
-                val className = reference.canonicalText
-                val wxssVirtualFile = findRelateFile(
-                        psiElement.containingFile.virtualFile, RelateFileType.WXSS
-                )
-                val wxssPsiFile = wxssVirtualFile?.let { it ->
-                    PsiManager.getInstance(psiElement.project).findFile(
-                            it
-                    )
-                }?.let {
-                    it as? WXSSPsiFile
-                } ?: return false
-                super.wxssPsiFile = wxssPsiFile
-                super.className = className
-                return true
-            }
-        }
-        return false
-    }
-
-}
-
-class WXMLCreateClassAtAppWxssFileIntentionAction : WXMLCreateClassAtWxssFileIntentionAction() {
-
-    override fun getText(): String {
-        return "Create Class Selector At app.wxss"
-    }
-
-    override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
-        if (psiElement.node.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
-        val reference = psiElement.containingFile.findReferenceAt(editor.caretModel.offset)
-        if (reference is WXMLClassReference && reference.multiResolve(false).isEmpty()) {
-            findAppFile(psiElement.project, RelateFileType.WXSS)?.let {
+        if (reference is WXMLIdReference && reference.multiResolve(false).isEmpty()) {
+            findRelateFile(psiElement.containingFile.originalFile.virtualFile, RelateFileType.WXSS)?.let {
                 PsiManager.getInstance(psiElement.project).findFile(
                         it
                 )
             }?.let {
                 it as WXSSPsiFile
             }?.let {
-                super.wxssPsiFile = it
-                super.className = reference.canonicalText
+                this.smartPsiElementPointer = SmartPointerManager.createPointer(it)
+                this.id = reference.canonicalText
                 return true
             }
         }
         return false
-
     }
 }

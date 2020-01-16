@@ -113,6 +113,11 @@
             <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtComponentWxssFileIntentionAction</className>
             <category>Wechat mini program</category>
         </intentionAction>
+        <intentionAction>
+            <descriptionDirectoryName>WXMLCreateIdAtWxssFileIntentionAction</descriptionDirectoryName>
+            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateIdAtWxssFileIntentionAction</className>
+            <category>Wechat mini program</category>
+        </intentionAction>
 
         <localInspection
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXSSInvalidImportInspection"
@@ -254,5 +259,7 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLElementResolveScopeProvider"/>
     </extensions>
 
-<project-components><component><implementation-class>com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata</implementation-class></component></project-components>
+    <project-components>
+        <component><implementation-class>com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata</implementation-class></component>
+    </project-components>
 </idea-plugin>
