@@ -243,8 +243,7 @@ class WXSSCompletionContributor : CompletionContributor() {
                             parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
                     ) {
                         val psiElement = parameters.position
-                        val wxssClassSelector = psiElement.parentOfType<WXSSClassSelector>() ?: return
-                        wxssClassSelector.references
+                        if (psiElement.parent !is WXSSClassSelector) return
                         val wxssPsiFile = (psiElement.containingFile as? WXSSPsiFile) ?: return
 
                         // 收集wxss文件中的所有可见的类名
@@ -277,6 +276,35 @@ class WXSSCompletionContributor : CompletionContributor() {
                 })
 
         // id
+        extend(
+                CompletionType.BASIC,
+                PlatformPatterns.psiElement(WXSSTypes.IDENTIFIER),
+                object :CompletionProvider<CompletionParameters>(){
+                    override fun addCompletions(
+                            parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
+                    ) {
+                        val psiElement = parameters.position
+                        if (psiElement.parent !is WXSSIdSelector) return
+
+                        val wxssPsiFile = (psiElement.containingFile as? WXSSPsiFile) ?: return
+
+                        // 收集wxml文件中的所有可见的Id
+                        val wxmlVirtualFile = findRelateFile(wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.WXML)
+                                ?: return
+                        val wxmlPsiFile = PsiManager.getInstance(psiElement.project).findFile(
+                                wxmlVirtualFile
+                        ) as? WXMLPsiFile ?: return
+                        result.addAllElements(wxmlPsiFile.findChildrenOfType<WXMLStringText>().asSequence().flatMap {
+                            it.references.asSequence()
+                        }.map {
+                            it.rangeInElement.substring(it.element.text)
+                        }.distinct().map {
+                            LookupElementBuilder.create(it).withPresentableText("#$it")
+                        }.toMutableList())
+                    }
+
+                }
+        )
 
     }
 }
