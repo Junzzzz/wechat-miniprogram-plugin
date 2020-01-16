@@ -81,8 +81,7 @@ import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
-import com.intellij.ui.JBColor
-import java.awt.Color
+import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 import javax.swing.event.HyperlinkEvent
 
 class UpdateInfoActivity : StartupActivity.DumbAware {
@@ -90,12 +89,13 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
     companion object {
         private const val LAST_VERSION_KEY = "$pluginId.lastVersion"
 
-        private val DEFAULT_BORDER_COLOR: Color = JBColor(0xD0D0D0, 0x555555)
     }
 
     override fun runActivity(project: Project) {
+        if (!isWechatMiniProgramContext(project)) return
         val pluginDescriptor = PluginManager.getPlugin(PluginId.getId(pluginId))!!
-        val lastVersion = PropertiesComponent.getInstance().getValue(LAST_VERSION_KEY)
+        val propertiesComponent = PropertiesComponent.getInstance()
+        val lastVersion = propertiesComponent.getValue(LAST_VERSION_KEY)
         val version = pluginDescriptor.version
         if (version == lastVersion) {
             return
@@ -107,8 +107,11 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
         val content = """
             如果此插件对您有帮助，请
             <b><a href="$HTML_DESCRIPTION_SUPPORT">支持我们</a>.</b>
-            感谢您的支持!</br>
-            <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases">发行记录:</a> 
+            <br/>
+            感谢您的支持!
+            <br/>
+            <br/>
+            <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases">发行记录</a> 
         """.trimIndent()
         NotificationGroup(displayId, NotificationDisplayType.BALLOON, false)
                 .createNotification(
@@ -120,22 +123,25 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
                                     notification: Notification, hyperlinkEvent: HyperlinkEvent
                             ) {
                                 if (hyperlinkEvent.description == HTML_DESCRIPTION_SUPPORT) {
-                                    SupportDialog.show()
+                                    SupportDialog(project).show()
                                 } else {
                                     urlOpeningBehavior.hyperlinkUpdate(notification, hyperlinkEvent)
                                 }
                             }
                         }
                 )
-                .addAction(SupportAction())
+                .addAction(SupportAction(project))
                 .setImportant(true)
                 .let {
                     Notifications.Bus.notify(it, project)
                 }
+        propertiesComponent.setValue(LAST_VERSION_KEY, version)
     }
 
-    class SupportAction : DumbAwareAction("支持一下") {
-        override fun actionPerformed(e: AnActionEvent) = SupportDialog.show()
+    class SupportAction(private val project: Project) : DumbAwareAction("支持一下") {
+        override fun actionPerformed(e: AnActionEvent) {
+            SupportDialog(project).show()
+        }
     }
 
 }

@@ -95,6 +95,8 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="com.zxy.ijplugin.wechat_miniprogram.plugin.UpdateInfoActivity"/>
+
         <gotoRelatedProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WechatMiniProgramGotoRelatedProvider"/>
 
@@ -262,4 +264,5 @@
     <project-components>
         <component><implementation-class>com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata</implementation-class></component>
     </project-components>
+
 </idea-plugin>

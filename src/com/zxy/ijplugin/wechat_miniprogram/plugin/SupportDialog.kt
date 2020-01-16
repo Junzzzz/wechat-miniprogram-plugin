@@ -74,50 +74,43 @@
 package com.zxy.ijplugin.wechat_miniprogram.plugin
 
 import com.intellij.ide.BrowserUtil
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.ui.components.labels.LinkLabel
-import com.intellij.util.ui.JBUI
+import com.intellij.ui.layout.panel
 import javax.swing.Action
 import javax.swing.JComponent
-import javax.swing.UIManager
 
 /**
  * SupportDialog
  */
-class SupportDialog private constructor() : DialogWrapper(null) {
-
-    private val form = SupportFrom()
+class SupportDialog(project: Project) : DialogWrapper(project) {
 
     init {
-        title = "您可以通过以下方式来支持此项目"
+        title = "支持"
         setOKButtonText("感谢您的支持")
-        form.init()
         init()
     }
 
-    private fun SupportFrom.init() {
-        rootPane.border = JBUI.Borders.empty(12, 15)
-        rootPane.background = UIManager.getColor("TextArea.background")
-
-        starLinkLabel.init("https://gitee.com/zxy_c/wechat-miniprogram-plugin")
-        reportLinkLabel.init("https://gitee.com/zxy_c/wechat-miniprogram-plugin")
-        ideaLinkLabel.init("https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/new")
-        openCollectiveLinkLabel.init("https://gitee.com/zxy_c/wechat-miniprogram-plugin/")
-    }
-
-    private fun LinkLabel<String>.init(url: String) {
-        icon = null
-        setListener({ _, linkUrl -> BrowserUtil.browse(linkUrl) }, url)
-    }
-
-    override fun createCenterPanel(): JComponent = form.rootPane
-
     override fun getStyle(): DialogStyle = DialogStyle.COMPACT
 
-    override fun createActions(): Array<Action> = arrayOf(okAction)
-
-    companion object {
-        fun show() = SupportDialog().show()
+    override fun createCenterPanel(): JComponent? = panel {
+        row("您可以通过以下方式来支持此项目") {}
+        val links = mapOf(
+                "在Gitee上Star此项目" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin",
+                "反馈问题" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/new",
+                "提出想法或建议" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/new",
+                "提交PR" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin",
+                "捐赠此项目" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin"
+        )
+        links.entries.forEachIndexed { index, entry ->
+            row("${index + 1}.") {
+                link(entry.key) {
+                    BrowserUtil.browse(entry.value)
+                }
+            }
+        }
     }
+
+    override fun createActions(): Array<Action> = arrayOf(okAction)
 
 }
