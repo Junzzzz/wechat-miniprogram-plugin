@@ -65,13 +65,20 @@
             <li>Rebuild WXSS formatter</li>
             <li>Fix bug of calc function parsing error in wxss</li>
         </ul>
+        <h3>1.7</h3>
+        <ul>
+            <li>Wxss supports auto-completion of class names, ids and tag names</li>
+            <li>Support for creating id selectors from wxml</li>
+            <li>Fixed formatter deleting characters by mistake</li>
+            <li>Wxss supports child element selectors</li>
+        </ul>
         ]]>
     </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.6</version>
+    <version>1.7</version>
     <idea-version since-build="193.2723"/>
 
     <actions>
