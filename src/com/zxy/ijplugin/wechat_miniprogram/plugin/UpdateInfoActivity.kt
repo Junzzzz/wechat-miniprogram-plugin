@@ -73,6 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.plugin
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginManager
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.*
@@ -101,18 +102,27 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
             return
         }
 
+        showUpdateNotification(pluginDescriptor, version, project)
+        
+        propertiesComponent.setValue(LAST_VERSION_KEY, version)
+    }
+
+    private fun showUpdateNotification(
+            pluginDescriptor: IdeaPluginDescriptor, version: String?,
+            project: Project
+    ) {
         // 显示更新通知
         val displayId = "${pluginDescriptor.name}插件更新"
         val title = "${pluginDescriptor.name}插件更新至v$version"
         val content = """
-            如果此插件对您有帮助，请
-            <b><a href="$HTML_DESCRIPTION_SUPPORT">支持我们</a>.</b>
-            <br/>
-            感谢您的支持!
-            <br/>
-            <br/>
-            <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases">发行记录</a> 
-        """.trimIndent()
+                如果此插件对您有帮助，请
+                <b><a href="$HTML_DESCRIPTION_SUPPORT">支持我们</a>.</b>
+                <br/>
+                感谢您的支持!
+                <br/>
+                <br/>
+                <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases">发行记录</a> 
+            """.trimIndent()
         NotificationGroup(displayId, NotificationDisplayType.BALLOON, false)
                 .createNotification(
                         title, content, NotificationType.INFORMATION,
@@ -135,7 +145,6 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
                 .let {
                     Notifications.Bus.notify(it, project)
                 }
-        propertiesComponent.setValue(LAST_VERSION_KEY, version)
     }
 
     class SupportAction(private val project: Project) : DumbAwareAction("支持一下") {
