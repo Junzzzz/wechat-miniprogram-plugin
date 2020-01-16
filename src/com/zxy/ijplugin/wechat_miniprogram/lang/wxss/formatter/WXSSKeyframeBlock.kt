@@ -76,15 +76,21 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.formatter.common.AbstractBlock
-import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 class WXSSKeyframeBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings, alignment: Alignment? = null) :
-        AbstractBlock(node, null, alignment) {
+        WXSSAbstractBlock(node, null, alignment) {
     override fun isLeaf(): Boolean {
         return false
+    }
+
+    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
+        return if (node.elementType == WXSSTypes.STYLE_STATEMENT_SECTION) {
+            listOf(WXSSStyleStatementSectionBlock(node, this.codeStyleSettings))
+        } else {
+            listOf(WXSSLeafBlock(node))
+        }
     }
 
     override fun getSpacing(child1: Block?, child2: Block): Spacing? {
@@ -98,15 +104,4 @@ class WXSSKeyframeBlock(node: ASTNode, private val codeStyleSettings: CodeStyleS
         return Indent.getNormalIndent()
     }
 
-    override fun buildChildren(): MutableList<Block> {
-        return this.node.getChildren(
-                TokenSet.create(WXSSTypes.KEYFRAME_SELECTOR, WXSSTypes.COMMA, WXSSTypes.STYLE_STATEMENT_SECTION)
-        ).map {
-            if (it.elementType == WXSSTypes.STYLE_STATEMENT_SECTION) {
-                WXSSStyleStatementSectionBlock(it, this.codeStyleSettings)
-            } else {
-                WXSSLeafBlock(it)
-            }
-        }.toMutableList()
-    }
 }

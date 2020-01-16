@@ -68,6 +68,30 @@ COMMENT_END = "*/"
 UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 %%
 
+// 注释，记录进入注释之前的状态
+// 再注释结束之后释放
+<YYINITIAL>{
+    {COMMENT_START}~{COMMENT_END} {
+//        this.saveBeforeCommentState();
+//        yybegin(COMMENT);
+        return WXSSTypes.COMMENT;
+    }
+}
+
+
+//<COMMENT> {
+//    {COMMENT_END} {
+//        yybegin(this.beforeCommentState);
+//        return WXSSTypes.COMMENT;
+//    }
+//    {WHITE_SPACE_AND_CRLF} {
+//          return TokenType.WHITE_SPACE;
+//      }
+//    [^] {
+//        return WXSSTypes.COMMENT;
+//    }
+//}
+
 "!important" { return WXSSTypes.IMPORTANT_KEYWORD;}
 "@font-face" { return WXSSTypes.FONT_FACE_KEYWORD; }
 "@keyframes" {  return WXSSTypes.KEYFRAMES_KEYWORD; }
@@ -104,27 +128,6 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 
 "\"" { this.saveBeforeStringState();yybegin(STRING_START_DQ);return WXSSTypes.STRING_START_DQ; }
 "'" { this.saveBeforeStringState();yybegin(STRING_START_SQ);return WXSSTypes.STRING_START_SQ; }
-
-// 注释，记录进入注释之前的状态
-// 再注释结束之后释放
-{COMMENT_START} {
-    this.saveBeforeCommentState();
-    yybegin(COMMENT);
-    return WXSSTypes.COMMENT;
-}
-
-<COMMENT> {
-    {COMMENT_END} {
-        yybegin(this.beforeCommentState);
-        return WXSSTypes.COMMENT;
-    }
-    {WHITE_SPACE_AND_CRLF} {
-          return TokenType.WHITE_SPACE;
-      }
-    [^] {
-        return WXSSTypes.COMMENT;
-    }
-}
 
 {IDENTIFIER} {return WXSSTypes.IDENTIFIER;}
 

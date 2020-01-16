@@ -78,14 +78,13 @@ import com.intellij.formatting.Spacing
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 class WXSSImportBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
         WXSSRootChildrenBlock(node) {
-    override fun isLeaf(): Boolean {
-        return false
+    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
+        return null
     }
 
     override fun getSpacing(child1: Block?, child2: Block): Spacing? {
@@ -95,8 +94,4 @@ class WXSSImportBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSet
                 .getSpacing(this, child1, child2)
     }
 
-    override fun buildChildren(): MutableList<Block> {
-        return this.node.getChildren(TokenSet.create(WXSSTypes.IMPORT_KEYWORD, WXSSTypes.STRING, WXSSTypes.SEMICOLON))
-                .map { WXSSLeafBlock(it) }.toMutableList()
-    }
 }

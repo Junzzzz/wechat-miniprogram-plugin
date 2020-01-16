@@ -73,6 +73,30 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 
+import com.intellij.formatting.Alignment
+import com.intellij.formatting.Block
+import com.intellij.formatting.Wrap
 import com.intellij.lang.ASTNode
+import com.intellij.psi.TokenType
+import com.intellij.psi.formatter.common.AbstractBlock
+import com.intellij.psi.tree.TokenSet
 
-abstract class WXSSRootChildrenBlock(node: ASTNode) : WXSSAbstractBlock(node, null, WXSSAlignments.ROOT_DEFINITION)
+abstract class WXSSAbstractBlock(node: ASTNode, wrap: Wrap? = null, alignment: Alignment? = null) :
+        AbstractBlock(node, wrap, alignment) {
+
+    override fun isLeaf(): Boolean {
+        return false
+    }
+
+    /**
+     * 映射子节点和子块的关系
+     */
+    abstract fun mapChildrenBlock(node: ASTNode): List<Block>?
+
+    final override fun buildChildren(): MutableList<Block> {
+        return this.node.getChildren(TokenSet.andNot(TokenSet.ANY, TokenSet.create(TokenType.WHITE_SPACE))).flatMap {
+            this.mapChildrenBlock(it) ?: listOf(WXSSLeafBlock(it))
+        }.toMutableList()
+    }
+
+}

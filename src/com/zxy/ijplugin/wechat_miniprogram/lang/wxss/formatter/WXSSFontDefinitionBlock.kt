@@ -78,14 +78,11 @@ import com.intellij.formatting.Spacing
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 class WXSSFontDefinitionBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
         WXSSRootChildrenBlock(node) {
-
-    override fun isLeaf(): Boolean = false
 
     override fun getSpacing(p0: Block?, p1: Block): Spacing? {
         return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
@@ -93,15 +90,12 @@ class WXSSFontDefinitionBlock(node: ASTNode, private val codeStyleSettings: Code
                 .spaces(1).getSpacing(this, p0, p1)
     }
 
-    override fun buildChildren(): MutableList<Block> {
-        return this.node.getChildren(TokenSet.create(WXSSTypes.FONT_FACE_KEYWORD, WXSSTypes.STYLE_STATEMENT_SECTION))
-                .map {
-                    if (it.elementType == WXSSTypes.STYLE_STATEMENT_SECTION) {
-                        WXSSStyleStatementSectionBlock(it, this.codeStyleSettings)
-                    } else {
-                        WXSSLeafBlock(it)
-                    }
-                }.toMutableList()
+    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
+        return if (node.elementType == WXSSTypes.STYLE_STATEMENT_SECTION) {
+            listOf(WXSSStyleStatementSectionBlock(node, this.codeStyleSettings))
+        } else {
+            null
+        }
     }
 
 }

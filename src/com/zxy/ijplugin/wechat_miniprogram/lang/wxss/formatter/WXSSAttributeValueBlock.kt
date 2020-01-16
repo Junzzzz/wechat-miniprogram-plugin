@@ -76,19 +76,15 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.formatter.common.AbstractBlock
 import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue
 
 class WXSSAttributeValueBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
-        AbstractBlock(
+        WXSSAbstractBlock(
                 node, Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, false), null
         ) {
-    override fun isLeaf(): Boolean {
-        return false
-    }
 
     override fun getSpacing(p0: Block?, p1: Block): Spacing? {
         return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
@@ -102,21 +98,17 @@ class WXSSAttributeValueBlock(node: ASTNode, private val codeStyleSettings: Code
                 .getSpacing(this, p0, p1)
     }
 
-    override fun buildChildren(): MutableList<Block> {
-        return this.node.getChildren(TokenSet.create(WXSSTypes.VALUE, WXSSTypes.COMMA)).mapNotNull {
-            if (it.elementType == WXSSTypes.VALUE) {
-                val psi = it.psi
-                if (psi is WXSSValue && psi.function != null) {
-                    WXSSFunctionBlock(psi.function!!.node, this.codeStyleSettings)
-                } else {
-                    WXSSLeafBlock(it)
-                }
-            } else if (it.elementType == WXSSTypes.COMMA) {
-                WXSSLeafBlock(it)
+    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
+        return if (node.elementType == WXSSTypes.VALUE) {
+            val psi = node.psi
+            if (psi is WXSSValue && psi.function != null) {
+                listOf(WXSSFunctionBlock(psi.function!!.node, this.codeStyleSettings))
             } else {
                 null
             }
-        }.toMutableList()
+        } else{
+            null
+        }
     }
 
 }

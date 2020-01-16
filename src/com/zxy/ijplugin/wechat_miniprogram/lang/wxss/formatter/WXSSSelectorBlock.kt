@@ -78,20 +78,15 @@ import com.intellij.formatting.Spacing
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.formatter.common.AbstractBlock
 import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 class WXSSSelectorBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
-        AbstractBlock(node, null, null) {
-    private val tokenSet = TokenSet.create(
-            WXSSTypes.RIGHT_ANGLE_BRACKETS, WXSSTypes.IDENTIFIER, WXSSTypes.CLASS_SELECTOR, WXSSTypes.ID_SELECTOR,
-            WXSSTypes.PSEUDO_SELECTOR
-    )
+        WXSSAbstractBlock(node, null, null) {
 
-    override fun isLeaf(): Boolean {
-        return this.node.getChildren(tokenSet).size == 1
+    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
+        return null
     }
 
     override fun getSpacing(child1: Block?, child2: Block): Spacing? {
@@ -105,9 +100,4 @@ class WXSSSelectorBlock(node: ASTNode, private val codeStyleSettings: CodeStyleS
                 .getSpacing(this,child1, child2)
     }
 
-    override fun buildChildren(): MutableList<Block> {
-        return this.node.getChildren(this.tokenSet).map {
-            WXSSLeafBlock(it)
-        }.toMutableList()
-    }
 }

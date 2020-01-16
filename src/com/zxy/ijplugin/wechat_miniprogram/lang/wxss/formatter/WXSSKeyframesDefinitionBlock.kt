@@ -76,14 +76,24 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 class WXSSKeyframesDefinitionBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
         WXSSRootChildrenBlock(node) {
+
+    private val keyframeBlockAlignment = Alignment.createAlignment()
+
     override fun isLeaf(): Boolean {
         return false
+    }
+
+    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
+        return if (node.elementType == WXSSTypes.KEYFRAME) {
+            listOf(WXSSKeyframeBlock(node, this.codeStyleSettings, keyframeBlockAlignment))
+        } else {
+            listOf(WXSSLeafBlock(node))
+        }
     }
 
     override fun getSpacing(child1: Block?, child2: Block): Spacing? {
@@ -93,22 +103,6 @@ class WXSSKeyframesDefinitionBlock(node: ASTNode, private val codeStyleSettings:
                 .after(WXSSTypes.LEFT_BRACKET).lineBreakInCode()
                 .before(WXSSTypes.RIGHT_BRACKET).lineBreakInCode()
                 .getSpacing(this, child1, child2)
-    }
-
-    override fun buildChildren(): MutableList<Block> {
-        val keyframeBlockAlignment = Alignment.createAlignment()
-        return this.node.getChildren(
-                TokenSet.create(
-                        WXSSTypes.KEYFRAMES_KEYWORD, WXSSTypes.KEYFRAMES_NAME, WXSSTypes.LEFT_BRACKET,
-                        WXSSTypes.KEYFRAME, WXSSTypes.RIGHT_BRACKET
-                )
-        ).map {
-            if (it.elementType == WXSSTypes.KEYFRAME) {
-                WXSSKeyframeBlock(it, this.codeStyleSettings, keyframeBlockAlignment)
-            } else {
-                WXSSLeafBlock(it)
-            }
-        }.toMutableList()
     }
 
     override fun getIndent(): Indent? {

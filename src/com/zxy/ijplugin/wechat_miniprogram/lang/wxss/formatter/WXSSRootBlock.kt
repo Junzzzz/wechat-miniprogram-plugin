@@ -78,12 +78,11 @@ import com.intellij.formatting.Spacing
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.formatter.common.AbstractBlock
 import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
-class WXSSRootBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) : AbstractBlock(
+class WXSSRootBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) : WXSSAbstractBlock(
         node, null, null
 ) {
 
@@ -91,39 +90,38 @@ class WXSSRootBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSetti
         private val GRAMMAR_ITEM_TOKENS = TokenSet.create(
                 WXSSTypes.FONT_DEFINITION, WXSSTypes.IMPORT,
                 WXSSTypes.STYLE_DEFINITION,
-                WXSSTypes.KEYFRAMES_DEFINITION
+                WXSSTypes.KEYFRAMES_DEFINITION,
+                WXSSTypes.COMMENT
         )
     }
 
     override fun isLeaf(): Boolean = false
+
+    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
+        return when (node.elementType) {
+            WXSSTypes.KEYFRAMES_DEFINITION -> {
+                listOf(WXSSKeyframesDefinitionBlock(node, this.codeStyleSettings))
+            }
+            WXSSTypes.IMPORT -> {
+                listOf(WXSSImportBlock(node, this.codeStyleSettings))
+            }
+            WXSSTypes.STYLE_DEFINITION -> {
+                listOf(WXSSStyleDefinitionBlock(node, this.codeStyleSettings))
+            }
+            WXSSTypes.FONT_DEFINITION -> {
+                listOf(WXSSFontDefinitionBlock(node, this.codeStyleSettings))
+            }
+            else -> {
+                null
+            }
+        }
+    }
 
     override fun getSpacing(p0: Block?, p1: Block): Spacing? {
         return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
                 .around(GRAMMAR_ITEM_TOKENS)
                 .blankLines(1)
                 .getSpacing(this, p0, p1)
-    }
-
-    override fun buildChildren(): MutableList<Block> {
-        return this.node.getChildren(GRAMMAR_ITEM_TOKENS).mapNotNull {
-            when (it.elementType) {
-                WXSSTypes.KEYFRAMES_DEFINITION -> {
-                    WXSSKeyframesDefinitionBlock(it, this.codeStyleSettings)
-                }
-                WXSSTypes.IMPORT -> {
-                    WXSSImportBlock(it, this.codeStyleSettings)
-                }
-                WXSSTypes.STYLE_DEFINITION -> {
-                    WXSSStyleDefinitionBlock(it, this.codeStyleSettings)
-                }
-                WXSSTypes.FONT_DEFINITION -> {
-                    WXSSFontDefinitionBlock(it, this.codeStyleSettings)
-                }
-                else -> {
-                    null
-                }
-            }
-        }.toMutableList()
     }
 
 }

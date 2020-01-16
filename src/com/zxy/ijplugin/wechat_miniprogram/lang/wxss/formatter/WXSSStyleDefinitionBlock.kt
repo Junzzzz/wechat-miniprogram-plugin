@@ -79,36 +79,31 @@ import com.intellij.formatting.Spacing
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 open class WXSSStyleDefinitionBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
         WXSSRootChildrenBlock(node) {
     override fun isLeaf(): Boolean = false
+    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
+        return when (node.elementType) {
+            WXSSTypes.SELECTOR_GROUP -> {
+                listOf(WXSSSelectorGroupBlock(node, this.codeStyleSettings))
+            }
+            WXSSTypes.STYLE_STATEMENT_SECTION -> {
+                listOf(WXSSStyleStatementSectionBlock(node, this.codeStyleSettings))
+            }
+            else -> {
+                null
+            }
+        }
+    }
 
     override fun getSpacing(p0: Block?, p1: Block): Spacing? {
         return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
                 .after(WXSSTypes.SELECTOR_GROUP)
                 .spaces(1)
                 .getSpacing(this, p0, p1)
-    }
-
-    override fun buildChildren(): MutableList<Block> {
-        return this.node.getChildren(TokenSet.create(WXSSTypes.SELECTOR_GROUP, WXSSTypes.STYLE_STATEMENT_SECTION))
-                .mapNotNull {
-                    when (it.elementType) {
-                        WXSSTypes.SELECTOR_GROUP -> {
-                            WXSSSelectorGroupBlock(it, this.codeStyleSettings)
-                        }
-                        WXSSTypes.STYLE_STATEMENT_SECTION -> {
-                            WXSSStyleStatementSectionBlock(it, this.codeStyleSettings)
-                        }
-                        else -> {
-                            null
-                        }
-                    }
-                }.toMutableList()
     }
 
     override fun getIndent(): Indent? {
