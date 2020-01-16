@@ -105,32 +105,14 @@ ATTRIBUTE_NAME = ({ALPHA}|-|_|:)+
 
 <YYINITIAL>{
     "<!--"~"-->" {
-//        this.saveBeforeCommentState();
         return WXMLTypes.COMMENT;
     }
 }
-
-//<COMMENT> {
-//    "<!--" {return WXMLTypes.COMMENT_START;}
-//    "-->" {
-//        yybegin(this.beforeCommentState);
-//        System.out.println("1");
-//        return WXMLTypes.COMMENT_END;
-//    }
-//    [^]+"-->" {
-//          System.out.println("2");
-//        yypushback(3);
-//        return WXMLTypes.COMMENT_CONTENT;
-//    }
-//}
-
-
 
 <STRING_DQ_START> {
     [^\r\n\"]+ {
         return WXMLTypes.STRING_CONTENT;
     }
-
 }
 
 <STRING_SQ_START> {
