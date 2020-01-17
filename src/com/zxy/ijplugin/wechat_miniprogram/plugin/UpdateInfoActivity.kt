@@ -116,12 +116,12 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
         val title = "${pluginDescriptor.name}插件更新至v$version"
         val content = """
                 如果此插件对您有帮助，请
-                <b><a href="$HTML_DESCRIPTION_SUPPORT">支持我们</a>.</b>
+                <b><a href="$HTML_DESCRIPTION_SUPPORT">支持我们</a>。</b>
                 <br/>
                 感谢您的支持!
                 <br/>
                 <br/>
-                <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases">发行记录</a> 
+                <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases">发行记录/更新日志</a> 
             """.trimIndent()
         NotificationGroup(displayId, NotificationDisplayType.BALLOON, false)
                 .createNotification(
