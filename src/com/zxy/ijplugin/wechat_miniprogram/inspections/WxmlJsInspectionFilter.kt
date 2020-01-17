@@ -75,6 +75,7 @@ package com.zxy.ijplugin.wechat_miniprogram.inspections
 
 import com.intellij.codeInspection.InspectionProfileEntry
 import com.intellij.lang.javascript.highlighting.IntentionAndInspectionFilter
+import com.intellij.lang.javascript.inspections.JSUnresolvedVariableInspection
 import com.intellij.lang.javascript.intentions.JSSplitDeclarationIntention
 import com.intellij.util.containers.mapSmartSet
 import com.sixrr.inspectjs.validity.BadExpressionStatementJSInspection
@@ -87,7 +88,9 @@ class WxmlJsInspectionFilter : IntentionAndInspectionFilter() {
 
     companion object {
         val suppressedToolIds = listOf(
-                BadExpressionStatementJSInspection::class, JSSplitDeclarationIntention::class
+                JSUnresolvedVariableInspection::class,
+                BadExpressionStatementJSInspection::class,
+                JSSplitDeclarationIntention::class
         ).mapSmartSet { InspectionProfileEntry.getShortName(it.java.simpleName) }
     }
 }
