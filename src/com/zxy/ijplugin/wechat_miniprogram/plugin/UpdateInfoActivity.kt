@@ -96,6 +96,7 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
         if (!isWechatMiniProgramContext(project)) return
         val pluginDescriptor = PluginManager.getPlugin(PluginId.getId(pluginId))!!
         val propertiesComponent = PropertiesComponent.getInstance()
+        propertiesComponent.setValue(LAST_VERSION_KEY, null)
         val lastVersion = propertiesComponent.getValue(LAST_VERSION_KEY)
         val version = pluginDescriptor.version
         if (version == lastVersion) {
@@ -121,7 +122,10 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
                 感谢您的支持!
                 <br/>
                 <br/>
-                <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases">发行记录/更新日志</a> 
+                <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases">发行记录/更新日志</a>
+                <br/>
+                <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis">使用文档</a>
+                <br/>
             """.trimIndent()
         NotificationGroup(displayId, NotificationDisplayType.BALLOON, false)
                 .createNotification(

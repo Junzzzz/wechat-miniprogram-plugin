@@ -94,7 +94,7 @@ class SupportDialog(project: Project) : DialogWrapper(project) {
     override fun getStyle(): DialogStyle = DialogStyle.COMPACT
 
     override fun createCenterPanel(): JComponent? = panel {
-        row("您可以通过以下方式来支持此项目") {}
+        row("您可以通过以下方式来支持此项目：") {}
         val links = mapOf(
                 "在Gitee上Star此项目" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin",
                 "反馈问题" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/new",
@@ -108,6 +108,9 @@ class SupportDialog(project: Project) : DialogWrapper(project) {
                     BrowserUtil.browse(entry.value)
                 }
             }
+        }
+        row("${links.size + 1}.") {
+            label("将此插件推荐给您的同事朋友")
         }
     }
 
