@@ -83,17 +83,42 @@ object ComponentJsUtils {
      * 如果这个js文件具有ComponentAPI
      */
     fun findPropertiesItems(jsFile: JSFile): Array<out JSProperty>? {
-        return jsFile.children.filterIsInstance(JSExpressionStatement::class.java).mapNotNull {
-            it.firstChild as? JSCallExpression
-        }.find { jsCallExpression ->
-            jsCallExpression.children.any { it is JSReferenceExpression && it.text == "Component" }
-        }?.let { jsCallExpression ->
-            (jsCallExpression.argumentList?.children?.find { it is JSObjectLiteralExpression } as? JSObjectLiteralExpression)?.properties
-        }?.find {
+        return findComponentApiOptionProperties(jsFile)?.find {
             it.name == "properties"
         }?.let {
             (it.value as? JSObjectLiteralExpression)?.properties
         }
+    }
+
+    /**
+     * 找到Component API或Page API的方法调用
+     */
+    fun findComponentOrPageCallExpression(jsFile: JSFile): JSCallExpression?  {
+        return jsFile.children.filterIsInstance(JSExpressionStatement::class.java).mapNotNull {
+            it.firstChild as? JSCallExpression
+        }.find { jsCallExpression ->
+            jsCallExpression.methodExpression.let {
+                it is JSReferenceExpression && (it.text ==
+                        "Component" || it.text == "Page")
+            }
+        }
+    }
+
+    fun findCallExpressionFirstObjectArg(callExpression: JSCallExpression): JSObjectLiteralExpression? {
+        return callExpression.arguments.firstOrNull() as? JSObjectLiteralExpression
+    }
+
+    /**
+     * 找到js文件中的component API的选项列表
+     */
+    private fun findComponentApiOptionProperties(jsFile: JSFile): Array<JSProperty>? {
+        return jsFile.children.filterIsInstance(JSExpressionStatement::class.java).mapNotNull {
+            it.firstChild as? JSCallExpression
+        }.find { jsCallExpression ->
+            jsCallExpression.children.any { it is JSReferenceExpression && it.text == "Component" }
+        }?.let {
+            it.argumentList?.firstChild as? JSObjectLiteralExpression
+        }?.properties
     }
 
     /**

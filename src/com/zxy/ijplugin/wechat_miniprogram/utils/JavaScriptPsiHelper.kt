@@ -71,114 +71,17 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl
+package com.zxy.ijplugin.wechat_miniprogram.utils
 
-import com.intellij.psi.*
-import com.intellij.psi.util.PsiTreeUtil
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
+import com.intellij.lang.javascript.psi.JSObjectLiteralExpression
+import com.intellij.lang.javascript.psi.JSProperty
+import com.intellij.psi.PsiElement
 
-object WXMLPsiImplUtils {
-
-    @JvmStatic
-    fun getEndTag(element: WXMLStartTag): WXMLEndTag? {
-        do {
-            val next = element.nextSibling ?: return null
-            if (next is WXMLEndTag) {
-                return next
-            }
-        } while (true)
+fun JSObjectLiteralExpression.addProperty(property: JSProperty): PsiElement {
+    val firstProperty = this.firstProperty
+    return if (firstProperty == null) {
+        this.addBefore(property, this.lastChild)
+    } else {
+        this.addBefore(property, firstProperty)
     }
-
-    @JvmStatic
-    fun getStartTag(element: WXMLEndTag): WXMLStartTag? {
-        do {
-            val prev = element.prevSibling ?: return null
-            if (prev is WXMLStartTag) {
-                return prev
-            }
-        } while (true)
-    }
-
-    @JvmStatic
-    fun getTagName(element: WXMLElement): String? {
-        val wrapPsiElement = PsiTreeUtil.findChildOfType(element, WXMLStartTag::class.java)
-                ?: PsiTreeUtil.findChildOfType(element, WXMLClosedElement::class.java)!!
-        return wrapPsiElement.node.findChildByType(WXMLTypes.TAG_NAME)?.text
-    }
-
-    @JvmStatic
-    fun getName(element: WXMLAttribute): String {
-        return element.node.firstChildNode.text
-    }
-
-    @JvmStatic
-    fun getReferences(element: WXMLAttribute): Array<out PsiReference> {
-        return PsiReferenceService.getService().getContributedReferences(element)
-    }
-
-    @JvmStatic
-    fun isEvent(element: WXMLAttribute):Boolean{
-        val name = getName(element)
-        return name.matches(Regex("^(bind|catch):?.+"))
-    }
-
-    /*text*/
-    @JvmStatic
-    fun isValidHost(element: WXMLText): Boolean {
-        return true
-    }
-
-    @JvmStatic
-    fun updateText(element: WXMLText, newText: String): PsiLanguageInjectionHost {
-        element.replace(WXMLElementFactory.createText(element.project, newText))
-        return element
-    }
-
-    @JvmStatic
-    fun createLiteralTextEscaper(element: WXMLText): LiteralTextEscaper<WXMLText> {
-        return LiteralTextEscaper.createSimple(element)
-    }
-
-    /*string text*/
-    @JvmStatic
-    fun getReferences(element: WXMLStringText): Array<PsiReference> {
-        return PsiReferenceService.getService().getContributedReferences(element)
-    }
-
-    @JvmStatic
-    fun isValidHost(element: WXMLStringText): Boolean {
-        return true
-    }
-
-    @JvmStatic
-    fun updateText(element: WXMLStringText, newText: String): PsiLanguageInjectionHost {
-        element.replace(WXMLElementFactory.createStringText(element.project, newText))
-        return element
-    }
-
-    @JvmStatic
-    fun createLiteralTextEscaper(element: WXMLStringText): LiteralTextEscaper<WXMLStringText> {
-        return LiteralTextEscaper.createSimple(element)
-    }
-
-    @JvmStatic
-    fun getName(element: WXMLStringText): String? {
-        return element.nameIdentifier?.text
-    }
-
-    @JvmStatic
-    fun getNameIdentifier(element: WXMLStringText): PsiElement? {
-        return if (WXMLModuleUtils.isTemplateNameAttributeStringText(
-                        element
-                ) || WXMLModuleUtils.isSlotNameAttributeStringText(element)) element else null
-    }
-
-    @JvmStatic
-    fun setName(element: WXMLStringText, name: String):PsiElement {
-        element.nameIdentifier?.replace(WXMLElementFactory.createStringText(element.project, name))
-        return element
-    }
-
 }

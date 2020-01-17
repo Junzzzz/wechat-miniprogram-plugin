@@ -98,7 +98,6 @@
         >
             <add-to-group group-id="NewGroup" anchor="first"/>
         </action>
-
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -125,6 +124,11 @@
         <intentionAction>
             <descriptionDirectoryName>WXMLCreateIdAtWxssFileIntentionAction</descriptionDirectoryName>
             <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateIdAtWxssFileIntentionAction</className>
+            <category>Wechat mini program</category>
+        </intentionAction>
+        <intentionAction>
+            <descriptionDirectoryName>WXMLCreateEventHandlerIntentionAction</descriptionDirectoryName>
+            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateEventHandlerIntentionAction</className>
             <category>Wechat mini program</category>
         </intentionAction>
 

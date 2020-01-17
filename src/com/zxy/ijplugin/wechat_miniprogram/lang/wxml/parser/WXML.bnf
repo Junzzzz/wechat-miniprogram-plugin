@@ -118,7 +118,7 @@ endTag ::= END_TAG_START TAG_NAME END_TAG_END {
 }
 private attributes ::= attribute+
 attribute ::= ATTRIBUTE_NAME (EQ attributeValue)? {
-    methods= [getName getReferences]
+    methods= [getName getReferences isEvent]
     implements = ["com.intellij.psi.ContributedReferenceHost"]
 }
 private attributeValue ::= string

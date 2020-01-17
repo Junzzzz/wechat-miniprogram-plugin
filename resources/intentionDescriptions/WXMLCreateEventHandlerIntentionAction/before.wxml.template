@@ -1,0 +1,1 @@
+<view bind:tap="myClickHandler"></view>

@@ -75,11 +75,15 @@ package com.zxy.ijplugin.wechat_miniprogram.intents
 
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
+import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.util.parentOfType
@@ -103,20 +107,22 @@ class WXMLCreateEventHandlerIntentionAction : IntentionAction, PsiElementBaseInt
         return "Create event handler function at component js file"
     }
 
-    override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
-        if (element.node.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
+    override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
+        val element = InjectedLanguageManager.getInstance(project).getInjectionHost(psiElement) ?: return false
+        if (element.node.elementType !== WXMLTypes.STRING_TEXT || editor == null) return false
         val wxmlAttribute = element.parentOfType<WXMLAttribute>() ?: return false
         // 属性是事件属性
         if (!wxmlAttribute.isEvent) return false
         // 属性值是正确的js标识符
-        if (!element.text.matches(Regex("^[a-zA-Z_$][a-zA-Z0-9_$]*"))) return false
+        val text = element.text
+        if (!text.matches(Regex("^[a-zA-Z_$][a-zA-Z0-9_$]*"))) return false
 
-        val jsFile = findRelatePsiFile<JSFile>(element.containingFile) ?: return false
+        val jsFile = findRelatePsiFile<JSFile>(element.containingFile.originalFile) ?: return false
         val callExpression = ComponentJsUtils.findComponentOrPageCallExpression(jsFile) ?: return false
         // 只要存在Page或Component方法调用切有第一个参数为对象即可
         val optionsObject = ComponentJsUtils.findCallExpressionFirstObjectArg(callExpression) ?: return false
         val options = optionsObject.properties
-        val isComponent = callExpression.name == "Component"
+        val isComponent = callExpression.methodExpression?.text == "Component"
         val functions = if (isComponent) {
             (options.find {
                 it.name == "methods"
@@ -128,46 +134,68 @@ class WXMLCreateEventHandlerIntentionAction : IntentionAction, PsiElementBaseInt
         }.filter {
             !MyJSPredefinedLibraryProvider.PAGE_LIFETIMES.contains(it.name)
         }
-        return !functions.contains(element)
+        return !functions.any {
+            it.name == text
+        }
     }
 
-    override fun invoke(project: Project, editor: Editor, element: PsiElement) {
+    override fun invoke(project: Project, editor: Editor, psiElement: PsiElement) {
+        val element = InjectedLanguageManager.getInstance(project).getInjectionHost(psiElement) ?: return
         val jsFile = findRelatePsiFile<JSFile>(element.containingFile) ?: return
         val callExpression = ComponentJsUtils.findComponentOrPageCallExpression(jsFile) ?: return
         val optionsObject = ComponentJsUtils.findCallExpressionFirstObjectArg(callExpression) ?: return
         val options = optionsObject.properties
-        val isComponent = callExpression.name == "Component"
-        if (isComponent) {
+        val isComponent = callExpression.methodExpression?.text == "Component"
+        val text = element.text
+        val property = if (isComponent) {
             val methodsProperty = options.find {
                 it.name == "methods"
             }
-            if (methodsProperty == null){
+            if (methodsProperty == null) {
                 runWriteAction {
-                    optionsObject.addProperty(JavaScriptElementFactory.createProperty(project, """methods:{
-                            ${element.text}(){
+                    optionsObject.addProperty(
+                            JavaScriptElementFactory.createProperty(
+                                    project, """methods:{
+                            ${text}(){
                                                             
                             }    
-                        }""".trimMargin()))
-                    CodeStyleManager.getInstance(project).reformat(element.originalElement)
+                        }""".trimMargin()
+                            )
+                    )
                 }
-            }else{
-                val functionsObject = (methodsProperty.value as? JSObjectLiteralExpression?:return)
+            } else {
+                val functionsObject = (methodsProperty.value as? JSObjectLiteralExpression ?: return)
                 runWriteAction {
-                    functionsObject.addProperty(JavaScriptElementFactory.createProperty(project,"""
-                        ${element.text} (){
+                    functionsObject.addProperty(
+                            JavaScriptElementFactory.createProperty(
+                                    project, """
+                        $text(){
                                                                                     
                         }
-                    """.trimIndent()))
-                    CodeStyleManager.getInstance(project).reformat(element.originalElement)
+                    """.trimIndent()
+                            )
+                    )
                 }
             }
-        }else{
+        } else {
             runWriteAction {
-                optionsObject.addProperty(JavaScriptElementFactory.createProperty(project,"""
-                    ${element.text} (){}
-                """.trimIndent()))
-                CodeStyleManager.getInstance(project).reformat(element.originalElement)
+                optionsObject.addProperty(
+                        JavaScriptElementFactory.createProperty(
+                                project, """
+                    $text(){
+                        
+                    }
+                """.trimIndent()
+                        )
+                )
             }
         }
+        val descriptor = OpenFileDescriptor(project, jsFile.virtualFile)
+        val wxssFileEditor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true)
+        wxssFileEditor?.let {
+            PsiDocumentManager.getInstance(project).doPostponedOperationsAndUnblockDocument(it.document)
+            it.caretModel.moveToOffset(property.textOffset + text.length + 1)
+        }
+        CodeStyleManager.getInstance(project).reformat(optionsObject)
     }
 }

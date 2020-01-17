@@ -78,15 +78,20 @@ import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.lang.javascript.JavaScriptFileType
+import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
+import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 
 fun isWechatMiniProgramContext(psiElement: PsiElement): Boolean {
     return isWechatMiniProgramContext(psiElement.project)
@@ -130,6 +135,24 @@ enum class RelateFileType(val fileType: LanguageFileType) {
  */
 fun findRelateFile(originFile: VirtualFile, relateFileType: RelateFileType): VirtualFile? {
     return originFile.parent?.children?.find { it.nameWithoutExtension == originFile.nameWithoutExtension && it.extension == relateFileType.fileType.defaultExtension }
+}
+
+inline fun <reified T:PsiFile> findRelatePsiFile(psiFile: PsiFile): T? {
+    val originFile = psiFile.originalFile.virtualFile
+    val project = psiFile.project
+    return findRelatePsiFile(originFile, project)
+}
+
+inline fun <reified T : PsiFile> findRelatePsiFile(originFile: VirtualFile, project: Project): T? {
+    val relateFileType = when {
+        T::class==WXSSPsiFile::class-> RelateFileType.WXSS
+        T::class==WXMLPsiFile::class -> RelateFileType.WXML
+        T::class==JsonFile::class -> RelateFileType.JSON
+        T::class==JSFile::class -> RelateFileType.JS
+        else -> return null
+    }
+    val virtualFile = findRelateFile(originFile, relateFileType) ?: return null
+    return PsiManager.getInstance(project).findFile(virtualFile) as? T
 }
 
 fun findAppFile(project: Project, relateFileType: RelateFileType): VirtualFile? {
