@@ -72,13 +72,18 @@
             <li>Fixed formatter deleting characters by mistake</li>
             <li>Wxss supports child element selectors</li>
         </ul>
+        <h3>1.8</h3>
+        <ul>
+            <li>Support creating js event handlers from wxml</li>
+            <li>Wxml does not check for undefined variables</li>
+        </ul>
         ]]>
     </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.7</version>
+    <version>1.8</version>
     <idea-version since-build="193.2723"/>
 
     <actions>
