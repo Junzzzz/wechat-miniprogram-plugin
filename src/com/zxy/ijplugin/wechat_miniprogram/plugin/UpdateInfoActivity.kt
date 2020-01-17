@@ -96,7 +96,6 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
         if (!isWechatMiniProgramContext(project)) return
         val pluginDescriptor = PluginManager.getPlugin(PluginId.getId(pluginId))!!
         val propertiesComponent = PropertiesComponent.getInstance()
-        propertiesComponent.setValue(LAST_VERSION_KEY, null)
         val lastVersion = propertiesComponent.getValue(LAST_VERSION_KEY)
         val version = pluginDescriptor.version
         if (version == lastVersion) {
@@ -127,7 +126,7 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
                 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis">使用文档</a>
                 <br/>
             """.trimIndent()
-        NotificationGroup(displayId, NotificationDisplayType.BALLOON, false)
+        val notification = NotificationGroup(displayId, NotificationDisplayType.BALLOON, false)
                 .createNotification(
                         title, content, NotificationType.INFORMATION,
                         object : NotificationListener.Adapter() {
@@ -144,15 +143,20 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
                             }
                         }
                 )
-                .addAction(SupportAction(project))
+        notification
+                .addAction(SupportAction(project,notification))
                 .setImportant(true)
                 .let {
                     Notifications.Bus.notify(it, project)
                 }
     }
 
-    class SupportAction(private val project: Project) : DumbAwareAction("支持一下") {
+    class SupportAction(
+            private val project: Project,
+            private val notification: Notification
+    ) : DumbAwareAction("支持一下") {
         override fun actionPerformed(e: AnActionEvent) {
+            notification.hideBalloon()
             SupportDialog(project).show()
         }
     }
