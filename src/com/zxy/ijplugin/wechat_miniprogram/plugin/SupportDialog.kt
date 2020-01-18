@@ -97,6 +97,7 @@ class SupportDialog(project: Project) : DialogWrapper(project) {
         row("您可以通过以下方式来支持此项目：") {}
         val links = mapOf(
                 "在Gitee上Star此项目" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin",
+                "在Gitee上Watch此项目" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin",
                 "反馈问题" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/new",
                 "提出想法或建议" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/new",
                 "提交PR" to "https://gitee.com/zxy_c/wechat-miniprogram-plugin",
