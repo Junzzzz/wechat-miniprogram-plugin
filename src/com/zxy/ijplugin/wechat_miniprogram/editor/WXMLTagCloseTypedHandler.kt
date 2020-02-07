@@ -81,6 +81,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.elementType
 import com.zxy.ijplugin.wechat_miniprogram.lang.utils.findPrevSibling
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
@@ -100,6 +101,8 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
                 PsiTreeUtil.findChildOfType(
                         prevElement.findPrevSibling { it is WXMLElement }, WXMLOpenedElement::class.java
                 )
+            } else if (prevElement.elementType == WXMLTypes.STRING_CONTENT) {
+                return Result.CONTINUE
             } else {
                 // 处于开元素的最后位置
                 PsiTreeUtil.getParentOfType(
@@ -109,16 +112,16 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
 
 
             if (element != null && element.node.elementType == WXMLTypes.START_TAG_END) {
-                val wxmlStartTag = PsiTreeUtil.getParentOfType(element,WXMLStartTag::class.java)
+                val wxmlStartTag = PsiTreeUtil.getParentOfType(element, WXMLStartTag::class.java)
                 val nextSibling = wxmlStartTag?.nextSibling
-                if (nextSibling is WXMLEndTag){
+                if (nextSibling is WXMLEndTag) {
                     val range = nextSibling.textRange
                     // 删除结束标签
                     // 让这个标签变成闭合标签
-                    editor.document.deleteString(range.startOffset,range.endOffset)
+                    editor.document.deleteString(range.startOffset, range.endOffset)
                     return Result.CONTINUE
                 }
-            }else if (wxmlOpenedElement!=null && wxmlOpenedElement.startTag.lastChild !== WXMLTypes.START_TAG_END) {
+            } else if (wxmlOpenedElement != null && wxmlOpenedElement.startTag.lastChild !== WXMLTypes.START_TAG_END) {
                 // 键入了闭合标签的尾部 />
                 // 单标签
                 // 完成闭合标签
