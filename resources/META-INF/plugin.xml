@@ -76,6 +76,7 @@
         <ul>
             <li>Support creating js event handlers from wxml</li>
             <li>Wxml does not check for undefined variables</li>
+            <li>Fixed an error where the auto-close tag function would trigger in inappropriate places</li>
         </ul>
         ]]>
     </change-notes>
@@ -83,7 +84,7 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.8</version>
+    <version>1.8.1</version>
     <idea-version since-build="193.2723"/>
 
     <actions>
