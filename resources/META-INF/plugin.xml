@@ -280,8 +280,4 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLElementResolveScopeProvider"/>
     </extensions>
 
-    <project-components>
-        <component><implementation-class>com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata</implementation-class></component>
-    </project-components>
-
 </idea-plugin>
