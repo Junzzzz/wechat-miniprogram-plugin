@@ -118,6 +118,11 @@ class WXMLPresetElementAttributeDescriptor @JsonCreator constructor(
 typealias A = WXMLPresetElementAttributeDescriptor
 typealias T = WXMLElementAttributeDescriptor.ValueType
 
+/**
+ * 此组件影响动态加载插件
+ * 在将来版本中修复
+ * TODO
+ */
 class WXMLMetadata(private val project: Project) : ProjectComponent {
 
     private val elementDescriptors by lazy {
