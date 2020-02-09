@@ -77,7 +77,7 @@
             <li>Support creating js event handlers from wxml</li>
             <li>Wxml does not check for undefined variables</li>
             <li>Fixed an error where the auto-close tag function would trigger in inappropriate places</li>
-            <li>fix some compatibility issues</li>
+            <li>Fix some compatibility issues</li>
         </ul>
         ]]>
     </change-notes>
