@@ -212,6 +212,7 @@
         <completion.contributor
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXMLCompletionContributor"
                 language="WXML"/>
+        <!--此扩展点影响插件的动态加载TODO-->
         <editorFactoryListener implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagNameSynchronizer"/>
         <lang.foldingBuilder language="WXML"
                              implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLTagPairFoldingBuilder"/>
