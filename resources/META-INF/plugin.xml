@@ -77,6 +77,7 @@
             <li>Support creating js event handlers from wxml</li>
             <li>Wxml does not check for undefined variables</li>
             <li>Fixed an error where the auto-close tag function would trigger in inappropriate places</li>
+            <li>fix some compatibility issues</li>
         </ul>
         ]]>
     </change-notes>
@@ -85,7 +86,7 @@
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
     <version>1.8.1</version>
-    <idea-version since-build="193.2723"/>
+    <idea-version since-build="201.4515.24"/>
 
     <actions>
         <action class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramPageAction"
