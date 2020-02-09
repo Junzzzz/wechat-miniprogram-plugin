@@ -74,7 +74,7 @@
 package com.zxy.ijplugin.wechat_miniprogram.plugin
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor
-import com.intellij.ide.plugins.PluginManager
+import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.*
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -94,7 +94,7 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
 
     override fun runActivity(project: Project) {
         if (!isWechatMiniProgramContext(project)) return
-        val pluginDescriptor = PluginManager.getPlugin(PluginId.getId(pluginId))!!
+        val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(pluginId))!!
         val propertiesComponent = PropertiesComponent.getInstance()
         val lastVersion = propertiesComponent.getValue(LAST_VERSION_KEY)
         val version = pluginDescriptor.version
