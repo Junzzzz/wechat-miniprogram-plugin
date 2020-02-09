@@ -78,7 +78,7 @@ import com.intellij.json.psi.JsonArray
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonStringLiteral
-import com.intellij.openapi.components.ProjectComponent
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.utils.*
@@ -118,12 +118,8 @@ class WXMLPresetElementAttributeDescriptor @JsonCreator constructor(
 typealias A = WXMLPresetElementAttributeDescriptor
 typealias T = WXMLElementAttributeDescriptor.ValueType
 
-/**
- * 此组件影响动态加载插件
- * 在将来版本中修复
- * TODO
- */
-class WXMLMetadata(private val project: Project) : ProjectComponent {
+@Service
+class WXMLMetadata(private val project: Project) {
 
     private val elementDescriptors by lazy {
         ResourceUtils.findWXMLMetaDataFile()?.let {
