@@ -79,6 +79,7 @@ import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.utils.*
@@ -174,7 +175,7 @@ class WXMLMetadata(private val project: Project) {
     companion object {
 
         fun getElementDescriptors(project: Project): List<WXMLElementDescriptor> {
-            return project.getComponent(WXMLMetadata::class.java).elementDescriptors
+            return ServiceManager.getService(project, WXMLMetadata::class.java).elementDescriptors
         }
 
         val COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS = arrayOf(

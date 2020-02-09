@@ -126,7 +126,7 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
                 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis">使用文档</a>
                 <br/>
             """.trimIndent()
-        val notification = NotificationGroup(displayId, NotificationDisplayType.BALLOON, false)
+        val notification = NotificationGroup(displayId, NotificationDisplayType.BALLOON, false, null, null)
                 .createNotification(
                         title, content, NotificationType.INFORMATION,
                         object : NotificationListener.Adapter() {
