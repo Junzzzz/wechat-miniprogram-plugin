@@ -160,7 +160,7 @@ function ::= IDENTIFIER LEFT_PARENTHESES functionArgs? RIGHT_PARENTHESES {
 }
 functionArgs ::= (functionArgGroup (COMMA functionArgGroup)*)
 private functionArgGroup ::= (functionArg)+
-functionArg ::= (calcExpression | HASH  | string )
+functionArg ::= (calcExpression | HASH  | string | function)
 numericalValue ::= NUMBER IDENTIFIER?
 calcExpression ::= calcExpressionItem (OPERATOR calcExpressionItem)*
 private calcExpressionItem ::= numericalValueGroup | parenthesesCalcExpressionItem

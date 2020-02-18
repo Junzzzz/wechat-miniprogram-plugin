@@ -78,6 +78,7 @@
             <li>Wxml does not check for undefined variables</li>
             <li>Fixed an error where the auto-close tag function would trigger in inappropriate places</li>
             <li>Fix some compatibility issues</li>
+            <li>Fixed bug where nested functions could not be resolved in wxss</li>
         </ul>
         ]]>
     </change-notes>
@@ -85,7 +86,7 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.8.2</version>
+    <version>1.8.3</version>
 <!--    <idea-version since-build="201.4515.24"/>-->
     <idea-version since-build="201.4515.24"/>
 
