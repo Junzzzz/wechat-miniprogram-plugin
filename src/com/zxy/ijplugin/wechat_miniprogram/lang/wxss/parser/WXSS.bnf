@@ -151,7 +151,7 @@ styleStatement ::= IDENTIFIER COLON attributeValue IMPORTANT_KEYWORD?{
 }
 attributeValue ::= valueGroup (COMMA valueGroup)*
 private valueGroup ::= (value)+
-value ::= (HASH | function | numericalValue | string | IDENTIFIER | UNICODE_RANGE){
+value ::= (HASH | function | numericalValueGroup | string | IDENTIFIER | UNICODE_RANGE){
     implements = ["com.intellij.psi.ContributedReferenceHost"]
     methods = [getReferences]
 }
