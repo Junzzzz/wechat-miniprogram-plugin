@@ -31,62 +31,15 @@
 
     <change-notes>
         <![CDATA[
-        <h3>1.1</h3>
-        <ul>
-            <li>Support create wxss class selector from wxml file</li>
-        </ul>
-        <h3>1.2</h3>
-        <ul>
-            <li>Create page will be automatically registered in app.json</li>
-            <li>Added, "pages" configuration item path analysis in app.json</li>
-        </ul>
-        <h3>1.3</h3>
-        <ul>
-            <li>Added the ability to view WXML component documents</li>
-            <li>Added details for creating class selector intent</li>
-            <li>wxml file can insert comments correctly</li>
-        </ul>
-        <h3>1.4</h3>
-        <ul>
-            <li>wxss and wxml syntax highlighting based on xml and css</li>
-            <li>wxss adds support for @keyframes keywords</li>
-            <li>wxss added autocomplete for @keywords</li>
-            <li>Fixed wxss curly brace folding bug</li>
-            <li>Fix wxml comment matching bug</li>
-        </ul>
-        <h3>1.5</h3>
-        <ul>
-            <li>Add references to wxss keyframes, code completion and lookup usage</li>
-            <li>Fix a possible null pointer exception</li>
-            <li>Fix the bug that the js library file may not be found on the first installation</li>
-        </ul>
-        <h3>1.6</h3>
-        <ul>
-            <li>Rebuild WXSS formatter</li>
-            <li>Fix bug of calc function parsing error in wxss</li>
-        </ul>
-        <h3>1.7</h3>
-        <ul>
-            <li>Wxss supports auto-completion of class names, ids and tag names</li>
-            <li>Support for creating id selectors from wxml</li>
-            <li>Fixed formatter deleting characters by mistake</li>
-            <li>Wxss supports child element selectors</li>
-        </ul>
-        <h3>1.8</h3>
-        <ul>
-            <li>Support creating js event handlers from wxml</li>
-            <li>Wxml does not check for undefined variables</li>
-            <li>Fixed an error where the auto-close tag function would trigger in inappropriate places</li>
-            <li>Fix some compatibility issues</li>
-            <li>Fixed bug where nested functions could not be resolved in wxss</li>
-        </ul>
+            <h5>1.8.4</h5>
+            <p>wxss支持background-size属性的简写 (1px/2px) </p>
         ]]>
     </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.8.3</version>
+    <version>1.8.4</version>
 <!--    <idea-version since-build="201.4515.24"/>-->
     <idea-version since-build="201.4515.24"/>
 
