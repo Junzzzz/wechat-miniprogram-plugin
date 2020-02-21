@@ -63,6 +63,7 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata"/>
         <postStartupActivity implementation="com.zxy.ijplugin.wechat_miniprogram.plugin.UpdateInfoActivity"/>
 
         <gotoRelatedProvider
