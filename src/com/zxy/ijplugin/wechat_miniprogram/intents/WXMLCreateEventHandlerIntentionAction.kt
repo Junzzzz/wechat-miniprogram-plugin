@@ -86,7 +86,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.codeStyle.CodeStyleManager
-import com.intellij.psi.util.parentOfTypes
+import com.intellij.psi.util.parentOfType
 import com.zxy.ijplugin.wechat_miniprogram.context.MyJSPredefinedLibraryProvider
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
@@ -110,7 +110,7 @@ class WXMLCreateEventHandlerIntentionAction : IntentionAction, PsiElementBaseInt
     override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
         val element = InjectedLanguageManager.getInstance(project).getInjectionHost(psiElement) ?: return false
         if (element.node.elementType !== WXMLTypes.STRING_TEXT || editor == null) return false
-        val wxmlAttribute = element.parentOfTypes<WXMLAttribute>() ?: return false
+        val wxmlAttribute = element.parentOfType<WXMLAttribute>() ?: return false
         // 属性是事件属性
         if (!wxmlAttribute.isEvent) return false
         // 属性值是正确的js标识符

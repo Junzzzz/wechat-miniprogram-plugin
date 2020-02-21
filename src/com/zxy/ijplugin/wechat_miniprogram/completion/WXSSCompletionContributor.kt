@@ -83,7 +83,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.css.impl.util.table.CssDescriptorsUtil
 import com.intellij.psi.css.impl.util.table.CssElementDescriptorFactory
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.parentOfTypes
+import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.intellij.xml.util.ColorSampleLookupValue
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
@@ -222,7 +222,7 @@ class WXSSCompletionContributor : CompletionContributor() {
                             parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
                     ) {
                         val psiElement = parameters.position
-                        val wxssStyleStatement = psiElement.parentOfTypes<WXSSStyleStatement>() ?: return
+                        val wxssStyleStatement = psiElement.parentOfType<WXSSStyleStatement>() ?: return
                         if (wxssStyleStatement.isAnimationNameStyleStatement()) {
                             val wxssFiles = WXSSModuleUtils.findImportedFilesWithSelf(
                                     psiElement.containingFile as? WXSSPsiFile ?: return
