@@ -181,7 +181,7 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
                 result.addAll(findClassSelectorFromFileAndImports(appWXSSPsiFile))
             }
         }
-        return result.toTypedArray()
+        return result.distinctBy { it.className }.toTypedArray()
     }
 
     private fun findClassSelectorFromFileAndImports(wxssPsiFile: WXSSPsiFile): List<WXSSClassSelector> {
