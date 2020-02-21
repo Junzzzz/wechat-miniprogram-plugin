@@ -31,15 +31,14 @@
 
     <change-notes>
         <![CDATA[
-            <h5>1.8.4</h5>
-            <p>wxss支持background-size属性的简写 (1px/2px) </p>
+            <p>Fix the error that wxss will display multiple same classes when prompting class</p>
         ]]>
     </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.8.4</version>
+    <version>1.8.5</version>
     <idea-version since-build="193"/>
 
     <actions>
@@ -63,7 +62,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata"/>
-        <postStartupActivity implementation="com.zxy.ijplugin.wechat_miniprogram.plugin.UpdateInfoActivity"/>
+        <!--        <postStartupActivity implementation="com.zxy.ijplugin.wechat_miniprogram.plugin.UpdateInfoActivity"/>-->
 
         <gotoRelatedProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WechatMiniProgramGotoRelatedProvider"/>
