@@ -32,14 +32,15 @@
     <change-notes>
         <![CDATA[
             <p>Fix the error that wxss will display multiple same classes when prompting class</p>
+            <p>Fix wxss class name autocomplete without deduplication error</p>
         ]]>
     </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.8.5</version>
-    <idea-version since-build="193" until-build="193.*"/>
+    <version>1.8.6</version>
+    <idea-version since-build="201.4515.24"/>
 
     <actions>
         <action class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramPageAction"

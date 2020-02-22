@@ -73,7 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils
 
-import com.intellij.psi.util.parentOfType
+import com.intellij.psi.util.parentOfTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStyleStatement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue
 
@@ -88,5 +88,5 @@ fun WXSSStyleStatement.isAnimationNameStyleStatement(): Boolean {
  * 判断这个属性值是否属于animation-name
  */
 fun WXSSValue.isAnimationNameValue(): Boolean {
-    return this.parentOfType<WXSSStyleStatement>()?.isAnimationNameStyleStatement() == true
+    return this.parentOfTypes<WXSSStyleStatement>()?.isAnimationNameStyleStatement() == true
 }
