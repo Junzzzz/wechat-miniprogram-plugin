@@ -81,7 +81,7 @@ import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescription
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
@@ -94,7 +94,7 @@ class WXMLElementDocumentProvider : DocumentationProvider {
     override fun getQuickNavigateInfo(element: PsiElement, originalElement: PsiElement): String? {
         if (originalElement is WXMLTag) {
             val name = originalElement.getTagName()
-            val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
+            val wxmlElementDescriptor = WXMLMetadata.getElementDescriptions(element.project).find {
                 it.name == name
             }
             return if (wxmlElementDescriptor != null) {
@@ -106,15 +106,15 @@ class WXMLElementDocumentProvider : DocumentationProvider {
         return null
     }
 
-    private fun buildQuickNavigateInfoFromElementDescriptor(wxmlElementDescriptor: WXMLElementDescriptor): String {
-        return "Element <code>${wxmlElementDescriptor.name}</code> ${wxmlElementDescriptor.description ?: ""}"
+    private fun buildQuickNavigateInfoFromElementDescriptor(wxmlElementDescription: WXMLElementDescription): String {
+        return "Element <code>${wxmlElementDescription.name}</code> ${wxmlElementDescription.description ?: ""}"
     }
 
     override fun getUrlFor(element: PsiElement, originalElement: PsiElement): MutableList<String> {
         if (isInsideJsonConfigFile(element)) {
             if (element.parent?.parent?.parent == element.containingFile) {
                 val name = originalElement.text
-                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
+                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptions(element.project).find {
                     it.name == name
                 }
                 return wxmlElementDescriptor?.url?.let {
@@ -129,7 +129,7 @@ class WXMLElementDocumentProvider : DocumentationProvider {
         if (isInsideJsonConfigFile(element) && element is JsonStringLiteral) {
             if (element.parent?.parent?.parent == element.containingFile) {
                 val name = element.value
-                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
+                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptions(element.project).find {
                     it.name == name
                 }
                 return if (wxmlElementDescriptor != null) {
@@ -142,22 +142,22 @@ class WXMLElementDocumentProvider : DocumentationProvider {
         return null
     }
 
-    private fun generateDocFromElementDescriptor(wxmlElementDescriptor: WXMLElementDescriptor): String {
+    private fun generateDocFromElementDescriptor(wxmlElementDescription: WXMLElementDescription): String {
         val stringBuilder = StringBuilder()
         // 头部
         stringBuilder.append("<div class='definition'><pre>")
-                .append(wxmlElementDescriptor.name)
+                .append(wxmlElementDescription.name)
                 .append("</pre>")
-        if (wxmlElementDescriptor.description != null) {
+        if (wxmlElementDescription.description != null) {
             stringBuilder.append("<pre>")
-                    .append(wxmlElementDescriptor.description)
+                    .append(wxmlElementDescription.description)
                     .append("</pre>")
         }
         stringBuilder.append("</div>")
 
         // 内容
         stringBuilder.append(CONTENT_START)
-        if (wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.isNotEmpty()) {
+        if (wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors.isNotEmpty()) {
             // 属性信息表头
             stringBuilder.append(SECTIONS_START)
             stringBuilder.append(
@@ -168,11 +168,11 @@ class WXMLElementDocumentProvider : DocumentationProvider {
 |</tr>
 |</thead>""".trimMargin()
             )
-            wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.forEach { wxmlElementAttributeDescriptor ->
+            wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors.forEach { wxmlElementAttributeDescriptor ->
                 stringBuilder.append("<tr>")
                         .append(SECTION_START)
                         .append(GRAYED_START)
-                        .append("<a href='${DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL}elements/${wxmlElementDescriptor.name}/attributes/${wxmlElementAttributeDescriptor.key}'>")
+                        .append("<a href='${DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL}elements/${wxmlElementDescription.name}/attributes/${wxmlElementAttributeDescriptor.key}'>")
                         .append(wxmlElementAttributeDescriptor.key)
                         .append("</a>")
                         .append(GRAYED_END)
@@ -198,7 +198,7 @@ class WXMLElementDocumentProvider : DocumentationProvider {
             if (element.parent?.parent?.parent == element.containingFile) {
 
                 val tagName = element.value
-                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
+                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptions(element.project).find {
                     it.name == tagName
                 }
                 val attributeName = link.removePrefix("elements/$tagName/attributes/")

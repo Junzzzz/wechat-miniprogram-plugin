@@ -206,7 +206,7 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                     ): Array<PsiReference> {
                         psiElement as WXMLTag
                         val tagNameNode = psiElement.getTagNameNode()
-                        if (tagNameNode != null && WXMLMetadata.getElementDescriptors(psiElement.project).none {
+                        if (tagNameNode != null && WXMLMetadata.getElementDescriptions(psiElement.project).none {
                                     tagNameNode.text == it.name
                                 }) {
                             return arrayOf(WXMLCustomComponentTagReference(psiElement))
@@ -226,7 +226,7 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                     ): Array<out PsiReference> {
                         psiElement as WXMLTag
                         val tagNameNode = psiElement.getTagNameNode()
-                        if (tagNameNode != null && WXMLMetadata.getElementDescriptors(psiElement.project).any {
+                        if (tagNameNode != null && WXMLMetadata.getElementDescriptions(psiElement.project).any {
                                     tagNameNode.text == it.name
                                 }) {
                             return arrayOf(WXMLTagReference(psiElement))

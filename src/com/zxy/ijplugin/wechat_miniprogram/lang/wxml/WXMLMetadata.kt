@@ -82,11 +82,12 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
+import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.utils.*
 
-data class WXMLElementDescriptor constructor(
+data class WXMLElementDescription constructor(
         val name: String,
-        val attributeDescriptorPresetElementAttributeDescriptors: Array<WXMLPresetElementAttributeDescriptor> = emptyArray(),
+        val attributeDescriptorPresetElementAttributeDescriptors: Array<WXMLPresetElementAttributeDescription> = emptyArray(),
         val events: Array<String> = emptyArray(),
         val canOpen: Boolean = true,
         val canClose: Boolean = false,
@@ -98,7 +99,7 @@ data class WXMLElementDescriptor constructor(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as WXMLElementDescriptor
+        other as WXMLElementDescription
 
         if (name != other.name) return false
 
@@ -110,14 +111,14 @@ data class WXMLElementDescriptor constructor(
     }
 }
 
-class WXMLPresetElementAttributeDescriptor @JsonCreator constructor(
+class WXMLPresetElementAttributeDescription @JsonCreator constructor(
         key: String, types: Array<ValueType>, default: Any?, required: Boolean,
         enums: Array<String>, requiredInEnums: Boolean, description: String?,
         val definedElement: JsonStringLiteral
-) : WXMLElementAttributeDescriptor(key, types, default, required, enums, requiredInEnums, description)
+) : WXMLElementAttributeDescription(key, types, default, required, enums, requiredInEnums, description)
 
-typealias A = WXMLPresetElementAttributeDescriptor
-typealias T = WXMLElementAttributeDescriptor.ValueType
+typealias A = WXMLPresetElementAttributeDescription
+typealias T = WXMLElementAttributeDescription.ValueType
 
 @Service
 class WXMLMetadata(private val project: Project) {
@@ -137,17 +138,17 @@ class WXMLMetadata(private val project: Project) {
                 val canOpen = elementJsonPropertyValue.findBooleanPropertyValue("canOpen") ?: true
                 val canClose = elementJsonPropertyValue.findBooleanPropertyValue("canClose") ?: false
                 val url = elementJsonPropertyValue.findStringPropertyValue("url")
-                WXMLElementDescriptor(
+                WXMLElementDescription(
                         elementJsonProperty.name,
                         elementJsonPropertyValue.findProperty(
                                 "attributeDescriptors"
                         )?.let { attributeJsonProperty ->
                             (attributeJsonProperty.value as? JsonArray)?.valueList?.mapNotNull { attributeJsonObject ->
                                 if (attributeJsonObject is JsonObject) {
-                                    WXMLPresetElementAttributeDescriptor(
+                                    WXMLPresetElementAttributeDescription(
                                             attributeJsonObject.findStringPropertyValue("key")!!,
                                             attributeJsonObject.findStringArrayPropertyValue("types")?.map {
-                                                WXMLElementAttributeDescriptor.ValueType.valueOf(it)
+                                                WXMLElementAttributeDescription.ValueType.valueOf(it)
                                             }?.toTypedArray() ?: emptyArray(),
                                             attributeJsonObject.findPropertyValue("default"),
                                             attributeJsonObject.findBooleanPropertyValue("required") ?: false,
@@ -174,16 +175,31 @@ class WXMLMetadata(private val project: Project) {
 
     companion object {
 
-        fun getElementDescriptors(project: Project): List<WXMLElementDescriptor> {
+        fun getElementDescriptions(project: Project): List<WXMLElementDescription> {
             return ServiceManager.getService(project, WXMLMetadata::class.java).elementDescriptors
         }
 
+        fun findElementDescription(xmlTag: XmlTag): WXMLElementDescription? {
+            val tagName = xmlTag.name
+            return this.getElementDescriptions(xmlTag.project).find {
+                it.name == tagName
+            }
+        }
+
+        fun findElementAttributeDescription(xmlTag: XmlTag, attributeName: String): WXMLElementAttributeDescription? {
+            return this.findElementDescription(xmlTag)?.let { wxmlElementDescription ->
+                wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors.find {
+                    it.key == attributeName
+                }
+            }
+        }
+
         val COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS = arrayOf(
-                WXMLElementAttributeDescriptor("id", arrayOf(T.STRING)),
-                WXMLElementAttributeDescriptor("class", arrayOf(T.STRING)),
-                WXMLElementAttributeDescriptor("style", arrayOf(T.STRING)),
-                WXMLElementAttributeDescriptor("hidden", arrayOf(T.BOOLEAN), false),
-                WXMLElementAttributeDescriptor("slot", arrayOf(T.STRING))
+                WXMLElementAttributeDescription("id", arrayOf(T.STRING)),
+                WXMLElementAttributeDescription("class", arrayOf(T.STRING)),
+                WXMLElementAttributeDescription("style", arrayOf(T.STRING)),
+                WXMLElementAttributeDescription("hidden", arrayOf(T.BOOLEAN), false),
+                WXMLElementAttributeDescription("slot", arrayOf(T.STRING))
         )
 
         val COMMON_ELEMENT_EVENTS = arrayOf(
@@ -208,7 +224,7 @@ class WXMLMetadata(private val project: Project) {
     }
 }
 
-open class WXMLElementAttributeDescriptor(
+open class WXMLElementAttributeDescription(
         val key: String,
         val types: Array<ValueType> = emptyArray(),
         val default: Any? = null,
@@ -226,7 +242,7 @@ open class WXMLElementAttributeDescriptor(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as WXMLPresetElementAttributeDescriptor
+        other as WXMLPresetElementAttributeDescription
 
         if (key != other.key) return false
 

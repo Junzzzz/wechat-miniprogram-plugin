@@ -71,123 +71,121 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.inspections
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag
 
-import com.intellij.codeInspection.LocalQuickFix
-import com.intellij.codeInspection.ProblemDescriptor
-import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonProperty
-import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiManager
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.intellij.psi.PsiElement
+import com.intellij.psi.impl.source.xml.XmlDescriptorUtil
+import com.intellij.psi.xml.XmlAttribute
+import com.intellij.psi.xml.XmlTag
+import com.intellij.xml.XmlAttributeDescriptor
+import com.intellij.xml.XmlElementDescriptor
+import com.intellij.xml.XmlElementsGroup
+import com.intellij.xml.XmlNSDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescription
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLClosedElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStartTag
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLVisitor
-import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.contentRange
-import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
 
-class WXMLUnknownTagInspection : WXMLInspectionBase() {
+class WXMLElementDescriptor(
+        private val wxmlElementDescription: WXMLElementDescription?, private val xmlTag: XmlTag? = null
+) :
+        XmlElementDescriptor {
 
     companion object {
-        const val QUICK_FIX_FAMILY_NAME = "WXML标签"
+        val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elseif", "wx:else", "wx:key", "wx:if")
+        /**
+         * 忽略公共的属性的标签名
+         */
+        val IGNORE_COMMON_ATTRIBUTE_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
+        /**
+         * 忽略wx属性的标签名
+         */
+        val IGNORE_WX_ATTRIBUTE_TAG_NAMES = arrayOf("template", "wxs", "import", "include")
+        /**
+         * 忽略公共事件的标签名
+         */
+        val IGNORE_COMMON_EVENT_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
     }
 
-    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
-        return object : WXMLVisitor() {
-            override fun visitStartTag(wxmlStartTag: WXMLStartTag) {
-                if (wxmlStartTag is WXMLTag) {
-                    visitTag(wxmlStartTag)
-                }
-            }
+    override fun getDefaultValue(): String? {
+        return null
+    }
 
-            override fun visitClosedElement(wxmlClosedElement: WXMLClosedElement) {
-                if (wxmlClosedElement is WXMLTag) {
-                    visitTag(wxmlClosedElement)
-                }
-            }
+    override fun getName(context: PsiElement?): String {
+        return this.name
+    }
 
-            private fun visitTag(wxmlTag: WXMLTag) {
-                val tagNameNode = wxmlTag.getTagNameNode() ?: return
-                val tagName = tagNameNode.text
-                if (WXMLMetadata.getElementDescriptions(wxmlTag.project).any {
-                            it.name == tagName
-                        }) {
-                    // 是自带组件
-                    return
-                }
+    override fun getName(): String {
+        return wxmlElementDescription?.name ?: this.xmlTag?.name ?: ""
+    }
 
-                val project = wxmlTag.project
+    override fun getElementsDescriptors(context: XmlTag): Array<XmlElementDescriptor> {
+        return XmlDescriptorUtil.getElementsDescriptors(context)
+    }
 
-                val currentJsonFile = findRelateFile(wxmlTag.containingFile.virtualFile, RelateFileType.JSON)
-                val psiManager = PsiManager.getInstance(wxmlTag.project)
-                val currentJsonPsiFile = currentJsonFile?.let {
-                    psiManager.findFile(it)
-                } as? JsonFile
-                val usingComponentItems = mutableListOf<JsonProperty>().apply {
-                    currentJsonPsiFile?.let {
-                        ComponentJsonUtils.getUsingComponentItems(it)
-                    }?.let {
-                        this.addAll(it)
-                    }
-                    AppJsonUtils.findUsingComponentItems(project)?.let {
-                        this.addAll(it)
-                    }
-                }
-                if (!usingComponentItems.any {
-                            it.name == tagName
-                        }) {
-                    // 没有注册的标签
-                    val jsonConfigurationFiles = ComponentJsonUtils.getAllComponentConfigurationFile(project).filter {
-                        it != currentJsonPsiFile
-                    }
-                    val quickFixList = if (currentJsonPsiFile == null) {
-                        emptyArray()
-                    } else {
-                        jsonConfigurationFiles.filter {
-                            it.virtualFile.nameWithoutExtension == tagName
-                        }.let { list ->
-                            list.map {
-                                object : LocalQuickFix {
+    override fun init(p0: PsiElement?) {
 
-                                    override fun getFamilyName(): String {
-                                        return QUICK_FIX_FAMILY_NAME
-                                    }
+    }
 
-                                    override fun getName(): String {
-                                        // 如果有多个组件匹配
-                                        // 则显示他们相对于根目录的路径
-                                        val componentName = if (list.size > 1) it.virtualFile.getPathRelativeToRootRemoveExt(
-                                                it.project
-                                        ) else {
-                                            it.virtualFile.nameWithoutExtension
-                                        }
-                                        return "在${currentJsonPsiFile.name}中注册$componentName"
-                                    }
+    override fun getContentType(): Int {
+        return XmlElementDescriptor.CONTENT_TYPE_ANY
+    }
 
-                                    override fun applyFix(p0: Project, problemDescriptor: ProblemDescriptor) {
-                                        ComponentJsonUtils.registerComponent(currentJsonPsiFile, it)
-                                    }
-                                }
+    override fun getTopGroup(): XmlElementsGroup? {
+        return null
+    }
 
-                            }.toTypedArray<LocalQuickFix>()
-                        }
-                    }
-                    holder.registerProblem(
-                            tagNameNode.psi, tagNameNode.psi.contentRange(), "未知的标签：$tagName",
-                            *quickFixList
-                    )
+    override fun getDefaultName(): String {
+        return this.name
+    }
 
-                }
-            }
+    override fun getNSDescriptor(): XmlNSDescriptor? {
+        return WxmlNSDescriptor(
+                this.wxmlElementDescription, this.xmlTag
+        )
+    }
+
+    override fun getQualifiedName(): String {
+        return this.name
+    }
+
+    override fun getElementDescriptor(p0: XmlTag, p1: XmlTag): XmlElementDescriptor? {
+        return XmlDescriptorUtil.getElementDescriptor(p0, p1)
+    }
+
+    override fun getDeclaration(): PsiElement? {
+        return this.xmlTag
+    }
+
+    override fun getAttributeDescriptor(attributeName: String?, p1: XmlTag?): XmlAttributeDescriptor? {
+        return this.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.find {
+            it.key == attributeName
+        }?.let {
+            WXMLAttributeDescriptor(it)
         }
     }
 
-}
+    override fun getAttributeDescriptor(attribute: XmlAttribute?): XmlAttributeDescriptor? {
+        return this.getAttributeDescriptor(attribute?.name, attribute?.parent)
+    }
 
+    override fun getAttributesDescriptors(p0: XmlTag?): Array<XmlAttributeDescriptor> {
+        val result = ArrayList<XmlAttributeDescriptor>()
+        val name = this.wxmlElementDescription?.name
+        if (!IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(name)) {
+            result.addAll(WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.map {
+                WXMLAttributeDescriptor(
+                        it
+                )
+            })
+        }
+
+        this.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.map {
+            WXMLAttributeDescriptor(it) as XmlAttributeDescriptor
+        }?.let {
+            result.addAll(it)
+        }
+
+        return result.toTypedArray()
+    }
+
+}

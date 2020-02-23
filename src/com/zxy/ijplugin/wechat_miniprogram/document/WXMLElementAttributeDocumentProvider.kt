@@ -98,7 +98,7 @@ class WXMLElementAttributeDocumentProvider : DocumentationProvider {
     override fun getQuickNavigateInfo(element: PsiElement, originalElement: PsiElement): String? {
         if (element is JsonStringLiteral && originalElement is WXMLAttribute) {
             val wxmlTagName = (originalElement.parent as? WXMLTag)?.getTagName() ?: return null
-            val wxmlElementDescriptor = WXMLMetadata.getElementDescriptors(element.project).find {
+            val wxmlElementDescriptor = WXMLMetadata.getElementDescriptions(element.project).find {
                 it.name == wxmlTagName
             } ?: return null
             val attributeName = originalElement.name
@@ -117,7 +117,7 @@ class WXMLElementAttributeDocumentProvider : DocumentationProvider {
                     ?: return null
             val jsonObject = element.parent?.parent as? JsonObject ?: return null
             val key = jsonObject.findStringPropertyValue("key") ?: return null
-            WXMLMetadata.getElementDescriptors(element.project).find {
+            WXMLMetadata.getElementDescriptions(element.project).find {
                 it.name == elementName
             }?.attributeDescriptorPresetElementAttributeDescriptors?.find {
                 it.key == key
@@ -170,7 +170,7 @@ class WXMLElementAttributeDocumentProvider : DocumentationProvider {
     ): PsiElement? {
         if (element is JsonStringLiteral && element.containingFile.name == "elementDescriptions.json") {
             val elementName = link.removePrefix("elements/")
-            val definedElement = WXMLMetadata.getElementDescriptors(element.project).find {
+            val definedElement = WXMLMetadata.getElementDescriptions(element.project).find {
                 it.name == elementName
             }?.definedElement ?: return null
             definedElement.putUserData(

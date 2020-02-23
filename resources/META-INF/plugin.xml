@@ -40,7 +40,6 @@
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
     <version>1.8.6</version>
-    <idea-version since-build="201.4515.24"/>
 
     <actions>
         <action class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramPageAction"
@@ -72,27 +71,30 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLClassRenamePsiElementProcessor"/>
         <!--        <renameHandler implementation="com.zxy.ijplugin.wechat_miniprogram.rename.WXSSIdRenameHandler"/>-->
         <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
-
-        <intentionAction>
-            <descriptionDirectoryName>WXMLCreateClassAtAppWxssFileIntentionAction</descriptionDirectoryName>
-            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtAppWxssFileIntentionAction</className>
-            <category>Wechat mini program</category>
-        </intentionAction>
-        <intentionAction>
-            <descriptionDirectoryName>WXMLCreateClassAtComponentWxssFileIntentionAction</descriptionDirectoryName>
-            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtComponentWxssFileIntentionAction</className>
-            <category>Wechat mini program</category>
-        </intentionAction>
-        <intentionAction>
-            <descriptionDirectoryName>WXMLCreateIdAtWxssFileIntentionAction</descriptionDirectoryName>
-            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateIdAtWxssFileIntentionAction</className>
-            <category>Wechat mini program</category>
-        </intentionAction>
-        <intentionAction>
-            <descriptionDirectoryName>WXMLCreateEventHandlerIntentionAction</descriptionDirectoryName>
-            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateEventHandlerIntentionAction</className>
-            <category>Wechat mini program</category>
-        </intentionAction>
+        <lang.smartEnterProcessor language="WXML"
+                                  implementationClass="com.intellij.codeInsight.completion.XmlSmartEnterProcessor"/>
+        <!--        <intentionAction>-->
+        <!--            <descriptionDirectoryName>WXMLCreateClassAtAppWxssFileIntentionAction</descriptionDirectoryName>-->
+        <!--            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtAppWxssFileIntentionAction-->
+        <!--            </className>-->
+        <!--            <category>Wechat mini program</category>-->
+        <!--        </intentionAction>-->
+        <!--        <intentionAction>-->
+        <!--            <descriptionDirectoryName>WXMLCreateClassAtComponentWxssFileIntentionAction</descriptionDirectoryName>-->
+        <!--            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtComponentWxssFileIntentionAction-->
+        <!--            </className>-->
+        <!--            <category>Wechat mini program</category>-->
+        <!--        </intentionAction>-->
+        <!--        <intentionAction>-->
+        <!--            <descriptionDirectoryName>WXMLCreateIdAtWxssFileIntentionAction</descriptionDirectoryName>-->
+        <!--            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateIdAtWxssFileIntentionAction</className>-->
+        <!--            <category>Wechat mini program</category>-->
+        <!--        </intentionAction>-->
+        <!--        <intentionAction>-->
+        <!--            <descriptionDirectoryName>WXMLCreateEventHandlerIntentionAction</descriptionDirectoryName>-->
+        <!--            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateEventHandlerIntentionAction</className>-->
+        <!--            <category>Wechat mini program</category>-->
+        <!--        </intentionAction>-->
 
         <localInspection
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXSSInvalidImportInspection"
@@ -159,49 +161,66 @@
         <fileType name="WXML" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
                   fieldName="INSTANCE"/>
+        <xml.elementDescriptorProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptorProvider"/>
+        <xml.xmlExtension implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension.WxmlXmlExtension"/>
         <lang.parserDefinition language="WXML"
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition"/>
-        <lang.syntaxHighlighterFactory
-                language="WXML"
-                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLSyntaxHighlighterFactory"/>
-        <typedHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagCloseTypedHandler"/>
-        <completion.contributor
-                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXMLCompletionContributor"
-                language="WXML"/>
-        <!--此扩展点影响插件的动态加载TODO-->
-        <editorFactoryListener implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagNameSynchronizer"/>
-        <lang.foldingBuilder language="WXML"
-                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLTagPairFoldingBuilder"/>
-        <lang.foldingBuilder language="WXML"
-                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLIncludeTagFolding"/>
-        <breadcrumbsInfoProvider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.breadcrumbs.WXMLElementBreadcrumbsProvider"/>
-        <lang.formatter language="WXML"
-                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.formatter.WXMLFormattingModelBuilder"/>
-        <extendWordSelectionHandler
-                implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLStartTagSelectioner"/>
-        <extendWordSelectionHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLEndTagSelectioner"/>
-        <highlightingPassFactory
-                implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagTreeHighlightingPassFactory"/>
-        <braceMatcher filetype="WXML"
-                      implementationClass="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLBraceMatcher"/>
-        <colorProvider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.line_mark.WXMLElementColorProvider"/>
-        <psi.referenceContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLReferenceContributor"/>
-        <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLStringTextManipulator"/>
-        <multiHostInjector implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector"/>
-        <include.provider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WxmlJsModuleFileIncludeProvider"/>
-        <lang.findUsagesProvider language="WXML"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXMLFindUsageProvider"/>
-        <gotoSymbolContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXMLTemplateDefinitionChooseByNameContributor"/>
-        <lang.refactoringSupport language="WXML"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLTemplateNameRefactoring"/>
-        <lang.commenter language="WXML"
-                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLCommenter"/>
+        <xml.fileNSInfoProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension.WxmlFileNSInfoProvider"/>
+        <!--        <xml.tagNameProvider implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLTagNameProvider"/>-->
+
+
+        <!--        <lang.parserDefinition language="WXML"-->
+        <!--                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition"/>-->
+        <!--        <lang.syntaxHighlighterFactory-->
+        <!--                language="WXML"-->
+        <!--                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLSyntaxHighlighterFactory"/>-->
+        <!--        <typedHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagCloseTypedHandler"/>-->
+        <!--        <completion.contributor-->
+        <!--                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXMLCompletionContributor"-->
+        <!--                language="WXML"/>-->
+        <!--        &lt;!&ndash;此扩展点影响插件的动态加载TODO&ndash;&gt;-->
+        <!--        <editorFactoryListener implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagNameSynchronizer"/>-->
+        <!--        <lang.foldingBuilder language="WXML"-->
+        <!--                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLTagPairFoldingBuilder"/>-->
+        <!--        <lang.foldingBuilder language="WXML"-->
+        <!--                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLIncludeTagFolding"/>-->
+        <!--        <breadcrumbsInfoProvider-->
+        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.breadcrumbs.WXMLElementBreadcrumbsProvider"/>-->
+        <!--        <lang.formatter language="WXML"-->
+        <!--                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.formatter.WXMLFormattingModelBuilder"/>-->
+        <!--        <extendWordSelectionHandler-->
+        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLStartTagSelectioner"/>-->
+        <!--        <extendWordSelectionHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLEndTagSelectioner"/>-->
+        <!--        <highlightingPassFactory-->
+        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagTreeHighlightingPassFactory"/>-->
+        <!--        <braceMatcher filetype="WXML"-->
+        <!--                      implementationClass="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLBraceMatcher"/>-->
+        <!--        <colorProvider-->
+        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.line_mark.WXMLElementColorProvider"/>-->
+        <!--        <psi.referenceContributor-->
+        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLReferenceContributor"/>-->
+        <!--        <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText"-->
+        <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLStringTextManipulator"/>-->
+        <!--        <multiHostInjector implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector"/>-->
+        <!--        <include.provider-->
+        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WxmlJsModuleFileIncludeProvider"/>-->
+        <!--        <lang.findUsagesProvider language="WXML"-->
+        <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXMLFindUsageProvider"/>-->
+        <!--        <gotoSymbolContributor-->
+        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXMLTemplateDefinitionChooseByNameContributor"/>-->
+        <!--        <lang.refactoringSupport language="WXML"-->
+        <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLTemplateNameRefactoring"/>-->
+        <!--        <lang.commenter language="WXML"-->
+        <!--                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLCommenter"/>-->
+
+        <!--        <lang.documentationProvider language="WXML"-->
+        <!--                                    id="WXMLElementDocumentProvider"-->
+        <!--                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementDocumentProvider"/>-->
+        <!--        <lang.documentationProvider language="WXML"-->
+        <!--                                    id="WXMLElementAttributeDocumentProvider"-->
+        <!--                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementAttributeDocumentProvider"/>-->
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
@@ -213,13 +232,6 @@
 
         <psi.referenceContributor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WechatMiniProgramJSONReferenceContributor"/>
-
-        <lang.documentationProvider language="WXML"
-                                    id="WXMLElementDocumentProvider"
-                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementDocumentProvider"/>
-        <lang.documentationProvider language="WXML"
-                                    id="WXMLElementAttributeDocumentProvider"
-                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementAttributeDocumentProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">

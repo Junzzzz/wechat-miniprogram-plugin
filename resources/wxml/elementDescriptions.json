@@ -418,7 +418,7 @@
     "description": "可滚动视图区域。使用竖向滚动时，需要给scroll-view一个固定高度，通过 WXSS 设置 height。组件属性的长度单位默认为px，2.4.0起支持传入单位(rpx/px)。",
     "attributeDescriptors": [
       {
-        "key": "scroll-view",
+        "key": "scroll-x",
         "types": [
           "BOOLEAN"
         ],
@@ -541,12 +541,75 @@
         "enums": [],
         "requiredInEnums": true,
         "description": "开启 scroll anchoring 特性，即控制滚动位置不随内容变化而抖动，仅在 iOS 下生效，安卓下可参考 CSS overflow-anchor 属性。"
+      },
+      {
+        "key": "refresher-enabled",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "开启自定义下拉刷新"
+      },
+      {
+        "key": "refresher-threshold",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 45,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "设置自定义下拉刷新阈值"
+      },
+      {
+        "key": "refresher-default-style",
+        "types": [
+          "STRING"
+        ],
+        "default": "black",
+        "required": false,
+        "enums": [
+          "black",
+          "white",
+          "none"
+        ],
+        "requiredInEnums": true,
+        "description": "设置自定义下拉刷新默认样式，支持设置 black | white | none， none 表示不使用默认样式"
+      },
+      {
+        "key": "refresher-background",
+        "types": [
+          "COLOR"
+        ],
+        "default": "#FFF",
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "设置自定义下拉刷新区域背景颜色"
+      },
+      {
+        "key": "refresher-triggered",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "设置当前下拉刷新状态，true 表示下拉刷新已经被触发，false 表示下拉刷新未被触发"
       }
     ],
     "events": [
       "scrolltoupper",
       "scrolltolower",
-      "scroll"
+      "scroll",
+      "refresherpulling",
+      "refresherrefresh",
+      "refresherrestore",
+      "refresherabort"
     ],
     "canOpen": true,
     "canClose": false,

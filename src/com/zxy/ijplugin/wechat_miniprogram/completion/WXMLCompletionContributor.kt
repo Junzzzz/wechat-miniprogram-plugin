@@ -88,7 +88,7 @@ import com.intellij.util.ProcessingContext
 import com.intellij.util.containers.stream
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
@@ -126,7 +126,7 @@ class WXMLCompletionContributor : CompletionContributor() {
                         ) ?: return
                         val wxmlAttribute = PsiTreeUtil.findChildOfType(wxmlElement, WXMLAttribute::class.java)!!
                         val tagName = wxmlElement.tagName
-                        val attribute = WXMLMetadata.getElementDescriptors(
+                        val attribute = WXMLMetadata.getElementDescriptions(
                                 wxmlElement.project
                         ).stream().filter { it.name == tagName }
                                 .findFirst()
@@ -173,8 +173,8 @@ class WXMLCompletionContributor : CompletionContributor() {
 }
 
 private fun wxmlAttributeIsEnumerable(
-        attributePresetElementAttributeDescriptor: WXMLElementAttributeDescriptor
-) = attributePresetElementAttributeDescriptor.enums.isNotEmpty() && attributePresetElementAttributeDescriptor.types.size == 1 && attributePresetElementAttributeDescriptor.types[0] == WXMLElementAttributeDescriptor.ValueType.STRING && attributePresetElementAttributeDescriptor.requiredInEnums
+        attributePresetElementAttributeDescription: WXMLElementAttributeDescription
+) = attributePresetElementAttributeDescription.enums.isNotEmpty() && attributePresetElementAttributeDescription.types.size == 1 && attributePresetElementAttributeDescription.types[0] == WXMLElementAttributeDescription.ValueType.STRING && attributePresetElementAttributeDescription.requiredInEnums
 
 open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParameters>() {
 
@@ -192,7 +192,9 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
 
         // 获取所有组件名称
         cloneCompletionResultSet.addAllElements(
-                WXMLMetadata.getElementDescriptors(completionParameters.position.project).map { wxmlElementDescriptor ->
+                WXMLMetadata.getElementDescriptions(
+                        completionParameters.position.project
+                ).map { wxmlElementDescriptor ->
                     val requiredElements = wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.filter {
                         it.required
                     }
@@ -322,21 +324,21 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         val IGNORE_COMMON_EVENT_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
 
         internal fun isDoubleBraceForInsert(
-                wxmlPresetElementAttributeDescriptor: WXMLElementAttributeDescriptor
+                wxmlPresetElementAttributeDescription: WXMLElementAttributeDescription
         ): Boolean {
-            return wxmlPresetElementAttributeDescriptor.types.contains(
-                    WXMLElementAttributeDescriptor.ValueType.NUMBER
-            ) && !wxmlPresetElementAttributeDescriptor.types.contains(
-                    WXMLElementAttributeDescriptor.ValueType.STRING
+            return wxmlPresetElementAttributeDescription.types.contains(
+                    WXMLElementAttributeDescription.ValueType.NUMBER
+            ) && !wxmlPresetElementAttributeDescription.types.contains(
+                    WXMLElementAttributeDescription.ValueType.STRING
             )
         }
 
         internal fun isOnlyNameForInsert(
-                wxmlPresetElementAttributeDescriptor: WXMLElementAttributeDescriptor
+                wxmlPresetElementAttributeDescription: WXMLElementAttributeDescription
         ): Boolean {
-            return wxmlPresetElementAttributeDescriptor.types.contains(
-                    WXMLElementAttributeDescriptor.ValueType.BOOLEAN
-            ) && wxmlPresetElementAttributeDescriptor.default == false
+            return wxmlPresetElementAttributeDescription.types.contains(
+                    WXMLElementAttributeDescription.ValueType.BOOLEAN
+            ) && wxmlPresetElementAttributeDescription.default == false
         }
     }
 
@@ -389,7 +391,7 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         val wxmlAttributeNames = PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java)
                 .map(WXMLAttribute::getName)
 
-        val elementDescriptor = WXMLMetadata.getElementDescriptors(completionParameters.position.project)
+        val elementDescriptor = WXMLMetadata.getElementDescriptions(completionParameters.position.project)
                 .find { it.name == tagName }
         if (elementDescriptor != null) {
             // 自带组件
@@ -474,20 +476,20 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
     }
 
     private fun createLookupElementFromCommonAttribute(
-            wxmlElementAttributeDescriptor: WXMLElementAttributeDescriptor
+            wxmlElementAttributeDescription: WXMLElementAttributeDescription
     ): LookupElementBuilder {
         return when {
-            isOnlyNameForInsert(wxmlElementAttributeDescriptor) -> {
+            isOnlyNameForInsert(wxmlElementAttributeDescription) -> {
                 // 属性的默认值为false
                 // 只插入属性名称
-                return LookupElementBuilder.create(wxmlElementAttributeDescriptor.key)
+                return LookupElementBuilder.create(wxmlElementAttributeDescription.key)
             }
-            isDoubleBraceForInsert(wxmlElementAttributeDescriptor) -> LookupElementBuilder.create(
-                    wxmlElementAttributeDescriptor.key
+            isDoubleBraceForInsert(wxmlElementAttributeDescription) -> LookupElementBuilder.create(
+                    wxmlElementAttributeDescription.key
             ).withInsertHandler(DoubleBraceInsertHandler())
             else -> LookupElementBuilder.create(
-                    wxmlElementAttributeDescriptor.key
-            ).withInsertHandler(DoubleQuotaInsertHandler(wxmlAttributeIsEnumerable(wxmlElementAttributeDescriptor)))
+                    wxmlElementAttributeDescription.key
+            ).withInsertHandler(DoubleQuotaInsertHandler(wxmlAttributeIsEnumerable(wxmlElementAttributeDescription)))
         }
     }
 

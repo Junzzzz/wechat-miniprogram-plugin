@@ -82,7 +82,7 @@ class WXMLTagReference(element: WXMLTag) :
         PsiReferenceBase<WXMLTag>(element, element.getTagNameNode()?.psi?.textRangeInParent) {
     override fun resolve(): PsiElement? {
         val tagName = element.getTagName() ?: return null
-        return WXMLMetadata.getElementDescriptors(element.project).find {
+        return WXMLMetadata.getElementDescriptions(element.project).find {
             it.name == tagName
         }?.definedElement
     }

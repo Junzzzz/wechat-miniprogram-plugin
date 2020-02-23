@@ -71,123 +71,65 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.inspections
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension
 
-import com.intellij.codeInspection.LocalQuickFix
-import com.intellij.codeInspection.ProblemDescriptor
-import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonProperty
-import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiManager
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.intellij.psi.PsiFile
+import com.intellij.psi.xml.XmlTag
+import com.intellij.xml.DefaultXmlExtension
+import com.intellij.xml.XmlNSDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLClosedElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStartTag
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLVisitor
-import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.contentRange
-import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WxmlNSDescriptor
 
-class WXMLUnknownTagInspection : WXMLInspectionBase() {
+class WxmlXmlExtension : DefaultXmlExtension() {
 
-    companion object {
-        const val QUICK_FIX_FAMILY_NAME = "WXML标签"
+    override fun isAvailable(file: PsiFile): Boolean {
+        return file.fileType is WXMLFileType
     }
 
-    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
-        return object : WXMLVisitor() {
-            override fun visitStartTag(wxmlStartTag: WXMLStartTag) {
-                if (wxmlStartTag is WXMLTag) {
-                    visitTag(wxmlStartTag)
-                }
-            }
+    override fun getNSDescriptor(element: XmlTag?, namespace: String?, strict: Boolean): XmlNSDescriptor? {
+        if (element == null) {
+            return WxmlNSDescriptor(null, null)
+        }
+        return WxmlNSDescriptor(
+                WXMLMetadata.getElementDescriptions(element.project).find { it.name == element.name }, element
+        )
+    }
 
-            override fun visitClosedElement(wxmlClosedElement: WXMLClosedElement) {
-                if (wxmlClosedElement is WXMLTag) {
-                    visitTag(wxmlClosedElement)
-                }
-            }
-
-            private fun visitTag(wxmlTag: WXMLTag) {
-                val tagNameNode = wxmlTag.getTagNameNode() ?: return
-                val tagName = tagNameNode.text
-                if (WXMLMetadata.getElementDescriptions(wxmlTag.project).any {
-                            it.name == tagName
+    override fun getAttributeValuePresentation(
+            tag: XmlTag?,
+            attributeName: String,
+            defaultAttributeQuote: String
+    ): AttributeValuePresentation {
+        if (tag !== null) {
+            val attributeDescription = WXMLMetadata.findElementAttributeDescription(tag, attributeName)
+            if (attributeDescription != null) {
+                // 如果此属性是 number object 或 array
+                if (attributeDescription.types.let {
+                            it.contains(WXMLElementAttributeDescription.ValueType.NUMBER)
+                                    ||
+                                    it.contains(WXMLElementAttributeDescription.ValueType.ARRAY)
+                                    ||
+                                    it.contains(WXMLElementAttributeDescription.ValueType.OBJECT)
                         }) {
-                    // 是自带组件
-                    return
-                }
+                    return object : AttributeValuePresentation {
+                        override fun showAutoPopup(): Boolean {
+                            return false
+                        }
 
-                val project = wxmlTag.project
+                        override fun getPostfix(): String {
+                            return ""
+                        }
 
-                val currentJsonFile = findRelateFile(wxmlTag.containingFile.virtualFile, RelateFileType.JSON)
-                val psiManager = PsiManager.getInstance(wxmlTag.project)
-                val currentJsonPsiFile = currentJsonFile?.let {
-                    psiManager.findFile(it)
-                } as? JsonFile
-                val usingComponentItems = mutableListOf<JsonProperty>().apply {
-                    currentJsonPsiFile?.let {
-                        ComponentJsonUtils.getUsingComponentItems(it)
-                    }?.let {
-                        this.addAll(it)
-                    }
-                    AppJsonUtils.findUsingComponentItems(project)?.let {
-                        this.addAll(it)
-                    }
-                }
-                if (!usingComponentItems.any {
-                            it.name == tagName
-                        }) {
-                    // 没有注册的标签
-                    val jsonConfigurationFiles = ComponentJsonUtils.getAllComponentConfigurationFile(project).filter {
-                        it != currentJsonPsiFile
-                    }
-                    val quickFixList = if (currentJsonPsiFile == null) {
-                        emptyArray()
-                    } else {
-                        jsonConfigurationFiles.filter {
-                            it.virtualFile.nameWithoutExtension == tagName
-                        }.let { list ->
-                            list.map {
-                                object : LocalQuickFix {
-
-                                    override fun getFamilyName(): String {
-                                        return QUICK_FIX_FAMILY_NAME
-                                    }
-
-                                    override fun getName(): String {
-                                        // 如果有多个组件匹配
-                                        // 则显示他们相对于根目录的路径
-                                        val componentName = if (list.size > 1) it.virtualFile.getPathRelativeToRootRemoveExt(
-                                                it.project
-                                        ) else {
-                                            it.virtualFile.nameWithoutExtension
-                                        }
-                                        return "在${currentJsonPsiFile.name}中注册$componentName"
-                                    }
-
-                                    override fun applyFix(p0: Project, problemDescriptor: ProblemDescriptor) {
-                                        ComponentJsonUtils.registerComponent(currentJsonPsiFile, it)
-                                    }
-                                }
-
-                            }.toTypedArray<LocalQuickFix>()
+                        override fun getPrefix(): String {
+                            return ""
                         }
                     }
-                    holder.registerProblem(
-                            tagNameNode.psi, tagNameNode.psi.contentRange(), "未知的标签：$tagName",
-                            *quickFixList
-                    )
-
                 }
             }
         }
+        return super.getAttributeValuePresentation(tag, attributeName, defaultAttributeQuote)
     }
 
 }
-

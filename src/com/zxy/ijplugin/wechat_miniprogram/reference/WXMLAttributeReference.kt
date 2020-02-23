@@ -88,7 +88,7 @@ class WXMLAttributeReference(psiElement: WXMLAttribute) :
             val tagName = wxmlTag.getTagName()
             if (tagName != null) {
                 val attributeName = this.element.name
-                return WXMLMetadata.getElementDescriptors(element.project).find {
+                return WXMLMetadata.getElementDescriptions(element.project).find {
                     it.name == tagName
                 }?.attributeDescriptorPresetElementAttributeDescriptors?.find {
                     it.key == attributeName
