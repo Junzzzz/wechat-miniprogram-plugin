@@ -91,7 +91,7 @@ import org.jetbrains.annotations.NotNull;
  * @see WXMLParsing
  * @see com.intellij.psi.impl.source.parsing.xml.XmlParser
  */
-public class WXMLParser implements PsiParser {
+public class WXMLXmlParser implements PsiParser {
     // tries to match an old and new XmlTag by name
     private static final TripleFunction<ASTNode, LighterASTNode, FlyweightCapableTreeStructure<LighterASTNode>, ThreeState>
             REPARSE_XML_TAG_BY_NAME = (oldNode, newNode, structure) -> {

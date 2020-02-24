@@ -88,7 +88,7 @@ class WXMLParserDefinition : XMLParserDefinition() {
     }
 
     override fun createParser(project: Project?): PsiParser {
-        return WXMLParser()
+        return WXMLXmlParser()
     }
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile {

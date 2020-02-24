@@ -186,6 +186,12 @@ class WXMLMetadata(private val project: Project) {
             }
         }
 
+        fun findElementDescription(tagName: String, project: Project): WXMLElementDescription? {
+            return this.getElementDescriptions(project).find {
+                it.name == tagName
+            }
+        }
+
         fun findElementAttributeDescription(xmlTag: XmlTag, attributeName: String): WXMLElementAttributeDescription? {
             return this.findElementDescription(xmlTag)?.let { wxmlElementDescription ->
                 wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors.find {

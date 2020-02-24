@@ -167,7 +167,8 @@
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition"/>
         <xml.fileNSInfoProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension.WxmlFileNSInfoProvider"/>
-        <!--        <xml.tagNameProvider implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLTagNameProvider"/>-->
+        <!--        <xml.tagNameProvider-->
+        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLTagNameProvider"/>-->
 
 
         <!--        <lang.parserDefinition language="WXML"-->
