@@ -132,4 +132,11 @@ class WxmlXmlExtension : DefaultXmlExtension() {
         return super.getAttributeValuePresentation(tag, attributeName, defaultAttributeQuote)
     }
 
+    /**
+     * 不使用xml默认的InsertHandler
+     */
+    override fun useXmlTagInsertHandler(): Boolean {
+        return false
+    }
+
 }
