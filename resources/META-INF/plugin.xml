@@ -38,7 +38,7 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.8.6</version>
+    <version>1.8.7</version>
     <idea-version since-build="193" until-build="193.*"/>
 
     <actions>
