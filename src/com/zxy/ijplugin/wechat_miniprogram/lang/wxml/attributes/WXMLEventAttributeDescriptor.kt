@@ -104,7 +104,7 @@ class WXMLEventAttributeDescriptor(private val eventName: String) : XmlAttribute
     }
 
     override fun init(p0: PsiElement?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun isFixed(): Boolean {
