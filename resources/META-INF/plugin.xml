@@ -31,14 +31,14 @@
 
     <change-notes>
         <![CDATA[
-            <p>Fix the error that wxss will display multiple same classes when prompting class</p>
+            <p>Wxml template logical operator "elseif" changed to "elif"</p>
         ]]>
     </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.8.5</version>
+    <version>1.8.6</version>
     <idea-version since-build="193" until-build="193.*"/>
 
     <actions>
