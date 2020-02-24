@@ -309,7 +309,7 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
  */
 class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>() {
     companion object {
-        val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elseif", "wx:else", "wx:key", "wx:if")
+        val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elif", "wx:else", "wx:key", "wx:if")
         /**
          * 忽略公共的属性的标签名
          */
