@@ -115,15 +115,15 @@ class WxmlXmlExtension : DefaultXmlExtension() {
                         }) {
                     return object : AttributeValuePresentation {
                         override fun showAutoPopup(): Boolean {
-                            return false
+                            return attributeDescription.enums.isNotEmpty()
                         }
 
                         override fun getPostfix(): String {
-                            return ""
+                            return "}}$defaultAttributeQuote"
                         }
 
                         override fun getPrefix(): String {
-                            return ""
+                            return "$defaultAttributeQuote{{"
                         }
                     }
                 }

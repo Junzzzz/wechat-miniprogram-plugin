@@ -72,7 +72,7 @@
  */
 
 {
-  parserClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParser"
+  parserClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLXmlParser"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
