@@ -25,13 +25,13 @@
             <li> Code inspection and automatic repairs</li>
         </ul>
 
-        For detailed usage documents and function descriptions, please visit
+                For detailed usage documents and function descriptions, please visit
         <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis"> Gitee Wiki </a>
         ]]></description>
 
     <change-notes>
         <![CDATA[
-            <p>Wxml template logical operator "elseif" changed to "elif"</p>
+        <p>Wxml template logical operator "elseif" changed to "elif"</p>
         ]]>
     </change-notes>
 
@@ -167,8 +167,8 @@
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition"/>
         <xml.fileNSInfoProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension.WxmlFileNSInfoProvider"/>
-        <!--        <xml.tagNameProvider-->
-        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLTagNameProvider"/>-->
+            <xml.tagNameProvider
+                    implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLTagNameProvider"/>
 
 
         <!--        <lang.parserDefinition language="WXML"-->

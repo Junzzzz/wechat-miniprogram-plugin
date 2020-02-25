@@ -76,25 +76,14 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension
 import com.intellij.psi.PsiFile
 import com.intellij.psi.xml.XmlTag
 import com.intellij.xml.DefaultXmlExtension
-import com.intellij.xml.XmlNSDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WxmlNSDescriptor
 
 class WxmlXmlExtension : DefaultXmlExtension() {
 
     override fun isAvailable(file: PsiFile): Boolean {
         return file.fileType is WXMLFileType
-    }
-
-    override fun getNSDescriptor(element: XmlTag?, namespace: String?, strict: Boolean): XmlNSDescriptor? {
-        if (element == null) {
-            return WxmlNSDescriptor(null, null)
-        }
-        return WxmlNSDescriptor(
-                WXMLMetadata.getElementDescriptions(element.project).find { it.name == element.name }, element
-        )
     }
 
     override fun getAttributeValuePresentation(

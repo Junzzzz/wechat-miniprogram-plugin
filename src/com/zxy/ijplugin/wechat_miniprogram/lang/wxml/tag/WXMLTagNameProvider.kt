@@ -74,15 +74,23 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag
 
 import com.intellij.codeInsight.lookup.LookupElement
-import com.intellij.psi.impl.source.xml.DefaultXmlTagNameProvider
+import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.xml.XmlTag
+import com.intellij.xml.XmlTagNameProvider
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 
-class WXMLTagNameProvider : DefaultXmlTagNameProvider() {
 
-    // TODO 自定义标签完成
-    override fun addTagNameVariants(elements: MutableList<LookupElement>, tag: XmlTag, prefix: String?) {
-        elements.map { lookupElement ->
-            lookupElement.
+class WXMLTagNameProvider : XmlTagNameProvider {
+    override fun addTagNameVariants(
+            elements: MutableList<LookupElement>, tag: XmlTag, prefix: String
+    ) {
+        if (tag.language == WXMLLanguage.INSTANCE) {
+            elements.addAll(WXMLMetadata.getElementDescriptions(tag.project).map {
+                LookupElementBuilder.create(it.name)
+                        .withInsertHandler(WXMLTagInsertHandler.INSTANCE)
+            })
         }
     }
+
 }

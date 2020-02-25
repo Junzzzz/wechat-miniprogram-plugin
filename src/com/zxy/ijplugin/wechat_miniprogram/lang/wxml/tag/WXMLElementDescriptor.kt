@@ -86,7 +86,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
 
 class WXMLElementDescriptor(
-        private val wxmlElementDescription: WXMLElementDescription?, private val xmlTag: XmlTag? = null
+        val wxmlElementDescription: WXMLElementDescription?, private val xmlTag: XmlTag? = null
 ) :
         XmlElementDescriptor {
 
@@ -139,9 +139,7 @@ class WXMLElementDescriptor(
     }
 
     override fun getNSDescriptor(): XmlNSDescriptor? {
-        return WxmlNSDescriptor(
-                this.wxmlElementDescription, this.xmlTag
-        )
+        return null
     }
 
     override fun getQualifiedName(): String {

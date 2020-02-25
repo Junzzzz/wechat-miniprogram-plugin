@@ -121,6 +121,7 @@ import com.intellij.xml.actions.GenerateXmlTagAction;
 import com.intellij.xml.impl.schema.XmlElementDescriptorImpl;
 import com.intellij.xml.util.HtmlUtil;
 import com.intellij.xml.util.XmlUtil;
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLAttributeInsertUtils;
 import kotlin.collections.ArraysKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -239,10 +240,15 @@ public class WXMLTagInsertHandler implements InsertHandler<LookupElement> {
                 if (tag == null || tag.getAttributeValue(attributeName) == null) {
                     if (!notRequiredAttributes.contains(attributeName)) {
                         if (!extension.isIndirectSyntax(attributeDecl)) {
-                            template.addTextSegment(" " + attributeName + "=" + presenter.getPrefix());
-                            template.addVariable(presenter.showAutoPopup() ? new MacroCallNode(
-                                    new CompleteMacro()) : new EmptyExpression(), true);
-                            template.addTextSegment(presenter.getPostfix());
+                            if (WXMLAttributeInsertUtils.isBooleanTypeAttribute(attributeDecl)) {
+                                // Boolean类型之后不需要接等号
+                                template.addTextSegment(" " + attributeName);
+                            } else {
+                                template.addTextSegment(" " + attributeName + "=" + presenter.getPrefix());
+                                template.addVariable(presenter.showAutoPopup() ? new MacroCallNode(
+                                        new CompleteMacro()) : new EmptyExpression(), true);
+                                template.addTextSegment(presenter.getPostfix());
+                            }
                         } else {
                             if (indirectRequiredAttrs == null) indirectRequiredAttrs = new StringBuilder();
                             indirectRequiredAttrs.append("\n<jsp:attribute name=\"").append(attributeName).append(

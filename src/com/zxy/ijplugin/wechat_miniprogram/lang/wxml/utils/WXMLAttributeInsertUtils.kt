@@ -71,60 +71,29 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 
-import com.intellij.psi.PsiElement
-import com.intellij.psi.xml.XmlElement
 import com.intellij.xml.XmlAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
 
-class WXMLAttributeDescriptor(val wxmlElementAttributeDescription: WXMLElementAttributeDescription) :
-        XmlAttributeDescriptor {
-    override fun getDefaultValue(): String? {
-        return this.wxmlElementAttributeDescription.default?.toString()
-    }
+object WXMLAttributeInsertUtils {
 
-    override fun validateValue(p0: XmlElement?, p1: String?): String? {
-        return null
-    }
+    private val INTERPOLATION_TYPES = arrayOf(
+            WXMLElementAttributeDescription.ValueType.ARRAY,
+            WXMLElementAttributeDescription.ValueType.OBJECT,
+            WXMLElementAttributeDescription.ValueType.NUMBER
+    )
 
-    override fun getName(p0: PsiElement?): String {
-        return wxmlElementAttributeDescription.key
-    }
 
-    override fun getName(): String {
-        return wxmlElementAttributeDescription.key
-    }
-
-    override fun isRequired(): Boolean {
-        return wxmlElementAttributeDescription.required
-    }
-
-    override fun hasIdRefType(): Boolean {
-        return false
-    }
-
-    override fun init(p0: PsiElement?) {
-
-    }
-
-    override fun isFixed(): Boolean {
-        return true
-    }
-
-    override fun getDeclaration(): PsiElement? {
-        return null
-    }
-
-    override fun isEnumerated(): Boolean {
-        return this.wxmlElementAttributeDescription.enums.isNotEmpty()
-    }
-
-    override fun getEnumeratedValues(): Array<String>? {
-        return this.wxmlElementAttributeDescription.enums
-    }
-
-    override fun hasIdType(): Boolean {
+    @JvmStatic
+    fun isBooleanTypeAttribute(xmlAttributeDescriptor: XmlAttributeDescriptor): Boolean {
+        if (xmlAttributeDescriptor is WXMLAttributeDescriptor) {
+            val wxmlElementAttributeDescription = xmlAttributeDescriptor.wxmlElementAttributeDescription
+            if ((wxmlElementAttributeDescription.types.size == 1) && wxmlElementAttributeDescription.default == true) {
+                return true
+            }
+        }
         return false
     }
 }
