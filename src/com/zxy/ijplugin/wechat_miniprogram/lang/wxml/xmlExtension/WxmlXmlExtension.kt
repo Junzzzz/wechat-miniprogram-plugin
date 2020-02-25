@@ -82,6 +82,10 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 
 class WxmlXmlExtension : DefaultXmlExtension() {
 
+    companion object {
+        val selfClosingTagNames = arrayOf("input", "textarea", "image", "icon", "import", "include")
+    }
+
     override fun isAvailable(file: PsiFile): Boolean {
         return file.fileType is WXMLFileType
     }
@@ -126,6 +130,13 @@ class WxmlXmlExtension : DefaultXmlExtension() {
      */
     override fun useXmlTagInsertHandler(): Boolean {
         return false
+    }
+
+    /**
+     *  等标签可以自动关闭
+     */
+    override fun isSelfClosingTagAllowed(tag: XmlTag): Boolean {
+        return selfClosingTagNames.contains(tag.name)
     }
 
 }
