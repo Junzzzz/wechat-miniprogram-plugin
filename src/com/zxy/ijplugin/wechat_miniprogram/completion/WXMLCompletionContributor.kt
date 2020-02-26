@@ -310,6 +310,8 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
 class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>() {
     companion object {
         val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elif", "wx:else", "wx:key", "wx:if")
+
+        const val NO_VALUE_ATTRIBUTE = "wx:elif"
         /**
          * 忽略公共的属性的标签名
          */
@@ -448,7 +450,11 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             // 提供固定的wx前缀完成
             completionResultSet.addAllElements(
                     WX_ATTRIBUTES.map {
-                        LookupElementBuilder.create(it).withInsertHandler(DoubleBraceInsertHandler())
+                        if (it == NO_VALUE_ATTRIBUTE) {
+                            LookupElementBuilder.create(it)
+                        } else {
+                            LookupElementBuilder.create(it).withInsertHandler(DoubleBraceInsertHandler())
+                        }
                     })
         }
 
