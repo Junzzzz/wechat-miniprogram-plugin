@@ -101,7 +101,7 @@ class WXMLTagCloseTypedHandler : TypedHandlerDelegate() {
                 PsiTreeUtil.findChildOfType(
                         prevElement.findPrevSibling { it is WXMLElement }, WXMLOpenedElement::class.java
                 )
-            } else if (prevElement.elementType == WXMLTypes.STRING_CONTENT) {
+            } else if (prevElement.elementType == WXMLTypes.STRING_CONTENT || prevElement.elementType == WXMLTypes.STRING_START) {
                 return Result.CONTINUE
             } else {
                 // 处于开元素的最后位置
