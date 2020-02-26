@@ -25,20 +25,21 @@
             <li> Code inspection and automatic repairs</li>
         </ul>
 
-                For detailed usage documents and function descriptions, please visit
+        For detailed usage documents and function descriptions, please visit
         <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis"> Gitee Wiki </a>
         ]]></description>
 
     <change-notes>
         <![CDATA[
-        <p>Wxml template logical operator "elseif" changed to "elif"</p>
+            <p>Fixed a bug where typing '/' at the beginning of the string would automatically complete the label</p>
+            <p>Fixed 'wx: elif' error that would automatically complete double brackets</p>
         ]]>
     </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
-    <version>1.8.7</version>
+    <version>1.8.8</version>
 
     <actions>
         <action class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramPageAction"
