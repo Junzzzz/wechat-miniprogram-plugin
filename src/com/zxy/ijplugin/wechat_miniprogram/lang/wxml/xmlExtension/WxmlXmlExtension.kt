@@ -76,9 +76,9 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension
 import com.intellij.psi.PsiFile
 import com.intellij.psi.xml.XmlTag
 import com.intellij.xml.DefaultXmlExtension
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isJsTypeAttribute
 
 class WxmlXmlExtension : DefaultXmlExtension() {
 
@@ -99,13 +99,7 @@ class WxmlXmlExtension : DefaultXmlExtension() {
             val attributeDescription = WXMLMetadata.findElementAttributeDescription(tag, attributeName)
             if (attributeDescription != null) {
                 // 如果此属性是 number object 或 array
-                if (attributeDescription.types.let {
-                            it.contains(WXMLElementAttributeDescription.ValueType.NUMBER)
-                                    ||
-                                    it.contains(WXMLElementAttributeDescription.ValueType.ARRAY)
-                                    ||
-                                    it.contains(WXMLElementAttributeDescription.ValueType.OBJECT)
-                        }) {
+                if (attributeDescription.isJsTypeAttribute()) {
                     return object : AttributeValuePresentation {
                         override fun showAutoPopup(): Boolean {
                             return attributeDescription.enums.isNotEmpty()

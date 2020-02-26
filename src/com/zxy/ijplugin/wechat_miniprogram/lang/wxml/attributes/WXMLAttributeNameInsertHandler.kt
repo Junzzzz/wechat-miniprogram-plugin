@@ -71,119 +71,112 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes
 
-import com.intellij.psi.PsiElement
-import com.intellij.psi.impl.source.xml.XmlDescriptorUtil
-import com.intellij.psi.xml.XmlAttribute
-import com.intellij.psi.xml.XmlTag
-import com.intellij.xml.XmlAttributeDescriptor
-import com.intellij.xml.XmlElementDescriptor
-import com.intellij.xml.XmlElementsGroup
-import com.intellij.xml.XmlNSDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescription
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
+import com.intellij.application.options.editor.WebEditorOptions
+import com.intellij.codeInsight.AutoPopupController
+import com.intellij.codeInsight.completion.InsertHandler
+import com.intellij.codeInsight.completion.InsertionContext
+import com.intellij.codeInsight.editorActions.TabOutScopesTracker
+import com.intellij.codeInsight.editorActions.XmlEditUtil
+import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.openapi.editor.ScrollType
+import com.intellij.openapi.util.text.StringUtil
+import com.intellij.util.text.CharArrayUtil
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isJsTypeAttribute
 
-class WXMLElementDescriptor(
-        val wxmlElementDescription: WXMLElementDescription?, private val xmlTag: XmlTag? = null
-) :
-        XmlElementDescriptor {
-
+class WXMLAttributeNameInsertHandler(
+        private val attributeDescription: WXMLElementAttributeDescription
+) : InsertHandler<LookupElement> {
     companion object {
-        val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elseif", "wx:else", "wx:key", "wx:if")
-        /**
-         * 忽略公共的属性的标签名
-         */
-        val IGNORE_COMMON_ATTRIBUTE_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
-        /**
-         * 忽略wx属性的标签名
-         */
-        val IGNORE_WX_ATTRIBUTE_TAG_NAMES = arrayOf("template", "wxs", "import", "include")
-        /**
-         * 忽略公共事件的标签名
-         */
-        val IGNORE_COMMON_EVENT_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
-    }
 
-    override fun getDefaultValue(): String? {
-        return null
-    }
-
-    override fun getName(context: PsiElement?): String {
-        return this.name
-    }
-
-    override fun getName(): String {
-        return wxmlElementDescription?.name ?: this.xmlTag?.name ?: ""
-    }
-
-    override fun getElementsDescriptors(context: XmlTag): Array<XmlElementDescriptor> {
-        return XmlDescriptorUtil.getElementsDescriptors(context)
-    }
-
-    override fun init(p0: PsiElement?) {
-
-    }
-
-    override fun getContentType(): Int {
-        return XmlElementDescriptor.CONTENT_TYPE_ANY
-    }
-
-    override fun getTopGroup(): XmlElementsGroup? {
-        return null
-    }
-
-    override fun getDefaultName(): String {
-        return this.name
-    }
-
-    override fun getNSDescriptor(): XmlNSDescriptor? {
-        return null
-    }
-
-    override fun getQualifiedName(): String {
-        return this.name
-    }
-
-    override fun getElementDescriptor(p0: XmlTag, p1: XmlTag): XmlElementDescriptor? {
-        return XmlDescriptorUtil.getElementDescriptor(p0, p1)
-    }
-
-    override fun getDeclaration(): PsiElement? {
-        return this.xmlTag
-    }
-
-    override fun getAttributeDescriptor(attributeName: String?, p1: XmlTag?): XmlAttributeDescriptor? {
-        return this.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.find {
-            it.key == attributeName
-        }?.let {
-            WXMLAttributeDescriptor(it)
+        fun isOnlyNameForInsert(
+                wxmlPresetElementAttributeDescription: WXMLElementAttributeDescription
+        ): Boolean {
+            return wxmlPresetElementAttributeDescription.types.contains(
+                    WXMLElementAttributeDescription.ValueType.BOOLEAN
+            ) && wxmlPresetElementAttributeDescription.default == false
         }
     }
 
-    override fun getAttributeDescriptor(attribute: XmlAttribute?): XmlAttributeDescriptor? {
-        return this.getAttributeDescriptor(attribute?.name, attribute?.parent)
+    override fun handleInsert(context: InsertionContext, item: LookupElement) {
+        if (attributeDescription.isJsTypeAttribute()) {
+            DoubleBraceInsertHandler().handleInsert(context, item)
+        } else if (!isOnlyNameForInsert(attributeDescription)) {
+            DoubleQuotaInsertHandler().handleInsert(context, item)
+        }
+
+        val editor = context.editor
+        TabOutScopesTracker.getInstance().registerEmptyScopeAtCaret(context.editor)
+        editor.scrollingModel.scrollToCaret(ScrollType.RELATIVE)
+        editor.selectionModel.removeSelection()
+        AutoPopupController.getInstance(editor.project!!).scheduleAutoPopup(editor)
     }
 
-    override fun getAttributesDescriptors(p0: XmlTag?): Array<XmlAttributeDescriptor> {
-//        val result = ArrayList<XmlAttributeDescriptor>()
-//        val name = this.wxmlElementDescription?.name
-//        if (!IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(name)) {
-//            result.addAll(WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.map {
-//                WXMLAttributeDescriptor(
-//                        it
-//                )
-//            })
-//        }
-//
-//        this.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.map {
-//            WXMLAttributeDescriptor(it) as XmlAttributeDescriptor
-//        }?.let {
-//            result.addAll(it)
-//        }
-//
-//        return result.toTypedArray()
-        return emptyArray()
+    /**
+     * 在插入属性名称时
+     * 额外插入双括号
+     */
+    class DoubleBraceInsertHandler :
+            InsertHandler<LookupElement> {
+        override fun handleInsert(insertionContext: InsertionContext, p1: LookupElement) {
+            // 额外插入 [=""]
+            // 额外插入 [="{{}}"]
+            val editor = insertionContext.editor
+            val offset = editor.caretModel.offset
+            insertionContext.document.insertString(offset, "=\"{{}}\"")
+            editor.caretModel.moveToOffset(offset + 4)
+        }
+
     }
 
+    /**
+     * 在插入属性名称之前
+     * 额外插入双引号
+     * @param autoPopup 完成之后是否立即唤醒自动完成控制器
+     */
+    class DoubleQuotaInsertHandler(private val autoPopup: Boolean = false) :
+            InsertHandler<LookupElement> {
+        override fun handleInsert(context: InsertionContext, p1: LookupElement) {
+            val editor = context.editor
+            val document = editor.document
+            val caretOffset = editor.caretModel.offset
+            val file = context.file
+            val chars = document.charsSequence
+            val quote = XmlEditUtil.getAttributeQuote(file)
+            val insertQuotes = WebEditorOptions.getInstance().isInsertQuotesForAttributeValue && StringUtil.isNotEmpty(
+                    quote
+            )
+            val hasQuotes = CharArrayUtil.regionMatches(chars, caretOffset, "=\"") ||
+                    CharArrayUtil.regionMatches(chars, caretOffset, "='")
+            if (!hasQuotes) {
+                if (CharArrayUtil.regionMatches(chars, caretOffset, "=")) {
+                    document.deleteString(caretOffset, caretOffset + 1)
+                }
+                val fileContext = file.context
+                var toInsert: String? = null
+                if (fileContext != null) {
+                    if (fileContext.text.startsWith("\"")) toInsert = "=''"
+                    if (fileContext.text.startsWith("\'")) toInsert = "=\"\""
+                }
+                if (toInsert == null) {
+                    toInsert = "=$quote$quote"
+                }
+                if (!insertQuotes) toInsert = "="
+                if (caretOffset < document.textLength && "/> \n\t\r".indexOf(
+                                document.charsSequence[caretOffset]
+                        ) < 0) {
+                    document.insertString(caretOffset, "$toInsert ")
+                } else {
+                    document.insertString(caretOffset, toInsert)
+                }
+                if ('=' == context.completionChar) {
+                    context.setAddCompletionChar(false) // IDEA-19449
+                }
+            }
+            editor.caretModel.moveToOffset(caretOffset + if (insertQuotes || hasQuotes) 2 else 1)
+        }
+
+    }
 }

@@ -71,119 +71,20 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes
 
-import com.intellij.psi.PsiElement
-import com.intellij.psi.impl.source.xml.XmlDescriptorUtil
-import com.intellij.psi.xml.XmlAttribute
-import com.intellij.psi.xml.XmlTag
-import com.intellij.xml.XmlAttributeDescriptor
-import com.intellij.xml.XmlElementDescriptor
-import com.intellij.xml.XmlElementsGroup
-import com.intellij.xml.XmlNSDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescription
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
+import com.intellij.codeInsight.completion.CompletionContributor
+import com.intellij.codeInsight.completion.CompletionType
+import com.intellij.patterns.PlatformPatterns
+import com.intellij.patterns.XmlPatterns
 
-class WXMLElementDescriptor(
-        val wxmlElementDescription: WXMLElementDescription?, private val xmlTag: XmlTag? = null
-) :
-        XmlElementDescriptor {
+class WXMLAttributeCompletionContributor : CompletionContributor() {
 
-    companion object {
-        val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elseif", "wx:else", "wx:key", "wx:if")
-        /**
-         * 忽略公共的属性的标签名
-         */
-        val IGNORE_COMMON_ATTRIBUTE_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
-        /**
-         * 忽略wx属性的标签名
-         */
-        val IGNORE_WX_ATTRIBUTE_TAG_NAMES = arrayOf("template", "wxs", "import", "include")
-        /**
-         * 忽略公共事件的标签名
-         */
-        val IGNORE_COMMON_EVENT_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
-    }
-
-    override fun getDefaultValue(): String? {
-        return null
-    }
-
-    override fun getName(context: PsiElement?): String {
-        return this.name
-    }
-
-    override fun getName(): String {
-        return wxmlElementDescription?.name ?: this.xmlTag?.name ?: ""
-    }
-
-    override fun getElementsDescriptors(context: XmlTag): Array<XmlElementDescriptor> {
-        return XmlDescriptorUtil.getElementsDescriptors(context)
-    }
-
-    override fun init(p0: PsiElement?) {
-
-    }
-
-    override fun getContentType(): Int {
-        return XmlElementDescriptor.CONTENT_TYPE_ANY
-    }
-
-    override fun getTopGroup(): XmlElementsGroup? {
-        return null
-    }
-
-    override fun getDefaultName(): String {
-        return this.name
-    }
-
-    override fun getNSDescriptor(): XmlNSDescriptor? {
-        return null
-    }
-
-    override fun getQualifiedName(): String {
-        return this.name
-    }
-
-    override fun getElementDescriptor(p0: XmlTag, p1: XmlTag): XmlElementDescriptor? {
-        return XmlDescriptorUtil.getElementDescriptor(p0, p1)
-    }
-
-    override fun getDeclaration(): PsiElement? {
-        return this.xmlTag
-    }
-
-    override fun getAttributeDescriptor(attributeName: String?, p1: XmlTag?): XmlAttributeDescriptor? {
-        return this.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.find {
-            it.key == attributeName
-        }?.let {
-            WXMLAttributeDescriptor(it)
-        }
-    }
-
-    override fun getAttributeDescriptor(attribute: XmlAttribute?): XmlAttributeDescriptor? {
-        return this.getAttributeDescriptor(attribute?.name, attribute?.parent)
-    }
-
-    override fun getAttributesDescriptors(p0: XmlTag?): Array<XmlAttributeDescriptor> {
-//        val result = ArrayList<XmlAttributeDescriptor>()
-//        val name = this.wxmlElementDescription?.name
-//        if (!IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(name)) {
-//            result.addAll(WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.map {
-//                WXMLAttributeDescriptor(
-//                        it
-//                )
-//            })
-//        }
-//
-//        this.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.map {
-//            WXMLAttributeDescriptor(it) as XmlAttributeDescriptor
-//        }?.let {
-//            result.addAll(it)
-//        }
-//
-//        return result.toTypedArray()
-        return emptyArray()
+    init {
+        this.extend(
+                CompletionType.BASIC, PlatformPatterns.psiElement().inside(XmlPatterns.xmlAttribute()),
+                WXMLAttributeNameCompletionProvider()
+        )
     }
 
 }

@@ -73,9 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.completion
 
-import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.*
-import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonProperty
@@ -91,6 +89,7 @@ import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeNameInsertHandler
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
@@ -344,42 +343,6 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
         }
     }
 
-    /**
-     * 在插入属性名称时
-     * 额外插入双括号
-     */
-    class DoubleBraceInsertHandler : InsertHandler<LookupElement> {
-        override fun handleInsert(insertionContext: InsertionContext, p1: LookupElement) {
-            // 额外插入 [=""]
-            // 额外插入 [="{{}}"]
-            val editor = insertionContext.editor
-            val offset = editor.caretModel.offset
-            insertionContext.document.insertString(offset, "=\"{{}}\"")
-            editor.caretModel.moveToOffset(offset + 4)
-        }
-
-    }
-
-    /**
-     * 在插入属性名称之前
-     * 额外插入双引号
-     * @param autoPopup 完成之后是否立即唤醒自动完成控制器
-     */
-    class DoubleQuotaInsertHandler(private val autoPopup: Boolean = false) : InsertHandler<LookupElement> {
-        override fun handleInsert(insertionContext: InsertionContext, p1: LookupElement) {
-            // 额外插入 [=""]
-            val editor = insertionContext.editor
-            val offset = editor.caretModel.offset
-            insertionContext.document.insertString(offset, "=\"\"")
-            editor.caretModel.moveToOffset(offset + 2)
-            if (autoPopup) {
-                AutoPopupController.getInstance(insertionContext.project)
-                        .autoPopupMemberLookup(insertionContext.editor, null)
-            }
-        }
-
-    }
-
     override fun addCompletions(
             completionParameters: CompletionParameters, processingContext: ProcessingContext,
             completionResultSet: CompletionResultSet
@@ -411,7 +374,11 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             if (!WXMLMetadata.NATIVE_COMPONENTS.contains(tagName)) {
                 // 无障碍访问属性
                 completionResultSet.addAllElements(WXMLMetadata.ARIA_ATTRIBUTE.map {
-                    LookupElementBuilder.create(it).withInsertHandler(DoubleQuotaInsertHandler(false))
+                    LookupElementBuilder.create(it).withInsertHandler(
+                            WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler(
+                                    false
+                            )
+                    )
                 })
             }
         } else {
@@ -428,7 +395,9 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
                         .withInsertHandler(
                                 if (ComponentJsUtils.findTypeByPropertyValue(
                                                 it
-                                        ) != "String") DoubleBraceInsertHandler() else DoubleQuotaInsertHandler(false)
+                                        ) != "String") WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler() else WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler(
+                                        false
+                                )
                         ).withTypeText("Component.properties")
             }?.let {
                 completionResultSet.addAllElements(it)
@@ -439,7 +408,11 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
                 ComponentJsUtils.findComponentExternalClasses(it)
             }?.map {
                 LookupElementBuilder.create(it)
-                        .withInsertHandler(DoubleQuotaInsertHandler(true))
+                        .withInsertHandler(
+                                WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler(
+                                        true
+                                )
+                        )
                         .withTypeText("Component.externalClasses")
             }?.let {
                 completionResultSet.addAllElements(it)
@@ -453,7 +426,9 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
                         if (it == NO_VALUE_ATTRIBUTE) {
                             LookupElementBuilder.create(it)
                         } else {
-                            LookupElementBuilder.create(it).withInsertHandler(DoubleBraceInsertHandler())
+                            LookupElementBuilder.create(it).withInsertHandler(
+                                    WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
+                            )
                         }
                     })
         }
@@ -477,7 +452,11 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
                 prefix + it
             }.asSequence()
         }.map {
-            LookupElementBuilder.create(it).withInsertHandler(DoubleQuotaInsertHandler(false))
+            LookupElementBuilder.create(it).withInsertHandler(
+                    WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler(
+                            false
+                    )
+            )
         }.toList()
     }
 
@@ -492,10 +471,16 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             }
             isDoubleBraceForInsert(wxmlElementAttributeDescription) -> LookupElementBuilder.create(
                     wxmlElementAttributeDescription.key
-            ).withInsertHandler(DoubleBraceInsertHandler())
+            ).withInsertHandler(
+                    WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
+            )
             else -> LookupElementBuilder.create(
                     wxmlElementAttributeDescription.key
-            ).withInsertHandler(DoubleQuotaInsertHandler(wxmlAttributeIsEnumerable(wxmlElementAttributeDescription)))
+            ).withInsertHandler(
+                    WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler(
+                            wxmlAttributeIsEnumerable(wxmlElementAttributeDescription)
+                    )
+            )
         }
     }
 

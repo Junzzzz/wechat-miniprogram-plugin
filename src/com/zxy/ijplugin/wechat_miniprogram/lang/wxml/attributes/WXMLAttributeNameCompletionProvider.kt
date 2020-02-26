@@ -76,12 +76,99 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
+import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.psi.impl.source.xml.XmlAttributeReference
 import com.intellij.util.ProcessingContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
 
 class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParameters>() {
+
+    companion object {
+        val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elif", "wx:else", "wx:key", "wx:if")
+
+        const val NO_VALUE_ATTRIBUTE = "wx:elif"
+        /**
+         * 忽略公共的属性的标签名
+         */
+        val IGNORE_COMMON_ATTRIBUTE_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
+        /**
+         * 忽略wx属性的标签名
+         */
+        val IGNORE_WX_ATTRIBUTE_TAG_NAMES = arrayOf("template", "wxs", "import", "include")
+        /**
+         * 忽略公共事件的标签名
+         */
+        val IGNORE_COMMON_EVENT_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
+    }
+
     override fun addCompletions(
             parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
     ) {
-        TODO()
+        if (parameters.position.containingFile.fileType !== WXMLFileType.INSTANCE) return
+        val reference = parameters.position.containingFile
+                .findReferenceAt(parameters.offset)
+        if (reference is XmlAttributeReference) {
+            val xmlTag = reference.element.parent
+            val descriptor = xmlTag.descriptor as? WXMLElementDescriptor ?: return
+            val attributes = descriptor.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors
+            val xmlAttributes = xmlTag.attributes
+            // wxml组件属性
+            attributes?.filter { desc ->
+                xmlAttributes.none {
+                    it.name == desc.key
+                }
+            }?.map {
+                LookupElementBuilder.create(it.key).withInsertHandler(WXMLAttributeNameInsertHandler(it))
+            }?.let {
+                result.addAllElements(it)
+            }
+
+            // wxml组件事件
+            descriptor.wxmlElementDescription?.events?.filter { event ->
+                xmlAttributes.none {
+                    it.name == event
+                }
+            }?.map {
+                LookupElementBuilder.create(it)
+                        .withInsertHandler(WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler())
+            }?.let {
+                result.addAllElements(it)
+            }
+
+            val tagName = descriptor.name
+            if (!IGNORE_WX_ATTRIBUTE_TAG_NAMES.contains(tagName)) {
+                // 提供固定的wx前缀完成
+                result.addAllElements(
+                        WX_ATTRIBUTES.filter { wxAttribute -> xmlAttributes.none { it.name == wxAttribute } }.map {
+                            if (it == NO_VALUE_ATTRIBUTE) {
+                                LookupElementBuilder.create(it)
+                            } else {
+                                LookupElementBuilder.create(it).withInsertHandler(
+                                        WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
+                                )
+                            }
+                        })
+            }
+
+            if (!IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(tagName)) {
+                // 公共属性
+                result.addAllElements(
+                        WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.filter { attribute -> xmlAttributes.none { it.name == attribute.key } }.map {
+                            LookupElementBuilder.create(it.key).withInsertHandler(WXMLAttributeNameInsertHandler(it))
+                        })
+            }
+
+            if (!IGNORE_COMMON_EVENT_TAG_NAMES.contains(tagName)) {
+                // 公共事件
+                result.addAllElements(
+                        WXMLMetadata.COMMON_ELEMENT_EVENTS.filter { e -> xmlAttributes.none { it.name == e } }.map {
+                            LookupElementBuilder.create(it)
+                        })
+            }
+
+        }
     }
+
 }

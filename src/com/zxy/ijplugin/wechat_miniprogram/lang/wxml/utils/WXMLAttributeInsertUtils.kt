@@ -79,11 +79,6 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDes
 
 object WXMLAttributeInsertUtils {
 
-    private val INTERPOLATION_TYPES = arrayOf(
-            WXMLElementAttributeDescription.ValueType.ARRAY,
-            WXMLElementAttributeDescription.ValueType.OBJECT,
-            WXMLElementAttributeDescription.ValueType.NUMBER
-    )
 
 
     @JvmStatic
@@ -95,5 +90,16 @@ object WXMLAttributeInsertUtils {
             }
         }
         return false
+    }
+
+}
+
+fun WXMLElementAttributeDescription.isJsTypeAttribute(): Boolean {
+    return this.types.let {
+        it.contains(WXMLElementAttributeDescription.ValueType.NUMBER)
+                ||
+                it.contains(WXMLElementAttributeDescription.ValueType.ARRAY)
+                ||
+                it.contains(WXMLElementAttributeDescription.ValueType.OBJECT)
     }
 }
