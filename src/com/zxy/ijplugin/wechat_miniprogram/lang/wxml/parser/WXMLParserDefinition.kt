@@ -75,6 +75,8 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser
 
 import com.intellij.lang.PsiParser
 import com.intellij.lang.xml.XMLParserDefinition
+import com.intellij.lexer.HtmlLexer
+import com.intellij.lexer.Lexer
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
@@ -89,6 +91,10 @@ class WXMLParserDefinition : XMLParserDefinition() {
 
     override fun createParser(project: Project?): PsiParser {
         return WXMLXmlParser()
+    }
+
+    override fun createLexer(project: Project?): Lexer {
+        return HtmlLexer()
     }
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile {
