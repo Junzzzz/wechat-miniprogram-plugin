@@ -73,6 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml;
 
+import com.intellij.lang.html.HTMLLanguage;
 import com.intellij.lang.xml.XMLLanguage;
 
 public class WXMLLanguage extends XMLLanguage {
@@ -82,7 +83,7 @@ public class WXMLLanguage extends XMLLanguage {
     public static WXMLLanguage INSTANCE = new WXMLLanguage();
 
     private WXMLLanguage() {
-        super(XMLLanguage.INSTANCE, "WXML");
+        super(HTMLLanguage.INSTANCE, "WXML");
     }
 
 }
