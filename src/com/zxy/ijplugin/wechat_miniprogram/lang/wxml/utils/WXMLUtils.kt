@@ -93,6 +93,14 @@ object WXMLUtils {
             WXMLAttributeDescriptor(it)
         }?.toTypedArray() ?: emptyArray()
     }
+
+    /**
+     * 根据属性名粗略判断是否是事件
+     */
+    @JvmStatic
+    fun likeEventAttribute(attributeName: String): Boolean {
+        return WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any { attributeName.startsWith(it) }
+    }
 }
 
 /**
