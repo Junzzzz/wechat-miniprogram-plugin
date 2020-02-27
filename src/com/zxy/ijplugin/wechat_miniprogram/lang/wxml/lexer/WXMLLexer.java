@@ -70,38 +70,136 @@
  *
  *    See the Mulan PSL v1 for more details.
  */
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer;
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser
+import com.intellij.lang.HtmlInlineScriptTokenTypesProvider;
+import com.intellij.lang.Language;
+import com.intellij.lang.LanguageHtmlInlineScriptTokenTypesProvider;
+import com.intellij.lang.LanguageUtil;
+import com.intellij.lexer.*;
+import com.intellij.psi.TokenType;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.xml.XmlTokenType;
+import org.jetbrains.annotations.NotNull;
 
-import com.intellij.lang.PsiParser
-import com.intellij.lang.xml.XMLParserDefinition
-import com.intellij.lexer.Lexer
-import com.intellij.openapi.project.Project
-import com.intellij.psi.FileViewProvider
-import com.intellij.psi.PsiFile
-import com.intellij.psi.tree.IFileElementType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer.WXMLLexer
+import java.util.List;
 
-class WXMLParserDefinition : XMLParserDefinition() {
-    companion object {
-        val iFileElementType = IFileElementType(WXMLLanguage.INSTANCE)
+/**
+ * Copy from {@see com.intellij.lexer.HtmlLexer}
+ */
+public class WXMLLexer extends BaseHtmlLexer {
+    public static final String INLINE_STYLE_NAME = "css-ruleset-block";
+    private static final IElementType ourInlineStyleElementType;
+
+    static {
+        List<EmbeddedTokenTypesProvider> extensions = EmbeddedTokenTypesProvider.EXTENSION_POINT_NAME.getExtensionList();
+        IElementType inlineStyleElementType = null;
+        for (EmbeddedTokenTypesProvider extension : extensions) {
+            if (INLINE_STYLE_NAME.equals(extension.getName())) {
+                inlineStyleElementType = extension.getElementType();
+                break;
+            }
+        }
+        ourInlineStyleElementType = inlineStyleElementType;
     }
 
-    override fun createParser(project: Project?): PsiParser {
-        return WXMLXmlParser()
+    private IElementType myTokenType;
+    private int myTokenStart;
+    private int myTokenEnd;
+
+    public WXMLLexer() {
+        this(new MergingLexerAdapter(new FlexAdapter(new __XmlLexer(null)), TOKENS_TO_MERGE), true);
     }
 
-    override fun createLexer(project: Project?): Lexer {
-        return WXMLLexer()
+    protected WXMLLexer(Lexer _baseLexer, boolean _caseInsensitive) {
+        super(_baseLexer, _caseInsensitive);
     }
 
-    override fun createFile(viewProvider: FileViewProvider): PsiFile {
-        return WXMLPsiFile(viewProvider)
+    private static boolean isStartOfEmbeddmentAttributeValue(final IElementType tokenType) {
+        return tokenType == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN;
     }
 
-    override fun getFileNodeType(): IFileElementType {
-        return iFileElementType
+    private static boolean isStartOfEmbeddmentTagContent(final IElementType tokenType) {
+        return (tokenType == XmlTokenType.XML_DATA_CHARACTERS ||
+                tokenType == XmlTokenType.XML_CDATA_START ||
+                tokenType == XmlTokenType.XML_COMMENT_START ||
+                tokenType == XmlTokenType.XML_START_TAG_START ||
+                tokenType == XmlTokenType.XML_REAL_WHITE_SPACE || tokenType == TokenType.WHITE_SPACE ||
+                tokenType == XmlTokenType.XML_ENTITY_REF_TOKEN || tokenType == XmlTokenType.XML_CHAR_ENTITY_REF
+        );
+    }
+
+    @Override
+    public void start(@NotNull CharSequence buffer, int startOffset, int endOffset, int initialState) {
+        myTokenType = null;
+        super.start(buffer, startOffset, endOffset, initialState);
+    }
+
+    @Override
+    public void advance() {
+        myTokenType = null;
+        super.advance();
+    }
+
+    @Override
+    public IElementType getTokenType() {
+        if (myTokenType != null) return myTokenType;
+        IElementType tokenType = super.getTokenType();
+
+        myTokenStart = super.getTokenStart();
+        myTokenEnd = super.getTokenEnd();
+
+        if (hasSeenStyle()) {
+            if (hasSeenTag() && isStartOfEmbeddmentTagContent(tokenType)) {
+                Language stylesheetLanguage = getStyleLanguage();
+                if (stylesheetLanguage == null || LanguageUtil.isInjectableLanguage(stylesheetLanguage)) {
+                    myTokenEnd = skipToTheEndOfTheEmbeddment();
+                    IElementType currentStylesheetElementType = getCurrentStylesheetElementType();
+                    tokenType = currentStylesheetElementType == null ? XmlTokenType.XML_DATA_CHARACTERS : currentStylesheetElementType;
+                }
+            } else if (ourInlineStyleElementType != null && isStartOfEmbeddmentAttributeValue(tokenType) && hasSeenAttribute()) {
+                tokenType = ourInlineStyleElementType;
+            }
+        } else if (hasSeenScript()) {
+            if (hasSeenTag() && isStartOfEmbeddmentTagContent(tokenType)) {
+                Language scriptLanguage = getScriptLanguage();
+                if (scriptLanguage == null || LanguageUtil.isInjectableLanguage(scriptLanguage)) {
+                    myTokenEnd = skipToTheEndOfTheEmbeddment();
+                    IElementType currentScriptElementType = getCurrentScriptElementType();
+                    tokenType = currentScriptElementType == null ? XmlTokenType.XML_DATA_CHARACTERS : currentScriptElementType;
+                }
+            } else if (hasSeenAttribute() && isStartOfEmbeddmentAttributeValue(tokenType)) {
+                // At the moment only JS.
+                HtmlInlineScriptTokenTypesProvider provider = LanguageHtmlInlineScriptTokenTypesProvider.getInlineScriptProvider(Language.findLanguageByID("JavaScript"));
+                IElementType inlineScriptElementType = provider != null ? provider.getElementType() : null;
+                if (inlineScriptElementType != null) {
+                    myTokenEnd = skipToTheEndOfTheEmbeddment();
+                    tokenType = inlineScriptElementType;
+                }
+            }
+        }
+
+        return myTokenType = tokenType;
+    }
+
+    @Override
+    protected boolean isHtmlTagState(int state) {
+        return state == __XmlLexer.TAG || state == __XmlLexer.END_TAG;
+    }
+
+    @Override
+    public int getTokenStart() {
+        if (myTokenType != null) {
+            return myTokenStart;
+        }
+        return super.getTokenStart();
+    }
+
+    @Override
+    public int getTokenEnd() {
+        if (myTokenType != null) {
+            return myTokenEnd;
+        }
+        return super.getTokenEnd();
     }
 }
