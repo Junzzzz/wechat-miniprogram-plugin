@@ -82,7 +82,6 @@ import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isJsTypeAttribute
 
 class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParameters>() {
 
@@ -121,13 +120,7 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                     it.name == desc.key
                 }
             }?.map {
-                val insertHandler = if (it.isJsTypeAttribute()) {
-                    WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
-                } else if (!WXMLAttributeNameInsertHandler.isOnlyNameForInsert(it)) {
-                    WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler()
-                } else {
-                    null
-                }
+                val insertHandler = WXMLAttributeNameInsertHandler.createFromAttributeDescription(it)
                 LookupElementBuilder.create(it.key).withInsertHandler(insertHandler)
             }?.let {
                 result.addAllElements(it)
@@ -164,7 +157,9 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                 // 公共属性
                 result.addAllElements(
                         WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.filter { attribute -> xmlAttributes.none { it.name == attribute.key } }.map {
-                            LookupElementBuilder.create(it.key).withInsertHandler(WXMLAttributeNameInsertHandler(it))
+                            LookupElementBuilder.create(it.key).withInsertHandler(
+                                    WXMLAttributeNameInsertHandler.createFromAttributeDescription(it)
+                            )
                         })
             }
 

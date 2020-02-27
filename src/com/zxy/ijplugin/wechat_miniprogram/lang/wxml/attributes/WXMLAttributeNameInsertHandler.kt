@@ -84,6 +84,7 @@ import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.util.text.CharArrayUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isJsTypeAttribute
 
 abstract class WXMLAttributeNameInsertHandler : InsertHandler<LookupElement> {
     companion object {
@@ -95,6 +96,19 @@ abstract class WXMLAttributeNameInsertHandler : InsertHandler<LookupElement> {
                     WXMLElementAttributeDescription.ValueType.BOOLEAN
             ) && wxmlPresetElementAttributeDescription.default == false
         }
+
+        fun createFromAttributeDescription(
+                attributeDescription: WXMLElementAttributeDescription
+        ): WXMLAttributeNameInsertHandler? {
+            return if (attributeDescription.isJsTypeAttribute()) {
+                DoubleBraceInsertHandler()
+            } else if (!isOnlyNameForInsert(attributeDescription)) {
+                DoubleQuotaInsertHandler()
+            } else {
+                null
+            }
+        }
+
     }
 
     override fun handleInsert(context: InsertionContext, item: LookupElement) {
