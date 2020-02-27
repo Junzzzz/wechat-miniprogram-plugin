@@ -82,6 +82,7 @@ import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isJsTypeAttribute
 
 class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParameters>() {
 
@@ -120,7 +121,14 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                     it.name == desc.key
                 }
             }?.map {
-                LookupElementBuilder.create(it.key).withInsertHandler(WXMLAttributeNameInsertHandler(it))
+                val insertHandler = if (it.isJsTypeAttribute()) {
+                    WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
+                } else if (!WXMLAttributeNameInsertHandler.isOnlyNameForInsert(it)) {
+                    WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler()
+                } else {
+                    null
+                }
+                LookupElementBuilder.create(it.key).withInsertHandler(insertHandler)
             }?.let {
                 result.addAllElements(it)
             }

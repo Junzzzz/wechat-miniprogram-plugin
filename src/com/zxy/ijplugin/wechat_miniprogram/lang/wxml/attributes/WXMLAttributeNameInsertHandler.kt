@@ -84,11 +84,8 @@ import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.util.text.CharArrayUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isJsTypeAttribute
 
-class WXMLAttributeNameInsertHandler(
-        private val attributeDescription: WXMLElementAttributeDescription
-) : InsertHandler<LookupElement> {
+abstract class WXMLAttributeNameInsertHandler : InsertHandler<LookupElement> {
     companion object {
 
         fun isOnlyNameForInsert(
@@ -101,12 +98,6 @@ class WXMLAttributeNameInsertHandler(
     }
 
     override fun handleInsert(context: InsertionContext, item: LookupElement) {
-        if (attributeDescription.isJsTypeAttribute()) {
-            DoubleBraceInsertHandler().handleInsert(context, item)
-        } else if (!isOnlyNameForInsert(attributeDescription)) {
-            DoubleQuotaInsertHandler().handleInsert(context, item)
-        }
-
         val editor = context.editor
         TabOutScopesTracker.getInstance().registerEmptyScopeAtCaret(context.editor)
         editor.scrollingModel.scrollToCaret(ScrollType.RELATIVE)
@@ -119,14 +110,15 @@ class WXMLAttributeNameInsertHandler(
      * 额外插入双括号
      */
     class DoubleBraceInsertHandler :
-            InsertHandler<LookupElement> {
-        override fun handleInsert(insertionContext: InsertionContext, p1: LookupElement) {
+            WXMLAttributeNameInsertHandler() {
+        override fun handleInsert(insertionContext: InsertionContext, item: LookupElement) {
             // 额外插入 [=""]
             // 额外插入 [="{{}}"]
             val editor = insertionContext.editor
             val offset = editor.caretModel.offset
             insertionContext.document.insertString(offset, "=\"{{}}\"")
             editor.caretModel.moveToOffset(offset + 4)
+            super.handleInsert(insertionContext, item)
         }
 
     }
@@ -137,8 +129,8 @@ class WXMLAttributeNameInsertHandler(
      * @param autoPopup 完成之后是否立即唤醒自动完成控制器
      */
     class DoubleQuotaInsertHandler(private val autoPopup: Boolean = false) :
-            InsertHandler<LookupElement> {
-        override fun handleInsert(context: InsertionContext, p1: LookupElement) {
+            WXMLAttributeNameInsertHandler() {
+        override fun handleInsert(context: InsertionContext, item: LookupElement) {
             val editor = context.editor
             val document = editor.document
             val caretOffset = editor.caretModel.offset
@@ -176,6 +168,7 @@ class WXMLAttributeNameInsertHandler(
                 }
             }
             editor.caretModel.moveToOffset(caretOffset + if (insertQuotes || hasQuotes) 2 else 1)
+            super.handleInsert(context, item)
         }
 
     }
