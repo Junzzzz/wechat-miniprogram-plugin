@@ -122,6 +122,7 @@ import com.intellij.xml.impl.schema.XmlElementDescriptorImpl;
 import com.intellij.xml.util.HtmlUtil;
 import com.intellij.xml.util.XmlUtil;
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLAttributeInsertUtils;
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLUtils;
 import kotlin.collections.ArraysKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -220,7 +221,9 @@ public class WXMLTagInsertHandler implements InsertHandler<LookupElement> {
             }
         }
 
-        XmlAttributeDescriptor[] attributes = descriptor.getAttributesDescriptors(tag);
+
+        XmlAttributeDescriptor[] attributes = WXMLUtils.getWXMLAttributeDescriptors(tag);
+
         StringBuilder indirectRequiredAttrs = null;
 
         if (WebEditorOptions.getInstance().isAutomaticallyInsertRequiredAttributes()) {

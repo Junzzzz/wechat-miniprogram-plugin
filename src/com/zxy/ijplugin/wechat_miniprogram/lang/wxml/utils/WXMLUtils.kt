@@ -74,14 +74,24 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
 
 object WXMLUtils {
     fun isValidTagName(charSequence: CharSequence): Boolean {
         return charSequence.all { it.isDigit() || (it.isLetter() && it.isLowerCase()) || it == '-' || it == '_' }
+    }
+
+    @JvmStatic
+    fun getWXMLAttributeDescriptors(tag: XmlTag?): Array<WXMLAttributeDescriptor> {
+        return (tag?.descriptor as? WXMLElementDescriptor)?.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.map {
+            WXMLAttributeDescriptor(it)
+        }?.toTypedArray() ?: emptyArray()
     }
 }
 
