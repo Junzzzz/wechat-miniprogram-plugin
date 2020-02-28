@@ -25,14 +25,14 @@
             <li> Code inspection and automatic repairs</li>
         </ul>
 
-        For detailed usage documents and function descriptions, please visit
+                For detailed usage documents and function descriptions, please visit
         <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis"> Gitee Wiki </a>
         ]]></description>
 
     <change-notes>
         <![CDATA[
-            <p>Fixed a bug where typing '/' at the beginning of the string would automatically complete the label</p>
-            <p>Fixed 'wx: elif' error that would automatically complete double brackets</p>
+        <p>Fixed a bug where typing '/' at the beginning of the string would automatically complete the label</p>
+        <p>Fixed 'wx: elif' error that would automatically complete double brackets</p>
         ]]>
     </change-notes>
 
@@ -179,6 +179,8 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.inspection.WXMLXmlSuppressionProvider"/>
         <lang.syntaxHighlighterFactory
                 language="WXML" implementationClass="com.intellij.lang.html.HtmlSyntaxHighlighterFactory"/>
+        <colorProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.line_mark.WXMLElementColorProvider"/>
 
         <!--        <lang.parserDefinition language="WXML"-->
         <!--                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition"/>-->
