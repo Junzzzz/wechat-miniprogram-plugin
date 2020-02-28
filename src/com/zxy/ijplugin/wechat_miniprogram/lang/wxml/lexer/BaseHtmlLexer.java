@@ -423,7 +423,7 @@ public abstract class BaseHtmlLexer extends DelegateLexer {
             }
 
 
-            if (firstCh != 'o' && firstCh != 'w' && (!caseInsensitive || (firstCh != 'W' && firstCh != 'O'))) {
+            if (firstCh != 'b' && firstCh != 'w' && firstCh != 'c' && (!caseInsensitive || (firstCh != 'B' && firstCh != 'O' && firstCh != 'C'))) {
                 return; // optimization
             }
 
