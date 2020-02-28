@@ -80,8 +80,10 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.impl.source.xml.XmlAttributeReference
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLUtils
 
 class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParameters>() {
 
@@ -128,8 +130,14 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
 
             // wxml组件事件
             descriptor.wxmlElementDescription?.events?.filter { event ->
-                xmlAttributes.none {
-                    it.name == event
+                xmlAttributes.none { attr ->
+                    WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any {
+                        attr.name == it + event
+                    }
+                }
+            }?.flatMap { event ->
+                WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.map {
+                    it + event
                 }
             }?.map {
                 LookupElementBuilder.create(it)
@@ -166,9 +174,10 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
             if (!IGNORE_COMMON_EVENT_TAG_NAMES.contains(tagName)) {
                 // 公共事件
                 result.addAllElements(
-                        WXMLMetadata.COMMON_ELEMENT_EVENTS.filter { e -> xmlAttributes.none { it.name == e } }.map {
+                        WXMLUtils.generateEventAttributeFullName(WXMLMetadata.COMMON_ELEMENT_EVENTS).map {
                             LookupElementBuilder.create(it)
-                        })
+                        }
+                )
             }
 
         }
