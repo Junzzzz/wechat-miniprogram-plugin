@@ -181,7 +181,8 @@
                 language="WXML" implementationClass="com.intellij.lang.html.HtmlSyntaxHighlighterFactory"/>
         <colorProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.line_mark.WXMLElementColorProvider"/>
-
+        <psi.referenceContributor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLReferenceContributor"/>
         <!--        <lang.parserDefinition language="WXML"-->
         <!--                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition"/>-->
         <!--        <lang.syntaxHighlighterFactory-->

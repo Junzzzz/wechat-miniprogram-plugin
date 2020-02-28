@@ -78,6 +78,9 @@ import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.xml.XmlAttribute
+import com.intellij.psi.xml.XmlAttributeValue
+import com.intellij.psi.xml.XmlToken
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
@@ -105,22 +108,18 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(psiReferenceRegistrar: PsiReferenceRegistrar) {
         // 解析wxml中的id
         psiReferenceRegistrar.registerReferenceProvider(
-                PlatformPatterns.psiElement(WXMLStringText::class.java),
+                PlatformPatterns.psiElement(XmlToken::class.java).withParent(XmlAttributeValue::class.java),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext
                     ): Array<PsiReference> {
-                        if (psiElement is WXMLStringText) {
-                            val attribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
-                            if (attribute != null && attribute.name == "id"
-                                    && psiElement.nextSibling.node.elementType == WXMLTypes.STRING_END
-                                    && psiElement.prevSibling.node.elementType == WXMLTypes.STRING_START) {
+                        if (psiElement is XmlToken) {
+                            val attribute = psiElement.parent?.parent as? XmlAttribute ?: return emptyArray()
+                            if (attribute.name == "id") {
                                 // 这个字符串内容必须在 id中
-                                // 并且没有整个字符串没有表达式
                                 return arrayOf(WXMLIdReference(psiElement))
                             }
                         }
-
                         return PsiReference.EMPTY_ARRAY
                     }
                 }
@@ -220,7 +219,7 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
         // 如果tag是元数据
         psiReferenceRegistrar.registerReferenceProvider(
                 PlatformPatterns.psiElement(WXMLTag::class.java),
-                object :PsiReferenceProvider(){
+                object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, context: ProcessingContext
                     ): Array<out PsiReference> {

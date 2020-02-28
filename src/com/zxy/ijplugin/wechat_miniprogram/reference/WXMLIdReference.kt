@@ -76,15 +76,15 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.xml.XmlToken
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.substring
 
-class WXMLIdReference(wxmlStringText: WXMLStringText) : PsiPolyVariantReferenceBase<WXMLStringText>(wxmlStringText) {
+class WXMLIdReference(xmlToken: XmlToken) : PsiPolyVariantReferenceBase<XmlToken>(xmlToken) {
 
     override fun multiResolve(p0: Boolean): Array<ResolveResult> {
         val id = this.element.text
