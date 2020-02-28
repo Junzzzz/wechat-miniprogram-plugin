@@ -75,9 +75,11 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlTag
+import com.intellij.xml.XmlAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLEventAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
@@ -88,10 +90,19 @@ object WXMLUtils {
     }
 
     @JvmStatic
-    fun getWXMLAttributeDescriptors(tag: XmlTag?): Array<WXMLAttributeDescriptor> {
-        return (tag?.descriptor as? WXMLElementDescriptor)?.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.map {
+    fun getWXMLAttributeDescriptors(tag: XmlTag?): Array<XmlAttributeDescriptor> {
+        val result = mutableSetOf<XmlAttributeDescriptor>()
+        val wxmlElementDescription = (tag?.descriptor as? WXMLElementDescriptor)?.wxmlElementDescription
+        wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.map {
             WXMLAttributeDescriptor(it)
-        }?.toTypedArray() ?: emptyArray()
+        }?.let {
+            result.addAll(it)
+        }
+        wxmlElementDescription?.events?.let {
+            result.addAll(this.generateEventAttributeDescriptions(it).toList())
+        }
+
+        return result.toTypedArray()
     }
 
     /**
@@ -100,6 +111,16 @@ object WXMLUtils {
     @JvmStatic
     fun likeEventAttribute(attributeName: String): Boolean {
         return WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any { attributeName.startsWith(it) }
+    }
+
+    fun generateEventAttributeDescriptions(eventNames: Array<String>): Array<XmlAttributeDescriptor> {
+        return eventNames.flatMap { eventName ->
+            WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.map {
+                it + eventName
+            }
+        }.map {
+            WXMLEventAttributeDescriptor(it)
+        }.toTypedArray()
     }
 }
 
