@@ -79,7 +79,6 @@ import com.intellij.xml.XmlAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLEventAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
@@ -98,10 +97,6 @@ object WXMLUtils {
         }?.let {
             result.addAll(it)
         }
-        wxmlElementDescription?.events?.let {
-            result.addAll(this.generateEventAttributeDescriptions(it).toList())
-        }
-
         return result.toTypedArray()
     }
 
@@ -113,14 +108,12 @@ object WXMLUtils {
         return WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any { attributeName.startsWith(it) }
     }
 
-    fun generateEventAttributeDescriptions(eventNames: Array<String>): Array<XmlAttributeDescriptor> {
+    fun generateEventAttributeFullName(eventNames: Array<String>): List<String> {
         return eventNames.flatMap { eventName ->
             WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.map {
                 it + eventName
             }
-        }.map {
-            WXMLEventAttributeDescriptor(it)
-        }.toTypedArray()
+        }
     }
 }
 
