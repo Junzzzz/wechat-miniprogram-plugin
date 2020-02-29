@@ -77,7 +77,6 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.patterns.XmlPatterns
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
-import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.psi.xml.XmlAttribute
@@ -147,19 +146,13 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                         if (attribute != null && (attribute.name == "class" || ComponentWxmlUtils.isExternalClassesAttribute(
                                         attribute
                                 ))) {
-                            val stringContentNodes = psiElement.node.getChildren(
-                                    TokenSet.create(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN)
-                            )
-                            return stringContentNodes.flatMap {
-                                val findResults = Regex("[_\\-a-zA-Z][_\\-a-zA-Z0-9]+").findAll(it.text)
-                                findResults.map { matchResult ->
-                                    WXMLClassReference(
-                                            psiElement, matchResult.range.toTextRange()
-                                    )
-                                }.toList()
-                            }.toTypedArray()
+                            val findResults = Regex("[_\\-a-zA-Z][_\\-a-zA-Z0-9]+").findAll(psiElement.text)
+                            return findResults.map { matchResult ->
+                                WXMLClassReference(
+                                        psiElement, matchResult.range.toTextRange()
+                                )
+                            }.toList().toTypedArray()
                         }
-
                         return PsiReference.EMPTY_ARRAY
                     }
 
@@ -168,15 +161,16 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
 
         // 解析wxml中的路径属性
         psiReferenceRegistrar.registerReferenceProvider(
-                PlatformPatterns.psiElement(WXMLStringText::class.java),
+                XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, processingContext: ProcessingContext
                     ): Array<out PsiReference> {
-                        val wxmlElement = PsiTreeUtil.getParentOfType(psiElement, WXMLElement::class.java)
-                        val wxmlAttribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
-                        if (wxmlElement != null && wxmlAttribute != null && matchPathAttribute(
-                                        wxmlElement.tagName!!, wxmlAttribute.name
+                        psiElement is XmlAttributeValue
+                        val attribute = psiElement.parent as? XmlAttribute ?: return PsiReference.EMPTY_ARRAY
+                        val tag = attribute.parent
+                        if (matchPathAttribute(
+                                        tag.name, attribute.name
                                 )) {
                             // 这个属性是可解析为路径的
                             return FileReferenceSet(psiElement).allReferences
