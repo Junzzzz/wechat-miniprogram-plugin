@@ -77,6 +77,7 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonProperty
+import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiPolyVariantReferenceBase
@@ -94,7 +95,10 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
-import com.zxy.ijplugin.wechat_miniprogram.utils.*
+import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
 
 class WXMLCompletionContributor : CompletionContributor() {
 
@@ -308,9 +312,12 @@ open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParamete
  */
 class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>() {
     companion object {
-        val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elif", "wx:else", "wx:key", "wx:if")
+        val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elif", "wx:else", "wx:key", "wx:if", "wx:for-item")
 
         const val NO_VALUE_ATTRIBUTE = "wx:elif"
+
+        const val ONLY_STRING_ATTRIBUTE = "wx:for-item"
+
         /**
          * 忽略公共的属性的标签名
          */
@@ -386,7 +393,7 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             val wxmlTag = PsiTreeUtil.findChildOfType(
                     wxmlElement, WXMLTag::class.java
             )
-            val jsFile = wxmlTag?.let { ComponentWxmlUtils.findCustomComponentDefinitionJsFile(wxmlTag) }
+            val jsFile: JSFile? = wxmlTag?.let { null }
             // 根据js中的properties配置项提供完成
             jsFile?.let {
                 ComponentJsUtils.findPropertiesItems(jsFile)
@@ -425,6 +432,9 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
                     WX_ATTRIBUTES.map {
                         if (it == NO_VALUE_ATTRIBUTE) {
                             LookupElementBuilder.create(it)
+                        } else if (it == ONLY_STRING_ATTRIBUTE) {
+                            LookupElementBuilder.create(it)
+                                    .withInsertHandler(WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler())
                         } else {
                             LookupElementBuilder.create(it).withInsertHandler(
                                     WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
