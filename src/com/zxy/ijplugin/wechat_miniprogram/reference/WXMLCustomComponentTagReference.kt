@@ -78,21 +78,25 @@ import com.intellij.json.psi.JsonProperty
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiReferenceBase
+import com.intellij.psi.util.elementType
+import com.intellij.psi.xml.XmlTag
+import com.intellij.psi.xml.XmlTokenType
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
 
-class WXMLCustomComponentTagReference(element: WXMLTag) :
-        PsiReferenceBase<WXMLTag>(element,element.getTagNameNode()?.psi?.textRangeInParent) {
+class WXMLCustomComponentTagReference(element: XmlTag) :
+        PsiReferenceBase<XmlTag>(
+                element, element.children.find { it.elementType == XmlTokenType.XML_NAME }!!.textRangeInParent
+        ) {
 
     override fun resolve(): PsiElement? {
-        val tagName = element.getTagName()?:return null
+        val tagName = this.value
         val wxmlPsiFile = this.element.containingFile
-        val jsonFile = findRelateFile(wxmlPsiFile.originalFile.virtualFile, RelateFileType.JSON)?:return null
+        val jsonFile = findRelateFile(wxmlPsiFile.originalFile.virtualFile, RelateFileType.JSON) ?: return null
         val psiManager = PsiManager.getInstance(this.element.project)
-        val jsonPsiFile = psiManager.findFile(jsonFile) as? JsonFile?:return null
+        val jsonPsiFile = psiManager.findFile(jsonFile) as? JsonFile ?: return null
         // 找到usingComponents的配置
         val usingComponentItems = mutableListOf<JsonProperty>().apply {
             ComponentJsonUtils.getUsingComponentItems(jsonPsiFile)?.let {

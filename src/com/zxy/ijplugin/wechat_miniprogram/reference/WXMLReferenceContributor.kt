@@ -81,6 +81,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlAttributeValue
+import com.intellij.psi.xml.XmlTag
 import com.intellij.psi.xml.XmlTokenType
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
@@ -197,15 +198,15 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
         // 解析wxml tag
         // 如果tag在json文件中注册
         psiReferenceRegistrar.registerReferenceProvider(
-                PlatformPatterns.psiElement(WXMLTag::class.java),
+                XmlPatterns.xmlTag().withLanguage(WXMLLanguage.INSTANCE),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext
                     ): Array<PsiReference> {
-                        psiElement as WXMLTag
-                        val tagNameNode = psiElement.getTagNameNode()
-                        if (tagNameNode != null && WXMLMetadata.getElementDescriptions(psiElement.project).none {
-                                    tagNameNode.text == it.name
+                        psiElement as XmlTag
+                        val tagName = psiElement.name
+                        if (WXMLMetadata.getElementDescriptions(psiElement.project).none {
+                                    tagName == it.name
                                 }) {
                             return arrayOf(WXMLCustomComponentTagReference(psiElement))
                         }
