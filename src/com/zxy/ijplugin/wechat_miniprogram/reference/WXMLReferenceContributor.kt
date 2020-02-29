@@ -74,13 +74,15 @@
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
 import com.intellij.patterns.PlatformPatterns
+import com.intellij.patterns.XmlPatterns
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.elementType
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlAttributeValue
-import com.intellij.psi.xml.XmlToken
+import com.intellij.psi.xml.XmlTokenType
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
@@ -108,18 +110,24 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(psiReferenceRegistrar: PsiReferenceRegistrar) {
         // 解析wxml中的id
         psiReferenceRegistrar.registerReferenceProvider(
-                PlatformPatterns.psiElement(XmlToken::class.java).withParent(XmlAttributeValue::class.java),
+                XmlPatterns.xmlAttributeValue(),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext
                     ): Array<PsiReference> {
-                        if (psiElement is XmlToken) {
-                            val attribute = psiElement.parent?.parent as? XmlAttribute ?: return emptyArray()
-                            if (attribute.name == "id") {
-                                // 这个字符串内容必须在 id中
-                                return arrayOf(WXMLIdReference(psiElement))
+                        if (psiElement is XmlAttributeValue && (psiElement.parent as? XmlAttribute)?.name == "id") {
+                            val valueTokens = psiElement.children.filter {
+                                it.elementType == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN
+                            }
+
+                            if (valueTokens.size == 1) {
+                                // 这个字符串内容必须在 id中 并且只有一个ValueToken
+                                // 没有双括号
+                                return arrayOf(WXMLIdReference(psiElement, valueTokens[0].textRangeInParent))
                             }
                         }
+
+
                         return PsiReference.EMPTY_ARRAY
                     }
                 }

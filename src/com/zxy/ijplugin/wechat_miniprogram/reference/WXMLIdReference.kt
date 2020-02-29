@@ -73,28 +73,29 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
+import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.xml.XmlToken
+import com.intellij.psi.xml.XmlAttributeValue
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.substring
 
-class WXMLIdReference(xmlToken: XmlToken) : PsiPolyVariantReferenceBase<XmlToken>(xmlToken) {
+class WXMLIdReference(xmlAttributeValue: XmlAttributeValue, range: TextRange) :
+        PsiPolyVariantReferenceBase<XmlAttributeValue>(xmlAttributeValue, range) {
 
     override fun multiResolve(p0: Boolean): Array<ResolveResult> {
-        val id = this.element.text
+        val id = this.value
         return getIdSelectorsFromRelatedWxssFile().filter { id == it.id }.map {
             PsiElementResolveResult(it)
         }.toTypedArray()
     }
 
     override fun isReferenceTo(element: PsiElement): Boolean {
-        val cssId = this.element.text.substring(this.rangeInElement)
+        val cssId = this.value
         if (element is WXSSIdSelector && element.id == cssId) {
             val wxmlFile = this.element.containingFile.virtualFile
             val wxssFile = findRelateFile(wxmlFile, RelateFileType.WXSS)
