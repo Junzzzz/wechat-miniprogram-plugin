@@ -73,8 +73,10 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlAttribute
+import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.psi.xml.XmlTag
 import com.intellij.xml.XmlAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
@@ -151,4 +153,9 @@ fun WXMLElement.findAttribute(name: String): WXMLAttribute? {
     return PsiTreeUtil.findChildrenOfType(this, WXMLAttribute::class.java).find {
         it.name == name
     }
+}
+
+fun XmlAttributeValue.valueTextRangeInSelf(): TextRange {
+    val value = this.value
+    return TextRange.create(1, this.value.length + 1)
 }

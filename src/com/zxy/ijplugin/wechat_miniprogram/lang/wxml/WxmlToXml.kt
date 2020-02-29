@@ -71,29 +71,6 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.reference
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiReferenceBase
-import com.intellij.psi.xml.XmlAttributeValue
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.valueTextRangeInSelf
-
-class WXMLTemplateIsAttributeReference(element: XmlAttributeValue) :
-        PsiReferenceBase<XmlAttributeValue>(element, element.valueTextRangeInSelf()) {
-
-    override fun resolve(): PsiElement? {
-        val wxmlPsiFile = this.element.containingFile
-        return WXMLModuleUtils.findTemplateDefinitionXmlAttributeValue(wxmlPsiFile as WXMLPsiFile, this.value)
-    }
-
-    override fun getVariants(): Array<Any> {
-        return WXMLModuleUtils.findTemplateDefinitionsWithImports(element.containingFile as WXMLPsiFile).toTypedArray()
-    }
-
-    override fun isSoft(): Boolean {
-        return false
-    }
-
-}
+const val wxmlToXmlDeprecatedMessage = "wxml to xml"

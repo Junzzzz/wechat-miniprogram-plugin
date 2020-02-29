@@ -76,10 +76,13 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.xml.XmlAttributeValue
+import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.wxmlToXmlDeprecatedMessage
 
 object WXMLModuleUtils {
 
@@ -87,6 +90,7 @@ object WXMLModuleUtils {
      * 从一个wxml文件以及找到一个template的定义
      * 包含其导入的文件
      */
+    @Deprecated(wxmlToXmlDeprecatedMessage)
     fun findTemplateDefinition(wxmlPsiFile: WXMLPsiFile, templateName: String): PsiElement? {
         val elements = PsiTreeUtil.findChildrenOfType(wxmlPsiFile, WXMLElement::class.java)
         // 在本文件中找
@@ -106,6 +110,44 @@ object WXMLModuleUtils {
         return null
     }
 
+    fun findTemplateDefinitionXmlAttributeValue(wxmlPsiFile: WXMLPsiFile, templateName: String): XmlAttributeValue? {
+        val elements = PsiTreeUtil.findChildrenOfType(wxmlPsiFile, XmlTag::class.java)
+        // 在本文件中找
+        this.findTemplateDefinitionWithSingleFile(elements, templateName)?.let {
+            return it
+        }
+        // 找到所有的import的文件引用
+        val fileReferences = findSrcImportedFileReferences(elements)
+        for (fileReference in fileReferences) {
+            val resolveFile = fileReference.resolve()
+            if (resolveFile is WXMLPsiFile) {
+                findTemplateDefinitionOnlySingleFile(resolveFile, templateName).let {
+                    return it
+                }
+            }
+        }
+        return null
+    }
+
+    private fun findSrcImportedFileReferences(
+            elements: Collection<XmlTag>
+    ): Sequence<FileReference> {
+        return elements.asSequence().filter {
+            it.name == "import"
+        }.mapNotNull { xmlTag ->
+            xmlTag.attributes.find {
+                it.name == "src"
+            }
+        }.mapNotNull {
+            it.valueElement
+        }.mapNotNull { xmlAttributeValue ->
+            xmlAttributeValue.references.findLast {
+                it is FileReference
+            }
+        }.filterIsInstance<FileReference>()
+    }
+
+    @Deprecated(wxmlToXmlDeprecatedMessage)
     private fun findImportedFileReferences(
             elements: Collection<WXMLElement>
     ): Sequence<FileReference> {
@@ -124,12 +166,22 @@ object WXMLModuleUtils {
         }.filterIsInstance<FileReference>()
     }
 
+    @Deprecated(wxmlToXmlDeprecatedMessage)
     private fun findTemplateDefinitionWithSingleFile(wxmlPsiFile: WXMLPsiFile, templateName: String): WXMLStringText? {
         return this.findTemplateDefinitionWithSingleFile(
                 PsiTreeUtil.findChildrenOfType(wxmlPsiFile, WXMLElement::class.java), templateName
         )
     }
 
+    private fun findTemplateDefinitionOnlySingleFile(
+            wxmlPsiFile: WXMLPsiFile, templateName: String
+    ): XmlAttributeValue? {
+        return this.findTemplateDefinitionWithSingleFile(
+                PsiTreeUtil.findChildrenOfType(wxmlPsiFile, XmlTag::class.java), templateName
+        )
+    }
+
+    @Deprecated(wxmlToXmlDeprecatedMessage)
     private fun findTemplateDefinitionWithSingleFile(
             wxmlElements: Collection<WXMLElement>, templateName: String
     ): WXMLStringText? {
@@ -147,6 +199,26 @@ object WXMLModuleUtils {
                 )
                 if (stringText != null && stringText.text == templateName) {
                     return stringText
+                }
+            }
+        }
+        return null
+    }
+
+    private fun findTemplateDefinitionWithSingleFile(
+            tags: Collection<XmlTag>, templateName: String
+    ): XmlAttributeValue? {
+        val templateElements = tags.filter {
+            it.name == "template"
+        }
+        for (templateElement in templateElements) {
+            val attributes = templateElement.attributes
+            val nameAttribute = attributes.find {
+                it.name == "name"
+            }
+            if (nameAttribute != null) {
+                if (nameAttribute.value == templateName) {
+                    return nameAttribute.valueElement
                 }
             }
         }

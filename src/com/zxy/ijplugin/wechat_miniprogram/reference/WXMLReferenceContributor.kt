@@ -86,7 +86,6 @@ import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
@@ -182,20 +181,15 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
 
         // 解析wxml中的template.is属性
         psiReferenceRegistrar.registerReferenceProvider(
-                PlatformPatterns.psiElement(WXMLStringText::class.java),
+                XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE).withLocalName("is").withSuperParent(
+                        2, XmlPatterns.xmlTag().withLocalName("template")
+                ),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext
                     ): Array<PsiReference> {
-                        psiElement as WXMLStringText
-                        val wxmlAttribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
-                        if (wxmlAttribute != null && wxmlAttribute.name == "is") {
-                            val wxmlElement = PsiTreeUtil.getParentOfType(wxmlAttribute, WXMLElement::class.java)
-                            if (wxmlElement != null && wxmlElement.tagName == "template") {
-                                return arrayOf(WXMLTemplateIsAttributeReference(psiElement))
-                            }
-                        }
-                        return PsiReference.EMPTY_ARRAY
+                        psiElement as XmlAttributeValue
+                        return arrayOf(WXMLTemplateIsAttributeReference(psiElement))
                     }
                 }
         )
