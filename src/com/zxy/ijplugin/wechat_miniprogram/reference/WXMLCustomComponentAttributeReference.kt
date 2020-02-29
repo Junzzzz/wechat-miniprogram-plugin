@@ -79,14 +79,13 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 
 class WXMLCustomComponentAttributeReference(element: WXMLAttribute) :
         PsiReferenceBase<WXMLAttribute>(element, element.firstChild.textRangeInParent) {
     override fun resolve(): PsiElement? {
         val attributeName = this.element.name
         val wxmlTag = PsiTreeUtil.getParentOfType(this.element, WXMLTag::class.java)
-        return wxmlTag?.let { ComponentWxmlUtils.findCustomComponentDefinitionJsFile(it) }?.let { jsFile ->
+        return wxmlTag?.let { null }?.let { jsFile ->
             ComponentJsUtils.findPropertiesItems(jsFile)?.find {
                 it.name == attributeName
             }
