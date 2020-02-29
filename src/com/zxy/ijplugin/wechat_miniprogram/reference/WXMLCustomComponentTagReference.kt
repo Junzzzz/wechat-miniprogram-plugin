@@ -78,17 +78,16 @@ import com.intellij.json.psi.JsonProperty
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiReferenceBase
-import com.intellij.psi.util.elementType
 import com.intellij.psi.xml.XmlTag
-import com.intellij.psi.xml.XmlTokenType
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.nameTextRangeInSelf
 import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
 
 class WXMLCustomComponentTagReference(element: XmlTag) :
         PsiReferenceBase<XmlTag>(
-                element, element.children.find { it.elementType == XmlTokenType.XML_NAME }!!.textRangeInParent
+                element, element.nameTextRangeInSelf()
         ) {
 
     override fun resolve(): PsiElement? {
