@@ -78,10 +78,13 @@ import com.intellij.lang.injection.MultiHostRegistrar
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiLanguageInjectionHost
+import com.intellij.psi.impl.source.xml.XmlAttributeValueImpl
+import com.intellij.psi.impl.source.xml.XmlTextImpl
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.xml.XmlAttribute
+import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.expr.WxmlJsLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector.Companion.DOUBLE_BRACE_REGEX
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isEventHandler
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
@@ -92,41 +95,41 @@ class WxmlJSInjector : MultiHostInjector {
     }
 
     override fun elementsToInjectIn(): MutableList<out Class<out PsiElement>> {
-        return mutableListOf(WXMLText::class.java, WXMLStringText::class.java)
+        return mutableListOf(XmlTextImpl::class.java, XmlAttributeValueImpl::class.java)
     }
 
     override fun getLanguagesToInject(multiHostRegistrar: MultiHostRegistrar, psiElement: PsiElement) {
         when (psiElement) {
-            is WXMLText -> {
+            is XmlTextImpl -> {
                 injectInText(psiElement, multiHostRegistrar)
             }
-            is WXMLStringText -> {
-                injectInStringText(psiElement, multiHostRegistrar)
+            is XmlAttributeValueImpl -> {
+                injectInAttributeValue(psiElement, multiHostRegistrar)
             }
         }
     }
 
-    private fun injectInStringText(
-            psiElement: WXMLStringText,
+    private fun injectInAttributeValue(
+            psiElement: XmlAttributeValueImpl,
             multiHostRegistrar: MultiHostRegistrar
     ) {
-        val element = PsiTreeUtil.getParentOfType(psiElement, WXMLElement::class.java)
-        val attribute = PsiTreeUtil.getParentOfType(
-                psiElement, WXMLAttribute::class.java
-        )
-        val attributeName = attribute?.name
-        if (element == null || element.tagName == "wxs" || element.tagName == "include" || element.tagName == "import"
-                || (element.tagName == "template" && attributeName == "name")
+
+        val attribute = psiElement.parent as? XmlAttribute ?: return
+        val element = attribute.parent
+        val attributeName = attribute.name
+        val tagName = element.name
+        if (tagName == "wxs" || tagName == "include" || tagName == "import"
+                || (tagName == "template" && attributeName == "name")
                 || attributeName == "wx:for-item" || attributeName == "wx:key" || attributeName == "wx:for-index") {
             // wxs等特殊标签 标签的属性不支持 {{}} 语法
             // wx:for 相关的一些辅助属性不支持 {{}} 语法
             return
         }
-        if (attribute?.isEventHandler() == true && !DOUBLE_BRACE_REGEX.matches(psiElement.text)) {
+        if (attribute.isEventHandler() && !DOUBLE_BRACE_REGEX.matches(psiElement.text)) {
             // 此属性是事件
             // 并且属性值中没有双括号
             multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
-                    .addPlace(null, null, psiElement, TextRange(0, psiElement.textLength))
+                    .addPlace(null, "()", psiElement, TextRange(0, psiElement.textLength))
                     .doneInjecting()
         } else {
             // 对字符串中的双括号注入js语言
@@ -135,12 +138,12 @@ class WxmlJSInjector : MultiHostInjector {
     }
 
     private fun injectInText(
-            psiElement: WXMLText,
+            psiElement: XmlTextImpl,
             multiHostRegistrar: MultiHostRegistrar
     ) {
-        val wxmlOpenedElement = PsiTreeUtil.getParentOfType(psiElement, WXMLOpenedElement::class.java)
-        if (wxmlOpenedElement != null) {
-            if ((wxmlOpenedElement.parent as WXMLElement).tagName == "wxs") {
+        val xmlTag = PsiTreeUtil.getParentOfType(psiElement, XmlTag::class.java)
+        if (xmlTag != null) {
+            if (xmlTag.name == "wxs") {
                 // 对wxs标签注入js语言
                 multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
                         .addPlace(null, null, psiElement, TextRange(0, psiElement.textLength))
