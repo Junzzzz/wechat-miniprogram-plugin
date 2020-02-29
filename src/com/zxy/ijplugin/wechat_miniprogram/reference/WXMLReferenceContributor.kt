@@ -84,8 +84,12 @@ import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.psi.xml.XmlTokenType
 import com.intellij.util.ProcessingContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
@@ -110,12 +114,12 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(psiReferenceRegistrar: PsiReferenceRegistrar) {
         // 解析wxml中的id
         psiReferenceRegistrar.registerReferenceProvider(
-                XmlPatterns.xmlAttributeValue(),
+                XmlPatterns.xmlAttributeValue().withLocalName("id").withLanguage(WXMLLanguage.INSTANCE),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext
                     ): Array<PsiReference> {
-                        if (psiElement is XmlAttributeValue && (psiElement.parent as? XmlAttribute)?.name == "id") {
+                        if (psiElement is XmlAttributeValue) {
                             val valueTokens = psiElement.children.filter {
                                 it.elementType == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN
                             }
@@ -126,8 +130,6 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                                 return arrayOf(WXMLIdReference(psiElement, valueTokens[0].textRangeInParent))
                             }
                         }
-
-
                         return PsiReference.EMPTY_ARRAY
                     }
                 }
@@ -135,17 +137,18 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
 
         // 解析wxml中的class
         psiReferenceRegistrar.registerReferenceProvider(
-                PlatformPatterns.psiElement(WXMLStringText::class.java),
+                XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext
                     ): Array<PsiReference> {
-                        val attribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
+                        psiElement is XmlAttributeValue
+                        val attribute = psiElement.parent as? XmlAttribute
                         if (attribute != null && (attribute.name == "class" || ComponentWxmlUtils.isExternalClassesAttribute(
                                         attribute
                                 ))) {
                             val stringContentNodes = psiElement.node.getChildren(
-                                    TokenSet.create(WXMLTypes.STRING_CONTENT)
+                                    TokenSet.create(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN)
                             )
                             return stringContentNodes.flatMap {
                                 val findResults = Regex("[_\\-a-zA-Z][_\\-a-zA-Z0-9]+").findAll(it.text)
