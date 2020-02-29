@@ -73,6 +73,15 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
+import com.intellij.lexer.Lexer
 import com.intellij.psi.css.impl.util.CssHighlighter
+import com.intellij.psi.css.impl.util.CssHighlighterLexer
+import com.intellij.psi.css.impl.util.scheme.CssElementDescriptorFactory2
 
-class WXSSSyntaxHighlighter : CssHighlighter()
+class WXSSSyntaxHighlighter : CssHighlighter() {
+    override fun getHighlightingLexer(): Lexer {
+        return CssHighlighterLexer(CssElementDescriptorFactory2.getInstance().valueIdentifiers.apply {
+            this.add("rpx")
+        })
+    }
+}

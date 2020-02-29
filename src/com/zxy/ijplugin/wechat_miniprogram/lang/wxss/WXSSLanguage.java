@@ -73,7 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss;
 
-import com.intellij.lang.css.CSSLanguage;
+import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -81,14 +81,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class WXSSLanguage extends CSSLanguage {
+public class WXSSLanguage extends Language {
 
-    public static List<String> UNITS = Arrays.asList("rpx","px","%","deg","s","rgb","rect","ex","rem","Hz","pt","rad","in","kHz","mm","ms","cm","vw","vh","vmin","vmax","ch","q","qt");
+    public static List<String> UNITS = Arrays.asList("rpx", "px", "%", "deg", "s", "rgb", "rect", "ex", "rem", "Hz", "pt", "rad", "in", "kHz", "mm", "ms", "cm", "vw", "vh", "vmin", "vmax", "ch", "q", "qt");
 
     public static WXSSLanguage INSTANCE = new WXSSLanguage();
 
     private WXSSLanguage() {
-        super(CSSLanguage.INSTANCE,"WXSS");
+        super("WXSS");
     }
 
     @NotNull
