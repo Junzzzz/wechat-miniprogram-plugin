@@ -430,15 +430,19 @@ class WXMLAttributeCompletionProvider : CompletionProvider<CompletionParameters>
             // 提供固定的wx前缀完成
             completionResultSet.addAllElements(
                     WX_ATTRIBUTES.map {
-                        if (it == NO_VALUE_ATTRIBUTE) {
-                            LookupElementBuilder.create(it)
-                        } else if (it == ONLY_STRING_ATTRIBUTE) {
-                            LookupElementBuilder.create(it)
-                                    .withInsertHandler(WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler())
-                        } else {
-                            LookupElementBuilder.create(it).withInsertHandler(
-                                    WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
-                            )
+                        when (it) {
+                            NO_VALUE_ATTRIBUTE -> {
+                                LookupElementBuilder.create(it)
+                            }
+                            ONLY_STRING_ATTRIBUTE -> {
+                                LookupElementBuilder.create(it)
+                                        .withInsertHandler(WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler())
+                            }
+                            else -> {
+                                LookupElementBuilder.create(it).withInsertHandler(
+                                        WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
+                                )
+                            }
                         }
                     })
         }
