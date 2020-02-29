@@ -218,15 +218,15 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
         // 解析wxml tag
         // 如果tag是元数据
         psiReferenceRegistrar.registerReferenceProvider(
-                PlatformPatterns.psiElement(WXMLTag::class.java),
+                XmlPatterns.xmlTag().withLanguage(WXMLLanguage.INSTANCE),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, context: ProcessingContext
                     ): Array<out PsiReference> {
-                        psiElement as WXMLTag
-                        val tagNameNode = psiElement.getTagNameNode()
-                        if (tagNameNode != null && WXMLMetadata.getElementDescriptions(psiElement.project).any {
-                                    tagNameNode.text == it.name
+                        psiElement as XmlTag
+                        val tagName = psiElement.name
+                        if (WXMLMetadata.getElementDescriptions(psiElement.project).any {
+                                    tagName == it.name
                                 }) {
                             return arrayOf(WXMLTagReference(psiElement))
                         }

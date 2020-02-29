@@ -75,13 +75,14 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReferenceBase
+import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.nameTextRangeInSelf
 
-class WXMLTagReference(element: WXMLTag) :
-        PsiReferenceBase<WXMLTag>(element, element.getTagNameNode()?.psi?.textRangeInParent) {
+class WXMLTagReference(element: XmlTag) :
+        PsiReferenceBase<XmlTag>(element, element.nameTextRangeInSelf()) {
     override fun resolve(): PsiElement? {
-        val tagName = element.getTagName() ?: return null
+        val tagName = this.value
         return WXMLMetadata.getElementDescriptions(element.project).find {
             it.name == tagName
         }?.definedElement
