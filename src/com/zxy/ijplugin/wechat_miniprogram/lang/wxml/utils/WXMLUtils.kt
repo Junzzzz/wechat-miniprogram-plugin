@@ -74,6 +74,7 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlTag
 import com.intellij.xml.XmlAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
@@ -139,8 +140,15 @@ fun WXMLAttribute.isEventHandler(): Boolean {
     }
 }
 
-fun WXMLElement.findAttribute(name:String):WXMLAttribute?{
-    return PsiTreeUtil.findChildrenOfType(this,WXMLAttribute::class.java).find {
+fun XmlAttribute.isEventHandler(): Boolean {
+    val name = this.name
+    return WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any {
+        name.startsWith(it)
+    }
+}
+
+fun WXMLElement.findAttribute(name: String): WXMLAttribute? {
+    return PsiTreeUtil.findChildrenOfType(this, WXMLAttribute::class.java).find {
         it.name == name
     }
 }
