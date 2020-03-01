@@ -116,9 +116,14 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
         if (reference is XmlAttributeReference) {
             val xmlTag = reference.element.parent
             val descriptor = xmlTag.descriptor
+            val xmlAttributes = xmlTag.attributes
             if (descriptor is WxmlCustomComponentDescriptor) {
                 // 自定义组件的属性
-                result.addAllElements(WXMLUtils.getCustomComponentAttributeDescriptors(descriptor).map {
+                result.addAllElements(WXMLUtils.getCustomComponentAttributeDescriptors(descriptor).filter { desc ->
+                    xmlAttributes.none {
+                        it.name == desc.name
+                    }
+                }.map {
                     if (WXMLAttributeInsertUtils.isBooleanTypeAttribute(it) && it.defaultValue == "false") {
                         LookupElementBuilder.create(it.name)
                     } else {
@@ -128,7 +133,6 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                 })
             } else if (descriptor is WXMLElementDescriptor) {
                 val attributes = descriptor.wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors
-                val xmlAttributes = xmlTag.attributes
                 // wxml组件属性
                 attributes.filter { desc ->
                     xmlAttributes.none {
