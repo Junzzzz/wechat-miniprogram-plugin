@@ -261,36 +261,10 @@
         <psi.referenceContributor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLReferenceContributor"/>
         <multiHostInjector implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector"/>
-        <!--        <lang.parserDefinition language="WXML"-->
-        <!--                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition"/>-->
-        <!--        <lang.syntaxHighlighterFactory-->
-        <!--                language="WXML"-->
-        <!--                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLSyntaxHighlighterFactory"/>-->
-        <!--        <typedHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagCloseTypedHandler"/>-->
-        <!--        <completion.contributor-->
-        <!--                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXMLCompletionContributor"-->
-        <!--                language="WXML"/>-->
-        <!--        &lt;!&ndash;此扩展点影响插件的动态加载TODO&ndash;&gt;-->
-        <!--        <editorFactoryListener implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagNameSynchronizer"/>-->
-        <!--        <lang.foldingBuilder language="WXML"-->
-        <!--                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLTagPairFoldingBuilder"/>-->
         <!--        <lang.foldingBuilder language="WXML"-->
         <!--                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLIncludeTagFolding"/>-->
-        <!--        <breadcrumbsInfoProvider-->
-        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.breadcrumbs.WXMLElementBreadcrumbsProvider"/>-->
-        <!--        <lang.formatter language="WXML"-->
-        <!--                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.formatter.WXMLFormattingModelBuilder"/>-->
-        <!--        <extendWordSelectionHandler-->
-        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLStartTagSelectioner"/>-->
-        <!--        <extendWordSelectionHandler implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLEndTagSelectioner"/>-->
-        <!--        <highlightingPassFactory-->
-        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLTagTreeHighlightingPassFactory"/>-->
-        <!--        <braceMatcher filetype="WXML"-->
-        <!--                      implementationClass="com.zxy.ijplugin.wechat_miniprogram.editor.WXMLBraceMatcher"/>-->
         <!--        <colorProvider-->
         <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.line_mark.WXMLElementColorProvider"/>-->
-        <!--        <psi.referenceContributor-->
-        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLReferenceContributor"/>-->
         <!--        <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText"-->
         <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLStringTextManipulator"/>-->
         <!--        <include.provider-->
@@ -301,8 +275,6 @@
         <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXMLTemplateDefinitionChooseByNameContributor"/>-->
         <!--        <lang.refactoringSupport language="WXML"-->
         <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLTemplateNameRefactoring"/>-->
-        <!--        <lang.commenter language="WXML"-->
-        <!--                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLCommenter"/>-->
 
         <!--        <lang.documentationProvider language="WXML"-->
         <!--                                    id="WXMLElementDocumentProvider"-->
