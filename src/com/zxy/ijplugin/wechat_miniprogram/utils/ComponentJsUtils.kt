@@ -116,8 +116,9 @@ object ComponentJsUtils {
             it.firstChild as? JSCallExpression
         }.find { jsCallExpression ->
             jsCallExpression.children.any { it is JSReferenceExpression && it.text == "Component" }
-        }?.let {
-            it.argumentList?.firstChild as? JSObjectLiteralExpression
+        }?.let { jsCallExpression ->
+            jsCallExpression.argumentList?.children?.asSequence()?.filterIsInstance<JSObjectLiteralExpression>()
+                    ?.firstOrNull()
         }?.properties
     }
 

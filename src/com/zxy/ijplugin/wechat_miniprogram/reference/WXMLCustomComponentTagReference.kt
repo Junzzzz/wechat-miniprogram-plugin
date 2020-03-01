@@ -115,3 +115,8 @@ class WXMLCustomComponentTagReference(element: XmlTag) :
     }
 
 }
+
+fun XmlTag.findWXMLCustomComponentTagReference(): WXMLCustomComponentTagReference? {
+    return this.references.asSequence()
+            .filterIsInstance<WXMLCustomComponentTagReference>().firstOrNull()
+}

@@ -81,6 +81,7 @@ import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.reference.findWXMLCustomComponentTagReference
 
 object ComponentWxmlUtils {
 
@@ -108,7 +109,9 @@ object ComponentWxmlUtils {
     }
 
     private fun findCustomComponentDefinitionFiles(xmlTag: XmlTag): List<PsiFile>? {
-        val componentNameJsonLiteral = xmlTag.reference?.resolve() as? JsonStringLiteral
+        // 先找到json文件的定义
+        val componentNameJsonLiteral = xmlTag.findWXMLCustomComponentTagReference()?.resolve() as? JsonStringLiteral
+        // 解析其路径可以找到自定义组件的位置
         val lastComponentPathReference = (componentNameJsonLiteral?.parent as? JsonProperty)?.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>
         return lastComponentPathReference?.multiResolve(
                 false

@@ -238,14 +238,15 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
         // 解析自定义组件标签上的属性
         // 引用js文件中的properties配置
         psiReferenceRegistrar.registerReferenceProvider(
-                PlatformPatterns.psiElement(WXMLAttribute::class.java),
+                XmlPatterns.xmlAttribute().withLanguage(WXMLLanguage.INSTANCE),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext
                     ): Array<PsiReference> {
-                        psiElement as WXMLAttribute
-                        val wxmlTag = PsiTreeUtil.getParentOfType(psiElement, WXMLTag::class.java)
-                        if (wxmlTag != null && wxmlTag.reference is WXMLCustomComponentTagReference) {
+                        psiElement as XmlAttribute
+                        val xmlTag = psiElement.parent
+                        val wxmlCustomComponentTagReference = xmlTag.findWXMLCustomComponentTagReference()
+                        if (wxmlCustomComponentTagReference != null) {
                             return arrayOf(WXMLCustomComponentAttributeReference(psiElement))
                         }
                         return PsiReference.EMPTY_ARRAY
