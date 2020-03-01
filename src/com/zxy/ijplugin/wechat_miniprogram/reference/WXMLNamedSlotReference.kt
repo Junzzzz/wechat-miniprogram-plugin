@@ -89,7 +89,7 @@ class WXMLNamedSlotReference(element: XmlAttributeValue) :
         PsiReferenceBase<XmlAttributeValue>(element, element.valueTextRangeInSelf()) {
 
     override fun resolve(): PsiElement? {
-        val slotName = element.text
+        val slotName = element.value
         return getNamedSlots()?.find {
             it.value == slotName
         }
