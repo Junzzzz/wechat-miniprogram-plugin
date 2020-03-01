@@ -114,35 +114,35 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
         if (reference is XmlAttributeReference) {
             val xmlTag = reference.element.parent
             val descriptor = xmlTag.descriptor as? WXMLElementDescriptor ?: return
-            val attributes = descriptor.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors
+            val attributes = descriptor.wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors
             val xmlAttributes = xmlTag.attributes
             // wxml组件属性
-            attributes?.filter { desc ->
+            attributes.filter { desc ->
                 xmlAttributes.none {
                     it.name == desc.key
                 }
-            }?.map {
+            }.map {
                 val insertHandler = WXMLAttributeNameInsertHandler.createFromAttributeDescription(it)
                 LookupElementBuilder.create(it.key).withInsertHandler(insertHandler)
-            }?.let {
+            }.let {
                 result.addAllElements(it)
             }
 
             // wxml组件事件
-            descriptor.wxmlElementDescription?.events?.filter { event ->
+            descriptor.wxmlElementDescription.events.filter { event ->
                 xmlAttributes.none { attr ->
                     WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any {
                         attr.name == it + event
                     }
                 }
-            }?.flatMap { event ->
+            }.flatMap { event ->
                 WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.map {
                     it + event
                 }
-            }?.map {
+            }.map {
                 LookupElementBuilder.create(it)
                         .withInsertHandler(WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler())
-            }?.let {
+            }.let {
                 result.addAllElements(it)
             }
 
