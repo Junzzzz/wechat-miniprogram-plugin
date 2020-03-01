@@ -243,8 +243,8 @@ public class WXMLTagInsertHandler implements InsertHandler<LookupElement> {
                 if (tag == null || tag.getAttributeValue(attributeName) == null) {
                     if (!notRequiredAttributes.contains(attributeName)) {
                         if (!extension.isIndirectSyntax(attributeDecl)) {
-                            if (WXMLAttributeInsertUtils.isBooleanTypeAttribute(attributeDecl)) {
-                                // Boolean类型之后不需要接等号
+                            if (WXMLAttributeInsertUtils.isBooleanTypeAttribute(attributeDecl) && Objects.equals(attributeDecl.getDefaultValue(), "false")) {
+                                // Boolean类型，且默认值为false，之后不需要接等号
                                 template.addTextSegment(" " + attributeName);
                             } else {
                                 template.addTextSegment(" " + attributeName + "=" + presenter.getPrefix());

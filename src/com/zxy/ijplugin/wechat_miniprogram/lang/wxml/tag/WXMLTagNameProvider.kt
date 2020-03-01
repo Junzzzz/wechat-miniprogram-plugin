@@ -75,10 +75,19 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag
 
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonProperty
+import com.intellij.psi.PsiManager
+import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.xml.XmlTag
 import com.intellij.xml.XmlTagNameProvider
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
+import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
+import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
 
 
 class WXMLTagNameProvider : XmlTagNameProvider {
@@ -86,10 +95,74 @@ class WXMLTagNameProvider : XmlTagNameProvider {
             elements: MutableList<LookupElement>, tag: XmlTag, prefix: String
     ) {
         if (tag.language == WXMLLanguage.INSTANCE) {
+            // 自带组件
             elements.addAll(WXMLMetadata.getElementDescriptions(tag.project).map {
                 LookupElementBuilder.create(it.name)
                         .withInsertHandler(WXMLTagInsertHandler.INSTANCE)
             })
+
+            // 自定义组件
+            val currentJsonFile = findRelateFile(tag.containingFile.originalFile.virtualFile, RelateFileType.JSON)
+            if (currentJsonFile !== null) {
+                val project = tag.project
+                val psiManager = PsiManager.getInstance(project)
+                val currentJsonPsiFile = psiManager.findFile(currentJsonFile)
+                if (currentJsonPsiFile != null && currentJsonPsiFile is JsonFile) {
+
+                    // 项目中所有的组件配置文件
+                    val jsonFiles = ComponentJsonUtils.getAllComponentConfigurationFile(
+                            project
+                    ).filter {
+                        it != currentJsonPsiFile
+                    }
+                    val usingComponentsObjectValue = ComponentJsonUtils.getUsingComponentPropertyValue(
+                            currentJsonPsiFile
+                    )
+                    val appJsonUsingComponentsObjectValue = AppJsonUtils.findUsingComponentsValue(project)
+                    // 从app.json 和 相关的json文件中手机usingComponents
+                    val usingComponentItems = mutableListOf<JsonProperty>().apply {
+                        usingComponentsObjectValue?.propertyList?.let {
+                            this.addAll(it)
+                        }
+                        appJsonUsingComponentsObjectValue?.propertyList?.let {
+                            this.addAll(it)
+                        }
+                    }
+                    val usingComponentMap = usingComponentItems
+                            .associateBy({ jsonProperty ->
+                                (jsonProperty.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>)?.multiResolve(
+                                        false
+                                )?.map {
+                                    it.element
+                                }?.find {
+                                    it is JsonFile
+                                }?.let {
+                                    it as JsonFile
+                                }
+                            }, { it.name })
+                            .filter { it.key != null }
+                    elements.addAll(jsonFiles.mapNotNull { jsonFile ->
+                        val configComponentName = usingComponentMap[jsonFile]
+                        val componentPath = (jsonFile.virtualFile.getPathRelativeToRootRemoveExt(
+                                project
+                        ) ?: return@mapNotNull null)
+                        if (configComponentName == null) {
+                            // 没有注册的组件
+                            LookupElementBuilder.create(jsonFile.virtualFile.nameWithoutExtension)
+                                    .withTypeText(componentPath)
+                                    .withInsertHandler { _, _ ->
+                                        // 在配置文件中注册组件
+                                        usingComponentsObjectValue?.let {
+                                            ComponentJsonUtils.registerComponent(usingComponentsObjectValue, jsonFile)
+                                        }
+                                    }
+                        } else {
+                            LookupElementBuilder.create(configComponentName)
+                                    .withTypeText(componentPath)
+                        }
+                    })
+                }
+            }
         }
     }
 

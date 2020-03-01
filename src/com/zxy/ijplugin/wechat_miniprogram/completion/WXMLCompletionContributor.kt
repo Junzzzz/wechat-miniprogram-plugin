@@ -75,18 +75,12 @@ package com.zxy.ijplugin.wechat_miniprogram.completion
 
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonProperty
 import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.patterns.PlatformPatterns
-import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import com.intellij.util.containers.stream
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
@@ -95,10 +89,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
-import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
 
 class WXMLCompletionContributor : CompletionContributor() {
 
@@ -148,29 +139,6 @@ class WXMLCompletionContributor : CompletionContributor() {
                     }
                 }
         )
-
-        // 输入一个元素开始符号后
-        // 自动完成标签名以及必填的属性
-        this.extend(
-                CompletionType.BASIC,
-                PlatformPatterns.psiElement().afterLeafSkipping(
-                        PlatformPatterns.alwaysFalse<Any>(),
-                        PlatformPatterns.psiElement(WXMLTypes.START_TAG_START)
-                ), WXMLTagNameCompletionProvider()
-        )
-
-        this.extend(
-                CompletionType.BASIC,
-                PlatformPatterns.psiElement().afterLeafSkipping(
-                        PlatformPatterns.alwaysFalse<Any>(),
-                        PlatformPatterns.psiElement(WXMLTypes.TAG_NAME)
-                ),
-                object : WXMLTagNameCompletionProvider() {
-                    override fun getPrefix(completionParameters: CompletionParameters): String? {
-                        return (completionParameters.position.parent.prevSibling as? WXMLTag)?.getTagName()
-                    }
-                }
-        )
     }
 
 }
@@ -178,134 +146,6 @@ class WXMLCompletionContributor : CompletionContributor() {
 private fun wxmlAttributeIsEnumerable(
         attributePresetElementAttributeDescription: WXMLElementAttributeDescription
 ) = attributePresetElementAttributeDescription.enums.isNotEmpty() && attributePresetElementAttributeDescription.types.size == 1 && attributePresetElementAttributeDescription.types[0] == WXMLElementAttributeDescription.ValueType.STRING && attributePresetElementAttributeDescription.requiredInEnums
-
-open class WXMLTagNameCompletionProvider : CompletionProvider<CompletionParameters>() {
-
-    open fun getPrefix(completionParameters: CompletionParameters): String? {
-        return null
-    }
-
-    override fun addCompletions(
-            completionParameters: CompletionParameters, p1: ProcessingContext,
-            completionResultSet: CompletionResultSet
-    ) {
-        val cloneCompletionResultSet = getPrefix(completionParameters)?.let {
-            completionResultSet.withPrefixMatcher(it)
-        } ?: completionResultSet
-
-        // 获取所有组件名称
-        cloneCompletionResultSet.addAllElements(
-                WXMLMetadata.getElementDescriptions(
-                        completionParameters.position.project
-                ).map { wxmlElementDescriptor ->
-                    val requiredElements = wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.filter {
-                        it.required
-                    }
-                    if (requiredElements.isEmpty()) {
-                        LookupElementBuilder.create(wxmlElementDescriptor.name)
-                    } else {
-                        LookupElementBuilder.create(wxmlElementDescriptor.name)
-                                .withInsertHandler { insertionContext, _ ->
-                                    val editor = insertionContext.editor
-                                    val offset = editor.caretModel.offset
-                                    var result = ""
-                                    var afterOffset: Int? = null
-                                    requiredElements.forEach {
-                                        val key = it.key
-                                        when {
-                                            WXMLAttributeCompletionProvider.isDoubleBraceForInsert(
-                                                    it
-                                            ) -> {
-                                                result += " $key=\"{{}}\""
-                                                if (afterOffset == null) {
-                                                    afterOffset = offset + result.length - 3
-                                                }
-                                            }
-                                            WXMLAttributeCompletionProvider.isOnlyNameForInsert(it) -> {
-                                                result += " $key"
-                                            }
-                                            else -> {
-                                                result += " $key=\"\""
-                                                if (afterOffset == null) {
-                                                    afterOffset = offset + result.length - 1
-                                                }
-                                            }
-                                        }
-                                    }
-                                    if (afterOffset == null) {
-                                        afterOffset = offset + result.length
-                                    }
-                                    insertionContext.document.insertString(offset, result)
-                                    if (afterOffset != null) {
-                                        editor.caretModel.moveToOffset(afterOffset!!)
-                                    }
-                                }
-                    }
-                })
-        // 自定义组件
-        val currentJsonFile = findRelateFile(completionParameters.originalFile.virtualFile, RelateFileType.JSON)
-        if (currentJsonFile !== null) {
-            val project = completionParameters.position.project
-            val psiManager = PsiManager.getInstance(project)
-            val currentJsonPsiFile = psiManager.findFile(currentJsonFile)
-            if (currentJsonPsiFile != null && currentJsonPsiFile is JsonFile) {
-
-                // 项目中所有的组件配置文件
-                val jsonFiles = ComponentJsonUtils.getAllComponentConfigurationFile(
-                        project
-                ).filter {
-                    it != currentJsonPsiFile
-                }
-                val usingComponentsObjectValue = ComponentJsonUtils.getUsingComponentPropertyValue(
-                        currentJsonPsiFile
-                )
-                val appJsonUsingComponentsObjectValue = AppJsonUtils.findUsingComponentsValue(project)
-                // 从app.json 和 相关的json文件中手机usingComponents
-                val usingComponentItems = mutableListOf<JsonProperty>().apply {
-                    usingComponentsObjectValue?.propertyList?.let {
-                        this.addAll(it)
-                    }
-                    appJsonUsingComponentsObjectValue?.propertyList?.let {
-                        this.addAll(it)
-                    }
-                }
-                val usingComponentMap = usingComponentItems
-                        .associateBy({ jsonProperty ->
-                            (jsonProperty.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>)?.multiResolve(
-                                    false
-                            )?.map {
-                                it.element
-                            }?.find {
-                                it is JsonFile
-                            }?.let {
-                                it as JsonFile
-                            }
-                        }, { it.name })
-                        .filter { it.key != null }
-                cloneCompletionResultSet.addAllElements(jsonFiles.mapNotNull { jsonFile ->
-                    val configComponentName = usingComponentMap[jsonFile]
-                    val componentPath = (jsonFile.virtualFile.getPathRelativeToRootRemoveExt(
-                            project
-                    ) ?: return@mapNotNull null)
-                    if (configComponentName == null) {
-                        // 没有注册的组件
-                        LookupElementBuilder.create(jsonFile.virtualFile.nameWithoutExtension)
-                                .withTypeText(componentPath)
-                                .withInsertHandler { _, _ ->
-                                    // 在配置文件中注册组件
-                                    usingComponentsObjectValue?.let {
-                                        ComponentJsonUtils.registerComponent(usingComponentsObjectValue, jsonFile)
-                                    }
-                                }
-                    } else {
-                        LookupElementBuilder.create(configComponentName)
-                                .withTypeText(componentPath)
-                    }
-                })
-            }
-        }
-    }
-}
 
 /**
  * 对WXML属性名称提供完成

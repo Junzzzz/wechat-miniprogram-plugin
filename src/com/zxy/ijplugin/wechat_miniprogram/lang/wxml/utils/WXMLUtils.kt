@@ -84,9 +84,13 @@ import com.intellij.xml.XmlAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLCustomComponentAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WxmlCustomComponentDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 
 object WXMLUtils {
     fun isValidTagName(charSequence: CharSequence): Boolean {
@@ -96,11 +100,16 @@ object WXMLUtils {
     @JvmStatic
     fun getWXMLAttributeDescriptors(tag: XmlTag?): Array<XmlAttributeDescriptor> {
         val result = mutableSetOf<XmlAttributeDescriptor>()
-        val wxmlElementDescription = (tag?.descriptor as? WXMLElementDescriptor)?.wxmlElementDescription
-        wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.map {
-            WXMLAttributeDescriptor(it)
-        }?.let {
-            result.addAll(it)
+        val xmlElementDescriptor = tag?.descriptor ?: return emptyArray()
+        if (xmlElementDescriptor is WxmlCustomComponentDescriptor) {
+            result.addAll(this.getCustomComponentAttributeDescriptors(xmlElementDescriptor))
+        } else if (xmlElementDescriptor is WXMLElementDescriptor) {
+            val wxmlElementDescription = xmlElementDescriptor.wxmlElementDescription
+            wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors.map {
+                WXMLAttributeDescriptor(it)
+            }.let {
+                result.addAll(it)
+            }
         }
         return result.toTypedArray()
     }
@@ -119,6 +128,18 @@ object WXMLUtils {
                 it + eventName
             }
         }
+    }
+
+    private fun getCustomComponentAttributeDescriptors(
+            wxmlCustomComponentDescriptor: WxmlCustomComponentDescriptor
+    ): Array<WXMLCustomComponentAttributeDescriptor> {
+        return ComponentWxmlUtils.findCustomComponentDefinitionJsFile(
+                wxmlCustomComponentDescriptor.declaration
+        )?.let { jsFile ->
+            ComponentJsUtils.findPropertiesItems(jsFile)
+        }?.map {
+            WXMLCustomComponentAttributeDescriptor(it)
+        }?.toTypedArray() ?: emptyArray()
     }
 }
 

@@ -91,7 +91,7 @@ class WXMLElementDescriptorProvider : XmlElementDescriptorProvider {
         val tagName = xmlTag.name.ifBlank { return null }
         val jsonProperty = WXMLCustomComponentTagReference(xmlTag).resolve()
         if (jsonProperty != null) {
-            return WxmlCustomComponentDescription(jsonProperty)
+            return WxmlCustomComponentDescriptor(jsonProperty)
         }
         return WXMLMetadata.getElementDescriptions(xmlTag.project).find {
             it.name == tagName

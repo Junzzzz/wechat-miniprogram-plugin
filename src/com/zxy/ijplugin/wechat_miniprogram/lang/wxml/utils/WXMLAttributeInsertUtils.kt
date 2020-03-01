@@ -73,12 +73,14 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 
+import com.intellij.lang.javascript.psi.JSObjectLiteralExpression
+import com.intellij.lang.javascript.psi.JSReferenceExpression
 import com.intellij.xml.XmlAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLCustomComponentAttributeDescriptor
 
 object WXMLAttributeInsertUtils {
-
 
 
     @JvmStatic
@@ -87,6 +89,14 @@ object WXMLAttributeInsertUtils {
             val wxmlElementAttributeDescription = xmlAttributeDescriptor.wxmlElementAttributeDescription
             if ((wxmlElementAttributeDescription.types.size == 1) && wxmlElementAttributeDescription.default == true) {
                 return true
+            }
+        } else if (xmlAttributeDescriptor is WXMLCustomComponentAttributeDescriptor) {
+            val jsProperty = xmlAttributeDescriptor.declaration
+            val propertyConfig = jsProperty.value
+            if (propertyConfig is JSObjectLiteralExpression) {
+                return (propertyConfig.findProperty("type")?.value as JSReferenceExpression).text == "Boolean"
+            } else if (propertyConfig is JSReferenceExpression) {
+                return propertyConfig.text == "Boolean"
             }
         }
         return false

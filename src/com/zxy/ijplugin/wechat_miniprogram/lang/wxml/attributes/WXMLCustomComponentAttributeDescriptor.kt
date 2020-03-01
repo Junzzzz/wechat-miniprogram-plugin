@@ -73,13 +73,25 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes
 
+import com.intellij.lang.javascript.psi.JSLiteralExpression
+import com.intellij.lang.javascript.psi.JSObjectLiteralExpression
 import com.intellij.lang.javascript.psi.JSProperty
 import com.intellij.psi.PsiElement
 import com.intellij.psi.xml.XmlElement
 import com.intellij.xml.XmlAttributeDescriptor
 
 class WXMLCustomComponentAttributeDescriptor(private val element: JSProperty) : XmlAttributeDescriptor {
+
     override fun getDefaultValue(): String? {
+        val value = this.declaration.value
+        if (value is JSObjectLiteralExpression) {
+            val valueValue = value.findProperty("value")?.value
+            return if (valueValue is JSLiteralExpression) {
+                valueValue.value?.toString()
+            } else {
+                valueValue?.text
+            }
+        }
         return null
     }
 
@@ -111,7 +123,7 @@ class WXMLCustomComponentAttributeDescriptor(private val element: JSProperty) : 
         return false
     }
 
-    override fun getDeclaration(): PsiElement {
+    override fun getDeclaration(): JSProperty {
         return this.element
     }
 

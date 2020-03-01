@@ -82,14 +82,11 @@ import com.intellij.xml.XmlAttributeDescriptor
 import com.intellij.xml.XmlElementDescriptor
 import com.intellij.xml.XmlElementsGroup
 import com.intellij.xml.XmlNSDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLCustomComponentAttributeDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 
 /**
  * [https://developers.weixin.qq.com/miniprogram/dev/reference/api/Component.html]
  */
-class WxmlCustomComponentDescription(private val element: JsonProperty) : XmlElementDescriptor {
+class WxmlCustomComponentDescriptor(private val element: JsonProperty) : XmlElementDescriptor {
     override fun getDefaultValue(): String? {
         return null
     }
@@ -149,10 +146,6 @@ class WxmlCustomComponentDescription(private val element: JsonProperty) : XmlEle
     }
 
     override fun getAttributesDescriptors(context: XmlTag?): Array<out XmlAttributeDescriptor> {
-        return ComponentWxmlUtils.findCustomComponentDefinitionJsFile(this.declaration)?.let { jsFile ->
-            ComponentJsUtils.findPropertiesItems(jsFile)
-        }?.map {
-            WXMLCustomComponentAttributeDescriptor(it)
-        }?.toTypedArray() ?: emptyArray()
+        return emptyArray()
     }
 }
