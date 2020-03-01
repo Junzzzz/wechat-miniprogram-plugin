@@ -82,6 +82,7 @@ import com.intellij.xml.XmlAttributeDescriptor
 import com.intellij.xml.XmlElementDescriptor
 import com.intellij.xml.XmlElementsGroup
 import com.intellij.xml.XmlNSDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLUtils
 
 /**
  * [https://developers.weixin.qq.com/miniprogram/dev/reference/api/Component.html]
@@ -136,7 +137,7 @@ class WxmlCustomComponentDescriptor(private val element: JsonProperty) : XmlElem
     }
 
     override fun getAttributeDescriptor(attributeName: String, context: XmlTag?): XmlAttributeDescriptor? {
-        return this.getAttributesDescriptors(null).find {
+        return WXMLUtils.getCustomComponentAttributeDescriptors(this).find {
             it.name == attributeName
         }
     }
