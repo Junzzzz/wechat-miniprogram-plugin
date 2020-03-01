@@ -150,23 +150,6 @@ class WXMLElementDescriptor(
     }
 
     override fun getAttributesDescriptors(p0: XmlTag?): Array<XmlAttributeDescriptor> {
-//        val result = ArrayList<XmlAttributeDescriptor>()
-//        val name = this.wxmlElementDescription?.name
-//        if (!IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(name)) {
-//            result.addAll(WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.map {
-//                WXMLAttributeDescriptor(
-//                        it
-//                )
-//            })
-//        }
-//
-//        this.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.map {
-//            WXMLAttributeDescriptor(it) as XmlAttributeDescriptor
-//        }?.let {
-//            result.addAll(it)
-//        }
-//
-//        return result.toTypedArray()
         return emptyArray()
     }
 
