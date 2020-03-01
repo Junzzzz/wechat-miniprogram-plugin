@@ -71,26 +71,19 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes
 
-import com.intellij.json.psi.JsonProperty
-import com.intellij.json.psi.JsonStringLiteral
+import com.intellij.lang.javascript.psi.JSProperty
 import com.intellij.psi.PsiElement
-import com.intellij.psi.xml.XmlAttribute
-import com.intellij.psi.xml.XmlTag
+import com.intellij.psi.xml.XmlElement
 import com.intellij.xml.XmlAttributeDescriptor
-import com.intellij.xml.XmlElementDescriptor
-import com.intellij.xml.XmlElementsGroup
-import com.intellij.xml.XmlNSDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLCustomComponentAttributeDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 
-/**
- * [https://developers.weixin.qq.com/miniprogram/dev/reference/api/Component.html]
- */
-class WxmlCustomComponentDescription(private val element: JsonProperty) : XmlElementDescriptor {
+class WXMLCustomComponentAttributeDescriptor(private val element: JSProperty) : XmlAttributeDescriptor {
     override fun getDefaultValue(): String? {
+        return null
+    }
+
+    override fun validateValue(context: XmlElement?, value: String?): String? {
         return null
     }
 
@@ -99,60 +92,38 @@ class WxmlCustomComponentDescription(private val element: JsonProperty) : XmlEle
     }
 
     override fun getName(): String {
-        return this.element.name
+        return this.element.name ?: ""
     }
 
-    override fun getElementsDescriptors(context: XmlTag?): Array<XmlElementDescriptor> {
-        return emptyArray()
+    override fun isRequired(): Boolean {
+        return false
+    }
+
+    override fun hasIdRefType(): Boolean {
+        return false
     }
 
     override fun init(element: PsiElement?) {
 
     }
 
-    override fun getContentType(): Int {
-        return XmlElementDescriptor.CONTENT_TYPE_ANY
+    override fun isFixed(): Boolean {
+        return false
     }
 
-    override fun getTopGroup(): XmlElementsGroup? {
-        return null
-    }
-
-    override fun getDefaultName(): String {
-        return this.name
-    }
-
-    override fun getNSDescriptor(): XmlNSDescriptor? {
-        return null
-    }
-
-    override fun getQualifiedName(): String {
-        return (this.element.value as? JsonStringLiteral)?.value ?: this.name
-    }
-
-    override fun getElementDescriptor(childTag: XmlTag?, contextTag: XmlTag?): XmlElementDescriptor? {
-        return null
-    }
-
-    override fun getDeclaration(): JsonProperty {
+    override fun getDeclaration(): PsiElement {
         return this.element
     }
 
-    override fun getAttributeDescriptor(attributeName: String, context: XmlTag?): XmlAttributeDescriptor? {
-        return this.getAttributesDescriptors(null).find {
-            it.name == attributeName
-        }
+    override fun isEnumerated(): Boolean {
+        return false
     }
 
-    override fun getAttributeDescriptor(attribute: XmlAttribute): XmlAttributeDescriptor? {
-        return this.getAttributeDescriptor(attribute.name, null)
+    override fun getEnumeratedValues(): Array<String>? {
+        return null
     }
 
-    override fun getAttributesDescriptors(context: XmlTag?): Array<out XmlAttributeDescriptor> {
-        return ComponentWxmlUtils.findCustomComponentDefinitionJsFile(this.declaration)?.let { jsFile ->
-            ComponentJsUtils.findPropertiesItems(jsFile)
-        }?.map {
-            WXMLCustomComponentAttributeDescriptor(it)
-        }?.toTypedArray() ?: emptyArray()
+    override fun hasIdType(): Boolean {
+        return false
     }
 }

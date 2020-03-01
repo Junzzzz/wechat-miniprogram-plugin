@@ -108,11 +108,20 @@ object ComponentWxmlUtils {
         return this.findCustomComponentDefinitionFiles(xmlTag)?.find { it is JSFile } as? JSFile
     }
 
+    fun findCustomComponentDefinitionJsFile(jsonProperty: JsonProperty): JSFile? {
+        return this.findCustomComponentDefinitionFiles(jsonProperty)?.find { it is JSFile } as? JSFile
+    }
+
     private fun findCustomComponentDefinitionFiles(xmlTag: XmlTag): List<PsiFile>? {
         // 先找到json文件的定义
         val componentNameJsonLiteral = xmlTag.findWXMLCustomComponentTagReference()?.resolve() as? JsonStringLiteral
         // 解析其路径可以找到自定义组件的位置
-        val lastComponentPathReference = (componentNameJsonLiteral?.parent as? JsonProperty)?.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>
+        return (componentNameJsonLiteral?.parent as? JsonProperty)?.let { this.findCustomComponentDefinitionFiles(it) }
+    }
+
+    private fun findCustomComponentDefinitionFiles(jsonProperty: JsonProperty): List<PsiFile>? {
+        // 解析其路径可以找到自定义组件的位置
+        val lastComponentPathReference = jsonProperty.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>
         return lastComponentPathReference?.multiResolve(
                 false
         )?.mapNotNull { it.element as? PsiFile }

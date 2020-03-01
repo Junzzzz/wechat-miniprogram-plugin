@@ -188,25 +188,6 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                 }
         )
 
-        // 解析自定义组件标签上的属性
-        // 引用js文件中的properties配置
-        psiReferenceRegistrar.registerReferenceProvider(
-                XmlPatterns.xmlAttribute().withLanguage(WXMLLanguage.INSTANCE),
-                object : PsiReferenceProvider() {
-                    override fun getReferencesByElement(
-                            psiElement: PsiElement, p1: ProcessingContext
-                    ): Array<PsiReference> {
-                        psiElement as XmlAttribute
-                        val xmlTag = psiElement.parent
-                        val wxmlCustomComponentTagReference = xmlTag.findWXMLCustomComponentTagReference()
-                        if (wxmlCustomComponentTagReference != null) {
-                            return arrayOf(WXMLCustomComponentAttributeReference(psiElement))
-                        }
-                        return PsiReference.EMPTY_ARRAY
-                    }
-                }
-        )
-
         // 解析wxml元素的slot属性
         psiReferenceRegistrar.registerReferenceProvider(
                 XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE).withLocalName("slot"),
