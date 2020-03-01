@@ -130,7 +130,7 @@ object WXMLUtils {
         }
     }
 
-    private fun getCustomComponentAttributeDescriptors(
+    fun getCustomComponentAttributeDescriptors(
             wxmlCustomComponentDescriptor: WxmlCustomComponentDescriptor
     ): Array<WXMLCustomComponentAttributeDescriptor> {
         return ComponentWxmlUtils.findCustomComponentDefinitionJsFile(
