@@ -81,9 +81,10 @@ import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl
+import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescription
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
 
 /**
@@ -92,18 +93,13 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
 class WXMLElementDocumentProvider : DocumentationProvider {
 
     override fun getQuickNavigateInfo(element: PsiElement, originalElement: PsiElement): String? {
-        if (originalElement is WXMLTag) {
-            val name = originalElement.getTagName()
-            val wxmlElementDescriptor = WXMLMetadata.getElementDescriptions(element.project).find {
-                it.name == name
-            }
-            return if (wxmlElementDescriptor != null) {
-                this.buildQuickNavigateInfoFromElementDescriptor(wxmlElementDescriptor)
-            } else {
-                null
-            }
+        return this.getDescription(originalElement)?.let {
+            buildQuickNavigateInfoFromElementDescriptor(it)
         }
-        return null
+    }
+
+    private fun getDescription(element: PsiElement): WXMLElementDescription? {
+        return ((element as? XmlTag)?.descriptor as? WXMLElementDescriptor)?.wxmlElementDescription
     }
 
     private fun buildQuickNavigateInfoFromElementDescriptor(wxmlElementDescription: WXMLElementDescription): String {
@@ -113,11 +109,8 @@ class WXMLElementDocumentProvider : DocumentationProvider {
     override fun getUrlFor(element: PsiElement, originalElement: PsiElement): MutableList<String> {
         if (isInsideJsonConfigFile(element)) {
             if (element.parent?.parent?.parent == element.containingFile) {
-                val name = originalElement.text
-                val wxmlElementDescriptor = WXMLMetadata.getElementDescriptions(element.project).find {
-                    it.name == name
-                }
-                return wxmlElementDescriptor?.url?.let {
+                val wxmlElementDescription = getDescription(originalElement)
+                return wxmlElementDescription?.url?.let {
                     mutableListOf(it)
                 } ?: mutableListOf()
             }

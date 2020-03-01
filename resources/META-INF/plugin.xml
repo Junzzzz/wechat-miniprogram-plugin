@@ -276,12 +276,12 @@
         <!--        <lang.refactoringSupport language="WXML"-->
         <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLTemplateNameRefactoring"/>-->
 
-        <!--        <lang.documentationProvider language="WXML"-->
-        <!--                                    id="WXMLElementDocumentProvider"-->
-        <!--                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementDocumentProvider"/>-->
-        <!--        <lang.documentationProvider language="WXML"-->
-        <!--                                    id="WXMLElementAttributeDocumentProvider"-->
-        <!--                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementAttributeDocumentProvider"/>-->
+        <lang.documentationProvider language="WXML"
+                                    id="WXMLElementDocumentProvider"
+                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementDocumentProvider"/>
+        <lang.documentationProvider language="WXML"
+                                    id="WXMLElementAttributeDocumentProvider"
+                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementAttributeDocumentProvider"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>

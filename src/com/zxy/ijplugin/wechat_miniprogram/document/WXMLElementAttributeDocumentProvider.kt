@@ -83,10 +83,9 @@ import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.smartPointers.SmartPointerManagerImpl
+import com.intellij.psi.xml.XmlAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
 import com.zxy.ijplugin.wechat_miniprogram.utils.findStringPropertyValue
 
@@ -96,23 +95,16 @@ import com.zxy.ijplugin.wechat_miniprogram.utils.findStringPropertyValue
 class WXMLElementAttributeDocumentProvider : DocumentationProvider {
 
     override fun getQuickNavigateInfo(element: PsiElement, originalElement: PsiElement): String? {
-        if (element is JsonStringLiteral && originalElement is WXMLAttribute) {
-            val wxmlTagName = (originalElement.parent as? WXMLTag)?.getTagName() ?: return null
-            val wxmlElementDescriptor = WXMLMetadata.getElementDescriptions(element.project).find {
-                it.name == wxmlTagName
-            } ?: return null
-            val attributeName = originalElement.name
-            return wxmlElementDescriptor.attributeDescriptorPresetElementAttributeDescriptors.find {
-                it.key == attributeName
-            }?.let {
-                "Element Attribute " + wxmlElementDescriptor.name + "." + it.key + " " + it.description
-            }
+        if (element is JsonStringLiteral && originalElement is XmlAttribute) {
+            val wxmlElementAttributeDescription = (originalElement.descriptor as? WXMLAttributeDescriptor)?.wxmlElementAttributeDescription
+                    ?: return null
+            return "Element Attribute " + originalElement.parent.name + "." + wxmlElementAttributeDescription.key + " " + wxmlElementAttributeDescription.description
         }
         return null
     }
 
     override fun generateDoc(element: PsiElement, originalElement: PsiElement?): String? {
-        if (element is JsonStringLiteral && element.containingFile.name == "elementDescriptions.json" && (originalElement == null || originalElement.node.elementType == WXMLTypes.ATTRIBUTE_NAME)) {
+        if (element is JsonStringLiteral && element.containingFile.name == "elementDescriptions.json") {
             val elementName = (element.parent?.parent?.parent?.parent?.parent?.parent as? JsonProperty)?.name
                     ?: return null
             val jsonObject = element.parent?.parent as? JsonObject ?: return null

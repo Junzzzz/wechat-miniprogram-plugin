@@ -78,9 +78,9 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.xml.XmlAttribute
+import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLClosedElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLText
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildOfType
@@ -93,7 +93,7 @@ object WXMLElementFactory {
             <$tagName $attributeName/>
         """.trimIndent()
         )
-        return psiFile.findChildOfType<WXMLAttribute>()?.firstChild!!
+        return psiFile.findChildOfType<XmlAttribute>()?.firstChild!!
     }
 
     fun createStringText(project: Project, text: String): WXMLStringText {
@@ -121,7 +121,7 @@ object WXMLElementFactory {
             <$elementName/>
         """.trimIndent()
         )
-        return psiFile.findChildOfType<WXMLClosedElement>()?.firstChild?.nextSibling!!
+        return psiFile.findChildOfType<XmlTag>()?.firstChild?.nextSibling!!
     }
 
 }
