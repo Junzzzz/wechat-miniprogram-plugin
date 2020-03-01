@@ -203,11 +203,9 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                             psiElement: PsiElement, p1: ProcessingContext
                     ): Array<PsiReference> {
                         psiElement as XmlTag
-                        val tagName = psiElement.name
-                        if (WXMLMetadata.getElementDescriptions(psiElement.project).none {
-                                    tagName == it.name
-                                }) {
-                            return arrayOf(WXMLCustomComponentTagReference(psiElement))
+                        val wxmlCustomComponentTagReference = WXMLCustomComponentTagReference(psiElement)
+                        if (wxmlCustomComponentTagReference.resolve() != null) {
+                            return arrayOf(wxmlCustomComponentTagReference)
                         }
                         return PsiReference.EMPTY_ARRAY
                     }
@@ -223,8 +221,13 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                             psiElement: PsiElement, context: ProcessingContext
                     ): Array<out PsiReference> {
                         psiElement as XmlTag
+                        val wxmlCustomComponentTagReference = WXMLCustomComponentTagReference(psiElement)
                         val tagName = psiElement.name
-                        if (WXMLMetadata.getElementDescriptions(psiElement.project).any {
+                        // 未在json文件中注册过
+                        // 在元数据中存在
+                        if (wxmlCustomComponentTagReference.resolve() == null && WXMLMetadata.getElementDescriptions(
+                                        psiElement.project
+                                ).any {
                                     tagName == it.name
                                 }) {
                             return arrayOf(WXMLTagReference(psiElement))
