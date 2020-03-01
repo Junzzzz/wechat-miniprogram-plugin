@@ -87,7 +87,6 @@ import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
@@ -256,18 +255,15 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
 
         // 解析wxml元素的slot属性
         psiReferenceRegistrar.registerReferenceProvider(
-                PlatformPatterns.psiElement(WXMLStringText::class.java),
+                XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE).withLocalName("slot"),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext
                     ): Array<PsiReference> {
-                        psiElement as WXMLStringText
-                        val wxmlAttribute = PsiTreeUtil.getParentOfType(psiElement, WXMLAttribute::class.java)
-                        if (wxmlAttribute != null && wxmlAttribute.name == "slot") {
-                            val stringText = wxmlAttribute.string?.stringText
-                            if (stringText != null) {
-                                return arrayOf(WXMLNamedSlotReference(stringText))
-                            }
+                        psiElement as XmlAttributeValue
+                        val wxmlAttribute = psiElement.parent as? XmlAttribute
+                        if (wxmlAttribute != null) {
+                            return arrayOf(WXMLNamedSlotReference(psiElement))
                         }
                         return PsiReference.EMPTY_ARRAY
                     }
