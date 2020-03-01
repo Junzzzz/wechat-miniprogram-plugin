@@ -118,7 +118,7 @@ class WXMLElementDescriptor(
     }
 
     override fun getElementsDescriptors(context: XmlTag): Array<XmlElementDescriptor> {
-        return XmlDescriptorUtil.getElementsDescriptors(context)
+        return emptyArray()
     }
 
     override fun init(p0: PsiElement?) {
