@@ -78,13 +78,21 @@ import com.intellij.psi.xml.XmlTag
 import com.intellij.xml.XmlElementDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
+import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLCustomComponentTagReference
 
+/**
+ * 提供Wxml小程序自带组件以及自定义组件的标签描述
+ */
 class WXMLElementDescriptorProvider : XmlElementDescriptorProvider {
     override fun getDescriptor(xmlTag: XmlTag): XmlElementDescriptor? {
         if (xmlTag.language !is WXMLLanguage) {
             return null
         }
         val tagName = xmlTag.name.ifBlank { return null }
+        val jsonProperty = WXMLCustomComponentTagReference(xmlTag).resolve()
+        if (jsonProperty != null) {
+            return WxmlCustomComponentDescription(jsonProperty)
+        }
         return WXMLMetadata.getElementDescriptions(xmlTag.project).find {
             it.name == tagName
         }?.let {

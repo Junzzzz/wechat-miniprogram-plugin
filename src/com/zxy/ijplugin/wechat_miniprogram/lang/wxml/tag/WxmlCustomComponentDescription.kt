@@ -71,51 +71,79 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.reference
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag
 
-import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonProperty
-import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiReferenceBase
+import com.intellij.json.psi.JsonStringLiteral
+import com.intellij.psi.PsiElement
+import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlTag
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.nameTextRangeInSelf
-import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
+import com.intellij.xml.XmlAttributeDescriptor
+import com.intellij.xml.XmlElementDescriptor
+import com.intellij.xml.XmlElementsGroup
+import com.intellij.xml.XmlNSDescriptor
 
-class WXMLCustomComponentTagReference(element: XmlTag) :
-        PsiReferenceBase<XmlTag>(
-                element, element.nameTextRangeInSelf()
-        ) {
-
-    override fun resolve(): JsonProperty? {
-        val tagName = this.value
-        val wxmlPsiFile = this.element.containingFile
-        val jsonFile = findRelateFile(wxmlPsiFile.originalFile.virtualFile, RelateFileType.JSON) ?: return null
-        val psiManager = PsiManager.getInstance(this.element.project)
-        val jsonPsiFile = psiManager.findFile(jsonFile) as? JsonFile ?: return null
-        // 找到usingComponents的配置
-        val usingComponentItems = mutableListOf<JsonProperty>().apply {
-            ComponentJsonUtils.getUsingComponentItems(jsonPsiFile)?.let {
-                this.addAll(it)
-            }
-            AppJsonUtils.findUsingComponentItems(element.project)?.let {
-                this.addAll(it)
-            }
-        }
-        return usingComponentItems.find {
-            it.name == tagName
-        }
+/**
+ * [https://developers.weixin.qq.com/miniprogram/dev/reference/api/Component.html]
+ */
+class WxmlCustomComponentDescription(private val element: JsonProperty) : XmlElementDescriptor {
+    override fun getDefaultValue(): String? {
+        return null
     }
 
-    override fun isSoft(): Boolean {
-        return false
+    override fun getName(context: PsiElement?): String {
+        return this.name
     }
 
-}
+    override fun getName(): String {
+        return this.element.name
+    }
 
-fun XmlTag.findWXMLCustomComponentTagReference(): WXMLCustomComponentTagReference? {
-    return this.references.asSequence()
-            .filterIsInstance<WXMLCustomComponentTagReference>().firstOrNull()
+    override fun getElementsDescriptors(context: XmlTag?): Array<XmlElementDescriptor> {
+        return emptyArray()
+    }
+
+    override fun init(element: PsiElement?) {
+
+    }
+
+    override fun getContentType(): Int {
+        return XmlElementDescriptor.CONTENT_TYPE_ANY
+    }
+
+    override fun getTopGroup(): XmlElementsGroup? {
+        return null
+    }
+
+    override fun getDefaultName(): String {
+        return this.name
+    }
+
+    override fun getNSDescriptor(): XmlNSDescriptor? {
+        return null
+    }
+
+    override fun getQualifiedName(): String {
+        return (this.element.value as? JsonStringLiteral)?.value ?: this.name
+    }
+
+    override fun getElementDescriptor(childTag: XmlTag?, contextTag: XmlTag?): XmlElementDescriptor? {
+        return null
+    }
+
+    override fun getDeclaration(): JsonProperty {
+        return this.element
+    }
+
+    override fun getAttributeDescriptor(attributeName: String?, context: XmlTag?): XmlAttributeDescriptor? {
+        return null
+    }
+
+    override fun getAttributeDescriptor(attribute: XmlAttribute): XmlAttributeDescriptor? {
+        return this.getAttributeDescriptor(attribute.name, null)
+    }
+
+    override fun getAttributesDescriptors(context: XmlTag?): Array<XmlAttributeDescriptor> {
+        return emptyArray()
+    }
 }
