@@ -73,11 +73,9 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
-import com.intellij.patterns.PlatformPatterns
 import com.intellij.patterns.XmlPatterns
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlAttributeValue
@@ -86,8 +84,6 @@ import com.intellij.psi.xml.XmlTokenType
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
@@ -276,14 +272,14 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
         // 解析wxml属性
         // wxml自带标签的属性
         psiReferenceRegistrar.registerReferenceProvider(
-                PlatformPatterns.psiElement(WXMLAttribute::class.java),
+                XmlPatterns.xmlAttribute().withLanguage(WXMLLanguage.INSTANCE),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, context: ProcessingContext
                     ): Array<out PsiReference> {
-                        psiElement as WXMLAttribute
-                        val wxmlTag = PsiTreeUtil.getParentOfType(psiElement, WXMLTag::class.java)
-                        if (wxmlTag != null && wxmlTag.reference is WXMLTagReference) {
+                        psiElement as XmlAttribute
+                        val wxmlTag = psiElement.parent
+                        if (wxmlTag != null && wxmlTag.findWXMLTagReference() != null) {
                             return arrayOf(WXMLAttributeReference(psiElement))
                         }
                         return PsiReference.EMPTY_ARRAY

@@ -88,3 +88,7 @@ class WXMLTagReference(element: XmlTag) :
         }?.definedElement
     }
 }
+
+fun XmlTag.findWXMLTagReference(): WXMLTagReference? {
+    return this.references.asSequence().filterIsInstance<WXMLTagReference>().firstOrNull()
+}
