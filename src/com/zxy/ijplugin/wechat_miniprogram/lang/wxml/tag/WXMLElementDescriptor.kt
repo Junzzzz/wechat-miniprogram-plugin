@@ -85,7 +85,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescription
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
 
 class WXMLElementDescriptor(
-        val wxmlElementDescription: WXMLElementDescription?, private val xmlTag: XmlTag? = null
+        val wxmlElementDescription: WXMLElementDescription
 ) :
         XmlElementDescriptor {
 
@@ -98,7 +98,7 @@ class WXMLElementDescriptor(
     }
 
     override fun getName(): String {
-        return wxmlElementDescription?.name ?: this.xmlTag?.name ?: ""
+        return wxmlElementDescription.name
     }
 
     override fun getElementsDescriptors(context: XmlTag): Array<XmlElementDescriptor> {
@@ -134,11 +134,11 @@ class WXMLElementDescriptor(
     }
 
     override fun getDeclaration(): PsiElement? {
-        return this.xmlTag
+        return this.wxmlElementDescription.definedElement
     }
 
     override fun getAttributeDescriptor(attributeName: String?, p1: XmlTag?): XmlAttributeDescriptor? {
-        return this.wxmlElementDescription?.attributeDescriptorPresetElementAttributeDescriptors?.find {
+        return this.wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors.find {
             it.key == attributeName
         }?.let {
             WXMLAttributeDescriptor(it)

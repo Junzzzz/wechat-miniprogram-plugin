@@ -85,11 +85,13 @@ class WXMLElementDescriptorProvider : XmlElementDescriptorProvider {
             return null
         }
         val tagName = xmlTag.name.ifBlank { return null }
-        return WXMLElementDescriptor(
-                WXMLMetadata.getElementDescriptions(xmlTag.project).find {
-                    it.name == tagName
-                }, xmlTag
-        )
+        return WXMLMetadata.getElementDescriptions(xmlTag.project).find {
+            it.name == tagName
+        }?.let {
+            WXMLElementDescriptor(
+                    it
+            )
+        }
 
     }
 }

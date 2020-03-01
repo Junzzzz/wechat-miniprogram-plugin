@@ -76,9 +76,9 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes
 import com.intellij.psi.PsiElement
 import com.intellij.psi.xml.XmlElement
 import com.intellij.xml.XmlAttributeDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementAttributeDescription
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPresetElementAttributeDescription
 
-class WXMLAttributeDescriptor(val wxmlElementAttributeDescription: WXMLElementAttributeDescription) :
+class WXMLAttributeDescriptor(val wxmlElementAttributeDescription: WXMLPresetElementAttributeDescription) :
         XmlAttributeDescriptor {
     override fun getDefaultValue(): String? {
         return this.wxmlElementAttributeDescription.default?.toString()
@@ -113,7 +113,7 @@ class WXMLAttributeDescriptor(val wxmlElementAttributeDescription: WXMLElementAt
     }
 
     override fun getDeclaration(): PsiElement? {
-        return null
+        return this.wxmlElementAttributeDescription.definedElement
     }
 
     override fun isEnumerated(): Boolean {

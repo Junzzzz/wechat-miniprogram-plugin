@@ -83,7 +83,6 @@ import com.intellij.psi.xml.XmlTag
 import com.intellij.psi.xml.XmlTokenType
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
@@ -208,31 +207,6 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                 }
         )
 
-        // 解析wxml tag
-        // 如果tag是元数据
-        psiReferenceRegistrar.registerReferenceProvider(
-                XmlPatterns.xmlTag().withLanguage(WXMLLanguage.INSTANCE),
-                object : PsiReferenceProvider() {
-                    override fun getReferencesByElement(
-                            psiElement: PsiElement, context: ProcessingContext
-                    ): Array<out PsiReference> {
-                        psiElement as XmlTag
-                        val wxmlCustomComponentTagReference = WXMLCustomComponentTagReference(psiElement)
-                        val tagName = psiElement.name
-                        // 未在json文件中注册过
-                        // 在元数据中存在
-                        if (wxmlCustomComponentTagReference.resolve() == null && WXMLMetadata.getElementDescriptions(
-                                        psiElement.project
-                                ).any {
-                                    tagName == it.name
-                                }) {
-                            return arrayOf(WXMLTagReference(psiElement))
-                        }
-                        return PsiReference.EMPTY_ARRAY
-                    }
-                }
-        )
-
         // 解析自定义组件标签上的属性
         // 引用js文件中的properties配置
         psiReferenceRegistrar.registerReferenceProvider(
@@ -266,25 +240,6 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                         }
                         return PsiReference.EMPTY_ARRAY
                     }
-                }
-        )
-
-        // 解析wxml属性
-        // wxml自带标签的属性
-        psiReferenceRegistrar.registerReferenceProvider(
-                XmlPatterns.xmlAttribute().withLanguage(WXMLLanguage.INSTANCE),
-                object : PsiReferenceProvider() {
-                    override fun getReferencesByElement(
-                            psiElement: PsiElement, context: ProcessingContext
-                    ): Array<out PsiReference> {
-                        psiElement as XmlAttribute
-                        val wxmlTag = psiElement.parent
-                        if (wxmlTag != null && wxmlTag.findWXMLTagReference() != null) {
-                            return arrayOf(WXMLAttributeReference(psiElement))
-                        }
-                        return PsiReference.EMPTY_ARRAY
-                    }
-
                 }
         )
 
