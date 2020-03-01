@@ -89,22 +89,6 @@ class WXMLElementDescriptor(
 ) :
         XmlElementDescriptor {
 
-    companion object {
-        val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elseif", "wx:else", "wx:key", "wx:if")
-        /**
-         * 忽略公共的属性的标签名
-         */
-        val IGNORE_COMMON_ATTRIBUTE_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
-        /**
-         * 忽略wx属性的标签名
-         */
-        val IGNORE_WX_ATTRIBUTE_TAG_NAMES = arrayOf("template", "wxs", "import", "include")
-        /**
-         * 忽略公共事件的标签名
-         */
-        val IGNORE_COMMON_EVENT_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
-    }
-
     override fun getDefaultValue(): String? {
         return null
     }
