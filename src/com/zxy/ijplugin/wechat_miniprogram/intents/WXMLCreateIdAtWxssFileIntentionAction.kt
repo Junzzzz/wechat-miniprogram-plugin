@@ -79,14 +79,14 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.SmartPsiElementPointer
+import com.intellij.psi.xml.XmlTokenType
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLIdReference
 
 class WXMLCreateIdAtWxssFileIntentionAction() : WXMLCreateSelectorAtWxssFileIntentionAction() {
-    lateinit var smartPsiElementPointer: SmartPsiElementPointer<WXSSPsiFile>
+    private lateinit var smartPsiElementPointer: SmartPsiElementPointer<WXSSPsiFile>
 
     private lateinit var id:String
 
@@ -106,7 +106,7 @@ class WXMLCreateIdAtWxssFileIntentionAction() : WXMLCreateSelectorAtWxssFileInte
     }
 
     override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
-        if (psiElement.node.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
+        if (psiElement.node.elementType !== XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN || editor == null) return false
         val reference = psiElement.containingFile.findReferenceAt(editor.caretModel.offset)
         if (reference is WXMLIdReference && reference.multiResolve(false).isEmpty()) {
             findRelateFile(psiElement.containingFile.originalFile.virtualFile, RelateFileType.WXSS)?.let {
