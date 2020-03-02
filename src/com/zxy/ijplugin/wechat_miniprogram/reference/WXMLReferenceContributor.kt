@@ -91,13 +91,13 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
         // 描述可以被解析为路径的元素的属性
         private val PATH_ATTRIBUTES = arrayOf(
                 PathAttribute("wxs", "src"),
-                PathAttribute("image", "src"),
+                PathAttribute("image", "src", false),
                 PathAttribute("import", "src"),
                 PathAttribute("include", "src")
         )
 
-        private fun matchPathAttribute(tagName: String, attributeName: String): Boolean {
-            return PATH_ATTRIBUTES.any {
+        private fun findPathAttribute(tagName: String, attributeName: String): PathAttribute? {
+            return PATH_ATTRIBUTES.find {
                 it.tagName == tagName && it.attributeName == attributeName
             }
         }
@@ -162,11 +162,16 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                         psiElement is XmlAttributeValue
                         val attribute = psiElement.parent as? XmlAttribute ?: return PsiReference.EMPTY_ARRAY
                         val tag = attribute.parent
-                        if (matchPathAttribute(
-                                        tag.name, attribute.name
-                                )) {
+                        val pathAttribute = findPathAttribute(
+                                tag.name, attribute.name
+                        )
+                        if (pathAttribute != null) {
                             // 这个属性是可解析为路径的
-                            return FileReferenceSet(psiElement).allReferences
+                            return object : FileReferenceSet(psiElement) {
+                                override fun isSoft(): Boolean {
+                                    return pathAttribute.isSoftReference
+                                }
+                            }.allReferences
                         }
                         return PsiReference.EMPTY_ARRAY
                     }
