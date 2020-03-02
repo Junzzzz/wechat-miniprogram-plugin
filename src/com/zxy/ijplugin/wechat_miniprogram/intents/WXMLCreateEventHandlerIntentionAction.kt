@@ -86,11 +86,11 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.codeStyle.CodeStyleManager
-import com.intellij.psi.util.parentOfTypes
+import com.intellij.psi.xml.XmlAttribute
+import com.intellij.psi.xml.XmlAttributeValue
 import com.zxy.ijplugin.wechat_miniprogram.context.MyJSPredefinedLibraryProvider
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.JavaScriptElementFactory
 import com.zxy.ijplugin.wechat_miniprogram.utils.addProperty
@@ -108,15 +108,15 @@ class WXMLCreateEventHandlerIntentionAction : IntentionAction, PsiElementBaseInt
     }
 
     override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
-        val element = InjectedLanguageManager.getInstance(project).getInjectionHost(psiElement) ?: return false
-        if (element.node.elementType !== WXMLTypes.STRING_TEXT || editor == null) return false
-        val wxmlAttribute = element.parentOfTypes<WXMLAttribute>() ?: return false
+        val element = InjectedLanguageManager.getInstance(project).getInjectionHost(psiElement) as? XmlAttributeValue
+                ?: return false
+        if (editor == null) return false
+        val wxmlAttribute = (element.parent as? XmlAttribute) ?: return false
         // 属性是事件属性
-        if (!wxmlAttribute.isEvent) return false
+        if (!WXMLUtils.likeEventAttribute(wxmlAttribute.name)) return false
         // 属性值是正确的js标识符
-        val text = element.text
+        val text = element.value
         if (!text.matches(Regex("^[a-zA-Z_$][a-zA-Z0-9_$]*"))) return false
-
         val jsFile = findRelatePsiFile<JSFile>(element.containingFile.originalFile) ?: return false
         val callExpression = ComponentJsUtils.findComponentOrPageCallExpression(jsFile) ?: return false
         // 只要存在Page或Component方法调用切有第一个参数为对象即可
@@ -140,13 +140,14 @@ class WXMLCreateEventHandlerIntentionAction : IntentionAction, PsiElementBaseInt
     }
 
     override fun invoke(project: Project, editor: Editor, psiElement: PsiElement) {
-        val element = InjectedLanguageManager.getInstance(project).getInjectionHost(psiElement) ?: return
+        val element = InjectedLanguageManager.getInstance(project).getInjectionHost(psiElement) as? XmlAttributeValue
+                ?: return
         val jsFile = findRelatePsiFile<JSFile>(element.containingFile) ?: return
         val callExpression = ComponentJsUtils.findComponentOrPageCallExpression(jsFile) ?: return
         val optionsObject = ComponentJsUtils.findCallExpressionFirstObjectArg(callExpression) ?: return
         val options = optionsObject.properties
         val isComponent = callExpression.methodExpression?.text == "Component"
-        val text = element.text
+        val text = element.value
         val property = if (isComponent) {
             val methodsProperty = options.find {
                 it.name == "methods"
