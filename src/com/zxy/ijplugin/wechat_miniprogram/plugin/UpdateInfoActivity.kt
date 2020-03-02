@@ -102,18 +102,23 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
             return
         }
 
-        showUpdateNotification(pluginDescriptor, version, project)
-        
+        showUpdateNotification(pluginDescriptor, version, project, lastVersion)
+
         propertiesComponent.setValue(LAST_VERSION_KEY, version)
     }
 
     private fun showUpdateNotification(
-            pluginDescriptor: IdeaPluginDescriptor, version: String?,
-            project: Project
+            pluginDescriptor: IdeaPluginDescriptor, version: String,
+            project: Project,
+            lastVersion: String?
     ) {
         // 显示更新通知
-        val displayId = "${pluginDescriptor.name}插件更新"
-        val title = "${pluginDescriptor.name}插件更新至v$version"
+        val displayId = "${pluginDescriptor.name}插件${if (lastVersion == null) "已安装" else "更新"}"
+        val title = if (lastVersion == null) {
+            "${pluginDescriptor.name} v${version}以安装"
+        } else {
+            "${pluginDescriptor.name} 插件更新至v$version"
+        }
         val content = """
                 如果此插件对您有帮助，请
                 <b><a href="$HTML_DESCRIPTION_SUPPORT">支持我们</a>。</b>
@@ -144,7 +149,7 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
                         }
                 )
         notification
-                .addAction(SupportAction(project,notification))
+                .addAction(SupportAction(project, notification))
                 .setImportant(true)
                 .let {
                     Notifications.Bus.notify(it, project)
