@@ -73,15 +73,30 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.reference.usage
 
+import com.intellij.lang.HelpID
+import com.intellij.lang.cacheBuilder.DefaultWordsScanner
+import com.intellij.lang.cacheBuilder.WordsScanner
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
+import com.intellij.psi.tree.TokenSet
+import com.intellij.psi.xml.XmlAttribute
+import com.intellij.psi.xml.XmlAttributeValue
+import com.intellij.psi.xml.XmlTokenType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer.WXMLLexer
 
-class WXMLFindUsageProvider:FindUsagesProvider {
+class WXMLTemplateFindUsageProvider : FindUsagesProvider {
+
+    override fun getWordsScanner(): WordsScanner? {
+        return DefaultWordsScanner(
+                WXMLLexer(), TokenSet.EMPTY,
+                XmlTokenType.COMMENTS,
+                TokenSet.create(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN)
+        )
+    }
 
     override fun getNodeText(psiElement: PsiElement, p1: Boolean): String {
-        return (psiElement as PsiNamedElement).name ?: ""
+        return (psiElement as? PsiNamedElement)?.name ?: ""
     }
 
     override fun getDescriptiveName(psiElement: PsiElement): String {
@@ -89,17 +104,18 @@ class WXMLFindUsageProvider:FindUsagesProvider {
     }
 
     override fun getType(psiElement: PsiElement): String {
-        if (psiElement is WXMLStringText){
-            return psiElement.text
+        if (psiElement is XmlAttributeValue) {
+            val attributeName = (psiElement.parent as? XmlAttribute)?.name
+            return if (attributeName == "name") "template definition" else "template usage"
         }
         return ""
     }
 
     override fun getHelpId(p0: PsiElement): String? {
-        return null
+        return HelpID.FIND_OTHER_USAGES
     }
 
     override fun canFindUsagesFor(psiElement: PsiElement): Boolean {
-        return psiElement is WXMLStringText
+        return psiElement is XmlAttributeValue
     }
 }
