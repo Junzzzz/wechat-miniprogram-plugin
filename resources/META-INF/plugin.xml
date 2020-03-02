@@ -76,6 +76,8 @@
     <name>Wechat mini program support</name>
     <vendor url="https://gitee.com/zxy_c/wechat-miniprogram-plugin">ZXY</vendor>
     <xi:include href="intents.xml" xpointer="xpointer(/idea-plugin/*)"/>
+    <xi:include href="wxml.xml" xpointer="xpointer(/idea-plugin/*)"/>
+    <xi:include href="wxss.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <description><![CDATA[
         Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> WeChat Mini Program </a> project
 
@@ -183,94 +185,6 @@
                 groupName="Wechat mini program"
                 shortName="WXMLUnknownTag"
                 enabledByDefault="true" level="ERROR"/>
-
-
-        <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
-                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
-        <css.cssInspectionFilter
-                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"
-                language="CSS"/>
-
-        <lang.parserDefinition language="WXSS"
-                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WXSSParserDefinition"/>
-        <lang.syntaxHighlighterFactory language="WXSS"
-                                       implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSSyntaxHighlighterFactory"/>
-        <colorProvider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.line_mark.WXSSElementColorProvider"/>
-        <gotoSymbolContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXSSIdChooseByNameContributor"/>
-        <gotoSymbolContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXSSClassChooseByNameContributor"/>
-        <lang.commenter language="WXSS"
-                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>
-        <lang.braceMatcher language="WXSS"
-                           implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBraceMatcher"/>
-        <quoteHandler fileType="WXSS" className="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSDoubleQuoteHandler"/>
-        <lang.formatter language="WXSS"
-                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
-        <completion.contributor language="WXSS"
-                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXSSCompletionContributor"/>
-        <lang.refactoringSupport language="WXSS"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXSSSelectorRefactoring"/>
-        <lang.namesValidator language="WXSS"
-                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.validator.WXSSNamesValidator"/>
-        <lang.findUsagesProvider language="WXSS"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSFindUsageProvider"/>
-        <psi.referenceContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXSSReferenceContributor"/>
-        <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLClassSelectorManipulator"/>
-        <lang.foldingBuilder language="WXSS"
-                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXSSBracketFolding"/>
-        <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXSSValueManipulator"/>
-        <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
-
-
-        <fileType name="WXML" extensions="wxml" language="WXML"
-                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
-                  fieldName="INSTANCE"/>
-        <xml.elementDescriptorProvider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptorProvider"/>
-        <xml.xmlExtension implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension.WxmlXmlExtension"/>
-        <lang.parserDefinition language="WXML"
-                               implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition"/>
-        <xml.fileNSInfoProvider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension.WxmlFileNSInfoProvider"/>
-        <xml.tagNameProvider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLTagNameProvider"/>
-        <completion.contributor id="wxml"
-                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeCompletionContributor"
-                                language="WXML" order="before xmlNonFirst"/>
-        <highlightErrorFilter
-                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension.WXMLHighlightErrorFilter"/>
-        <xml.xmlSuppressionProvider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.inspection.WXMLXmlSuppressionProvider"/>
-        <lang.syntaxHighlighterFactory
-                language="WXML" implementationClass="com.intellij.lang.html.HtmlSyntaxHighlighterFactory"/>
-        <colorProvider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.line_mark.WXMLElementColorProvider"/>
-        <psi.referenceContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLReferenceContributor"/>
-        <multiHostInjector implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector"/>
-        <lang.foldingBuilder language="WXML"
-                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLIncludeTagFolding"/>
-        <include.provider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WxmlJsModuleFileIncludeProvider"/>
-        <lang.findUsagesProvider language="WXML"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXMLTemplateFindUsageProvider"/>
-        <gotoSymbolContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXMLTemplateDefinitionChooseByNameContributor"/>
-        <lang.documentationProvider language="WXML"
-                                    id="WXMLElementDocumentProvider"
-                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementDocumentProvider"/>
-        <lang.documentationProvider language="WXML"
-                                    id="WXMLElementAttributeDocumentProvider"
-                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementAttributeDocumentProvider"/>
-        <lang.ast.factory language="XML"
-                          implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WxmlXmlAstFactory"
-                          order="first"/>
-        <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
