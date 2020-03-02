@@ -244,14 +244,10 @@ object WXMLModuleUtils {
         }
     }
 
-    fun findValidIncludeTags(wxmlElements: Collection<WXMLElement>): List<WXMLElement> {
+    fun findValidIncludeTags(wxmlElements: Collection<XmlTag>): List<XmlTag> {
         return wxmlElements.filter { wxmlElement ->
-            wxmlElement.tagName == "include" && PsiTreeUtil.findChildrenOfType(
-                    wxmlElement, WXMLAttribute::class.java
-            ).any {
-                it.name == "src" && PsiTreeUtil.findChildOfType(
-                        it, WXMLStringText::class.java
-                )?.references?.lastOrNull()?.resolve() is WXMLPsiFile
+            wxmlElement.name == "include" && wxmlElement.attributes.any {
+                it.name == "src" && it.valueElement?.references?.lastOrNull()?.resolve() is WXMLPsiFile
             }
         }
     }

@@ -80,18 +80,16 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStartTag
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.findAttribute
 
 class WXMLIncludeTagFolding : FoldingBuilderEx() {
     override fun getPlaceholderText(astNode: ASTNode): String? {
         val psiElement = astNode.psi
-        if (psiElement is WXMLElement) {
-            val resolveResult = psiElement.findAttribute("src")?.string?.stringText?.references?.lastOrNull()?.resolve()
+        if (psiElement is XmlTag) {
+            val resolveResult = psiElement.attributes.find { it.name == "src" }?.valueElement?.references?.lastOrNull()?.resolve()
+                    ?: return null
             if (resolveResult is WXMLPsiFile) {
                 return resolveResult.text
             }
@@ -102,15 +100,12 @@ class WXMLIncludeTagFolding : FoldingBuilderEx() {
     override fun buildFoldRegions(
             rootElement: PsiElement, document: Document, quick: Boolean
     ): Array<FoldingDescriptor> {
-        val elements = PsiTreeUtil.findChildrenOfType(rootElement, WXMLElement::class.java)
-        return WXMLModuleUtils.findValidIncludeTags(elements).mapNotNull {
-            val tagNameNode = PsiTreeUtil.findChildOfType(it, WXMLStartTag::class.java)?.node?.findChildByType(
-                    WXMLTypes.TAG_NAME
-            ) ?: return@mapNotNull null
+        val elements = PsiTreeUtil.findChildrenOfType(rootElement, XmlTag::class.java)
+        return WXMLModuleUtils.findValidIncludeTags(elements).map {
             FoldingDescriptor(
-                    it.node,
+                    it,
                     TextRange(
-                            tagNameNode.textRange.endOffset + 1,
+                            it.textRange.startOffset + it.name.length + 1,
                             it.textRange.endOffset
                     )
             )
