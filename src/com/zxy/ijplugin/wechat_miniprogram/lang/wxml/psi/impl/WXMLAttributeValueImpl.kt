@@ -75,23 +75,15 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl
 
 import com.intellij.icons.AllIcons
 import com.intellij.navigation.ItemPresentation
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.impl.source.xml.XmlAttributeValueImpl
-import com.intellij.psi.xml.XmlAttribute
 import javax.swing.Icon
 
-class WXMLAttributeValueImpl : XmlAttributeValueImpl(), PsiNamedElement {
-
-    override fun setName(name: String): PsiElement {
-        (this.parent as? XmlAttribute)?.setValue(name)
-        return this
-    }
+class WXMLAttributeValueImpl : XmlAttributeValueImpl() {
 
     override fun getPresentation(): ItemPresentation? {
         val presentation = super.getPresentation()
         val value = this.value
-        return object :ItemPresentation{
+        return object : ItemPresentation {
             override fun getLocationString(): String? {
                 return presentation?.locationString
             }
