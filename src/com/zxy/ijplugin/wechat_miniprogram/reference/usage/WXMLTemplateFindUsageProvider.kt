@@ -89,9 +89,10 @@ class WXMLTemplateFindUsageProvider : FindUsagesProvider {
 
     override fun getWordsScanner(): WordsScanner? {
         return DefaultWordsScanner(
-                WXMLLexer(), TokenSet.EMPTY,
+                WXMLLexer(), TokenSet.create(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN),
                 XmlTokenType.COMMENTS,
-                TokenSet.create(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN)
+                TokenSet.create(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN),
+                TokenSet.andNot(TokenSet.ANY, TokenSet.create(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN))
         )
     }
 
