@@ -71,7 +71,7 @@
   ~    See the Mulan PSL v1 for more details.
   -->
 
-<idea-plugins>
+<idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
@@ -110,4 +110,4 @@
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXSSValueManipulator"/>
         <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
     </extensions>
-</idea-plugins>
+</idea-plugin>

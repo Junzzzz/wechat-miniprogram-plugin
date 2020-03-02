@@ -71,7 +71,7 @@
   ~    See the Mulan PSL v1 for more details.
   -->
 
-<idea-plugins>
+<idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
         <fileType name="WXML" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
@@ -119,4 +119,4 @@
         <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata"/>
     </extensions>
 
-</idea-plugins>
+</idea-plugin>
