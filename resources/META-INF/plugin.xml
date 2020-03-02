@@ -71,11 +71,11 @@
   ~    See the Mulan PSL v1 for more details.
   -->
 
-<idea-plugin>
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
     <id>com.zxy.ijplugin.wechat-miniprogram</id>
     <name>Wechat mini program support</name>
     <vendor url="https://gitee.com/zxy_c/wechat-miniprogram-plugin">ZXY</vendor>
-
+    <xi:include href="intents.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <description><![CDATA[
         Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> WeChat Mini Program </a> project
 
@@ -134,15 +134,9 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata"/>
         <postStartupActivity implementation="com.zxy.ijplugin.wechat_miniprogram.plugin.UpdateInfoActivity"/>
-
         <gotoRelatedProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WechatMiniProgramGotoRelatedProvider"/>
-
-        <renamePsiElementProcessor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLClassRenamePsiElementProcessor"/>
-        <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
 
         <intentionAction>
             <descriptionDirectoryName>WXMLCreateClassAtAppWxssFileIntentionAction</descriptionDirectoryName>
@@ -230,6 +224,8 @@
                              implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXSSBracketFolding"/>
         <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXSSValueManipulator"/>
+        <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
+
 
         <fileType name="WXML" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
@@ -274,8 +270,7 @@
         <lang.ast.factory language="XML"
                           implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WxmlXmlAstFactory"
                           order="first"/>
-        <lang.elementManipulator forClass="com.intellij.psi.xml.XmlAttributeValue"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLAttributeValueManipulator"/>
+        <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
