@@ -188,6 +188,21 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                 }
         )
 
+        // 解析wxml中的template.name属性
+        psiReferenceRegistrar.registerReferenceProvider(
+                XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE).withLocalName("name").withSuperParent(
+                        2, XmlPatterns.xmlTag().withLocalName("template")
+                ),
+                object : PsiReferenceProvider() {
+                    override fun getReferencesByElement(
+                            psiElement: PsiElement, p1: ProcessingContext
+                    ): Array<PsiReference> {
+                        psiElement as XmlAttributeValue
+                        return arrayOf(WXMLTemplateNameAttributeReference(psiElement))
+                    }
+                }
+        )
+
         // 解析wxml元素的slot属性
         psiReferenceRegistrar.registerReferenceProvider(
                 XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE).withLocalName("slot"),
