@@ -275,7 +275,7 @@
         <lang.documentationProvider language="WXML"
                                     id="WXMLElementAttributeDocumentProvider"
                                     implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementAttributeDocumentProvider"/>
-        <lang.ast.factory language="WXML" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WxmlXmlAstFactory" order="first"/>
+        <lang.ast.factory language="XML" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WxmlXmlAstFactory" order="first"/>
         <lang.elementManipulator forClass="com.intellij.psi.xml.XmlAttributeValue"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLAttributeValueManipulator"/>
 

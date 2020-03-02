@@ -104,4 +104,8 @@ class WXMLTemplateIsAttributeReference(element: XmlAttributeValue) :
         return super.isReferenceTo(element)
     }
 
+    override fun bindToElement(element: PsiElement): PsiElement {
+        return super.bindToElement(element)
+    }
+
 }

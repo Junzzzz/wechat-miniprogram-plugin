@@ -113,4 +113,8 @@ class WXMLTemplateNameAttributeReference(element: XmlAttributeValue) :
         return super.handleElementRename(newElementName)
     }
 
+    override fun bindToElement(element: PsiElement): PsiElement {
+        return super.bindToElement(element)
+    }
+
 }

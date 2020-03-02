@@ -79,10 +79,10 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.xml.XmlElementType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl.WXMLAttributeValueImpl
 
-class WxmlXmlAstFactory: XmlASTFactory() {
+class WxmlXmlAstFactory : XmlASTFactory() {
 
     override fun createComposite(type: IElementType): CompositeElement? {
-        if (type == XmlElementType.XML_ATTRIBUTE){
+        if (type == XmlElementType.XML_ATTRIBUTE_VALUE) {
             return WXMLAttributeValueImpl()
         }
         return super.createComposite(type)
