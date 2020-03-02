@@ -73,7 +73,6 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser;
 
-import com.intellij.codeInsight.daemon.XmlErrorBundle;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.ICustomParsingType;
@@ -81,7 +80,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.xml.XmlTokenType;
 import com.intellij.util.containers.Stack;
-import com.intellij.xml.psi.XmlPsiBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -104,7 +102,7 @@ public class WXMLParsing {
     @Nullable
     private static PsiBuilder.Marker flushError(PsiBuilder.Marker error) {
         if (error != null) {
-            error.error(XmlPsiBundle.message("xml.parsing.unexpected.tokens"));
+            error.error("Unexpected tokens");
         }
         return null;
     }
@@ -146,7 +144,7 @@ public class WXMLParsing {
         }
 
         if (error != null) {
-            error.error(XmlPsiBundle.message("top.level.element.is.not.completed"));
+            error.error("Top level element is not completed");
         }
 
         document.done(XML_DOCUMENT);
@@ -171,7 +169,7 @@ public class WXMLParsing {
                 if (!tagName.equals(endName) && myTagNamesStack.contains(endName)) {
                     footer.rollbackTo();
                     myTagNamesStack.pop();
-                    tag.doneBefore(XML_TAG, content, XmlErrorBundle.message("named.element.is.not.closed", tagName));
+                    tag.doneBefore(XML_TAG, content, String.format("Element %s is not closed", tagName));
                     content.drop();
                     return;
                 }
@@ -181,17 +179,17 @@ public class WXMLParsing {
             footer.drop();
 
             while (token() != XmlTokenType.XML_TAG_END && token() != XmlTokenType.XML_START_TAG_START && token() != XmlTokenType.XML_END_TAG_START && eof()) {
-                error(XmlPsiBundle.message("xml.parsing.unexpected.token"));
+                error("Unexpected token");
                 advance();
             }
 
             if (token() == XML_TAG_END) {
                 advance();
             } else {
-                error(XmlPsiBundle.message("xml.parsing.closing.tag.is.not.done"));
+                error("Closing tag is not done");
             }
         } else {
-            error(XmlPsiBundle.message("xml.parsing.unexpected.end.of.file"));
+            error("Unexpected end of file");
         }
 
         content.drop();
@@ -205,7 +203,7 @@ public class WXMLParsing {
 
         final String tagName;
         if (token() != XML_NAME || myBuilder.rawLookup(-1) == TokenType.WHITE_SPACE) {
-            error(XmlPsiBundle.message("xml.parsing.tag.name.expected"));
+            error("Tag name expected");
             tagName = "";
         } else {
             tagName = myBuilder.getTokenText();
@@ -236,14 +234,14 @@ public class WXMLParsing {
         if (token() == XML_TAG_END) {
             advance();
         } else {
-            error(XmlPsiBundle.message("tag.start.is.not.closed"));
+            error("Tag start is not closed");
             myTagNamesStack.pop();
             tag.done(XML_TAG);
             return null;
         }
 
         if (myTagNamesStack.size() > BALANCING_DEPTH_THRESHOLD) {
-            error(XmlPsiBundle.message("way.too.unbalanced"));
+            error("Way too unbalanced. Stopping attempt to balance tags properly at this point");
             tag.done(XML_TAG);
             return null;
         }
@@ -281,7 +279,7 @@ public class WXMLParsing {
                 xmlText = startText(xmlText);
                 final PsiBuilder.Marker error = mark();
                 advance();
-                error.error(XmlPsiBundle.message("unescaped.ampersand.or.nonterminated.character.entity.reference"));
+                error.error("Unescaped \\& or nonterminated character/entity reference");
             } else if (tt instanceof ICustomParsingType || tt instanceof ILazyParseableElementType) {
                 xmlText = terminateText(xmlText);
                 advance();
@@ -337,7 +335,7 @@ public class WXMLParsing {
             } else if (tt == XML_BAD_CHARACTER) {
                 final PsiBuilder.Marker error = mark();
                 advance();
-                error.error(XmlPsiBundle.message("xml.parsing.bad.character"));
+                error.error("Bad character");
                 continue;
             }
             if (tt == XML_COMMENT_END) {
@@ -384,8 +382,7 @@ public class WXMLParsing {
                 if (tt == XML_BAD_CHARACTER) {
                     final PsiBuilder.Marker error = mark();
                     advance();
-                    error.error(
-                            XmlPsiBundle.message("unescaped.ampersand.or.nonterminated.character.entity.reference"));
+                    error.error("Unescaped \\& or nonterminated character/entity reference");
                 } else if (tt == XML_ENTITY_REF_TOKEN) {
                     parseReference();
                 } else {
@@ -396,10 +393,10 @@ public class WXMLParsing {
             if (token() == XML_ATTRIBUTE_VALUE_END_DELIMITER) {
                 advance();
             } else {
-                error(XmlPsiBundle.message("xml.parsing.unclosed.attribute.value"));
+                error("Attribute value is not closed");
             }
         } else {
-            error(XmlPsiBundle.message("xml.parsing.attribute.value.expected"));
+            error("Attribute value expected");
         }
 
         attValue.done(XML_ATTRIBUTE_VALUE);
@@ -410,7 +407,7 @@ public class WXMLParsing {
         final PsiBuilder.Marker pi = mark();
         advance();
         if (token() != XML_NAME) {
-            error(XmlPsiBundle.message("xml.parsing.processing.instruction.name.expected"));
+            error("Processing instruction name expected");
         } else {
             advance();
         }
@@ -432,7 +429,7 @@ public class WXMLParsing {
         if (token() == XML_PI_END) {
             advance();
         } else {
-            error(XmlPsiBundle.message("xml.parsing.unterminated.processing.instruction"));
+            error("Processing instruction not terminated");
         }
 
         pi.done(XML_PROCESSING_INSTRUCTION);
