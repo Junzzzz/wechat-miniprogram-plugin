@@ -142,32 +142,31 @@
 
         <renamePsiElementProcessor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLClassRenamePsiElementProcessor"/>
-        <!--        <renameHandler implementation="com.zxy.ijplugin.wechat_miniprogram.rename.WXSSIdRenameHandler"/>-->
         <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
         <lang.smartEnterProcessor language="WXML"
                                   implementationClass="com.intellij.codeInsight.completion.XmlSmartEnterProcessor"/>
-        <!--        <intentionAction>-->
-        <!--            <descriptionDirectoryName>WXMLCreateClassAtAppWxssFileIntentionAction</descriptionDirectoryName>-->
-        <!--            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtAppWxssFileIntentionAction-->
-        <!--            </className>-->
-        <!--            <category>Wechat mini program</category>-->
-        <!--        </intentionAction>-->
-        <!--        <intentionAction>-->
-        <!--            <descriptionDirectoryName>WXMLCreateClassAtComponentWxssFileIntentionAction</descriptionDirectoryName>-->
-        <!--            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtComponentWxssFileIntentionAction-->
-        <!--            </className>-->
-        <!--            <category>Wechat mini program</category>-->
-        <!--        </intentionAction>-->
-        <!--        <intentionAction>-->
-        <!--            <descriptionDirectoryName>WXMLCreateIdAtWxssFileIntentionAction</descriptionDirectoryName>-->
-        <!--            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateIdAtWxssFileIntentionAction</className>-->
-        <!--            <category>Wechat mini program</category>-->
-        <!--        </intentionAction>-->
-        <!--        <intentionAction>-->
-        <!--            <descriptionDirectoryName>WXMLCreateEventHandlerIntentionAction</descriptionDirectoryName>-->
-        <!--            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateEventHandlerIntentionAction</className>-->
-        <!--            <category>Wechat mini program</category>-->
-        <!--        </intentionAction>-->
+        <intentionAction>
+            <descriptionDirectoryName>WXMLCreateClassAtAppWxssFileIntentionAction</descriptionDirectoryName>
+            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtAppWxssFileIntentionAction
+            </className>
+            <category>Wechat mini program</category>
+        </intentionAction>
+        <intentionAction>
+            <descriptionDirectoryName>WXMLCreateClassAtComponentWxssFileIntentionAction</descriptionDirectoryName>
+            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtComponentWxssFileIntentionAction
+            </className>
+            <category>Wechat mini program</category>
+        </intentionAction>
+        <intentionAction>
+            <descriptionDirectoryName>WXMLCreateIdAtWxssFileIntentionAction</descriptionDirectoryName>
+            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateIdAtWxssFileIntentionAction</className>
+            <category>Wechat mini program</category>
+        </intentionAction>
+        <intentionAction>
+            <descriptionDirectoryName>WXMLCreateEventHandlerIntentionAction</descriptionDirectoryName>
+            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateEventHandlerIntentionAction</className>
+            <category>Wechat mini program</category>
+        </intentionAction>
 
         <localInspection
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXSSInvalidImportInspection"
@@ -275,7 +274,9 @@
         <lang.documentationProvider language="WXML"
                                     id="WXMLElementAttributeDocumentProvider"
                                     implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementAttributeDocumentProvider"/>
-        <lang.ast.factory language="XML" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WxmlXmlAstFactory" order="first"/>
+        <lang.ast.factory language="XML"
+                          implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WxmlXmlAstFactory"
+                          order="first"/>
         <lang.elementManipulator forClass="com.intellij.psi.xml.XmlAttributeValue"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLAttributeValueManipulator"/>
 

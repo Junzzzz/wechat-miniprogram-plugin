@@ -77,10 +77,10 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
+import com.intellij.psi.xml.XmlTokenType
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLClassReference
 
@@ -102,6 +102,10 @@ abstract class WXMLCreateClassAtWxssFileIntentionAction : WXMLCreateSelectorAtWx
 
 }
 
+private fun isAvailableElementAndEditor(
+        psiElement: PsiElement, editor: Editor?
+) = psiElement.node.elementType !== XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN || editor == null
+
 class WXMLCreateClassAtComponentWxssFileIntentionAction : WXMLCreateClassAtWxssFileIntentionAction() {
 
     override fun getText(): String {
@@ -109,8 +113,8 @@ class WXMLCreateClassAtComponentWxssFileIntentionAction : WXMLCreateClassAtWxssF
     }
 
     override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
-        if (psiElement.node.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
-        val reference = psiElement.containingFile.findReferenceAt(editor.caretModel.offset)
+        if (isAvailableElementAndEditor(psiElement, editor)) return false
+        val reference = psiElement.containingFile.findReferenceAt(editor!!.caretModel.offset)
         if (reference is WXMLClassReference) {
             if (reference.multiResolve(false).isEmpty()) {
                 val className = reference.canonicalText
@@ -141,8 +145,8 @@ class WXMLCreateClassAtAppWxssFileIntentionAction : WXMLCreateClassAtWxssFileInt
     }
 
     override fun isAvailable(project: Project, editor: Editor?, psiElement: PsiElement): Boolean {
-        if (psiElement.node.elementType !== WXMLTypes.STRING_CONTENT || editor == null) return false
-        val reference = psiElement.containingFile.findReferenceAt(editor.caretModel.offset)
+        if (isAvailableElementAndEditor(psiElement, editor)) return false
+        val reference = psiElement.containingFile.findReferenceAt(editor!!.caretModel.offset)
         if (reference is WXMLClassReference && reference.multiResolve(false).isEmpty()) {
             findAppFile(psiElement.project, RelateFileType.WXSS)?.let {
                 PsiManager.getInstance(psiElement.project).findFile(
