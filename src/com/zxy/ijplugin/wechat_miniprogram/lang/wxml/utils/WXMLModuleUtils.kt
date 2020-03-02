@@ -147,6 +147,9 @@ object WXMLModuleUtils {
         }.filterIsInstance<FileReference>()
     }
 
+    /**
+     * @see findSrcImportedFileReferences
+     */
     @Deprecated(wxmlToXmlDeprecatedMessage)
     private fun findImportedFileReferences(
             elements: Collection<WXMLElement>
@@ -225,22 +228,18 @@ object WXMLModuleUtils {
         return null
     }
 
-    fun findTemplateDefinitions(wxmlPsiFile: WXMLPsiFile): List<WXMLStringText> {
-        val wxmlElements = PsiTreeUtil.findChildrenOfType(wxmlPsiFile, WXMLElement::class.java)
+    fun findTemplateDefinitions(wxmlPsiFile: WXMLPsiFile): List<XmlAttributeValue> {
+        val wxmlElements = PsiTreeUtil.findChildrenOfType(wxmlPsiFile, XmlTag::class.java)
         return findTemplateDefinitions(wxmlElements)
     }
 
-    private fun findTemplateDefinitions(wxmlElements: Collection<WXMLElement>): List<WXMLStringText> {
+    private fun findTemplateDefinitions(wxmlElements: Collection<XmlTag>): List<XmlAttributeValue> {
         return wxmlElements.filter { wxmlElement ->
-            wxmlElement.tagName == "template"
+            wxmlElement.name == "template"
         }.mapNotNull { wxmlElement ->
-            PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java).find {
-                it.name == "name"
-            }
+            wxmlElement.getAttribute("name")
         }.mapNotNull {
-            PsiTreeUtil.findChildOfType(
-                    it, WXMLStringText::class.java
-            )
+            it.valueElement
         }
     }
 
@@ -268,11 +267,11 @@ object WXMLModuleUtils {
         } == true
     }
 
-    fun findTemplateDefinitionsWithImports(wxmlPsiFile: WXMLPsiFile): List<WXMLStringText> {
-        val results = arrayListOf<WXMLStringText>()
-        val elements = PsiTreeUtil.findChildrenOfType(wxmlPsiFile, WXMLElement::class.java)
+    fun findTemplateDefinitionsWithImports(wxmlPsiFile: WXMLPsiFile): List<XmlAttributeValue> {
+        val results = arrayListOf<XmlAttributeValue>()
+        val elements = PsiTreeUtil.findChildrenOfType(wxmlPsiFile, XmlTag::class.java)
         results.addAll(findTemplateDefinitions(elements))
-        val fileReferences = this.findImportedFileReferences(elements)
+        val fileReferences = this.findSrcImportedFileReferences(elements)
         results.addAll(fileReferences.mapNotNull { it.resolve()  }.mapNotNull { it as? WXMLPsiFile }.toList().toTypedArray().flatMap {
             findTemplateDefinitions(it)
         })

@@ -71,44 +71,40 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.navigation
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl
 
-import com.intellij.navigation.ChooseByNameContributor
-import com.intellij.navigation.NavigationItem
-import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiManager
+import com.intellij.icons.AllIcons
+import com.intellij.navigation.ItemPresentation
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.impl.source.xml.XmlAttributeValueImpl
-import com.intellij.psi.search.FileTypeIndex
-import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.xml.XmlAttributeValue
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
+import com.intellij.psi.xml.XmlAttribute
+import javax.swing.Icon
 
-class WXMLTemplateDefinitionChooseByNameContributor : ChooseByNameContributor {
-    override fun getItemsByName(
-            name: String, pattern: String?, project: Project, includeNonProjectItems: Boolean
-    ): Array<out NavigationItem> {
-        return getTemplateDefinition(project).filter { it.value == name }
-                .filterIsInstance<XmlAttributeValueImpl>()
-                .toTypedArray()
+class WXMLAttributeValueImpl : XmlAttributeValueImpl(), PsiNamedElement {
+
+    override fun setName(name: String): PsiElement {
+        (this.parent as? XmlAttribute)?.setValue(name)
+        return this
     }
 
-    override fun getNames(project: Project, p1: Boolean): Array<String> {
-        return getTemplateDefinition(project).distinct().map {
-            it.value
-        }.toTypedArray()
+    override fun getPresentation(): ItemPresentation? {
+        val presentation = super.getPresentation()
+        val value = this.value
+        return object :ItemPresentation{
+            override fun getLocationString(): String? {
+                return presentation?.locationString
+            }
+
+            override fun getIcon(unused: Boolean): Icon? {
+                return AllIcons.FileTypes.Xml
+            }
+
+            override fun getPresentableText(): String? {
+                return value
+            }
+
+        }
     }
 
-    private fun getTemplateDefinition(project: Project): List<XmlAttributeValue> {
-        val virtualFiles = FileTypeIndex.getFiles(
-                WXMLFileType.INSTANCE, GlobalSearchScope.allScope(project)
-        )
-        return virtualFiles.flatMap { virtualFile ->
-            val wxmlPsiFile = PsiManager.getInstance(project).findFile(virtualFile) as WXMLPsiFile?
-            wxmlPsiFile?.let {
-                WXMLModuleUtils.findTemplateDefinitions(it)
-            } ?: emptyList()
-        }.distinct()
-    }
 }

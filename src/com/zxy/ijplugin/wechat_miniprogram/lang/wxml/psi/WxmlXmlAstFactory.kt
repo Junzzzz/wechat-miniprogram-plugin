@@ -71,44 +71,21 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.navigation
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi
 
-import com.intellij.navigation.ChooseByNameContributor
-import com.intellij.navigation.NavigationItem
-import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiManager
-import com.intellij.psi.impl.source.xml.XmlAttributeValueImpl
-import com.intellij.psi.search.FileTypeIndex
-import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.xml.XmlAttributeValue
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
+import com.intellij.lang.xml.XmlASTFactory
+import com.intellij.psi.impl.source.tree.CompositeElement
+import com.intellij.psi.tree.IElementType
+import com.intellij.psi.xml.XmlElementType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.impl.WXMLAttributeValueImpl
 
-class WXMLTemplateDefinitionChooseByNameContributor : ChooseByNameContributor {
-    override fun getItemsByName(
-            name: String, pattern: String?, project: Project, includeNonProjectItems: Boolean
-    ): Array<out NavigationItem> {
-        return getTemplateDefinition(project).filter { it.value == name }
-                .filterIsInstance<XmlAttributeValueImpl>()
-                .toTypedArray()
+class WxmlXmlAstFactory: XmlASTFactory() {
+
+    override fun createComposite(type: IElementType): CompositeElement? {
+        if (type == XmlElementType.XML_ATTRIBUTE){
+            return WXMLAttributeValueImpl()
+        }
+        return super.createComposite(type)
     }
 
-    override fun getNames(project: Project, p1: Boolean): Array<String> {
-        return getTemplateDefinition(project).distinct().map {
-            it.value
-        }.toTypedArray()
-    }
-
-    private fun getTemplateDefinition(project: Project): List<XmlAttributeValue> {
-        val virtualFiles = FileTypeIndex.getFiles(
-                WXMLFileType.INSTANCE, GlobalSearchScope.allScope(project)
-        )
-        return virtualFiles.flatMap { virtualFile ->
-            val wxmlPsiFile = PsiManager.getInstance(project).findFile(virtualFile) as WXMLPsiFile?
-            wxmlPsiFile?.let {
-                WXMLModuleUtils.findTemplateDefinitions(it)
-            } ?: emptyList()
-        }.distinct()
-    }
 }

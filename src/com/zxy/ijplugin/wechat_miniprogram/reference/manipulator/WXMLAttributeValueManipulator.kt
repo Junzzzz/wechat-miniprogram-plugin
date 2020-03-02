@@ -71,44 +71,19 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.navigation
+package com.zxy.ijplugin.wechat_miniprogram.reference.manipulator
 
-import com.intellij.navigation.ChooseByNameContributor
-import com.intellij.navigation.NavigationItem
-import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiManager
-import com.intellij.psi.impl.source.xml.XmlAttributeValueImpl
-import com.intellij.psi.search.FileTypeIndex
-import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.openapi.util.TextRange
+import com.intellij.psi.AbstractElementManipulator
+import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlAttributeValue
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.replace
 
-class WXMLTemplateDefinitionChooseByNameContributor : ChooseByNameContributor {
-    override fun getItemsByName(
-            name: String, pattern: String?, project: Project, includeNonProjectItems: Boolean
-    ): Array<out NavigationItem> {
-        return getTemplateDefinition(project).filter { it.value == name }
-                .filterIsInstance<XmlAttributeValueImpl>()
-                .toTypedArray()
-    }
-
-    override fun getNames(project: Project, p1: Boolean): Array<String> {
-        return getTemplateDefinition(project).distinct().map {
-            it.value
-        }.toTypedArray()
-    }
-
-    private fun getTemplateDefinition(project: Project): List<XmlAttributeValue> {
-        val virtualFiles = FileTypeIndex.getFiles(
-                WXMLFileType.INSTANCE, GlobalSearchScope.allScope(project)
-        )
-        return virtualFiles.flatMap { virtualFile ->
-            val wxmlPsiFile = PsiManager.getInstance(project).findFile(virtualFile) as WXMLPsiFile?
-            wxmlPsiFile?.let {
-                WXMLModuleUtils.findTemplateDefinitions(it)
-            } ?: emptyList()
-        }.distinct()
+class WXMLAttributeValueManipulator: AbstractElementManipulator<XmlAttributeValue>() {
+    override fun handleContentChange(
+            element: XmlAttributeValue, range: TextRange, newContent: String
+    ): XmlAttributeValue? {
+        (element.parent as XmlAttribute?)?.setValue(element.text.replace(range, newContent))
+        return element
     }
 }

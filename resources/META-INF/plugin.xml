@@ -263,21 +263,21 @@
         <multiHostInjector implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector"/>
         <lang.foldingBuilder language="WXML"
                              implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLIncludeTagFolding"/>
-<!--        <include.provider-->
-<!--                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WxmlJsModuleFileIncludeProvider"/>-->
+        <include.provider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WxmlJsModuleFileIncludeProvider"/>
         <lang.findUsagesProvider language="WXML"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXMLTemplateFindUsageProvider"/>
-        <!--        <gotoSymbolContributor-->
-        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXMLTemplateDefinitionChooseByNameContributor"/>-->
-        <!--        <lang.refactoringSupport language="WXML"-->
-        <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXMLTemplateNameRefactoring"/>-->
-
+        <gotoSymbolContributor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXMLTemplateDefinitionChooseByNameContributor"/>
         <lang.documentationProvider language="WXML"
                                     id="WXMLElementDocumentProvider"
                                     implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementDocumentProvider"/>
         <lang.documentationProvider language="WXML"
                                     id="WXMLElementAttributeDocumentProvider"
                                     implementationClass="com.zxy.ijplugin.wechat_miniprogram.document.WXMLElementAttributeDocumentProvider"/>
+        <lang.ast.factory language="WXML" implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WxmlXmlAstFactory" order="first"/>
+        <lang.elementManipulator forClass="com.intellij.psi.xml.XmlAttributeValue"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLAttributeValueManipulator"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
