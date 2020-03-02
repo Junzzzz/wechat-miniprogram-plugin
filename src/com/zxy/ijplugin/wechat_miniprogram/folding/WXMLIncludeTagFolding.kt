@@ -80,6 +80,7 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.xml.XmlDocument
 import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
@@ -91,7 +92,13 @@ class WXMLIncludeTagFolding : FoldingBuilderEx() {
             val resolveResult = psiElement.attributes.find { it.name == "src" }?.valueElement?.references?.lastOrNull()?.resolve()
                     ?: return null
             if (resolveResult is WXMLPsiFile) {
-                return resolveResult.text
+                return resolveResult.children.asSequence().filterIsInstance<XmlDocument>().flatMap {
+                    it.children.asSequence()
+                }.filter {
+                    it is XmlTag && it.name != "template" && it.name != "wxs"
+                }.joinToString(""){
+                    it.text
+                }
             }
         }
         return "..."
