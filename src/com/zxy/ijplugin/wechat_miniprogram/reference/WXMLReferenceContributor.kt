@@ -93,7 +93,8 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                 PathAttribute("wxs", "src"),
                 PathAttribute("image", "src", false),
                 PathAttribute("import", "src"),
-                PathAttribute("include", "src")
+                PathAttribute("include", "src"),
+                PathAttribute("cover-image", "src", false)
         )
 
         private fun findPathAttribute(tagName: String, attributeName: String): PathAttribute? {
