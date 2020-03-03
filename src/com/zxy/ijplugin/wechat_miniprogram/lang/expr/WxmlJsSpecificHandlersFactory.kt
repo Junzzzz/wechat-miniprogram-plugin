@@ -129,7 +129,7 @@ class WxmlJsReferenceExpressionResolver(
                     if (injectionHost is XmlAttributeValue && PsiTreeUtil.getParentOfType(
                                     injectionHost, XmlAttribute::class.java
                             )?.isEventHandler() == true && !WxmlJSInjector.DOUBLE_BRACE_REGEX.matches(
-                                    (injectionHost as XmlAttribute).text
+                                    injectionHost.value
                             )) {
                         // 事件
                         // 找到js文件中的methods
@@ -216,14 +216,14 @@ class WxmlJsReferenceExpressionResolver(
     }
 
     private fun addObjectKeys(
-            methodsProperty: JSProperty?,
+            keyValueProperty: JSProperty?,
             results: ArrayList<ResolveResult>
     ) {
         val methodsPropertyObjectLiteral = PsiTreeUtil.getChildOfType(
-                methodsProperty, JSObjectLiteralExpression::class.java
+                keyValueProperty, JSObjectLiteralExpression::class.java
         )
-        val componentMethods = PsiTreeUtil.getChildrenOfType(methodsPropertyObjectLiteral, JSProperty::class.java)
-        componentMethods?.find {
+        val componentItems = PsiTreeUtil.getChildrenOfType(methodsPropertyObjectLiteral, JSProperty::class.java)
+        componentItems?.find {
             it.name == myReferencedName
         }?.let {
             results.add(PsiElementResolveResult(it))
