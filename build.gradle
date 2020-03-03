@@ -70,7 +70,6 @@
  *
  *    See the Mulan PSL v1 for more details.
  */
-
 buildscript {
     ext.kotlin_version = '1.3.61'
 
@@ -141,10 +140,6 @@ runIde{
 
 }
 
-buildPlugin{
-    version '192.7142.36'
-}
-
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains:annotations-java5:17.0.0"
@@ -153,4 +148,22 @@ dependencies {
 
 publishPlugin{
     token intellijPublishToken
+}
+
+version = "2.0.0"
+
+patchPluginXml{
+    sinceBuild = "193"
+    untilBuild = "193.*"
+    version = version
+    changeNotes = """
+<p>The implementation of WXML file type inherits from XML, and many functions are consistent with XML</p>
+<p>The "src" attribute of "cover-image" will also be parsed into a path</p>
+<p>Support for refactoring the "name" and "is" attributes of the "template" tag</p>
+<p>The collapse function of the "include" tag directs the introduction of valid tags (excluding "template" and "wxs")</p>
+<p>在JSON文件中注册的自定义组件的优先级高于WXML自带组件</p>
+<p>“rpx”单位会和其他CSS单位显示一样的颜色</p>
+<p>WXML的“style”属性和HTML表现一致</p>
+<p>WXML的部分路径属性在解析错误时不再高亮显示</p>
+"""
 }
