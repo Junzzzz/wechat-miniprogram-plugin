@@ -80,6 +80,9 @@ import com.intellij.lang.javascript.intentions.JSSplitDeclarationIntention
 import com.intellij.util.containers.mapSmartSet
 import com.sixrr.inspectjs.validity.BadExpressionStatementJSInspection
 
+/**
+ * TODO 此类无效
+ */
 class WxmlJsInspectionFilter : IntentionAndInspectionFilter() {
 
     override fun isSupportedInspection(inspectionToolId: String?): Boolean = !suppressedToolIds.contains(
