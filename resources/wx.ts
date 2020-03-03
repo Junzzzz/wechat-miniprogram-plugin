@@ -50,7 +50,6 @@ declare namespace wx {
         header?: RequestHeader;
         /** 默认为 GET，有效值：OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT */
         method?:
-            | "GET"
             | "OPTIONS"
             | "GET"
             | "HEAD"
