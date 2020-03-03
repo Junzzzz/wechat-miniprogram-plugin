@@ -77,22 +77,19 @@ import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.lang.javascript.JavaScriptSpecificHandlersFactory
 import com.intellij.lang.javascript.psi.*
 import com.intellij.lang.javascript.psi.impl.JSReferenceExpressionImpl
-import com.intellij.lang.javascript.psi.resolve.JSEvaluateContext
 import com.intellij.lang.javascript.psi.resolve.JSReferenceExpressionResolver
-import com.intellij.lang.javascript.psi.resolve.JSTypeEvaluator
-import com.intellij.lang.javascript.psi.resolve.JSTypeProcessor
 import com.intellij.psi.PsiElementResolveResult
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.ResolveResult
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.xml.XmlAttribute
+import com.intellij.psi.xml.XmlAttributeValue
 import com.zxy.ijplugin.wechat_miniprogram.context.MyJSPredefinedLibraryProvider.Companion.PAGE_LIFETIMES
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isEventHandler
 
 class WxmlJsSpecificHandlersFactory : JavaScriptSpecificHandlersFactory() {
@@ -101,10 +98,6 @@ class WxmlJsSpecificHandlersFactory : JavaScriptSpecificHandlersFactory() {
             referenceExpression: JSReferenceExpressionImpl, ignorePerformanceLimits: Boolean
     ): ResolveCache.PolyVariantResolver<JSReferenceExpressionImpl> {
         return WxmlJsReferenceExpressionResolver(referenceExpression, ignorePerformanceLimits)
-    }
-
-    override fun newTypeEvaluator(context: JSEvaluateContext, processor: JSTypeProcessor): JSTypeEvaluator {
-        return super.newTypeEvaluator(context, processor)
     }
 
 }
@@ -126,17 +119,17 @@ class WxmlJsReferenceExpressionResolver(
             val injectionHost = InjectedLanguageManager.getInstance(project).getInjectionHost(
                     expression
             ) ?: return ResolveResult.EMPTY_ARRAY
-            val originFile = injectionHost.containingFile?.virtualFile?:return ResolveResult.EMPTY_ARRAY
+            val originFile = injectionHost.containingFile?.virtualFile ?: return ResolveResult.EMPTY_ARRAY
             val jsFile = findRelateFile(
                     originFile, RelateFileType.JS
             )
             if (jsFile != null) {
                 val jsPsiFile = psiManager.findFile(jsFile)
                 if (jsPsiFile != null) {
-                    if (injectionHost is WXMLStringText && PsiTreeUtil.getParentOfType(
-                                    injectionHost, WXMLAttribute::class.java
+                    if (injectionHost is XmlAttributeValue && PsiTreeUtil.getParentOfType(
+                                    injectionHost, XmlAttribute::class.java
                             )?.isEventHandler() == true && !WxmlJSInjector.DOUBLE_BRACE_REGEX.matches(
-                                    injectionHost.text
+                                    (injectionHost as XmlAttribute).text
                             )) {
                         // 事件
                         // 找到js文件中的methods

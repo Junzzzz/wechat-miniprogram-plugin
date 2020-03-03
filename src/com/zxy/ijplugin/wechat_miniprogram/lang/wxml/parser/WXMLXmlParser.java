@@ -114,7 +114,7 @@ public class WXMLXmlParser implements PsiParser {
 
     @Override
     @NotNull
-    public ASTNode parse(final IElementType root, final PsiBuilder builder) {
+    public ASTNode parse(@NotNull final IElementType root, final PsiBuilder builder) {
         builder.enforceCommentTokens(TokenSet.EMPTY);
         builder.putUserData(PsiBuilderImpl.CUSTOM_COMPARATOR, REPARSE_XML_TAG_BY_NAME);
         final PsiBuilder.Marker file = builder.mark();

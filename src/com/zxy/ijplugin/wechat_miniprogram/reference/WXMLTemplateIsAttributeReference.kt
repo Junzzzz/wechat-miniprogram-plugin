@@ -96,16 +96,4 @@ class WXMLTemplateIsAttributeReference(element: XmlAttributeValue) :
         return false
     }
 
-    override fun handleElementRename(newElementName: String): PsiElement {
-        return super.handleElementRename(newElementName)
-    }
-
-    override fun isReferenceTo(element: PsiElement): Boolean {
-        return super.isReferenceTo(element)
-    }
-
-    override fun bindToElement(element: PsiElement): PsiElement {
-        return super.bindToElement(element)
-    }
-
 }

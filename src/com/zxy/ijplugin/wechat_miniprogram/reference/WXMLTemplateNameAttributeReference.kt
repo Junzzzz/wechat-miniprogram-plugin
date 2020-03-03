@@ -73,7 +73,10 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
-import com.intellij.psi.*
+import com.intellij.psi.PsiElementResolveResult
+import com.intellij.psi.PsiManager
+import com.intellij.psi.PsiPolyVariantReferenceBase
+import com.intellij.psi.ResolveResult
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.psi.xml.XmlTag
@@ -103,18 +106,6 @@ class WXMLTemplateNameAttributeReference(element: XmlAttributeValue) :
         }.map {
             PsiElementResolveResult(it)
         }.toTypedArray()
-    }
-
-    override fun isReferenceTo(element: PsiElement): Boolean {
-        return super.isReferenceTo(element)
-    }
-
-    override fun handleElementRename(newElementName: String): PsiElement {
-        return super.handleElementRename(newElementName)
-    }
-
-    override fun bindToElement(element: PsiElement): PsiElement {
-        return super.bindToElement(element)
     }
 
 }

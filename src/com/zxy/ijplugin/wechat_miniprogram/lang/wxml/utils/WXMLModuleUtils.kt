@@ -73,42 +73,14 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 
-import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.wxmlToXmlDeprecatedMessage
 
 object WXMLModuleUtils {
 
-    /**
-     * 从一个wxml文件以及找到一个template的定义
-     * 包含其导入的文件
-     */
-    @Deprecated(wxmlToXmlDeprecatedMessage)
-    fun findTemplateDefinition(wxmlPsiFile: WXMLPsiFile, templateName: String): PsiElement? {
-        val elements = PsiTreeUtil.findChildrenOfType(wxmlPsiFile, WXMLElement::class.java)
-        // 在本文件中找
-        this.findTemplateDefinitionWithSingleFile(elements, templateName)?.let {
-            return it
-        }
-        // 找到所有的import的文件引用
-        val fileReferences = findImportedFileReferences(elements)
-        for (fileReference in fileReferences) {
-            val resolveFile = fileReference.resolve()
-            if (resolveFile is WXMLPsiFile) {
-                findTemplateDefinitionWithSingleFile(resolveFile, templateName).let {
-                    return it
-                }
-            }
-        }
-        return null
-    }
 
     fun findTemplateDefinitionXmlAttributeValue(wxmlPsiFile: WXMLPsiFile, templateName: String): XmlAttributeValue? {
         val elements = PsiTreeUtil.findChildrenOfType(wxmlPsiFile, XmlTag::class.java)
@@ -147,35 +119,6 @@ object WXMLModuleUtils {
         }.filterIsInstance<FileReference>()
     }
 
-    /**
-     * @see findSrcImportedFileReferences
-     */
-    @Deprecated(wxmlToXmlDeprecatedMessage)
-    private fun findImportedFileReferences(
-            elements: Collection<WXMLElement>
-    ): Sequence<FileReference> {
-        return elements.asSequence().filter {
-            it.tagName == "import"
-        }.map { wxmlElement ->
-            PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java).find {
-                it.name == "src"
-            }
-        }.mapNotNull {
-            PsiTreeUtil.findChildOfType(it, WXMLStringText::class.java)
-        }.mapNotNull { wxmlStringText ->
-            wxmlStringText.references.findLast {
-                it is FileReference
-            }
-        }.filterIsInstance<FileReference>()
-    }
-
-    @Deprecated(wxmlToXmlDeprecatedMessage)
-    private fun findTemplateDefinitionWithSingleFile(wxmlPsiFile: WXMLPsiFile, templateName: String): WXMLStringText? {
-        return this.findTemplateDefinitionWithSingleFile(
-                PsiTreeUtil.findChildrenOfType(wxmlPsiFile, WXMLElement::class.java), templateName
-        )
-    }
-
     private fun findTemplateDefinitionOnlySingleFile(
             wxmlPsiFile: WXMLPsiFile, templateName: String
     ): XmlAttributeValue? {
@@ -184,29 +127,6 @@ object WXMLModuleUtils {
         )
     }
 
-    @Deprecated(wxmlToXmlDeprecatedMessage)
-    private fun findTemplateDefinitionWithSingleFile(
-            wxmlElements: Collection<WXMLElement>, templateName: String
-    ): WXMLStringText? {
-        val templateElements = wxmlElements.filter {
-            it.tagName == "template"
-        }
-        for (templateElement in templateElements) {
-            val attributes = PsiTreeUtil.findChildrenOfType(templateElement, WXMLAttribute::class.java)
-            val nameAttribute = attributes.find {
-                it.name == "name"
-            }
-            if (nameAttribute != null) {
-                val stringText = PsiTreeUtil.findChildOfType(
-                        nameAttribute, WXMLStringText::class.java
-                )
-                if (stringText != null && stringText.text == templateName) {
-                    return stringText
-                }
-            }
-        }
-        return null
-    }
 
     private fun findTemplateDefinitionWithSingleFile(
             tags: Collection<XmlTag>, templateName: String
@@ -249,22 +169,6 @@ object WXMLModuleUtils {
                 it.name == "src" && it.valueElement?.references?.lastOrNull()?.resolve() is WXMLPsiFile
             }
         }
-    }
-
-    fun isTemplateNameAttributeStringText(wxmlStringText: WXMLStringText): Boolean {
-        return isMatchTagNameAndAttributeName(wxmlStringText, "template", "name")
-    }
-
-    fun isSlotNameAttributeStringText(wxmlStringText: WXMLStringText): Boolean {
-        return isMatchTagNameAndAttributeName(wxmlStringText, "slot", "name")
-    }
-
-    private fun isMatchTagNameAndAttributeName(
-            wxmlStringText: WXMLStringText, tagName: String, attributeName: String
-    ): Boolean {
-        return PsiTreeUtil.getParentOfType(wxmlStringText, WXMLAttribute::class.java)?.let {
-            it.name == attributeName && PsiTreeUtil.getParentOfType(it, WXMLElement::class.java)?.tagName == tagName
-        } == true
     }
 
     fun findTemplateDefinitionsWithImports(wxmlPsiFile: WXMLPsiFile): List<XmlAttributeValue> {

@@ -153,7 +153,7 @@ public class WXMLTagInsertHandler implements InsertHandler<LookupElement> {
         boolean htmlCode = HtmlUtil.hasHtml(containingFile) || HtmlUtil.supportsXmlTypedHandlers(containingFile);
         template.setToReformat(!htmlCode);
 
-        StringBuilder indirectRequiredAttrs = addRequiredAttributes(descriptor, tag, template, containingFile);
+        StringBuilder indirectRequiredAttrs = addRequiredAttributes(tag, template, containingFile);
         final boolean chooseAttributeName = addTail(completionChar, descriptor, htmlCode, tag, template,
                 indirectRequiredAttrs);
 
@@ -200,8 +200,7 @@ public class WXMLTagInsertHandler implements InsertHandler<LookupElement> {
     }
 
     @Nullable
-    private static StringBuilder addRequiredAttributes(XmlElementDescriptor descriptor,
-                                                       @Nullable XmlTag tag,
+    private static StringBuilder addRequiredAttributes(@Nullable XmlTag tag,
                                                        Template template,
                                                        PsiFile containingFile) {
 
@@ -243,7 +242,8 @@ public class WXMLTagInsertHandler implements InsertHandler<LookupElement> {
                 if (tag == null || tag.getAttributeValue(attributeName) == null) {
                     if (!notRequiredAttributes.contains(attributeName)) {
                         if (!extension.isIndirectSyntax(attributeDecl)) {
-                            if (WXMLAttributeInsertUtils.isBooleanTypeAttribute(attributeDecl) && Objects.equals(attributeDecl.getDefaultValue(), "false")) {
+                            if (WXMLAttributeInsertUtils.isBooleanTypeAttribute(attributeDecl) && Objects.equals(
+                                    attributeDecl.getDefaultValue(), "false")) {
                                 // Boolean类型，且默认值为false，之后不需要接等号
                                 template.addTextSegment(" " + attributeName);
                             } else {
@@ -384,7 +384,7 @@ public class WXMLTagInsertHandler implements InsertHandler<LookupElement> {
                 }
             }
             template.addTextSegment("<" + qname);
-            addRequiredAttributes(subTag, null, template, file);
+            addRequiredAttributes(null, template, file);
             completeTagTail(template, subTag, file, context, false);
         }
         if (!requiredSubTags.isEmpty()) {

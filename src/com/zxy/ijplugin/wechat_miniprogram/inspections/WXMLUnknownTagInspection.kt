@@ -81,16 +81,14 @@ import com.intellij.json.psi.JsonProperty
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiManager
+import com.intellij.psi.XmlElementVisitor
+import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLClosedElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStartTag
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLTag
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLVisitor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.nameTextRangeInSelf
 import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.contentRange
 import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
 
 class WXMLUnknownTagInspection : WXMLInspectionBase() {
@@ -100,22 +98,10 @@ class WXMLUnknownTagInspection : WXMLInspectionBase() {
     }
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
-        return object : WXMLVisitor() {
-            override fun visitStartTag(wxmlStartTag: WXMLStartTag) {
-                if (wxmlStartTag is WXMLTag) {
-                    visitTag(wxmlStartTag)
-                }
-            }
+        return object : XmlElementVisitor() {
 
-            override fun visitClosedElement(wxmlClosedElement: WXMLClosedElement) {
-                if (wxmlClosedElement is WXMLTag) {
-                    visitTag(wxmlClosedElement)
-                }
-            }
-
-            private fun visitTag(wxmlTag: WXMLTag) {
-                val tagNameNode = wxmlTag.getTagNameNode() ?: return
-                val tagName = tagNameNode.text
+            override fun visitXmlTag(wxmlTag: XmlTag) {
+                val tagName = wxmlTag.name
                 if (WXMLMetadata.getElementDescriptions(wxmlTag.project).any {
                             it.name == tagName
                         }) {
@@ -180,7 +166,7 @@ class WXMLUnknownTagInspection : WXMLInspectionBase() {
                         }
                     }
                     holder.registerProblem(
-                            tagNameNode.psi, tagNameNode.psi.contentRange(), "未知的标签：$tagName",
+                            wxmlTag, wxmlTag.nameTextRangeInSelf(), "未知的标签：$tagName",
                             *quickFixList
                     )
 

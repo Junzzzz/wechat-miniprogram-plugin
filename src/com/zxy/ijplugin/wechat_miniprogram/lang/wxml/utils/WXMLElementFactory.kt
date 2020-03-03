@@ -77,12 +77,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLText
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildOfType
 
 object WXMLElementFactory {
@@ -94,20 +91,6 @@ object WXMLElementFactory {
         """.trimIndent()
         )
         return psiFile.findChildOfType<XmlAttribute>()?.firstChild!!
-    }
-
-    fun createStringText(project: Project, text: String): WXMLStringText {
-        val psiFile = createDummyFile(
-                project, """
-            <text a="$text"/>
-        """.trimIndent()
-        )
-        return PsiTreeUtil.findChildOfType(psiFile, WXMLStringText::class.java)!!
-    }
-
-    fun createText(project: Project, text: String): WXMLText {
-        val psiFile = createDummyFile(project, text)
-        return PsiTreeUtil.findChildOfType(psiFile, WXMLText::class.java)!!
     }
 
     private fun createDummyFile(project: Project, fileContent: String): PsiFile {

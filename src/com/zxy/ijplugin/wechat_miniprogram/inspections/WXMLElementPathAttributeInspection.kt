@@ -79,11 +79,14 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFile
+import com.intellij.psi.XmlElementVisitor
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
 import com.intellij.psi.util.PsiTreeUtil
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.*
+import com.intellij.psi.xml.XmlAttribute
+import com.intellij.psi.xml.XmlAttributeValue
+import com.intellij.psi.xml.XmlTag
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.valueTextRangeInSelf
 import com.zxy.ijplugin.wechat_miniprogram.reference.PathAttribute
-import com.zxy.ijplugin.wechat_miniprogram.utils.contentRange
 
 /**
  * 检查wxml中可以被解析为路径的标签的路径的正确性
@@ -95,30 +98,30 @@ abstract class WXMLElementPathAttributeInspection(
 ) : WXMLInspectionBase() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
-        return object : WXMLVisitor() {
-            override fun visitElement(wxmlElement: WXMLElement) {
+        return object : XmlElementVisitor() {
+            override fun visitXmlTag(xmlTag: XmlTag) {
 
                 val target = pathAttributes.find {
-                    it.tagName == wxmlElement.tagName
+                    it.tagName == xmlTag.name
                 }
                 if (target != null) {
-                    val pathAttribute = PsiTreeUtil.findChildrenOfType(wxmlElement, WXMLAttribute::class.java).find {
+                    val pathAttribute = PsiTreeUtil.findChildrenOfType(xmlTag, XmlAttribute::class.java).find {
                         it.name == target.attributeName
                     }
-                    val string = PsiTreeUtil.getChildOfType(pathAttribute, WXMLString::class.java) ?: return
-                    val stringText = PsiTreeUtil.getChildOfType(string, WXMLStringText::class.java)
-                    if (stringText == null || stringText.text.isBlank()) {
+                    val xmlAttributeValue = PsiTreeUtil.getChildOfType(pathAttribute, XmlAttributeValue::class.java)
+                            ?: return
+                    if (xmlAttributeValue.value.isBlank()) {
                         holder.registerProblem(
-                                string, TextRange.allOf(string.text),
+                                xmlAttributeValue, TextRange.allOf(xmlAttributeValue.text),
                                 this@WXMLElementPathAttributeInspection.displayName
                         )
                         return
                     }
 
-                    val references = stringText.references
+                    val references = xmlAttributeValue.references
                     if (references.isEmpty()) {
                         holder.registerProblem(
-                                stringText, stringText.contentRange(),
+                                xmlAttributeValue, xmlAttributeValue.valueTextRangeInSelf(),
                                 this@WXMLElementPathAttributeInspection.displayName
                         )
                     } else {
@@ -132,11 +135,14 @@ abstract class WXMLElementPathAttributeInspection(
                                         continue
                                     } else {
                                         val suffix = fileType.defaultExtension
-                                        holder.registerProblem(stringText, stringText.contentRange(), "仅能导入${suffix}文件")
+                                        holder.registerProblem(
+                                                xmlAttributeValue, xmlAttributeValue.valueTextRangeInSelf(),
+                                                "仅能导入${suffix}文件"
+                                        )
                                     }
                                 } else {
                                     holder.registerProblem(
-                                            stringText, reference.rangeInElement, "路径无效", *reference.quickFixes
+                                            xmlAttributeValue, reference.rangeInElement, "路径无效", *reference.quickFixes
                                     )
                                 }
                             }

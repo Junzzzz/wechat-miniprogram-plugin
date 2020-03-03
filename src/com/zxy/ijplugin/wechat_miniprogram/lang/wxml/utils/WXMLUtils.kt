@@ -74,7 +74,6 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlAttributeValue
@@ -82,20 +81,14 @@ import com.intellij.psi.xml.XmlTag
 import com.intellij.psi.xml.XmlTokenType
 import com.intellij.xml.XmlAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLCustomComponentAttributeDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLAttribute
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WxmlCustomComponentDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 
 object WXMLUtils {
-    fun isValidTagName(charSequence: CharSequence): Boolean {
-        return charSequence.all { it.isDigit() || (it.isLetter() && it.isLowerCase()) || it == '-' || it == '_' }
-    }
 
     @JvmStatic
     fun getWXMLAttributeDescriptors(tag: XmlTag?): Array<XmlAttributeDescriptor> {
@@ -143,38 +136,10 @@ object WXMLUtils {
     }
 }
 
-/**
- * 判断一个元素是否需要换行
- * 这个元素不能是内联元素
- * 这个元素中必须包含且只能包含块级元素
- */
-fun WXMLElement.isMultiLine(): Boolean {
-    return !this.isInnerElement() && PsiTreeUtil.findChildrenOfType(this, WXMLElement::class.java).let { children ->
-        children.isNotEmpty() && children.all { !it.isInnerElement() }
-    }
-}
-
-fun WXMLElement.isInnerElement(): Boolean {
-    return WXMLMetadata.INNER_ELEMENT_NAMES.contains(this.tagName)
-}
-
-fun WXMLAttribute.isEventHandler(): Boolean {
-    val name = this.name
-    return WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any {
-        name.startsWith(it)
-    }
-}
-
 fun XmlAttribute.isEventHandler(): Boolean {
     val name = this.name
     return WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any {
         name.startsWith(it)
-    }
-}
-
-fun WXMLElement.findAttribute(name: String): WXMLAttribute? {
-    return PsiTreeUtil.findChildrenOfType(this, WXMLAttribute::class.java).find {
-        it.name == name
     }
 }
 

@@ -84,13 +84,13 @@ import com.intellij.psi.css.impl.util.table.CssDescriptorsUtil
 import com.intellij.psi.css.impl.util.table.CssElementDescriptorFactory
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parentOfTypes
+import com.intellij.psi.xml.XmlAttributeValue
+import com.intellij.psi.xml.XmlTag
 import com.intellij.util.ProcessingContext
 import com.intellij.xml.util.ColorSampleLookupValue
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WXMLStringText
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage.UNITS
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
@@ -267,7 +267,7 @@ class WXSSCompletionContributor : CompletionContributor() {
                         ) as? WXMLPsiFile ?: return
 
                         result.addAllElements(
-                                wxmlPsiFile.findChildrenOfType<WXMLStringText>().asSequence().flatMap { it.references.asSequence() }.filterIsInstance<WXMLClassReference>().map {
+                                wxmlPsiFile.findChildrenOfType<XmlAttributeValue>().asSequence().flatMap { it.references.asSequence() }.filterIsInstance<WXMLClassReference>().map {
                                     it.rangeInElement.substring(it.element.text)
                                 }.distinct().map {
                                     LookupElementBuilder.create(it).withPresentableText(".$it").withIcon(AllIcons.Xml.Css_class)
@@ -296,7 +296,7 @@ class WXSSCompletionContributor : CompletionContributor() {
                         val wxmlPsiFile = PsiManager.getInstance(psiElement.project).findFile(
                                 wxmlVirtualFile
                         ) as? WXMLPsiFile ?: return
-                        result.addAllElements(wxmlPsiFile.findChildrenOfType<WXMLStringText>().asSequence().flatMap {
+                        result.addAllElements(wxmlPsiFile.findChildrenOfType<XmlAttributeValue>().asSequence().flatMap {
                             it.references.asSequence()
                         }.map {
                             it.rangeInElement.substring(it.element.text)
@@ -324,14 +324,16 @@ class WXSSCompletionContributor : CompletionContributor() {
 
                         val wxssPsiFile = (psiElement.containingFile as? WXSSPsiFile) ?: return
                         // 收集wxml文件中的所有可见的Id
-                        val wxmlVirtualFile = findRelateFile(wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.WXML)
+                        val wxmlVirtualFile = findRelateFile(
+                                wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.WXML
+                        )
                                 ?: return
                         val wxmlPsiFile = PsiManager.getInstance(psiElement.project).findFile(
                                 wxmlVirtualFile
                         ) as? WXMLPsiFile ?: return
 
-                        result.addAllElements(wxmlPsiFile.findChildrenOfType<WXMLElement>().mapNotNull {
-                            it.tagName
+                        result.addAllElements(wxmlPsiFile.findChildrenOfType<XmlTag>().map {
+                            it.name
                         }.distinct().map {
                             LookupElementBuilder.create(it).withIcon(AllIcons.Xml.Html5)
                         })
