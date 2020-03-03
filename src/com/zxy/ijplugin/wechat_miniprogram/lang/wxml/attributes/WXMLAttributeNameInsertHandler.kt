@@ -89,7 +89,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isJsTypeAttribute
 abstract class WXMLAttributeNameInsertHandler : InsertHandler<LookupElement> {
     companion object {
 
-        fun isOnlyNameForInsert(
+        private fun isOnlyNameForInsert(
                 wxmlPresetElementAttributeDescription: WXMLElementAttributeDescription
         ): Boolean {
             return wxmlPresetElementAttributeDescription.types.contains(

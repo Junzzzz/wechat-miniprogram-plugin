@@ -179,7 +179,7 @@ class WXMLMetadata(private val project: Project) {
             return ServiceManager.getService(project, WXMLMetadata::class.java).elementDescriptors
         }
 
-        fun findElementDescription(xmlTag: XmlTag): WXMLElementDescription? {
+        private fun findElementDescription(xmlTag: XmlTag): WXMLElementDescription? {
             val tagName = xmlTag.name
             return this.getElementDescriptions(xmlTag.project).find {
                 it.name == tagName
