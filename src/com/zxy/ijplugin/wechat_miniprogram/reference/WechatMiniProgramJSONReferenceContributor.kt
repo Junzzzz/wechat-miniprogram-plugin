@@ -174,6 +174,13 @@ internal fun handlerFileReferences(psiElement: JsonStringLiteral, fileReferences
                                 PsiElementResolveResult(it)
                             }.toTypedArray()
 
+                    override fun handleElementRename(newElementName: String): PsiElement {
+                        // 重命名移除文件名后缀
+                        return super.handleElementRename(
+                                newElementName.substring(0 until newElementName.lastIndexOf("."))
+                        )
+                    }
+
                 }
                 references[fileReferences.size - 1] = lastFileReference
                 return references
