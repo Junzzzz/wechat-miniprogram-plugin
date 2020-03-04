@@ -133,7 +133,7 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
             project: Project, wxssFile: VirtualFile?
     ): List<WXSSSelector> {
         val psiManager = PsiManager.getInstance(project)
-        val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
+        val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) } ?: return emptyList()
         val wxssPsiFiles = WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile as WXSSPsiFile)
 
         return wxssPsiFiles.flatMap {
