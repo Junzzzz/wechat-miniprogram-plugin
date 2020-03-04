@@ -171,10 +171,19 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentFilesAutomaticRenamerFactory"/>
         <renameHandler
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentPathLastReferenceRenameHandler"/>
+        <lang.elementManipulator forClass="com.intellij.psi.xml.XmlTag"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.XmlTagNameManipulator"
+                                 order="first"/>
 
         <lang.findUsagesProvider language="JSON"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.ComponentRegistrationFindUsageProvider"
                                  order="first"/>
+        <psi.referenceContributor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.JsonReferenceContributor"/>
+        <lang.elementManipulator forClass="com.intellij.json.psi.JsonProperty"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.JsonTagNameRegistrationManipulator"/>
+        <renamePsiElementProcessor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentRegistrationRenameProcessor"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">

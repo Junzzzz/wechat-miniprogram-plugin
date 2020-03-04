@@ -73,18 +73,12 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.reference.usage
 
-import com.intellij.json.findUsages.JsonWordScanner
 import com.intellij.json.psi.JsonProperty
 import com.intellij.lang.HelpID
-import com.intellij.lang.cacheBuilder.WordsScanner
 import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.psi.PsiElement
 
 class ComponentRegistrationFindUsageProvider : FindUsagesProvider {
-
-    override fun getWordsScanner(): WordsScanner? {
-        return JsonWordScanner()
-    }
 
     override fun getNodeText(element: PsiElement, useFullName: Boolean): String {
         return (element as? JsonProperty)?.name ?: ""

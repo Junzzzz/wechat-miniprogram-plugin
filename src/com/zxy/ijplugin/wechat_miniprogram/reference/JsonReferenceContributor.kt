@@ -71,23 +71,54 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.reference.manipulator
+package com.zxy.ijplugin.wechat_miniprogram.reference
 
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.AbstractElementManipulator
-import com.intellij.psi.PsiElement
-import com.zxy.ijplugin.wechat_miniprogram.utils.replace
+import com.intellij.json.psi.JsonProperty
+import com.intellij.patterns.PlatformPatterns
+import com.intellij.psi.*
+import com.intellij.psi.impl.source.xml.TagNameReference
+import com.intellij.psi.xml.XmlTag
+import com.intellij.util.ProcessingContext
+import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
-@Suppress("UNCHECKED_CAST")
-abstract class MyAbstractElementManipulator<T:PsiElement>(private val createNewElement:(project:Project, elementText:String)->T):
-        AbstractElementManipulator<T>() {
-    override fun handleContentChange(element: T, textRange: TextRange, newContent: String): T? {
-
-        return element.replace(
-                createNewElement(
-                        element.project, element.text.replace(textRange, newContent)
-                )
-        ) as T
+class JsonReferenceContributor : PsiReferenceContributor() {
+    override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
+        registrar.registerReferenceProvider(PlatformPatterns.psiElement(JsonProperty::class.java), object :
+                PsiReferenceProvider() {
+            override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
+                element as JsonProperty
+                val wxmlPsiFile = findRelatePsiFile<WXMLPsiFile>(element.containingFile)
+                        ?: return PsiReference.EMPTY_ARRAY
+                if (wxmlPsiFile.findChildrenOfType<XmlTag>().filter {
+                            it.name == element.name
+                        }.any { xmlTag ->
+                            xmlTag.references.any {
+                                it is TagNameReference && it.resolve() == element
+                            }
+                        }) {
+                    return arrayOf(JsonRegistrationReference(element))
+                }
+                return PsiReference.EMPTY_ARRAY
+            }
+        })
     }
+}
+
+class JsonRegistrationReference(jsonProperty: JsonProperty) :
+        PsiPolyVariantReferenceBase<JsonProperty>(jsonProperty, jsonProperty.nameElement.textRangeInParent) {
+    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+        val wxmlPsiFile = findRelatePsiFile<WXMLPsiFile>(element.containingFile) ?: return ResolveResult.EMPTY_ARRAY
+        return wxmlPsiFile.findChildrenOfType<XmlTag>().filter {
+            it.name == element.name
+        }.filter { xmlTag ->
+            xmlTag.references.any {
+                it is TagNameReference && it.resolve() == element
+            }
+        }.map {
+            PsiElementResolveResult(it)
+        }.toTypedArray()
+    }
+
 }

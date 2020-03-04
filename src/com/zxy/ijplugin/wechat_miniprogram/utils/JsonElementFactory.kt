@@ -71,23 +71,24 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.reference.manipulator
+package com.zxy.ijplugin.wechat_miniprogram.utils
 
+import com.intellij.json.JsonFileType
+import com.intellij.json.psi.JsonProperty
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.AbstractElementManipulator
-import com.intellij.psi.PsiElement
-import com.zxy.ijplugin.wechat_miniprogram.utils.replace
+import com.intellij.psi.PsiFileFactory
 
-@Suppress("UNCHECKED_CAST")
-abstract class MyAbstractElementManipulator<T:PsiElement>(private val createNewElement:(project:Project, elementText:String)->T):
-        AbstractElementManipulator<T>() {
-    override fun handleContentChange(element: T, textRange: TextRange, newContent: String): T? {
+object JsonElementFactory {
 
-        return element.replace(
-                createNewElement(
-                        element.project, element.text.replace(textRange, newContent)
-                )
-        ) as T
+    fun createProperty(project: Project, text: String): JsonProperty {
+        val name = "dummy.wxss"
+        return PsiFileFactory.getInstance(project).createFileFromText(
+                name, JsonFileType.INSTANCE, """
+            {
+                $text
+            }
+        """.trimIndent()
+        ).findChildOfType<JsonProperty>()!!
     }
+
 }

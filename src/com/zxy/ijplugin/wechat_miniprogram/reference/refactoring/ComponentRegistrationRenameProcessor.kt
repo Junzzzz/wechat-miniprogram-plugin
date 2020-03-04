@@ -71,23 +71,46 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.reference.manipulator
+package com.zxy.ijplugin.wechat_miniprogram.reference.refactoring
 
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.AbstractElementManipulator
+import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonProperty
 import com.intellij.psi.PsiElement
-import com.zxy.ijplugin.wechat_miniprogram.utils.replace
+import com.intellij.psi.PsiReference
+import com.intellij.psi.impl.source.xml.TagNameReference
+import com.intellij.psi.search.SearchScope
+import com.intellij.psi.xml.XmlTag
+import com.intellij.refactoring.rename.RenamePsiElementProcessor
+import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.reference.JsonRegistrationReference
+import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
-@Suppress("UNCHECKED_CAST")
-abstract class MyAbstractElementManipulator<T:PsiElement>(private val createNewElement:(project:Project, elementText:String)->T):
-        AbstractElementManipulator<T>() {
-    override fun handleContentChange(element: T, textRange: TextRange, newContent: String): T? {
+/**
+ * 重命名在WXML组件在json文件中的定义
+ */
+class ComponentRegistrationRenameProcessor : RenamePsiElementProcessor() {
 
-        return element.replace(
-                createNewElement(
-                        element.project, element.text.replace(textRange, newContent)
-                )
-        ) as T
+    override fun findReferences(
+            element: PsiElement, searchScope: SearchScope, searchInCommentsAndStrings: Boolean
+    ): MutableCollection<PsiReference> {
+        element as JsonProperty
+        val containingFile = element.containingFile
+        if (containingFile !is JsonFile) return mutableListOf()
+        val wxmlPsiFile = findRelatePsiFile<WXMLPsiFile>(containingFile) ?: return mutableListOf()
+        return wxmlPsiFile.findChildrenOfType<XmlTag>().filter {
+            it.name == element.name
+        }.flatMap {
+            it.references.toList()
+        }.filterIsInstance<TagNameReference>()
+                .filter {
+                    it.resolve() == element
+                }.toMutableList()
+    }
+
+    override fun canProcessElement(element: PsiElement): Boolean {
+        return element is JsonProperty && element.references.any {
+            it is JsonRegistrationReference
+        }
     }
 }
