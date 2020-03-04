@@ -85,6 +85,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.psi.xml.XmlTag
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.valueTextRangeInSelf
 import com.zxy.ijplugin.wechat_miniprogram.reference.PathAttribute
 
@@ -100,6 +101,9 @@ abstract class WXMLElementPathAttributeInspection(
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : XmlElementVisitor() {
             override fun visitXmlTag(xmlTag: XmlTag) {
+                if (xmlTag.language != WXMLLanguage.INSTANCE) {
+                    return
+                }
 
                 val target = pathAttributes.find {
                     it.tagName == xmlTag.name

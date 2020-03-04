@@ -85,6 +85,7 @@ import com.intellij.psi.XmlElementVisitor
 import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.nameTextRangeInSelf
 import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
@@ -101,6 +102,9 @@ class WXMLUnknownTagInspection : WXMLInspectionBase() {
         return object : XmlElementVisitor() {
 
             override fun visitXmlTag(wxmlTag: XmlTag) {
+                if (wxmlTag.language != WXMLLanguage.INSTANCE) {
+                    return
+                }
                 val tagName = wxmlTag.name
                 if (WXMLMetadata.getElementDescriptions(wxmlTag.project).any {
                             it.name == tagName
