@@ -165,16 +165,14 @@
         <lang.syntaxHighlighterFactory language="WxmlJs"
                                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.highlighting.WxmlJsHighlighterFactory"/>
 
-        <psi.referenceContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WechatMiniProgramJSONReferenceContributor"/>
         <automaticRenamerFactory
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentFilesAutomaticRenamerFactory"/>
         <renameHandler
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentPathLastReferenceRenameHandler"/>
-        <lang.elementManipulator forClass="com.intellij.psi.xml.XmlTag"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.XmlTagNameManipulator"
-                                 order="first"/>
 
+        <!--JSON-->
+        <psi.referenceContributor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WechatMiniProgramJSONReferenceContributor"/>
         <lang.findUsagesProvider language="JSON"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.ComponentRegistrationFindUsageProvider"
                                  order="first"/>
