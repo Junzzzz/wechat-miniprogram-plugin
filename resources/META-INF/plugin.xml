@@ -171,6 +171,10 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentFilesAutomaticRenamerFactory"/>
         <renameHandler
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentPathLastReferenceRenameHandler"/>
+
+        <lang.findUsagesProvider language="JSON"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.ComponentRegistrationFindUsageProvider"
+                                 order="first"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
