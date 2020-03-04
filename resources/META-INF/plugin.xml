@@ -163,6 +163,8 @@
 
         <psi.referenceContributor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WechatMiniProgramJSONReferenceContributor"/>
+        <automaticRenamerFactory
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentFilesAutomaticRenamerFactory"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
