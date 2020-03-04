@@ -75,6 +75,7 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 
 import com.intellij.json.psi.*
 import com.intellij.lang.javascript.psi.JSFile
+import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
@@ -147,7 +148,9 @@ class WechatMiniProgramJSONReferenceContributor : PsiReferenceContributor() {
 
 }
 
-internal fun handlerFileReferences(psiElement: JsonStringLiteral, fileReferences: Array<out FileReference>): Array<out PsiReference> {
+internal fun handlerFileReferences(
+        psiElement: JsonStringLiteral, fileReferences: Array<out FileReference>
+): Array<out PsiReference> {
     if (fileReferences.isNotEmpty()) {
         val last = fileReferences.last()
         if (last.resolve() == null && fileReferences.size >= 2) {
@@ -160,28 +163,7 @@ internal fun handlerFileReferences(psiElement: JsonStringLiteral, fileReferences
                 val references = fileReferences.map { it as PsiReference }
                         .toTypedArray()
                 // 最后一个引用可能解析出多个文件 js|wxss|wxml|json
-                val lastFileReference = object : PsiPolyVariantReferenceBase<JsonStringLiteral>(
-                                psiElement, last.rangeInElement
-                        ) {
-                    override fun multiResolve(p0: Boolean): Array<ResolveResult> =
-                            psiDirectory.files.filter {
-                                it.virtualFile.nameWithoutExtension == filename
-                                        && (it is JSFile
-                                        || it is WXMLPsiFile
-                                        || it is WXSSPsiFile
-                                        || it is JsonFile)
-                            }.map {
-                                PsiElementResolveResult(it)
-                            }.toTypedArray()
-
-                    override fun handleElementRename(newElementName: String): PsiElement {
-                        // 重命名移除文件名后缀
-                        return super.handleElementRename(
-                                newElementName.substring(0 until newElementName.lastIndexOf("."))
-                        )
-                    }
-
-                }
+                val lastFileReference = ComponentReference(psiElement, last.rangeInElement, psiDirectory, filename)
                 references[fileReferences.size - 1] = lastFileReference
                 return references
             }
@@ -190,4 +172,31 @@ internal fun handlerFileReferences(psiElement: JsonStringLiteral, fileReferences
         }
     }
     return PsiReference.EMPTY_ARRAY
+}
+
+class ComponentReference(
+        psiElement: JsonStringLiteral, range: TextRange, private val psiDirectory: PsiDirectory,
+        private val name: String
+) : PsiPolyVariantReferenceBase<JsonStringLiteral>(
+        psiElement, range, false
+) {
+    override fun multiResolve(p0: Boolean): Array<ResolveResult> {
+        return psiDirectory.files.filter {
+            it.virtualFile.nameWithoutExtension == name
+                    && (it is JSFile
+                    || it is WXMLPsiFile
+                    || it is WXSSPsiFile
+                    || it is JsonFile)
+        }.map {
+            PsiElementResolveResult(it)
+        }.toTypedArray()
+    }
+
+    override fun handleElementRename(newElementName: String): PsiElement {
+        // 重命名移除文件名后缀
+        return super.handleElementRename(
+                newElementName.substring(0 until newElementName.lastIndexOf("."))
+        )
+    }
+
 }

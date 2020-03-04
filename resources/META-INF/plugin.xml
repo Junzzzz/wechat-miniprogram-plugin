@@ -129,24 +129,28 @@
         </intentionAction>
 
         <localInspection
+                language="WXSS"
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXSSInvalidImportInspection"
                 displayName="Missing or invalid wxss import path"
                 groupName="Wechat mini program"
                 shortName="WXSSInvalidImport"
                 enabledByDefault="true" level="ERROR"/>
         <localInspection
+                language="WXML"
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WxmlWxsModuleImportInspection"
                 displayName="Invalid wxs.src attribute"
                 groupName="Wechat mini program"
                 shortName="WxmlWxsModuleImport"
                 enabledByDefault="true" level="ERROR"/>
         <localInspection
+                language="WXML"
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXMLInvalidImportInspection"
                 displayName="Missing or invalid wxml import path"
                 groupName="Wechat mini program"
                 shortName="WXMLInvalidImport"
                 enabledByDefault="true" level="ERROR"/>
         <localInspection
+                language="WXML"
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXMLUnknownTagInspection"
                 displayName="Unknown wxml tag"
                 groupName="Wechat mini program"
@@ -165,6 +169,8 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WechatMiniProgramJSONReferenceContributor"/>
         <automaticRenamerFactory
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentFilesAutomaticRenamerFactory"/>
+        <renameHandler
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentPathLastReferenceRenameHandler"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
