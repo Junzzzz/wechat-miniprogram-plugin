@@ -78,31 +78,6 @@
     <xi:include href="intents.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="wxml.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="wxss.xml" xpointer="xpointer(/idea-plugin/*)"/>
-    <description><![CDATA[
-        Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> WeChat Mini Program </a> project
-
-                 <h3> Get started </h3>
-        <ul>
-            <li> Open WeChat Mini Program Project</li>
-            <li> Ensure that the project.config.json configuration file exists</li>
-            <li> Now you can use all the features provided by this plugin</li>
-        </ul>
-
-                 <h3> Main functions </h3>
-
-                
-        <ul>
-            <li> wxml / wxss / wxs file support</li>
-            <li> Create WeChat applet components and pages</li>
-            <li> Relevant file navigation</li>
-            <li> WeChat applet custom component support</li>
-            <li> WeChat applet configuration file support</li>
-            <li> Code inspection and automatic repairs</li>
-        </ul>
-
-                For detailed usage documents and function descriptions, please visit
-        <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis"> Gitee Wiki </a>
-        ]]></description>
 
     <depends>JavaScript</depends>
     <depends>com.intellij.css</depends>
