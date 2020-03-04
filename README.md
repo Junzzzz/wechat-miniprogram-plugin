@@ -18,11 +18,9 @@ wechat-miniprogram-plugin
 - 微信小程序自定义组件支持
     - 自动注册自定义组件
     - 组件配置解析
+    - 重命名小程序自定义组件
 - 微信小程序配置文件支持
 - 代码检查以及自动修复
-
-**JetBrains**产品兼容性：
-支持内核版本在`193.2723`之后的所有产品
 
 在[Wiki](https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis)中浏览更多功能
 

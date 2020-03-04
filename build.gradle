@@ -150,7 +150,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "2.0.0"
+version = "2.0.1"
 
 patchPluginXml {
     sinceBuild = "193"
@@ -159,16 +159,9 @@ patchPluginXml {
     changeNotes = """
 <h3>$version</h3>
 <ul>
-    <li>The implementation of WXML file type inherits from XML, and many functions are consistent with XML</li>
-    <li>The <code>src</code> attribute of <code>cover-image</code> will also be parsed into a path</li>
-    <li>Support for refactoring the <code>name</code> and <code>is</code> attributes of the <code>template</code> tag</li>
-    <li>The collapse function of the <code>include</code> tag directs the introduction of valid tags (excluding <code>template</code> and <code>wxs</code>)</li>
-    <li>Custom components registered in a JSON file take precedence over WXML native components</li>
-    <li><code>rpx</code> units will display the same color as other CSS units</li>
-    <li>WXML's <code> style </code> attribute behaves the same as HTML</li>
-    <li>WXML partial path attributes are no longer highlighted when parsing errors</li>
-    <li>Fix WXSS class name cannot start with "_" error</li>
-    <li>Introduced the officially defined ts file</li>
+    <li> Supports renaming of component files, you can rename all related files of the target file at the same time </li>
+    <li> Support renaming of component registration items in component JSON configuration </li>
+    <li> Fix WXML's invalid tag check will overwrite XML and HTML errors <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1ARWH">I1ARWH </a></li>
 </ul>
 """
     pluginDescription = """
