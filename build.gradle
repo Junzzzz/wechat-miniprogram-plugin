@@ -160,18 +160,18 @@ patchPluginXml {
 <h3>$version</h3>
 <ul>
     <li>The implementation of WXML file type inherits from XML, and many functions are consistent with XML</li>
-    <li>The "src" attribute of "cover-image" will also be parsed into a path</li>
-    <li>Support for refactoring the "name" and "is" attributes of the "template" tag</li>
-    <li>The collapse function of the "include" tag directs the introduction of valid tags (excluding "template" and "wxs")</li>
-    <li>在JSON文件中注册的自定义组件的优先级高于WXML自带组件</li>
-    <li>“rpx”单位会和其他CSS单位显示一样的颜色</li>
-    <li>WXML的“style”属性和HTML表现一致</li>
-    <li>WXML的部分路径属性在解析错误时不再高亮显示</li>
-    <li>修复WXSS的类名不能以“_”开头的错误</li>
-    <li>引入了官方定义的ts文件</li>
+    <li>The <code>src</code> attribute of <code>cover-image</code> will also be parsed into a path</li>
+    <li>Support for refactoring the <code>name</code> and <code>is</code> attributes of the <code>template</code> tag</li>
+    <li>The collapse function of the <code>include</code> tag directs the introduction of valid tags (excluding <code>template</code> and <code>wxs</code>)</li>
+    <li>Custom components registered in a JSON file take precedence over WXML native components</li>
+    <li><code>rpx</code> units will display the same color as other CSS units</li>
+    <li>WXML's <code> style </code> attribute behaves the same as HTML</li>
+    <li>WXML partial path attributes are no longer highlighted when parsing errors</li>
+    <li>Fix WXSS class name cannot start with "_" error</li>
+    <li>Introduced the officially defined ts file</li>
 </ul>
 """
-    description = """
+    pluginDescription = """
 Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> WeChat Mini Program </a> project
 <h3> Get started </h3>
 <ul>
