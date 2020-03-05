@@ -85,6 +85,7 @@ import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentFilesCreator
 
 class WechatMiniProgramJSONReferenceContributor : PsiReferenceContributor() {
 
@@ -136,6 +137,7 @@ class WechatMiniProgramJSONReferenceContributor : PsiReferenceContributor() {
                                         // 确定是app.json下的pages配置项
                                         val fileReferences = FileReferenceSet(psiElement).allReferences
                                         return handlerFileReferences(psiElement,fileReferences)
+//                                        return ComponentFilesReferenceSet(psiElement).allReferences
                                     }
                                 }
                             }
@@ -197,6 +199,17 @@ class ComponentReference(
         return super.handleElementRename(
                 newElementName.substring(0 until newElementName.lastIndexOf("."))
         )
+    }
+
+    override fun bindToElement(element: PsiElement): PsiElement {
+        ComponentFilesCreator.createComponentPathFromFile(element.containingFile)?.let {
+            return this.element.replace(
+                    JsonElementGenerator(element.project).createStringLiteral(
+                            it
+                    )
+            )
+        }
+        return this.element
     }
 
 }

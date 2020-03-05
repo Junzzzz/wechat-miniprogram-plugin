@@ -76,6 +76,7 @@ package com.zxy.ijplugin.wechat_miniprogram.utils
 import com.intellij.ide.fileTemplates.FileTemplateManager
 import com.intellij.ide.fileTemplates.FileTemplateUtil
 import com.intellij.psi.PsiDirectory
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
@@ -120,6 +121,10 @@ object ComponentFilesCreator {
         )
         psiDirectory.add(wxmlFile)
         psiDirectory.add(wxssFile)
+    }
+
+    fun createComponentPathFromFile(targetFile: PsiFile): String? {
+        return targetFile.virtualFile.getPathRelativeToRootRemoveExt(targetFile.project)
     }
 
 }

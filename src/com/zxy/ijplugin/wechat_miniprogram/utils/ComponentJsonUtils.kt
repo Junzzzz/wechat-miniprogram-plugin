@@ -143,7 +143,7 @@ object ComponentJsonUtils {
         usingComponentsObjectValue.addBefore(
                 jsonElementGenerator.createProperty(
                         targetFile.virtualFile.nameWithoutExtension,
-                        "\"${targetFile.virtualFile.getPathRelativeToRootRemoveExt(project) ?: ""}\""
+                        "\"${ComponentFilesCreator.createComponentPathFromFile(targetFile) ?: ""}\""
                 ),
                 closeBrace
         )
