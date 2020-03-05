@@ -182,6 +182,9 @@
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.JsonTagNameRegistrationManipulator"/>
         <renamePsiElementProcessor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentRegistrationRenameProcessor"/>
+
+        <lang.inspectionSuppressor language="JavaScript"
+                                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WxmlJsInspectionFilter"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript">
@@ -191,8 +194,8 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.completion.WechatMiniProgramJsonSchemaProviderFactory"/>
         <dialectSpecificHandlersFactory language="WxmlJs"
                                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.WxmlJsSpecificHandlersFactory"/>
-        <!--        <intentionAndInspectionFilter language="WXML"-->
-        <!--                                      implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WxmlJsInspectionFilter"/>-->
+        <intentionAndInspectionFilter language="WxmlJs"
+                                      implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WxmlJsInspectionFilter"/>
         <!--        <dialectSpecificHandlersFactory language="JavaScript"-->
         <!--                                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.WxmlJsSpecificHandlersFactory"/>-->
         <!--        <intentionAndInspectionFilter language="WxmlJs"-->

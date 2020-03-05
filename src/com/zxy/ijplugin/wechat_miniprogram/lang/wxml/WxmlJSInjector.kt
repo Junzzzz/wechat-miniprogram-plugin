@@ -75,18 +75,14 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
 import com.intellij.lang.injection.MultiHostInjector
 import com.intellij.lang.injection.MultiHostRegistrar
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiLanguageInjectionHost
 import com.intellij.psi.impl.source.xml.XmlAttributeValueImpl
 import com.intellij.psi.impl.source.xml.XmlTextImpl
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlAttribute
-import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.expr.WxmlJsLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector.Companion.DOUBLE_BRACE_REGEX
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isEventHandler
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.valueTextRangeInSelf
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
 class WxmlJSInjector : MultiHostInjector {
@@ -129,9 +125,8 @@ class WxmlJSInjector : MultiHostInjector {
         if (attribute.isEventHandler() && !DOUBLE_BRACE_REGEX.matches(psiElement.text)) {
             // 此属性是事件
             // 并且属性值中没有双括号
-            multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
-                    .addPlace(null, null, psiElement, psiElement.valueTextRangeInSelf())
-                    .doneInjecting()
+            // 2.0版本后事件在Lexer中直接注入js
+            return
         } else {
             // 对字符串中的双括号注入js语言
             searchDoubleBraceAndInject(psiElement, multiHostRegistrar)
@@ -142,16 +137,7 @@ class WxmlJSInjector : MultiHostInjector {
             psiElement: XmlTextImpl,
             multiHostRegistrar: MultiHostRegistrar
     ) {
-        val xmlTag = PsiTreeUtil.getParentOfType(psiElement, XmlTag::class.java)
-        if (xmlTag != null) {
-            if (xmlTag.name == "wxs") {
-                // 对wxs标签注入js语言
-                multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
-                        .addPlace(null, null, psiElement, TextRange(0, psiElement.textLength))
-                        .doneInjecting()
-                return
-            }
-        }
+        // 2.0版本后wxs标签在Lexer中直接注入js
 
         // 对文本中的双括号注入js语言
         searchDoubleBraceAndInject(psiElement, multiHostRegistrar)

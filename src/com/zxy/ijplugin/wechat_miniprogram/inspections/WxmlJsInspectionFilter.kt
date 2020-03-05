@@ -74,16 +74,19 @@
 package com.zxy.ijplugin.wechat_miniprogram.inspections
 
 import com.intellij.codeInspection.InspectionProfileEntry
+import com.intellij.codeInspection.InspectionSuppressor
+import com.intellij.codeInspection.SuppressQuickFix
 import com.intellij.lang.javascript.highlighting.IntentionAndInspectionFilter
 import com.intellij.lang.javascript.inspections.JSUnresolvedVariableInspection
 import com.intellij.lang.javascript.intentions.JSSplitDeclarationIntention
+import com.intellij.lang.javascript.psi.JSEmbeddedContent
+import com.intellij.psi.PsiElement
 import com.intellij.util.containers.mapSmartSet
 import com.sixrr.inspectjs.validity.BadExpressionStatementJSInspection
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
+import com.zxy.ijplugin.wechat_miniprogram.utils.getParentOfType
 
-/**
- * TODO 此类无效
- */
-class WxmlJsInspectionFilter : IntentionAndInspectionFilter() {
+class WxmlJsInspectionFilter : IntentionAndInspectionFilter(), InspectionSuppressor {
 
     override fun isSupportedInspection(inspectionToolId: String?): Boolean = !suppressedToolIds.contains(
             inspectionToolId
@@ -95,5 +98,15 @@ class WxmlJsInspectionFilter : IntentionAndInspectionFilter() {
                 BadExpressionStatementJSInspection::class,
                 JSSplitDeclarationIntention::class
         ).mapSmartSet { InspectionProfileEntry.getShortName(it.java.simpleName) }
+    }
+
+    override fun getSuppressActions(element: PsiElement?, toolId: String): Array<SuppressQuickFix> {
+        return emptyArray()
+    }
+
+    override fun isSuppressedFor(element: PsiElement, toolId: String): Boolean {
+        return element.getParentOfType<JSEmbeddedContent>()?.parent?.language == WXMLLanguage.INSTANCE && suppressedToolIds.contains(
+                toolId
+        )
     }
 }

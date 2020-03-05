@@ -399,8 +399,6 @@ public abstract class BaseHtmlLexer extends DelegateLexer {
         private static final String TOKEN_SCRIPT = "wxs";
         @NonNls
         private static final String TOKEN_STYLE = "style";
-        @NonNls
-        private static final String TOKEN_ON = "on";
 
         @Override
         public void handleElement(Lexer lexer) {
