@@ -71,83 +71,74 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.action
+package com.zxy.ijplugin.wechat_miniprogram.intents.extractComponent
 
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.LangDataKeys
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.openapi.ui.Messages
-import com.intellij.psi.PsiDirectory
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentFilesCreator.createWechatComponentFiles
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.xml.XmlElementType
+import com.intellij.psi.xml.XmlTag
+import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 
-abstract class CreateWechatMiniProgramFileGroupAction<T : DialogWrapper> : WechatAction() {
+class WXMLExtractComponentIntentionAction : PsiElementBaseIntentionAction() {
+    override fun startInWriteAction(): Boolean {
+        return false
+    }
 
-    final override fun actionPerformed(anActionEvent: AnActionEvent) {
-        val project = anActionEvent.project ?: return
-        val psiDirectory = getPsiDirectory(anActionEvent) ?: return
+    override fun getFamilyName(): String {
+        return "Extract WXML Code Segment"
+    }
 
-        val dialog = this.createDialog(project)
-        if (dialog.showAndGet()) {
-            onDialogConfirm(dialog)
-
-            val fileName = this.getFileName()
-            WriteCommandAction.runWriteCommandAction(project) {
-                try {
-                    // 通过template创建js和json文件
-                    createWechatComponentFiles(
-                            fileName, psiDirectory,
-                            this.getJsComponentTemplateName(),
-                            this.getJsonComponentTemplate()
-                    )
-                    this.created(psiDirectory)
-                    val wxmlFile = psiDirectory.findFile("$fileName.wxml")!!
-                    // 当文件创建完成之后  wxmlFile 获得焦点
-                    FileEditorManager.getInstance(project).openFile(wxmlFile.virtualFile, true)
-                } catch (e: Exception) {
-                    ApplicationManager.getApplication().invokeLater {
-                        Messages
-                                .showErrorDialog(
-                                        project,
-                                        this.getMessage() + "\n" + e.localizedMessage,
-                                        getActionName()
-                                )
-                    }
-                }
-            }
+    override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
+        if (!isWechatMiniProgramContext(project) || element.containingFile?.fileType != WXMLFileType.INSTANCE) {
+            return false
         }
+        return getSelectedTags(element, editor).isNotEmpty()
     }
 
-    open fun created(psiDirectory: PsiDirectory) {
-
+    override fun getText(): String {
+        return "Extract Component"
     }
 
-    abstract fun onDialogConfirm(dialog: T)
+    override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
+        editor ?: return
+        val selectedTags = getSelectedTags(element, editor)
+        WXMLExtractComponentRefactoring(project, selectedTags, editor).perform()
+    }
 
-    abstract fun createDialog(project: Project): T
+    private fun getSelectedTags(element: PsiElement, editor: Editor?): List<XmlTag> {
+        val file = element.containingFile ?: return emptyList()
+        if (editor == null || !editor.selectionModel.hasSelection()) {
+            // 如果当前没有选择元素
+            val type = element.node.elementType
+            val parent = element.parent as? XmlTag
+            if (parent != null && (type == XmlElementType.XML_NAME ||
+                            type == XmlElementType.XML_START_TAG_START ||
+                            type == XmlElementType.XML_TAG_NAME)) {
+                return listOf(parent)
+            }
+            if (element is XmlTag) return listOf(element)
+            return emptyList()
+        }
+        var start = editor.selectionModel.selectionStart
+        val end = editor.selectionModel.selectionEnd
 
-    abstract fun getMessage(): String
-
-    abstract fun getJsComponentTemplateName(): String
-
-    abstract fun getJsonComponentTemplate(): String
-
-    abstract fun getFileName(): String
-
-    abstract fun getActionName(): String
-
-    private fun getPsiDirectory(
-            anActionEvent: AnActionEvent
-    ): PsiDirectory? {
-//        val psiElement = LangDataKeys.PSI_ELEMENT.getData(anActionEvent.dataContext)?:return null
-//        if (psiElement is PsiDirectory){
-//            return psiElement
-//        }else if (psiElement.containingFile!=null){
-//            return psiElement
-//        }
-        return LangDataKeys.IDE_VIEW.getData(anActionEvent.dataContext)?.orChooseDirectory
+        val list = mutableListOf<XmlTag>()
+        while (start < end) {
+            while (file.findElementAt(start) is PsiWhiteSpace && start < end) start++
+            if (start == end) break
+            val tag = PsiTreeUtil.findElementOfClassAtOffset(file, start, XmlTag::class.java, true)
+                    ?: return emptyList()
+            val textRange = tag.textRange
+            if (textRange.startOffset !in start until end) break
+            if (textRange.endOffset > end) return emptyList()
+            list.add(tag)
+            start = textRange.endOffset
+        }
+        return list
     }
 }

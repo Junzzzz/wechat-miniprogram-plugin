@@ -127,7 +127,11 @@
             <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateEventHandlerIntentionAction</className>
             <category>Wechat mini program</category>
         </intentionAction>
-
+        <intentionAction>
+            <descriptionDirectoryName>WXMLExtractComponentIntentionAction</descriptionDirectoryName>
+            <className>com.zxy.ijplugin.wechat_miniprogram.intents.extractComponent.WXMLExtractComponentIntentionAction</className>
+            <category>Wechat mini program</category>
+        </intentionAction>
         <localInspection
                 language="WXSS"
                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXSSInvalidImportInspection"

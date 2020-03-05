@@ -71,83 +71,97 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.action
+package com.zxy.ijplugin.wechat_miniprogram.intents.extractComponent
 
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.LangDataKeys
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.json.psi.JsonFile
+import com.intellij.openapi.application.runWriteAction
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.ui.InputValidator
 import com.intellij.openapi.ui.Messages
-import com.intellij.psi.PsiDirectory
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentFilesCreator.createWechatComponentFiles
+import com.intellij.psi.xml.XmlTag
+import com.intellij.refactoring.util.CommonRefactoringUtil
+import com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction.Companion.JSON_TEMPLATE_NAME
+import com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction.Companion.JS_TEMPLATE_NAME
+import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeNameCompletionProvider.Companion.WX_ATTRIBUTES
+import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentFilesCreator
+import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
 
-abstract class CreateWechatMiniProgramFileGroupAction<T : DialogWrapper> : WechatAction() {
+class WXMLExtractComponentRefactoring(
+        private val project: Project,
+        private val list: List<XmlTag>,
+        private val editor: Editor
+) {
 
-    final override fun actionPerformed(anActionEvent: AnActionEvent) {
-        val project = anActionEvent.project ?: return
-        val psiDirectory = getPsiDirectory(anActionEvent) ?: return
+    fun perform() {
+        if (list.isEmpty()) return
+        val containingFile = list[0].containingFile
+        val psiDirectory = containingFile.parent
+        if (containingFile == null ||
+                psiDirectory == null ||
+                !CommonRefactoringUtil.checkReadOnlyStatus(project, containingFile)) return
 
-        val dialog = this.createDialog(project)
-        if (dialog.showAndGet()) {
-            onDialogConfirm(dialog)
+        // 询问组件名称
+        val askComponentNameDialog = Messages.InputDialog(
+                "Enter new component name", "Extract Component", null, null, object : InputValidator {
+            override fun checkInput(inputString: String?): Boolean {
+                return inputString != null && inputString.matches(Regex("[a-z-_]+"))
+            }
 
-            val fileName = this.getFileName()
-            WriteCommandAction.runWriteCommandAction(project) {
-                try {
-                    // 通过template创建js和json文件
-                    createWechatComponentFiles(
-                            fileName, psiDirectory,
-                            this.getJsComponentTemplateName(),
-                            this.getJsonComponentTemplate()
-                    )
-                    this.created(psiDirectory)
-                    val wxmlFile = psiDirectory.findFile("$fileName.wxml")!!
-                    // 当文件创建完成之后  wxmlFile 获得焦点
-                    FileEditorManager.getInstance(project).openFile(wxmlFile.virtualFile, true)
-                } catch (e: Exception) {
-                    ApplicationManager.getApplication().invokeLater {
-                        Messages
-                                .showErrorDialog(
-                                        project,
-                                        this.getMessage() + "\n" + e.localizedMessage,
-                                        getActionName()
-                                )
+            override fun canClose(inputString: String?): Boolean {
+                return checkInput(inputString)
+            }
+        })
+        if (askComponentNameDialog.showAndGet()) {
+            runWriteAction {
+                val componentName = askComponentNameDialog.inputString!!
+//                list.forEach {
+//                    replaceControlAttribute(it)
+//                }
+
+                // 创建组件文件
+                ComponentFilesCreator.createWechatComponentFiles(
+                        componentName, psiDirectory, JS_TEMPLATE_NAME,
+                        JSON_TEMPLATE_NAME,
+                        list.joinToString("\n") {
+                            it.text
+                        }
+                )
+
+                editor.selectionModel.removeSelection()
+
+                val startOffset = list.first().textRange.startOffset
+                // 删除原来选择的标签
+                editor.document.deleteString(startOffset, list.last().textRange.endOffset)
+
+                // 添加组件元素
+                editor.document.insertString(startOffset, "<$componentName></$componentName>")
+
+                // 在json文件中注册此组件
+                findRelatePsiFile<JsonFile>(containingFile)?.let {
+                    (psiDirectory.findFile("$componentName.json") as? JsonFile)?.let { targetComponentJsonFile ->
+                        ComponentJsonUtils.registerComponent(it, targetComponentJsonFile)
                     }
                 }
             }
+
+        }
+
+    }
+
+    /**
+     * 移除标签上的控制属性
+     * example (wx:for wx:if)
+     */
+    private fun replaceControlAttribute(xmlTag: XmlTag) {
+        xmlTag.attributes.filter { xmlAttribute ->
+            WX_ATTRIBUTES.any {
+                it == xmlAttribute.name
+            }
+        }.forEach {
+            it.delete()
         }
     }
 
-    open fun created(psiDirectory: PsiDirectory) {
-
-    }
-
-    abstract fun onDialogConfirm(dialog: T)
-
-    abstract fun createDialog(project: Project): T
-
-    abstract fun getMessage(): String
-
-    abstract fun getJsComponentTemplateName(): String
-
-    abstract fun getJsonComponentTemplate(): String
-
-    abstract fun getFileName(): String
-
-    abstract fun getActionName(): String
-
-    private fun getPsiDirectory(
-            anActionEvent: AnActionEvent
-    ): PsiDirectory? {
-//        val psiElement = LangDataKeys.PSI_ELEMENT.getData(anActionEvent.dataContext)?:return null
-//        if (psiElement is PsiDirectory){
-//            return psiElement
-//        }else if (psiElement.containingFile!=null){
-//            return psiElement
-//        }
-        return LangDataKeys.IDE_VIEW.getData(anActionEvent.dataContext)?.orChooseDirectory
-    }
 }

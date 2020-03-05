@@ -77,7 +77,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.layout.panel
 import javax.swing.JComponent
-import javax.swing.JTextField
 
 /**
  * 创建微信小程序组件
@@ -87,6 +86,8 @@ class CreateWechatMiniProgramComponentAction :
 
     companion object {
         const val NAME = "Wechat Mini Program Component"
+        const val JSON_TEMPLATE_NAME = "Wechat mini program component json file"
+        const val JS_TEMPLATE_NAME = "Wechat mini program component js file"
     }
 
     private lateinit var componentName: String
