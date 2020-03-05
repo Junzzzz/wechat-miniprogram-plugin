@@ -160,7 +160,7 @@ patchPluginXml {
 <h3>$version</h3>
 <ul>
     <li> 新增了将一个或多个同级的WXML标签提取成自定义组件的功能 </li>
-    <li> wxml传入Object时不再显示警告 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1AV4Z">issues</a> </li>
+    <li> wxml模板表达式传入Object时不再显示警告 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1AV4Z">issues</a> </li>
 </ul>
 <br/>
 <ul>
