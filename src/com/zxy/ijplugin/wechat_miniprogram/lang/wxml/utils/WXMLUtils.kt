@@ -147,6 +147,6 @@ fun XmlAttributeValue.valueTextRangeInSelf(): TextRange {
     return TextRange.create(1, this.value.length + 1)
 }
 
-fun XmlTag.nameTextRangeInSelf(): TextRange {
-    return this.children.find { it.elementType == XmlTokenType.XML_NAME }!!.textRangeInParent
+fun XmlTag.nameTextRangeInSelf(): TextRange? {
+    return this.children.find { it.elementType == XmlTokenType.XML_NAME }?.textRangeInParent
 }
