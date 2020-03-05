@@ -105,7 +105,9 @@ class WXMLUnknownTagInspection : WXMLInspectionBase() {
                 if (wxmlTag.language != WXMLLanguage.INSTANCE) {
                     return
                 }
-                val tagName = wxmlTag.name
+                val tagName = wxmlTag.name.ifBlank {
+                    return
+                }
                 if (WXMLMetadata.getElementDescriptions(wxmlTag.project).any {
                             it.name == tagName
                         }) {
