@@ -82,6 +82,8 @@ import com.intellij.lang.javascript.intentions.JSSplitDeclarationIntention
 import com.intellij.lang.javascript.psi.JSEmbeddedContent
 import com.intellij.psi.PsiElement
 import com.intellij.util.containers.mapSmartSet
+import com.sixrr.inspectjs.confusing.CommaExpressionJSInspection
+import com.sixrr.inspectjs.control.UnnecessaryLabelJSInspection
 import com.sixrr.inspectjs.validity.BadExpressionStatementJSInspection
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.utils.getParentOfType
@@ -96,7 +98,9 @@ class WxmlJsInspectionFilter : IntentionAndInspectionFilter(), InspectionSuppres
         val suppressedToolIds = listOf(
                 JSUnresolvedVariableInspection::class,
                 BadExpressionStatementJSInspection::class,
-                JSSplitDeclarationIntention::class
+                JSSplitDeclarationIntention::class,
+                CommaExpressionJSInspection::class,
+                UnnecessaryLabelJSInspection::class
         ).mapSmartSet { InspectionProfileEntry.getShortName(it.java.simpleName) }
     }
 
