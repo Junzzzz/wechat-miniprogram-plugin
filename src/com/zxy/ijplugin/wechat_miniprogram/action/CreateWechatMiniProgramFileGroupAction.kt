@@ -142,12 +142,6 @@ abstract class CreateWechatMiniProgramFileGroupAction<T : DialogWrapper> : Wecha
     private fun getPsiDirectory(
             anActionEvent: AnActionEvent
     ): PsiDirectory? {
-//        val psiElement = LangDataKeys.PSI_ELEMENT.getData(anActionEvent.dataContext)?:return null
-//        if (psiElement is PsiDirectory){
-//            return psiElement
-//        }else if (psiElement.containingFile!=null){
-//            return psiElement
-//        }
         return LangDataKeys.IDE_VIEW.getData(anActionEvent.dataContext)?.orChooseDirectory
     }
 }
