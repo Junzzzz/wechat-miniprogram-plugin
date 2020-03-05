@@ -150,7 +150,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "2.1.1"
+version = "2.1.2"
 
 patchPluginXml {
     sinceBuild = "193"
@@ -159,7 +159,13 @@ patchPluginXml {
     changeNotes = """
 <h3>$version</h3>
 <ul>
-    <li> Fixed a bug where JS expressions embedded in WXML would show unexpected warnings </li>
+    <li> 新增了将一个或多个同级的WXML标签提取成自定义组件的功能 </li>
+    <li> wxml传入Object时不再显示警告 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1AV4Z">issues</a> </li>
+</ul>
+<br/>
+<ul>
+    <li> Added the ability to extract one or more sibling WXML tags into custom components </li>
+    <li> Warning no longer displayed when passing Object in WXML template expression <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1AV4Z">issues</a> </li>
 </ul>
 """
     pluginDescription = """
