@@ -170,6 +170,21 @@ patchPluginXml {
 """
     pluginDescription = """
 Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> WeChat Mini Program </a> project
+<h3>使用入门</h3>
+<ul> 
+    <li>打开微信小程序项目</li>
+    <li>确保project.config.json配置文件存在</li>
+    <li>现在您可以使用所有此插件提供的功能</li>
+</ul>
+<h3>主要功能</h3>
+<ul>
+    <li>wxml / wxss / wxs文件支持</li>
+    <li>创建微信小程序组件和页面</li>
+    <li>相关文件导航</li>
+    <li>微信小程序自定义组件支持</li> 
+    <li>微信小程序配置文件支持</li>
+    <li>代码检查和自动修复</li>
+</ul>
 <h3> Get started </h3>
 <ul>
     <li> Open WeChat Mini Program Project</li>
