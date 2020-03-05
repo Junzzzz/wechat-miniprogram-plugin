@@ -196,10 +196,6 @@
                                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.WxmlJsSpecificHandlersFactory"/>
         <intentionAndInspectionFilter language="WxmlJs"
                                       implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WxmlJsInspectionFilter"/>
-        <!--        <dialectSpecificHandlersFactory language="JavaScript"-->
-        <!--                                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.WxmlJsSpecificHandlersFactory"/>-->
-        <!--        <intentionAndInspectionFilter language="WxmlJs"-->
-        <!--                                      implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WxmlJsInspectionFilter"/>-->
         <elementScopeProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXMLElementResolveScopeProvider"/>
     </extensions>

@@ -150,7 +150,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "2.0.1"
+version = "2.1.1"
 
 patchPluginXml {
     sinceBuild = "193"
@@ -159,9 +159,7 @@ patchPluginXml {
     changeNotes = """
 <h3>$version</h3>
 <ul>
-    <li> Supports renaming of component files, you can rename all related files of the target file at the same time </li>
-    <li> Support renaming of component registration items in component JSON configuration </li>
-    <li> Fix WXML's invalid tag check will overwrite XML and HTML errors <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1ARWH">I1ARWH </a></li>
+    <li> Fixed a bug where JS expressions embedded in WXML would show unexpected warnings </li>
 </ul>
 """
     pluginDescription = """
