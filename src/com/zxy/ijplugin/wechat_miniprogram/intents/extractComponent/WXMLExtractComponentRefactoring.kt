@@ -84,7 +84,6 @@ import com.intellij.refactoring.util.CommonRefactoringUtil
 import com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction.Companion.JSON_TEMPLATE_NAME
 import com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction.Companion.JS_TEMPLATE_NAME
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeNameCompletionProvider.Companion.WX_ATTRIBUTES
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentFilesCreator
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
 
@@ -116,9 +115,6 @@ class WXMLExtractComponentRefactoring(
         if (askComponentNameDialog.showAndGet()) {
             runWriteAction {
                 val componentName = askComponentNameDialog.inputString!!
-//                list.forEach {
-//                    replaceControlAttribute(it)
-//                }
 
                 // 创建组件文件
                 ComponentFilesCreator.createWechatComponentFiles(
@@ -148,20 +144,6 @@ class WXMLExtractComponentRefactoring(
 
         }
 
-    }
-
-    /**
-     * 移除标签上的控制属性
-     * example (wx:for wx:if)
-     */
-    private fun replaceControlAttribute(xmlTag: XmlTag) {
-        xmlTag.attributes.filter { xmlAttribute ->
-            WX_ATTRIBUTES.any {
-                it == xmlAttribute.name
-            }
-        }.forEach {
-            it.delete()
-        }
     }
 
 }
