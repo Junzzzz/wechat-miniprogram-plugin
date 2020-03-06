@@ -102,29 +102,37 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
             return
         }
 
-        showUpdateNotification(pluginDescriptor, version, project, lastVersion)
+        showUpdateOrInstallNotification(pluginDescriptor, version, project, lastVersion)
 
         propertiesComponent.setValue(LAST_VERSION_KEY, version)
     }
 
-    private fun showUpdateNotification(
+    private fun showUpdateOrInstallNotification(
             pluginDescriptor: IdeaPluginDescriptor, version: String,
             project: Project,
             lastVersion: String?
     ) {
         // 显示更新通知
-        val displayId = "${pluginDescriptor.name}插件${if (lastVersion == null) "已安装" else "更新"}"
-        val title = if (lastVersion == null) {
+        val isInstall = lastVersion == null
+        val displayId = "${pluginDescriptor.name}插件${if (isInstall) "已安装" else "更新"}"
+        val title = if (isInstall) {
             "${pluginDescriptor.name} v${version}以安装"
         } else {
             "${pluginDescriptor.name} 插件更新至v$version"
         }
+        val changeNotesSection = if (isInstall) {
+            ""
+        } else {
+            """更新说明：<br/>
+                ${pluginDescriptor.changeNotes.split("<br/>").first { it.contains("lang='cn'") }}
+                <br/>"""
+        }
         val content = """
+                $changeNotesSection
                 如果此插件对您有帮助，请
                 <b><a href="$HTML_DESCRIPTION_SUPPORT">支持我们</a>。</b>
                 <br/>
                 感谢您的支持!
-                <br/>
                 <br/>
                 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases">发行记录/更新日志</a>
                 <br/>
