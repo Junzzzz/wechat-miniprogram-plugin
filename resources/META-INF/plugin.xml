@@ -173,6 +173,8 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentFilesAutomaticRenamerFactory"/>
         <renameHandler
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentPathLastReferenceRenameHandler"/>
+        <refactoring.moveHandler
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.MoveComponentReferenceHandler"/>
 
         <!--JSON-->
         <psi.referenceContributor
