@@ -150,22 +150,19 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "2.1.2"
+version = "2.2.0"
 
 patchPluginXml {
     sinceBuild = "193"
     untilBuild = "193.*"
     version = version
     changeNotes = """
-<h3>$version</h3>
-<ul>
-    <li> 新增了将一个或多个同级的WXML标签提取成自定义组件的功能 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis/%E6%8F%90%E5%8F%96%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6">Wiki</a> </li>
-    <li> wxml模板表达式传入Object时不再显示警告 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1AV4Z">issues</a> </li>
+<ul lang='cn'>
+    <li> 支持同时安全地移动所有组件文件 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis/%E7%A7%BB%E5%8A%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E6%88%96%E9%A1%B5%E9%9D%A2">Wiki</a> </li>
 </ul>
 <br/>
-<ul>
-    <li> Added the ability to extract one or more sibling WXML tags into custom components <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis/%E6%8F%90%E5%8F%96%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6">Wiki</a></li>
-    <li> Warning no longer displayed when passing Object in WXML template expression <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1AV4Z">issues</a> </li>
+<ul lang='en'>
+    <li> Supports simultaneous and secure movement of all component files <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis/%E6%8F%90%E5%8F%96%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6">Wiki</a> </li>
 </ul>
 """
     pluginDescription = """
