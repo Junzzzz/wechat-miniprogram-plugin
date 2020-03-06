@@ -177,8 +177,6 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.MoveComponentReferenceHandler"/>
 
         <!--JSON-->
-        <psi.referenceContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WechatMiniProgramJSONReferenceContributor"/>
         <lang.findUsagesProvider language="JSON"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.ComponentRegistrationFindUsageProvider"
                                  order="first"/>
