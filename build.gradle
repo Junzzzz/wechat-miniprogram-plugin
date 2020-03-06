@@ -162,7 +162,7 @@ patchPluginXml {
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Supports simultaneous and secure movement of all component files <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis/%E6%8F%90%E5%8F%96%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6">Wiki</a> </li>
+    <li> Supports simultaneous and secure movement of all component files <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis/%E7%A7%BB%E5%8A%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E6%88%96%E9%A1%B5%E9%9D%A2">Wiki</a> </li>
 </ul>
 """
     pluginDescription = """
