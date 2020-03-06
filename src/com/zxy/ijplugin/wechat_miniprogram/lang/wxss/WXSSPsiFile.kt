@@ -81,4 +81,8 @@ class WXSSPsiFile(fileViewProvider: FileViewProvider) : PsiFileBase(fileViewProv
     override fun getFileType(): FileType {
         return WXSSFileType.INSTANCE
     }
+
+    override fun toString(): String {
+        return "WxssFile:$name"
+    }
 }
