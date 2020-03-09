@@ -4,7 +4,8 @@ wechat-miniprogram-plugin
 [![Jetbrains Plugin Version](https://img.shields.io/jetbrains/plugin/v/13396-wechat-mini-program-support.svg "Jetbrains Plugin Version")](https://plugins.jetbrains.com/plugin/13396-wechat-mini-program-support)
 [![Jetbrains Plugin Downloads](https://img.shields.io/jetbrains/plugin/d/13396-wechat-mini-program-support.svg "Jetbrains Plugin Downloads")](https://plugins.jetbrains.com/plugin/13396-wechat-mini-program-support)
 
-### 基于JetBrains平台的微信小程序插件
+### 基于JetBrains平台的微信小程序插件 
+
 主要功能
 ---
 - wxml/wxss/wxs文件支持
