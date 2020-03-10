@@ -92,7 +92,8 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
     companion object {
         val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elif", "wx:else", "wx:key", "wx:if")
 
-        const val NO_VALUE_ATTRIBUTE = "wx:elif"
+        const val NO_VALUE_ATTRIBUTE = "wx:else"
+
         /**
          * 忽略公共的属性的标签名
          */
