@@ -1148,7 +1148,7 @@
         "description": "名称前是否带 loading 图标"
       },
       {
-        "key": "from-type",
+        "key": "form-type",
         "types": [
           "STRING"
         ],
