@@ -86,11 +86,12 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
     }
 
     override fun getPredefinedLibraries(project: Project): Array<out ScriptingLibraryModel> {
-        if (isWechatMiniProgramContext(project)){
+        if (isWechatMiniProgramContext(project, false)) {
             return arrayOf(
                     ScriptingLibraryModel.createPredefinedLibrary(
                             "wechat-mini-program-api",
-                            arrayOf(VfsUtil.findFileByURL(ResourceUtil.getResource(javaClass, "/", "index.d.ts"))), true
+                            arrayOf(VfsUtil.findFileByURL(ResourceUtil.getResource(javaClass, "/", "index.d.ts"))),
+                            false
                     )
             )
         }

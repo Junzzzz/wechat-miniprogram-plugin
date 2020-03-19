@@ -86,33 +86,35 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 
-fun isWechatMiniProgramContext(psiElement: PsiElement): Boolean {
+fun isWechatMiniProgramContext(psiElement: PsiElement, strict: Boolean = true): Boolean {
     return isWechatMiniProgramContext(psiElement.project)
 }
 
-fun isWechatMiniProgramContext(project: Project): Boolean {
+/**
+ * @param strict 是否去检查project.config.json的值
+ */
+fun isWechatMiniProgramContext(project: Project, strict: Boolean = true): Boolean {
     val basePath = project.basePath
     if (basePath != null) {
         val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
         if (baseDir != null) {
             val projectConfigJsonFile = baseDir.children.find { it.name == "project.config.json" } ?: return false
-            val fileContent = String(projectConfigJsonFile.contentsToByteArray())
-
-            return runReadAction {
-                // 读取文件内容创建文件
-                val jsonFile = PsiFileFactory.getInstance(project)
-                        .createFileFromText("project.config.json", JsonFileType.INSTANCE, fileContent)
-                        as? JsonFile
-                ((jsonFile?.children?.getOrNull(0) as? JsonObject)?.propertyList?.find {
-                    it.name == "compileType"
-                }?.value as? JsonStringLiteral)?.value == "miniprogram"
+            return if (strict) {
+                runReadAction {
+                    // 读取文件内容创建文件
+                    val jsonFile = PsiManager.getInstance(project).findFile(projectConfigJsonFile)
+                    ((jsonFile?.children?.getOrNull(0) as? JsonObject)?.propertyList?.find {
+                        it.name == "compileType"
+                    }?.value as? JsonStringLiteral)?.value == "miniprogram"
+                }
+            } else {
+                true
             }
         }
     }
