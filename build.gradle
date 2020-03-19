@@ -150,7 +150,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "2.2.2"
+version = "2.2.3"
 
 patchPluginXml {
     sinceBuild = "193"
@@ -158,11 +158,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 修复button的form-type属性的书写错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/pulls/1">Pull Request</a> </li>
+    <li> 修复一个可能会导致无法解析小程序js库的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1C33O">Issue</a> </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Fix the typo of the button's from-type property <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/pulls/1">Pull Request</a> </li>
+    <li> Fix an error that could cause the applet js library to fail to parse <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1C33O">Issue</a> </li>
 </ul>
 """
     pluginDescription = """
