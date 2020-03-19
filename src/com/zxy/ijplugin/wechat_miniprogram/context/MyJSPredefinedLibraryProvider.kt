@@ -91,7 +91,7 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
                     ScriptingLibraryModel.createPredefinedLibrary(
                             "wechat-mini-program-api",
                             arrayOf(VfsUtil.findFileByURL(ResourceUtil.getResource(javaClass, "/", "index.d.ts"))),
-                            false
+                            true
                     )
             )
         }
