@@ -119,7 +119,7 @@ intellij {
 //    localPath "C:\\Users\\Administrator\\Downloads\\ideaIU-LATEST-EAP-SNAPSHOT"
     type = "IU"
 //    localPath = localIdeaPath
-    version '2019.3.3'
+    version 'IU-LATEST-EAP-SNAPSHOT'
     pluginName 'wechat mini program'
     downloadSources true
     updateSinceUntilBuild false
