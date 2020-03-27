@@ -150,7 +150,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "2.2.1"
+version = "2.2.3"
 
 patchPluginXml {
     sinceBuild = "193"
@@ -158,13 +158,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 新增自动完成wxml模板双括号的功能 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1B96U">I1B96U</a> </li>
-    <li> 修复“wx:else”和“wx:elif”行为表现不符合预期的错误 </li>
+    <li> 修复一个可能会导致无法解析小程序js库的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1C33O">Issue</a> </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Added the function of automatically completing double brackets in wxml template <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1B96U">I1B96U</a> </li>
-    <li> Fixed "wx:else" and "wx:elif" behavior not meeting expectations </li>
+    <li> Fix an error that could cause the applet js library to fail to parse <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1C33O">Issue</a> </li>
 </ul>
 """
     pluginDescription = """
