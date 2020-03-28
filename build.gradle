@@ -158,11 +158,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 添加了WXML的代码折叠功能 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
+    <li> 兼容2020版本 </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Added WXML code folding function <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
+    <li> Compatible with 2020  </li>
 </ul>
 """
     pluginDescription = """
