@@ -117,6 +117,7 @@
                           implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.psi.WxmlXmlAstFactory"
                           order="first"/>
         <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata"/>
+        <lang.foldingBuilder language="WXML" implementationClass="com.intellij.lang.xml.XmlFoldingBuilder"/>
     </extensions>
 
 </idea-plugin>
