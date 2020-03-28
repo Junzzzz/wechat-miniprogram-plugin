@@ -150,7 +150,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "2.2.3"
+version = "2.2.4"
 
 patchPluginXml {
     sinceBuild = "193"
@@ -158,11 +158,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 修复一个可能会导致无法解析小程序js库的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1C33O">Issue</a> </li>
+    <li> 添加了WXML的代码折叠功能 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Fix an error that could cause the applet js library to fail to parse <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1C33O">Issue</a> </li>
+    <li> Added WXML code folding function <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
 </ul>
 """
     pluginDescription = """
