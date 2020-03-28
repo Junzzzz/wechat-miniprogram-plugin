@@ -153,8 +153,8 @@ publishPlugin {
 version = "2.2.4"
 
 patchPluginXml {
-    sinceBuild = "193"
-    untilBuild = "193.*"
+    sinceBuild = "201"
+    untilBuild = "201.*"
     version = version
     changeNotes = """
 <ul lang='cn'>
