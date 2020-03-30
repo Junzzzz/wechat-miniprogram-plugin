@@ -73,17 +73,17 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
+import com.intellij.codeInspection.InspectionSuppressor
+import com.intellij.codeInspection.SuppressQuickFix
 import com.intellij.psi.PsiElement
-import com.intellij.psi.css.inspections.CssApiBaseInspection
-import com.intellij.psi.css.inspections.CssInspectionFilter
-import com.intellij.psi.css.inspections.invalid.CssInvalidPropertyValueInspection
 
-class WxssCssInspectionFilter : CssInspectionFilter() {
-    override fun isSupported(inspection: Class<out CssApiBaseInspection>, p1: PsiElement): Boolean {
-        if (p1.language != WXSSLanguage.INSTANCE) return true
-        if (inspection is CssInvalidPropertyValueInspection && p1.text.endsWith("rpx")) {
-            return false
-        }
-        return true
+class WxssCssInspectionFilter : InspectionSuppressor {
+
+    override fun getSuppressActions(element: PsiElement?, toolId: String): Array<SuppressQuickFix> {
+        return SuppressQuickFix.EMPTY_ARRAY
+    }
+
+    override fun isSuppressedFor(element: PsiElement, toolId: String): Boolean {
+        return toolId == "CssInvalidPropertyValue"
     }
 }

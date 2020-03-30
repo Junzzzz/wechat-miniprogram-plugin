@@ -109,5 +109,7 @@
         <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXSSValueManipulator"/>
         <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
+        <lang.inspectionSuppressor language="WXSS"
+                                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"/>
     </extensions>
 </idea-plugin>
