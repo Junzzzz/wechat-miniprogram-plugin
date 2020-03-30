@@ -119,7 +119,7 @@ intellij {
 //    localPath "C:\\Users\\Administrator\\Downloads\\ideaIU-LATEST-EAP-SNAPSHOT"
     type = "IU"
 //    localPath = localIdeaPath
-    version 'IU-LATEST-EAP-SNAPSHOT'
+    version '2019.3.3'
     pluginName 'wechat mini program'
     downloadSources true
     updateSinceUntilBuild false
@@ -150,19 +150,19 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "2.3.0"
+version = "2.2.4"
 
 patchPluginXml {
-    sinceBuild = "201"
-    untilBuild = "201.*"
+    sinceBuild = "193"
+    untilBuild = "193.*"
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 兼容2020版本 </li>
+    <li> 添加了WXML的代码折叠功能 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Compatible with 2020  </li>
+    <li> Added WXML code folding function <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
 </ul>
 """
     pluginDescription = """
