@@ -78,30 +78,39 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiPolyVariantReference
 import com.intellij.refactoring.rename.PsiElementRenameHandler
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLClassReference
+import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLIdReference
 
-class WXSSRenameHandler : PsiElementRenameHandler() {
+class WXMLIdOrClassRenameHandler : PsiElementRenameHandler() {
 
     companion object {
-        fun getWXSSClassReference(dataContext: DataContext): WXMLClassReference? {
-            return CommonDataKeys.PSI_FILE.getData(dataContext)
+        fun getIdOrClassReference(dataContext: DataContext): PsiPolyVariantReference? {
+            val reference = CommonDataKeys.PSI_FILE.getData(dataContext)
                     ?.findReferenceAt(
                             CommonDataKeys.EDITOR.getData(dataContext)?.caretModel?.offset ?: return null
-                    ) as? WXMLClassReference
+                    )
+            if (reference is WXMLIdReference) {
+                return reference
+            }
+            if (reference is WXMLClassReference) {
+                return reference
+            }
+            return null
         }
     }
 
     override fun isAvailableOnDataContext(dataContext: DataContext): Boolean {
-        if (getWXSSClassReference(dataContext) != null) {
+        if (getIdOrClassReference(dataContext) != null) {
             return true
         }
         return false
     }
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?, dataContext: DataContext) {
-        val wxssClassReference = getWXSSClassReference(dataContext)
-        val element = wxssClassReference?.multiResolve(false)?.firstOrNull()?.element
+        val reference = getIdOrClassReference(dataContext)
+        val element = reference?.multiResolve(false)?.firstOrNull()?.element
         if (element != null) {
             invoke(element, project, null, editor)
         }

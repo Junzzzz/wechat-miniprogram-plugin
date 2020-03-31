@@ -94,12 +94,10 @@
         <!--                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>-->
         <!--        <completion.contributor language="WXSS"-->
         <!--                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXSSCompletionContributor"/>-->
-        <lang.refactoringSupport language="WXSS"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXSSSelectorRefactoring"/>
         <lang.namesValidator language="WXSS"
                              implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.validator.WXSSNamesValidator"/>
-        <!--        <lang.findUsagesProvider language="WXSS"-->
-        <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSFindUsageProvider"/>-->
+        <lang.findUsagesProvider language="WXSS"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSFindUsageProvider"/>
         <psi.referenceContributor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXSSReferenceContributor"/>
         <!--        <lang.elementManipulator forClass="com.intellij.psi.css.CssClass"-->
@@ -113,7 +111,7 @@
                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"/>
         <css.classOrIdUsagesProvider order="first"
                                      implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSIdOrClassUsageProvider"/>
-        <renameHandler implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSRenameHandler"/>
+        <renameHandler implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXMLIdOrClassRenameHandler"/>
         <!--        <css.inclusionContext implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSInclusionContext"/>-->
         <useScopeOptimizer implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSScopeOptimizer"/>
         <lang.foldingBuilder language="WXSS"
