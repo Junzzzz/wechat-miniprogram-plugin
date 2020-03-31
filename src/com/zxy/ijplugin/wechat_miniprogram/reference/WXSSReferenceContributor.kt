@@ -75,15 +75,14 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
+import com.intellij.psi.css.CssTerm
+import com.intellij.psi.css.impl.CssElementTypes
+import com.intellij.psi.css.impl.util.CssUtil
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.elementType
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSImport
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStringText
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.isAnimationNameValue
 
 class WXSSReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(psiReferenceRegistrar: PsiReferenceRegistrar) {
@@ -103,13 +102,23 @@ class WXSSReferenceContributor : PsiReferenceContributor() {
         )
 
         // 解析wxss animation-name的值
-        psiReferenceRegistrar.registerReferenceProvider(PlatformPatterns.psiElement(WXSSValue::class.java),
+        psiReferenceRegistrar.registerReferenceProvider(
+                PlatformPatterns.psiElement(CssElementTypes.CSS_IDENT),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             element: PsiElement, context: ProcessingContext
                     ): Array<PsiReference> {
-                        if (element is WXSSValue && element.isAnimationNameValue() && element.firstChild.elementType == WXSSTypes.IDENTIFIER) {
-                            return arrayOf(WXSSKeyframesReference(element))
+                        val parent = element.parent
+                        if (parent is CssTerm) {
+                            val declaration = CssUtil.getDeclaration(parent)
+                            if (declaration != null) {
+                                val propertyName = declaration.propertyName
+                                if ("animation-name".equals(propertyName, ignoreCase = true) || "animation".equals(
+                                                propertyName, ignoreCase = true
+                                        )) {
+                                    return arrayOf(WXSSKeyframesReference(element))
+                                }
+                            }
                         }
                         return PsiReference.EMPTY_ARRAY
                     }

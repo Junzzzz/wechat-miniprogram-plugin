@@ -74,36 +74,29 @@
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiElementResolveResult
-import com.intellij.psi.PsiPolyVariantReferenceBase
-import com.intellij.psi.ResolveResult
+import com.intellij.psi.PsiReferenceBase
+import com.intellij.psi.css.CssKeyframesRule
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSKeyframesDefinition
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
 /**
  * 动画的属性值的引用
  */
-class WXSSKeyframesReference(wxssValue: WXSSValue) : PsiPolyVariantReferenceBase<WXSSValue>(wxssValue) {
+class WXSSKeyframesReference(wxssValue: PsiElement) : PsiReferenceBase<PsiElement>(wxssValue) {
 
     /**
      * 关键帧可能会定义多个但以最近的一处为主
      */
-    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+    override fun resolve(): PsiElement? {
         val wxssFiles = WXSSModuleUtils.findImportedFilesWithSelf(
-                this.element.containingFile as? WXSSPsiFile ?: return ResolveResult.EMPTY_ARRAY
+                this.element.containingFile as? WXSSPsiFile ?: return null
         )
-        return wxssFiles.flatMap { wxssPsiFile ->
-            wxssPsiFile.findChildrenOfType<WXSSKeyframesDefinition>().mapNotNull {
-                PsiElementResolveResult(it.keyframesName ?: return@mapNotNull null)
-            }
-        }.toTypedArray()
-    }
-
-    override fun isReferenceTo(element: PsiElement): Boolean {
-        return super.isReferenceTo(element)
+        return wxssFiles.asSequence().flatMap { wxssPsiFile ->
+            wxssPsiFile.findChildrenOfType<CssKeyframesRule>().filter {
+                it.name == this.value
+            }.asSequence()
+        }.firstOrNull()
     }
 
 }
