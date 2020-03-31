@@ -177,7 +177,9 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
                 result.addAll(findClassSelectorFromFileAndImports(appWXSSPsiFile))
             }
         }
-        return result.distinctBy { it.name }.toTypedArray()
+        // 获取已经存在的class
+        val existedClassNames = this.element.references.filterIsInstance<WXMLClassReference>().map { it.value }
+        return result.filter { !existedClassNames.contains(it.name) }.distinctBy { it.name }.toTypedArray()
     }
 
     private fun findClassSelectorFromFileAndImports(wxssPsiFile: WXSSPsiFile): List<CssClass> {
