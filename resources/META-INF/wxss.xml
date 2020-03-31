@@ -113,6 +113,7 @@
                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"/>
         <css.classOrIdUsagesProvider order="first"
                                      implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSIdOrClassUsageProvider"/>
+        <renameHandler implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSRenameHandler"/>
         <!--        <css.inclusionContext implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSInclusionContext"/>-->
         <useScopeOptimizer implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSScopeOptimizer"/>
         <lang.foldingBuilder language="WXSS"
