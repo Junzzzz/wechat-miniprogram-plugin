@@ -111,5 +111,9 @@
         <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
         <lang.inspectionSuppressor language="WXSS"
                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"/>
+        <css.classOrIdUsagesProvider order="first"
+                                     implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSIdOrClassUsageProvider"/>
+        <css.inclusionContext implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSInclusionContext"/>
+        <useScopeOptimizer implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSScopeOptimizer"/>
     </extensions>
 </idea-plugin>

@@ -71,39 +71,14 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.css.CssStylesheet;
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
-public class CssInclusionContext extends com.intellij.psi.css.resolve.CssInclusionContext {
+import com.intellij.psi.PsiElement
+import com.intellij.psi.css.CssSelectorSuffix
+import com.intellij.psi.css.usages.CssClassOrIdUsagesProvider
 
-    public CssInclusionContext() {
-        super();
-    }
-
-    @NotNull
-    @Override
-    public PsiFile[] getContextFiles(@NotNull PsiFile current) {
-        return super.getContextFiles(current);
-    }
-
-    @Nullable
-    @Override
-    public CssStylesheet getStylesheet(@NotNull PsiFile candidate) {
-        return super.getStylesheet(candidate);
-    }
-
-    @Override
-    public boolean processAllCssFilesOnResolving(@NotNull PsiElement context) {
-        return context.getContainingFile() instanceof WXMLPsiFile;
-    }
-
-    @NotNull
-    @Override
-    public PsiFile[] getLocalUseScope(@NotNull PsiFile file) {
-        return new PsiFile[]{file};
+class WXSSIdOrClassUsageProvider : CssClassOrIdUsagesProvider {
+    override fun isUsage(p0: CssSelectorSuffix, p1: PsiElement, p2: Int): Boolean {
+        return false
     }
 }

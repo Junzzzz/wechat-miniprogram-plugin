@@ -58,7 +58,7 @@
  *       i. Fill in the blanks in following statement, including insert your software name, the year of the first publication of your software, and your name identified as the copyright owner;
  *       ii. Create a file named “LICENSE” which contains the whole context of this License in the first directory of your software package;
  *       iii. Attach the statement to the appropriate annotated syntax at the beginning of each source file.
- *    
+ *
  *    Copyright (c) [2019] [name of copyright holder]
  *    [Software Name] is licensed under the Mulan PSL v1.
  *    You can use this software according to the terms and conditions of the Mulan PSL v1.
@@ -67,144 +67,37 @@
  *    THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  *    IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  *    PURPOSE.
- *    
+ *
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.context
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
-import com.intellij.json.JsonFileType
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonObject
-import com.intellij.json.psi.JsonStringLiteral
-import com.intellij.lang.javascript.JavaScriptFileType
-import com.intellij.lang.javascript.psi.JSFile
-import com.intellij.openapi.application.runReadAction
-import com.intellij.openapi.fileTypes.LanguageFileType
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiManager
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import kotlin.reflect.KClass
+import com.intellij.psi.css.CssStylesheet
+import com.intellij.psi.css.resolve.CssInclusionContext
+import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 
-fun isWechatMiniProgramContext(psiElement: PsiElement, strict: Boolean = true): Boolean {
-    return isWechatMiniProgramContext(psiElement.project)
-}
+class WXSSInclusionContext : CssInclusionContext() {
 
-/**
- * @param strict 是否去检查project.config.json的值
- */
-fun isWechatMiniProgramContext(project: Project, strict: Boolean = true): Boolean {
-    val basePath = project.basePath
-    if (basePath != null) {
-        val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
-        if (baseDir != null) {
-            val projectConfigJsonFile = baseDir.children.find { it.name == "project.config.json" } ?: return false
-            return if (strict) {
-                runReadAction {
-                    // 读取文件内容创建文件
-                    val jsonFile = PsiManager.getInstance(project).findFile(projectConfigJsonFile)
-                    ((jsonFile?.children?.getOrNull(0) as? JsonObject)?.propertyList?.find {
-                        it.name == "compileType"
-                    }?.value as? JsonStringLiteral)?.value == "miniprogram"
-                }
-            } else {
-                true
-            }
+    override fun getLocalUseScope(file: PsiFile): Array<PsiFile> {
+        return if (isWechatMiniProgramContext(file)) {
+            arrayOf(file)
+        } else {
+            PsiFile.EMPTY_ARRAY
         }
     }
-    return false
-}
 
-enum class RelateFileType(val fileType: LanguageFileType) {
-    WXML(WXMLFileType.INSTANCE),
-    JSON(JsonFileType.INSTANCE),
-    JS(JavaScriptFileType.INSTANCE),
-    WXSS(WXSSFileType.INSTANCE)
-}
-
-val componentFileClasses = arrayOf(
-        JSFile::class.java, WXMLPsiFile::class.java, WXSSPsiFile::class.java, JsonFile::class.java
-)
-
-fun LanguageFileType.getRelateFileType(): RelateFileType? {
-    return when (this) {
-        WXMLFileType.INSTANCE -> RelateFileType.WXML
-        JsonFileType.INSTANCE -> RelateFileType.JSON
-        JavaScriptFileType.INSTANCE -> RelateFileType.JS
-        WXSSFileType.INSTANCE -> RelateFileType.WXSS
-        else -> null
+    override fun getContextFiles(current: PsiFile): Array<PsiFile> {
+        return super.getContextFiles(current)
     }
-}
 
-fun <T : PsiFile> Class<T>.getRelateFileType(): RelateFileType? {
-    return when {
-        WXSSPsiFile::class.java.isAssignableFrom(this) -> RelateFileType.WXSS
-        WXMLPsiFile::class.java.isAssignableFrom(this) -> RelateFileType.WXML
-        JsonFile::class.java.isAssignableFrom(this) -> RelateFileType.JSON
-        JSFile::class.java.isAssignableFrom(this) -> RelateFileType.JS
-        else -> null
+    override fun getStylesheet(candidate: PsiFile): CssStylesheet? {
+        return super.getStylesheet(candidate)
     }
-}
 
-/**
- * 找到指定的文件所对应的指定扩展的文件
- * 例如：
- * 已知一个wxss
- * 找到其对应的文件
- * @param relateFileType 对应的文件类型
- */
-fun findRelateFile(originFile: VirtualFile, relateFileType: RelateFileType): VirtualFile? {
-    return originFile.parent?.children?.find { it.nameWithoutExtension == originFile.nameWithoutExtension && it.extension == relateFileType.fileType.defaultExtension }
-}
-
-inline fun <reified T : PsiFile> findRelatePsiFile(psiFile: PsiFile): T? {
-    val originFile = psiFile.originalFile.virtualFile
-    val project = psiFile.project
-    return findRelatePsiFile(originFile, project)
-}
-
-inline fun <reified T : PsiFile> findRelatePsiFile(originFile: VirtualFile, project: Project): T? {
-    val relateFileType = getRelateFileTypeFromClass(T::class) ?: return null
-    val virtualFile = findRelateFile(originFile, relateFileType) ?: return null
-    return PsiManager.getInstance(project).findFile(virtualFile) as? T
-}
-
-fun <T : PsiFile> getRelateFileTypeFromClass(clazz: KClass<T>): RelateFileType? {
-    return when (clazz) {
-        WXSSPsiFile::class -> RelateFileType.WXSS
-        WXMLPsiFile::class -> RelateFileType.WXML
-        JsonFile::class -> RelateFileType.JSON
-        JSFile::class -> RelateFileType.JS
-        else -> null
+    override fun processAllCssFilesOnResolving(context: PsiElement): Boolean {
+        return super.processAllCssFilesOnResolving(context)
     }
-}
-
-fun findRelatePsiFile(psiFile: PsiFile, relateFileType: RelateFileType): PsiFile? {
-    val virtualFile = findRelateFile(psiFile.originalFile.virtualFile, relateFileType) ?: return null
-    return PsiManager.getInstance(psiFile.project).findFile(virtualFile)
-}
-
-fun findAppFile(project: Project, relateFileType: RelateFileType): VirtualFile? {
-    if (relateFileType == RelateFileType.WXML) return null
-    val basePath = project.basePath
-    if (basePath != null) {
-        val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
-        if (baseDir != null) {
-            return baseDir.findChild("app." + relateFileType.fileType.defaultExtension)
-        }
-    }
-    return null
-}
-
-inline fun <reified T : PsiFile> findAppFile(project: Project): T? {
-    val relateFileType = getRelateFileTypeFromClass(T::class) ?: return null
-    val virtualFile = findAppFile(project, relateFileType)
-    return virtualFile?.let { PsiManager.getInstance(project).findFile(it) } as? T
 }
