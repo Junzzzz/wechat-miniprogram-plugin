@@ -160,11 +160,13 @@ patchPluginXml {
 <ul lang='cn'>
     <li> 修复自定义组件不会自动完成公共属性事件和wx:前缀的属性的错误 </li>
     <li> wxml 类名自动完成不会再列举已经存在的类名 </li>
+    <li> 修复在WXML中无法重命名包含的多个引用的Class或Id的错误 </li>
 </ul>
 <br/>
 <ul lang='en'>
     <li> Fixed a bug where custom components would not autocomplete public property events and wx: prefixed properties </li>
     <li> WXML Class name autocompletion will no longer list existing class names </li>
+    <li> Fixed bug where multiple referenced Classes or Id could not be renamed in WXML </li>
 </ul>
 """
     pluginDescription = """
