@@ -55,7 +55,8 @@ CRLF=\R
 WHITE_SPACE=[\ \n\t\f]
 WHITE_SPACE_AND_CRLF =     ({CRLF}|{WHITE_SPACE})+
 DIGIT=[0-9]
-
+h	=	[0-9a-f]
+unicode=\\{h}{1,6}(\r\n|[ \t\r\n\f])?
 IDENTIFIER_START = [_a-zA-Z]
 IDENTIFIER = {IDENTIFIER_START}({IDENTIFIER_START}|{DIGIT}|"-"|"_")*
 
@@ -66,6 +67,9 @@ NUMBER_UNIT = {ALPHA}+ | %
 COMMENT_START = "/*"
 COMMENT_END = "*/"
 UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
+nonascii = [\240-\377]
+escape	=	{unicode}|\\[^\r\n\f0-9a-f]
+URL=([!#$%&*-~]|{nonascii}|{escape})+
 %%
 
 // 注释，记录进入注释之前的状态
@@ -77,20 +81,6 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
         return WXSSTypes.COMMENT;
     }
 }
-
-
-//<COMMENT> {
-//    {COMMENT_END} {
-//        yybegin(this.beforeCommentState);
-//        return WXSSTypes.COMMENT;
-//    }
-//    {WHITE_SPACE_AND_CRLF} {
-//          return TokenType.WHITE_SPACE;
-//      }
-//    [^] {
-//        return WXSSTypes.COMMENT;
-//    }
-//}
 
 "!important" { return WXSSTypes.IMPORTANT_KEYWORD;}
 "@font-face" { return WXSSTypes.FONT_FACE_KEYWORD; }
@@ -115,7 +105,6 @@ UNICODE_RANGE = "U+"([0-9a-fA-F]{1,4}(-[0-9a-fA-F]{1,4})?|[0-9a-fA-F?]{1,4})
 "." { return WXSSTypes.DOT; }
 (":"|"::")("before"|"after") { return WXSSTypes.PSEUDO_SELECTOR; }
 {UNICODE_RANGE} { yybegin(ATTRIBUTE_VALUE_END);return WXSSTypes.UNICODE_RANGE; }
-
 // string
 <STRING_START_SQ> {
   "'" { yybegin(this.beforeStringState);return WXSSTypes.STRING_END_SQ; }

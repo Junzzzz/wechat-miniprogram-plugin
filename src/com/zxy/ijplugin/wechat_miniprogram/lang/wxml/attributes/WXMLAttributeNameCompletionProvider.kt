@@ -78,6 +78,7 @@ import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.impl.source.xml.XmlAttributeReference
+import com.intellij.psi.xml.XmlAttribute
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
@@ -92,15 +93,18 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
     companion object {
         val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elif", "wx:else", "wx:key", "wx:if")
 
-        const val NO_VALUE_ATTRIBUTE = "wx:elif"
+        const val NO_VALUE_ATTRIBUTE = "wx:else"
+
         /**
          * 忽略公共的属性的标签名
          */
         val IGNORE_COMMON_ATTRIBUTE_TAG_NAMES = arrayOf("block", "template", "wxs", "import", "include", "slot")
+
         /**
          * 忽略wx属性的标签名
          */
         val IGNORE_WX_ATTRIBUTE_TAG_NAMES = arrayOf("template", "wxs", "import", "include")
+
         /**
          * 忽略公共事件的标签名
          */
@@ -131,6 +135,9 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                                 .withInsertHandler(WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler())
                     }
                 })
+                addFixedWXAttribute(result, xmlAttributes)
+                addCommonAttribute(result, xmlAttributes)
+                addCommonEvents(result, xmlAttributes)
             } else if (descriptor is WXMLElementDescriptor) {
                 val attributes = descriptor.wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors
                 // wxml组件属性
@@ -166,40 +173,61 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                 val tagName = descriptor.name
                 if (!IGNORE_WX_ATTRIBUTE_TAG_NAMES.contains(tagName)) {
                     // 提供固定的wx前缀完成
-                    result.addAllElements(
-                            WX_ATTRIBUTES.filter { wxAttribute -> xmlAttributes.none { it.name == wxAttribute } }.map {
-                                if (it == NO_VALUE_ATTRIBUTE) {
-                                    LookupElementBuilder.create(it)
-                                } else {
-                                    LookupElementBuilder.create(it).withInsertHandler(
-                                            WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
-                                    )
-                                }
-                            })
+                    addFixedWXAttribute(result, xmlAttributes)
                 }
 
                 if (!IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(tagName)) {
                     // 公共属性
-                    result.addAllElements(
-                            WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.filter { attribute -> xmlAttributes.none { it.name == attribute.key } }.map {
-                                LookupElementBuilder.create(it.key).withInsertHandler(
-                                        WXMLAttributeNameInsertHandler.createFromAttributeDescription(it)
-                                )
-                            })
+                    addCommonAttribute(result, xmlAttributes)
                 }
 
                 if (!IGNORE_COMMON_EVENT_TAG_NAMES.contains(tagName)) {
                     // 公共事件
-                    result.addAllElements(
-                            WXMLUtils.generateEventAttributeFullName(WXMLMetadata.COMMON_ELEMENT_EVENTS).map {
-                                LookupElementBuilder.create(it)
-                            }
-                    )
+                    addCommonEvents(result, xmlAttributes)
                 }
             }
 
 
         }
+    }
+
+    private fun addCommonEvents(result: CompletionResultSet, xmlAttributes: Array<out XmlAttribute>) {
+        result.addAllElements(
+                WXMLUtils.generateEventAttributeFullName(WXMLMetadata.COMMON_ELEMENT_EVENTS).filter { event ->
+                    xmlAttributes.none { it.name == event }
+                }.map {
+                    LookupElementBuilder.create(it)
+                }
+        )
+    }
+
+    private fun addCommonAttribute(
+            result: CompletionResultSet,
+            xmlAttributes: Array<out XmlAttribute>
+    ) {
+        result.addAllElements(
+                WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.filter { attribute -> xmlAttributes.none { it.name == attribute.key } }
+                        .map {
+                            LookupElementBuilder.create(it.key).withInsertHandler(
+                                    WXMLAttributeNameInsertHandler.createFromAttributeDescription(it)
+                            )
+                        })
+    }
+
+    private fun addFixedWXAttribute(
+            result: CompletionResultSet,
+            xmlAttributes: Array<out XmlAttribute>
+    ) {
+        result.addAllElements(
+                WX_ATTRIBUTES.filter { wxAttribute -> xmlAttributes.none { it.name == wxAttribute } }.map {
+                    if (it == NO_VALUE_ATTRIBUTE) {
+                        LookupElementBuilder.create(it)
+                    } else {
+                        LookupElementBuilder.create(it).withInsertHandler(
+                                WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
+                        )
+                    }
+                })
     }
 
 }

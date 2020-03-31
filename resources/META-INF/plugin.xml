@@ -168,6 +168,8 @@
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.parser.WxmlJsParserDefinition"/>
         <lang.syntaxHighlighterFactory language="WxmlJs"
                                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.highlighting.WxmlJsHighlighterFactory"/>
+        <typedHandler
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.expr.WxmlJsBracesInterpolationTypedHandler"/>
 
         <automaticRenamerFactory
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentFilesAutomaticRenamerFactory"/>

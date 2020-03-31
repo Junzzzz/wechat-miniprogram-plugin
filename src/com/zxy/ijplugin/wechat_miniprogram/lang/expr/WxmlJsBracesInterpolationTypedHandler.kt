@@ -70,134 +70,86 @@
  *
  *    See the Mulan PSL v1 for more details.
  */
-buildscript {
-    ext.kotlin_version = '1.3.61'
 
-    repositories {
-        mavenCentral()
-        maven { url 'https://dl.bintray.com/jetbrains/intellij-plugin-service' }
+package com.zxy.ijplugin.wechat_miniprogram.lang.expr
+
+import com.intellij.codeInsight.editorActions.TypedHandlerDelegate
+import com.intellij.lang.javascript.JSInjectionBracesUtil.InterpolationBracesCompleter
+import com.intellij.lang.javascript.formatter.JSCodeStyleSettings
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.EditorModificationUtil
+import com.intellij.openapi.fileTypes.FileType
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
+
+
+class WxmlJsBracesInterpolationTypedHandler : TypedHandlerDelegate() {
+
+    companion object {
+        private const val start = "{{"
+        private const val end = "}}"
     }
 
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
-plugins {
-    id "org.jetbrains.intellij" version "0.4.16"
-}
-
-// JDK compatibility
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
-tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
-
-// Kotlin compatibility
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
-    kotlinOptions {
-        jvmTarget = "1.8"
-        languageVersion = "1.3"
-        apiVersion = "1.3"
-    }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs 'src'
-            srcDirs 'gen'
+    override fun beforeCharTyped(c: Char, project: Project, editor: Editor, file: PsiFile, fileType: FileType): Result {
+        if (c == '{' && file.language == WXMLLanguage.INSTANCE) {
+            if (InterpolationBracesCompleter.startMatches(start, c, editor)) {
+                return if (alreadyHasEnding(editor)) {
+                    Result.CONTINUE
+                } else {
+                    insertWithEndCompletion(c, editor, file)
+                    Result.STOP
+                }
+            }
         }
-        resources {
-            srcDirs 'resources'
+        return Result.CONTINUE
+    }
+
+    private fun insertWithEndCompletion(
+            c: Char, editor: Editor?, file: PsiFile?
+    ) {
+        var caretBackOffset = end.length
+        val interpolation: String
+        when {
+            JSCodeStyleSettings.getSettings(file!!).SPACES_WITHIN_INTERPOLATION_EXPRESSIONS -> {
+                interpolation = "$c  $end"
+                ++caretBackOffset
+            }
+            start.length == 1 -> {
+                interpolation = end
+            }
+            else -> {
+                interpolation = c.toString() + end
+            }
+        }
+        EditorModificationUtil.insertStringAtCaret(editor, interpolation, true, interpolation.length - caretBackOffset)
+    }
+
+    private fun alreadyHasEnding(
+            editor: Editor
+    ): Boolean {
+        val stopChars: MutableSet<Char> = HashSet(
+                start.length + end.length + 1
+        )
+        stopChars.add('\n')
+        addChars(start, stopChars)
+        addChars(end, stopChars)
+        val offset = editor.caretModel.offset
+        var i = offset
+        val sequence: CharSequence = editor.document.charsSequence
+        while (i < sequence.length && i < offset + 100 && !stopChars.contains(sequence[i])) {
+            ++i
+        }
+        return if (i + end.length > sequence.length) false else end.contentEquals(
+                sequence.subSequence(i, i + end.length)
+        )
+    }
+
+    private fun addChars(start: String, stopChars: MutableSet<Char>) {
+        for (element in start) {
+            stopChars.add(element)
         }
     }
-}
-
-apply plugin: "kotlin"
-
-intellij {
-//    localPath "C:\\Users\\Administrator\\Downloads\\ideaIU-LATEST-EAP-SNAPSHOT"
-    type = "IU"
-//    localPath = localIdeaPath
-    version '2019.3.3'
-    pluginName 'wechat mini program'
-    downloadSources true
-    updateSinceUntilBuild false
-    plugins = ['JavaScriptLanguage', 'CSS']
-}
-
-repositories {
-    mavenCentral()
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-
-runIde {
 
 }
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "org.jetbrains:annotations-java5:17.0.0"
-    compile "org.jetbrains.kotlin:kotlin-script-runtime:1.3.50"
-}
-
-publishPlugin {
-    token intellijPublishToken
-}
-
-version = "2.2.4"
-
-patchPluginXml {
-    sinceBuild = "193"
-    untilBuild = "193.*"
-    version = version
-    changeNotes = """
-<ul lang='cn'>
-    <li> 添加了WXML的代码折叠功能 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
-</ul>
-<br/>
-<ul lang='en'>
-    <li> Added WXML code folding function <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
-</ul>
-"""
-    pluginDescription = """
-Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> WeChat Mini Program </a> project
-<h3>使用入门</h3>
-<ul> 
-    <li>打开微信小程序项目</li>
-    <li>确保project.config.json配置文件存在</li>
-    <li>现在您可以使用所有此插件提供的功能</li>
-</ul>
-<h3>主要功能</h3>
-<ul>
-    <li>wxml / wxss / wxs文件支持</li>
-    <li>创建微信小程序组件和页面</li>
-    <li>相关文件导航</li>
-    <li>微信小程序自定义组件支持</li> 
-    <li>微信小程序配置文件支持</li>
-    <li>代码检查和自动修复</li>
-</ul>
-<h3> Get started </h3>
-<ul>
-    <li> Open WeChat Mini Program Project</li>
-    <li> Ensure that the project.config.json configuration file exists</li>
-    <li> Now you can use all the features provided by this plugin</li>
-</ul>
-<h3> Main functions </h3>
-<ul>
-    <li> wxml / wxss / wxs file support</li>
-    <li> Create WeChat applet components and pages</li>
-    <li> Relevant file navigation</li>
-    <li> WeChat applet custom component support</li>
-    <li> WeChat applet configuration file support</li>
-    <li> Code inspection and automatic repairs</li>
-</ul>
-For detailed usage documents and function descriptions, please visit
-<a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis"> Gitee Wiki </a>
-"""
-}

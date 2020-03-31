@@ -79,40 +79,37 @@
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WXSSParserDefinition"/>
         <lang.syntaxHighlighterFactory language="WXSS"
                                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSSyntaxHighlighterFactory"/>
-        <css.cssInspectionFilter language="WXSS"
-                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WxssCssInspectionFilter"/>
-        <css.inclusionContext implementation="CssInclusionContext"/>
-        <css.embeddedCssProvider implementation="EmbeddedCssProvider"/>
-
-        <!--        <colorProvider-->
-        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.line_mark.WXSSElementColorProvider"/>-->
-        <!--        <gotoSymbolContributor-->
-        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXSSIdChooseByNameContributor"/>-->
-        <!--        <gotoSymbolContributor-->
-        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXSSClassChooseByNameContributor"/>-->
-        <!--        <lang.commenter language="WXSS"-->
-        <!--                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>-->
-        <!--        <lang.braceMatcher language="WXSS"-->
-        <!--                           implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBraceMatcher"/>-->
-        <!--        <quoteHandler fileType="WXSS" className="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSDoubleQuoteHandler"/>-->
+        <colorProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.line_mark.WXSSElementColorProvider"/>
+        <gotoSymbolContributor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXSSIdChooseByNameContributor"/>
+        <gotoSymbolContributor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXSSClassChooseByNameContributor"/>
+        <lang.commenter language="WXSS"
+                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>
+        <lang.braceMatcher language="WXSS"
+                           implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBraceMatcher"/>
+        <quoteHandler fileType="WXSS" className="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSDoubleQuoteHandler"/>
         <lang.formatter language="WXSS"
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
-        <!--        <completion.contributor language="WXSS"-->
-        <!--                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXSSCompletionContributor"/>-->
-        <!--        <lang.refactoringSupport language="WXSS"-->
-        <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXSSSelectorRefactoring"/>-->
-        <!--        <lang.namesValidator language="WXSS"-->
-        <!--                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.validator.WXSSNamesValidator"/>-->
-        <!--        <lang.findUsagesProvider language="WXSS"-->
-        <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSFindUsageProvider"/>-->
-        <!--        <psi.referenceContributor-->
-        <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXSSReferenceContributor"/>-->
-        <!--        <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector"-->
-        <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLClassSelectorManipulator"/>-->
-        <!--        <lang.foldingBuilder language="WXSS"-->
-        <!--                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXSSBracketFolding"/>-->
-        <!--        <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue"-->
-        <!--                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXSSValueManipulator"/>-->
-        <!--                <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>-->
+        <completion.contributor language="WXSS"
+                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXSSCompletionContributor"/>
+        <lang.refactoringSupport language="WXSS"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.WXSSSelectorRefactoring"/>
+        <lang.namesValidator language="WXSS"
+                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.validator.WXSSNamesValidator"/>
+        <lang.findUsagesProvider language="WXSS"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSFindUsageProvider"/>
+        <psi.referenceContributor
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXSSReferenceContributor"/>
+        <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXMLClassSelectorManipulator"/>
+        <lang.foldingBuilder language="WXSS"
+                             implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXSSBracketFolding"/>
+        <lang.elementManipulator forClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue"
+                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.WXSSValueManipulator"/>
+        <referencesSearch implementation="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXSSElementSearcher"/>
+        <lang.inspectionSuppressor language="WXSS"
+                                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"/>
     </extensions>
 </idea-plugin>
