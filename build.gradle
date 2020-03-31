@@ -158,11 +158,13 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 添加了WXML的代码折叠功能 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
+    <li> 修复自定义组件不会自动完成公共属性事件和wx:前缀的属性的错误 </li>
+    <li> wxml 类名自动完成不会再列举已经存在的类名 </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Added WXML code folding function <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
+    <li> Fixed a bug where custom components would not autocomplete public property events and wx: prefixed properties </li>
+    <li> WXML Class name autocompletion will no longer list existing class names </li>
 </ul>
 """
     pluginDescription = """
