@@ -90,8 +90,8 @@
         <!--        <lang.braceMatcher language="WXSS"-->
         <!--                           implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBraceMatcher"/>-->
         <!--        <quoteHandler fileType="WXSS" className="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSDoubleQuoteHandler"/>-->
-        <!--        <lang.formatter language="WXSS"-->
-        <!--                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>-->
+        <lang.formatter language="WXSS"
+                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
         <!--        <completion.contributor language="WXSS"-->
         <!--                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXSSCompletionContributor"/>-->
         <lang.namesValidator language="WXSS"
