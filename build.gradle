@@ -150,7 +150,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "2.2.4"
+version = "3.0.0"
 
 patchPluginXml {
     sinceBuild = "193"
@@ -158,12 +158,16 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
+    <li> 重新定义wxss语言，使其继承自css，获得css的基本功能，支持完整的css语法，兼容rpx单位（在wxss中的标签选择器的自动完成会列举html中的标签） </li>
+    <li> WXSS文件添加面包屑导航 </li>
     <li> 修复自定义组件不会自动完成公共属性事件和wx:前缀的属性的错误 </li>
     <li> wxml 类名自动完成不会再列举已经存在的类名 </li>
     <li> 修复在WXML中无法重命名包含的多个引用的Class或Id的错误 </li>
 </ul>
 <br/>
 <ul lang='en'>
+    <li> Redefine the wxss language to inherit from css, get the basic functions of css, support the full css syntax, compatible with rpx units (the auto-completion of the tag selector in wxss will list the tags in html) </li>
+    <li> WXSS file adds breadcrumb navigation </li>
     <li> Fixed a bug where custom components would not autocomplete public property events and wx: prefixed properties </li>
     <li> WXML Class name autocompletion will no longer list existing class names </li>
     <li> Fixed bug where multiple referenced Classes or Id could not be renamed in WXML </li>
