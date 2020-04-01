@@ -78,13 +78,13 @@ import com.intellij.codeInspection.LocalQuickFixOnPsiElement
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFile
 import com.intellij.psi.css.CssElementVisitor
 import com.intellij.psi.css.CssImport
 import com.intellij.psi.css.CssString
+import com.intellij.psi.css.resolve.StylesheetFileReference
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
@@ -118,31 +118,21 @@ class WXSSInvalidImportInspection : LocalInspectionTool() {
                             string, string.contentRange(), this@WXSSInvalidImportInspection.displayName
                     )
                 } else {
-                    for (reference in references) {
-                        val resolveElement = reference.resolve()
-                        if (resolveElement is PsiDirectory) {
-                            continue
-                        } else if (resolveElement is PsiFile) {
-                            if (resolveElement is WXSSPsiFile) {
-                                if (resolveElement.virtualFile == findAppFile(
-                                                resolveElement.project,
-                                                RelateFileType.WXSS
-                                        )) {
-                                    holder.registerProblem(
-                                            string, string.contentRange(), "app.wxss是全局样式，无需导入",
-                                            DeleteImportQuickFix(wxssImport)
-                                    )
-                                } else {
-                                    continue
-                                }
-                            } else {
-                                holder.registerProblem(string, string.contentRange(), "仅能导入wxss文件")
-                            }
-                        } else {
+                    val resolveElement = references.lastOrNull {
+                        it !is StylesheetFileReference
+                    }?.fileReferenceSet?.resolve()
+                    if (resolveElement is WXSSPsiFile) {
+                        if (resolveElement.virtualFile == findAppFile(
+                                        resolveElement.project,
+                                        RelateFileType.WXSS
+                                )) {
                             holder.registerProblem(
-                                    string, reference.rangeInElement, "路径无效", *reference.quickFixes
+                                    string, string.contentRange(), "app.wxss是全局样式，无需导入",
+                                    DeleteImportQuickFix(wxssImport)
                             )
                         }
+                    } else {
+                        holder.registerProblem(string, string.contentRange(), "无效的@import")
                     }
                 }
             }
