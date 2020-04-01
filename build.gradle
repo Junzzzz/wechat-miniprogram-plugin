@@ -150,11 +150,10 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.0.0"
+version = "3.0.0_201-beta"
 
 patchPluginXml {
-    sinceBuild = "193"
-    untilBuild = "193.*"
+    sinceBuild = "201"
     version = version
     changeNotes = """
 <ul lang='cn'>
