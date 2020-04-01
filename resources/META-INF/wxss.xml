@@ -89,6 +89,8 @@
                         implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder"/>
         <completion.contributor language="CSS"
                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.completion.WXSSCompletionContributor"/>
+        <css.elementDescriptorProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSElementDescriptionProvider"/>
         <lang.namesValidator language="WXSS"
                              implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.validator.WXSSNamesValidator"/>
         <psi.referenceContributor
@@ -100,7 +102,6 @@
         <css.classOrIdUsagesProvider order="first"
                                      implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSIdOrClassUsageProvider"/>
         <renameHandler implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXMLIdOrClassRenameHandler"/>
-        <!--        <css.inclusionContext implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSInclusionContext"/>-->
         <useScopeOptimizer implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSScopeOptimizer"/>
         <lang.foldingBuilder language="WXSS"
                              implementationClass="com.intellij.psi.css.impl.util.editor.CssFoldingBuilder"/>

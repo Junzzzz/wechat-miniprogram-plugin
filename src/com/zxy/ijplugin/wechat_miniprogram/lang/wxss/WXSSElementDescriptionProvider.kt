@@ -71,116 +71,46 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.completion
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
-import com.intellij.codeInsight.completion.*
-import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.icons.AllIcons
-import com.intellij.patterns.PlatformPatterns
-import com.intellij.patterns.PsiElementPattern
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
-import com.intellij.psi.css.CssClass
-import com.intellij.psi.css.CssIdSelector
-import com.intellij.psi.css.impl.CssElementTypes
-import com.intellij.psi.xml.XmlAttributeValue
-import com.intellij.util.ProcessingContext
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.intellij.psi.css.CssElementDescriptorProvider
+import com.intellij.psi.css.CssSimpleSelector
+import com.intellij.psi.xml.XmlTag
+import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
+import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
-import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLClassReference
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeNameCompletionProvider.Companion.IGNORE_COMMON_ATTRIBUTE_TAG_NAMES
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
-
-class WXSSCompletionContributor : CompletionContributor() {
-
-    init {
-        // wxss 类名
-        extend(
-                CompletionType.BASIC,
-                PlatformPatterns.psiElement(CssElementTypes.CSS_IDENT)
-                        .inWXSSFile()
-                        .withParent(CssClass::class.java),
-                object : CompletionProvider<CompletionParameters>() {
-                    override fun addCompletions(
-                            parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
-                    ) {
-                        val psiElement = parameters.position
-                        val wxssPsiFile = (psiElement.containingFile as? WXSSPsiFile) ?: return
-
-                        // 收集wxss文件中的所有可见的类名
-                        result.addAllElements(
-                                WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile).asSequence().flatMap {
-                                    it.findChildrenOfType<CssClass>().asSequence()
-                                }.mapNotNull {
-                                    it.name
-                                }.distinct().map {
-                                    LookupElementBuilder.create(it).withPresentableText(it)
-                                            .withIcon(AllIcons.Xml.Css_class)
-                                }.toMutableList()
-                        )
-
-                        // 收集wxml文件中的所有可见的类名
-                        val wxmlVirtualFile = findRelateFile(
-                                wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.WXML
-                        )
-                                ?: return
-                        val wxmlPsiFile = PsiManager.getInstance(psiElement.project).findFile(
-                                wxmlVirtualFile
-                        ) as? WXMLPsiFile ?: return
-
-                        result.addAllElements(
-                                wxmlPsiFile.findChildrenOfType<XmlAttributeValue>().asSequence()
-                                        .flatMap { it.references.asSequence() }.filterIsInstance<WXMLClassReference>()
-                                        .map {
-                                            it.rangeInElement.substring(it.element.text)
-                                        }.distinct().map {
-                                            LookupElementBuilder.create(it).withPresentableText(".$it")
-                                                    .withIcon(AllIcons.Xml.Css_class)
-                                        }.toMutableList()
-                        )
-                    }
-
-                })
-
-        // id
-        extend(
-                CompletionType.BASIC,
-                PlatformPatterns.psiElement(CssElementTypes.CSS_HASH)
-                        .inWXSSFile()
-                        .withParent(CssIdSelector::class.java),
-                object : CompletionProvider<CompletionParameters>() {
-                    override fun addCompletions(
-                            parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
-                    ) {
-                        val psiElement = parameters.position
-                        val wxssPsiFile = (psiElement.containingFile as? WXSSPsiFile) ?: return
-
-                        // 收集wxml文件中的所有可见的Id
-                        val wxmlVirtualFile = findRelateFile(
-                                wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.WXML
-                        )
-                                ?: return
-                        val wxmlPsiFile = PsiManager.getInstance(psiElement.project).findFile(
-                                wxmlVirtualFile
-                        ) as? WXMLPsiFile ?: return
-                        result.addAllElements(wxmlPsiFile.findChildrenOfType<XmlAttributeValue>().asSequence().flatMap {
-                            it.references.asSequence()
-                        }.map {
-                            it.rangeInElement.substring(it.element.text)
-                        }.distinct().map {
-                            LookupElementBuilder.create(it).withPresentableText("#$it").withIcon(AllIcons.Xml.Html_id)
-                        }.toMutableList())
-                    }
-
-                }
-        )
-
+class WXSSElementDescriptionProvider : CssElementDescriptorProvider() {
+    override fun getDeclarationsForSimpleSelector(p0: CssSimpleSelector): Array<PsiElement> {
+        return PsiElement.EMPTY_ARRAY
     }
-}
 
-fun PsiElementPattern.Capture<out PsiElement>.inWXSSFile(): PsiElementPattern.Capture<out PsiElement> {
-    return this.inFile(PlatformPatterns.psiFile(WXSSPsiFile::class.java))
+    override fun isMyContext(element: PsiElement?): Boolean {
+        return element != null && isWechatMiniProgramContext(element)
+    }
+
+    override fun isPossibleSelector(selector: String, context: PsiElement): Boolean {
+        return selector == "page" || WXMLMetadata.getElementDescriptions(context.project).any { it.name == selector }
+    }
+
+    override fun getSimpleSelectors(context: PsiElement): Array<String> {
+        val result = mutableListOf("page")
+        val wxssPsiFile = (context.containingFile as? WXSSPsiFile)
+        if (wxssPsiFile != null) {
+            val wxmlPsiFile = findRelatePsiFile<WXMLPsiFile>(wxssPsiFile)
+            if (wxmlPsiFile != null) {
+                result.addAll(wxmlPsiFile.findChildrenOfType<XmlTag>().distinctBy { it.name }.map {
+                    it.name
+                }.filter {
+                    // 忽略部分标签
+                    !IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(it)
+                })
+            }
+        }
+        return result.toTypedArray()
+    }
 }
