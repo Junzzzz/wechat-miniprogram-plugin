@@ -85,8 +85,8 @@
         <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXSSIdChooseByNameContributor"/>-->
         <!--        <gotoSymbolContributor-->
         <!--                implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WXSSClassChooseByNameContributor"/>-->
-        <!--        <lang.commenter language="WXSS"-->
-        <!--                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>-->
+        <lang.commenter language="WXSS"
+                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSCommenter"/>
         <!--        <lang.braceMatcher language="WXSS"-->
         <!--                           implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBraceMatcher"/>-->
         <!--        <quoteHandler fileType="WXSS" className="com.zxy.ijplugin.wechat_miniprogram.editor.WXSSDoubleQuoteHandler"/>-->
