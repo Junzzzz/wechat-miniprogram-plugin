@@ -150,6 +150,8 @@ class WXSSCompletionContributor : CompletionContributor() {
                     }
 
                 })
+
+        // rpx
         extend(
                 CompletionType.BASIC,
                 PlatformPatterns.psiElement(CssElementTypes.CSS_IDENT).afterLeafSkipping(
