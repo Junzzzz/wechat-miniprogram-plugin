@@ -95,8 +95,6 @@
                              implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.validator.WXSSNamesValidator"/>
         <psi.referenceContributor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXSSReferenceContributor"/>
-        <!--        <lang.ast.factory language="CSS" order="first"-->
-        <!--                          implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WxssAstFactory"/>-->
         <lang.inspectionSuppressor language="WXSS"
                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"/>
         <css.classOrIdUsagesProvider order="first"

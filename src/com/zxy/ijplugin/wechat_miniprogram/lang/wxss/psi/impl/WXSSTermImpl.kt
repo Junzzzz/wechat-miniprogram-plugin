@@ -71,7 +71,7 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl
 
 import com.intellij.codeInsight.completion.CompletionUtilCoreImpl
 import com.intellij.css.util.CssConstants
@@ -121,7 +121,9 @@ class WXSSTermImpl : CssTermImpl() {
                             return CssTermTypes.NUMBER
                         }
                         if (CssElementTypes.CSS_IDENT === lastTreeChild.elementType) {
-                            val suffixType = getTypeBySuffix(lastTreeChild.text)
+                            val suffixType = getTypeBySuffix(
+                                    lastTreeChild.text
+                            )
                             return if (suffixType === CssTermType.UNKNOWN) CssTermTypes.NUMBER_WITH_UNKNOWN_UNIT else suffixType
                         }
                         if (CssElementTypes.CSS_PERCENT === lastTreeChild.elementType) {
@@ -188,16 +190,22 @@ class WXSSTermImpl : CssTermImpl() {
                                     val lengthSuffixText = StringUtil.toLowerCase(
                                             lastNumberTermNode.text
                                     )
-                                    if (getTypeBySuffix(lengthSuffixText) == CssTermTypes.LENGTH) {
+                                    if (getTypeBySuffix(
+                                                    lengthSuffixText
+                                            ) == CssTermTypes.LENGTH) {
                                         return CssTermTypes.NEGATIVE_LENGTH
                                     }
-                                    if (getTypeBySuffix(lengthSuffixText) == CssTermTypes.ANGLE) {
+                                    if (getTypeBySuffix(
+                                                    lengthSuffixText
+                                            ) == CssTermTypes.ANGLE) {
                                         return CssTermTypes.NEGATIVE_ANGLE
                                     }
                                     val suffixText = StringUtil.toLowerCase(
                                             lastNumberTermNode.text
                                     )
-                                    val suffixType = getTypeBySuffix(suffixText)
+                                    val suffixType = getTypeBySuffix(
+                                            suffixText
+                                    )
                                     return if (suffixType === CssTermType.UNKNOWN) CssTermTypes.NUMBER_WITH_UNKNOWN_UNIT else suffixType
                                 }
                                 if (CssElementTypes.CSS_PERCENT === lastNumberTermNode.elementType) {

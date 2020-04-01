@@ -84,7 +84,7 @@ import com.intellij.psi.css.impl.CssElementTypes
 import com.intellij.psi.css.impl.util.completion.TimeUserLookup
 import com.intellij.psi.css.impl.util.editor.CssFormattingModelBuilder
 import com.intellij.psi.xml.XmlTokenType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTermImpl
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl.WXSSTermImpl
 
 open class WXSSPropertyBlock(
         _node: ASTNode?, indent: Indent?, extension: CssFormattingModelBuilder.CssFormattingExtension?,
