@@ -77,12 +77,12 @@ import com.intellij.navigation.ChooseByNameContributor
 import com.intellij.navigation.NavigationItem
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
+import com.intellij.psi.css.CssIdSelector
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.impl.WXSSIdSelectorImpl
 
 
 class WXSSIdChooseByNameContributor : ChooseByNameContributor {
@@ -90,24 +90,24 @@ class WXSSIdChooseByNameContributor : ChooseByNameContributor {
     override fun getItemsByName(
             name: String?, pattern: String?, project: Project, includeNonProjectItems: Boolean
     ): Array<NavigationItem> {
-        val idSelectors = getIdSelectorsByProject(project).filter { it.lastChild.text==name }
+        val idSelectors = getIdSelectorsByProject(project).filter { it.name == name }
         return idSelectors.toTypedArray()
     }
 
     override fun getNames(project: Project, includeNonProjectItems: Boolean): Array<String> {
         return getIdSelectorsByProject(project).mapNotNull { wxssIdSelector ->
-            wxssIdSelector.id
+            wxssIdSelector.name
         }.toTypedArray()
     }
 
-    private fun getIdSelectorsByProject(project: Project): List<WXSSIdSelectorImpl> {
+    private fun getIdSelectorsByProject(project: Project): List<CssIdSelector> {
         val virtualFiles = FileTypeIndex.getFiles(
                 WXSSFileType.INSTANCE, GlobalSearchScope.allScope(project)
         )
         return virtualFiles.flatMap { virtualFile ->
             val wxssFile = PsiManager.getInstance(project).findFile(virtualFile) as WXSSPsiFile?
             wxssFile?.let {
-                PsiTreeUtil.findChildrenOfType(wxssFile, WXSSIdSelectorImpl::class.java)
+                PsiTreeUtil.findChildrenOfType(wxssFile, CssIdSelector::class.java)
             } ?: emptyList()
         }
     }

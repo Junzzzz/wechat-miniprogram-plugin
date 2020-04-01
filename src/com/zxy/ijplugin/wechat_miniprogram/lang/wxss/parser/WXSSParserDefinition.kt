@@ -77,17 +77,13 @@ import com.intellij.lang.css.CSSParserDefinition
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
-import com.intellij.psi.tree.TokenSet
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 
 class WXSSParserDefinition : CSSParserDefinition() {
 
     companion object {
         val iFileElementType = IFileElementType(WXSSLanguage.INSTANCE)
-        val COMMENTS = TokenSet.create(WXSSTypes.COMMENT)
-        val STRINGS = TokenSet.create(WXSSTypes.STRING)
     }
 
 //    override fun createParser(p0: Project?): PsiParser {

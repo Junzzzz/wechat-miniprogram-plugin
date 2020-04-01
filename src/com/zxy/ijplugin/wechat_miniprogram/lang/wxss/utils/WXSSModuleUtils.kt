@@ -75,13 +75,13 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
+import com.intellij.psi.css.CssImport
+import com.intellij.psi.css.CssString
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSImport
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStringText
 
 object WXSSModuleUtils {
 
@@ -98,9 +98,9 @@ object WXSSModuleUtils {
     }
 
     private fun addImportedFiles(wxssPsiFile: WXSSPsiFile, result: MutableCollection<WXSSPsiFile>) {
-        val imports = PsiTreeUtil.findChildrenOfType(wxssPsiFile, WXSSImport::class.java)
+        val imports = PsiTreeUtil.findChildrenOfType(wxssPsiFile, CssImport::class.java)
         imports.mapNotNull { wxssImport ->
-            val references = PsiTreeUtil.findChildOfType(wxssImport, WXSSStringText::class.java)?.references
+            val references = PsiTreeUtil.findChildOfType(wxssImport, CssString::class.java)?.references
                     ?: emptyArray()
             val resolveResult = references.find { it is FileReference }?.let { it as FileReference? }
                     ?.lastFileReference?.resolve()
