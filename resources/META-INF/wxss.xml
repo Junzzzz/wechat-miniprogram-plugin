@@ -103,5 +103,7 @@
         <useScopeOptimizer implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSScopeOptimizer"/>
         <lang.foldingBuilder language="WXSS"
                              implementationClass="com.intellij.psi.css.impl.util.editor.CssFoldingBuilder"/>
+        <breadcrumbsInfoProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSBreadcrumbsInfoProvider"/>
     </extensions>
 </idea-plugin>
