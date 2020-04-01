@@ -78,11 +78,17 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.icons.AllIcons
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.patterns.PsiElementPattern
+import com.intellij.patterns.StandardPatterns
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.css.CssClass
+import com.intellij.psi.css.CssDeclaration
 import com.intellij.psi.css.CssIdSelector
+import com.intellij.psi.css.CssTerm
 import com.intellij.psi.css.impl.CssElementTypes
+import com.intellij.psi.css.impl.CssTermImpl
+import com.intellij.psi.css.impl.CssTermTypes
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
@@ -144,6 +150,29 @@ class WXSSCompletionContributor : CompletionContributor() {
                     }
 
                 })
+        extend(
+                CompletionType.BASIC,
+                PlatformPatterns.psiElement(CssElementTypes.CSS_IDENT).afterLeafSkipping(
+                        StandardPatterns.alwaysFalse<Any>(),
+                        PlatformPatterns.psiElement(CssElementTypes.CSS_NUMBER)
+                ).withSuperParent(2, CssTerm::class.java).inside(
+                        CssDeclaration::class.java
+                ).inWXSSFile(),
+                object : CompletionProvider<CompletionParameters>() {
+                    override fun addCompletions(
+                            parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
+                    ) {
+                        val element = parameters.position
+                        val termImpl = PsiTreeUtil.getParentOfType(
+                                element,
+                                CssTermImpl::class.java
+                        ) ?: return
+                        if (termImpl.termType == CssTermTypes.LENGTH) {
+                            result.addElement(LookupElementBuilder.create("rpx"))
+                        }
+                    }
+                }
+        )
 
         // id
         extend(
