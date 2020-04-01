@@ -82,13 +82,15 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFile
+import com.intellij.psi.css.CssElementVisitor
+import com.intellij.psi.css.CssImport
+import com.intellij.psi.css.CssString
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSImport
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSVisitor
 import com.zxy.ijplugin.wechat_miniprogram.utils.contentRange
+import com.zxy.ijplugin.wechat_miniprogram.utils.findChildOfType
 
 /**
  * 检查wxss的import是否有效
@@ -100,48 +102,46 @@ class WXSSInvalidImportInspection : LocalInspectionTool() {
     }
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
-        return object : WXSSVisitor() {
-            override fun visitImport(wxssImport: WXSSImport) {
-                val string = wxssImport.string ?: return
-                val stringText = string.stringText
-                if (stringText == null || stringText.text.isBlank()) {
+        return object : CssElementVisitor() {
+            override fun visitCssImport(wxssImport: CssImport) {
+                val string = wxssImport.findChildOfType<CssString>() ?: return
+                val stringText = string.value
+                if (stringText.isBlank()) {
                     holder.registerProblem(
                             string, TextRange.allOf(string.text), this@WXSSInvalidImportInspection.displayName
                     )
                     return
                 }
-                val references = stringText.references
+                val references = string.references.filterIsInstance<FileReference>()
                 if (references.isEmpty()) {
                     holder.registerProblem(
-                            stringText, stringText.contentRange(), this@WXSSInvalidImportInspection.displayName
+                            string, string.contentRange(), this@WXSSInvalidImportInspection.displayName
                     )
                 } else {
                     for (reference in references) {
-                        if (reference is FileReference) {
-                            val resolveElement = reference.resolve()
-                            if (resolveElement is PsiDirectory) {
-                                continue
-                            } else if (resolveElement is PsiFile) {
-                                if (resolveElement is WXSSPsiFile) {
-                                    if (resolveElement.virtualFile == findAppFile(
-                                                    resolveElement.project,
-                                                    RelateFileType.WXSS
-                                            )) {
-                                        holder.registerProblem(
-                                                stringText, stringText.contentRange(), "app.wxss是全局样式，无需导入",
-                                                DeleteImportQuickFix(wxssImport)
-                                        )
-                                    } else {
-                                        continue
-                                    }
+                        val resolveElement = reference.resolve()
+                        if (resolveElement is PsiDirectory) {
+                            continue
+                        } else if (resolveElement is PsiFile) {
+                            if (resolveElement is WXSSPsiFile) {
+                                if (resolveElement.virtualFile == findAppFile(
+                                                resolveElement.project,
+                                                RelateFileType.WXSS
+                                        )) {
+                                    holder.registerProblem(
+                                            string, string.contentRange(), "app.wxss是全局样式，无需导入",
+                                            DeleteImportQuickFix(wxssImport)
+                                    )
                                 } else {
-                                    holder.registerProblem(stringText, stringText.contentRange(), "仅能导入wxss文件")
+                                    continue
                                 }
                             } else {
-                                holder.registerProblem(
-                                        stringText, reference.rangeInElement, "路径无效", *reference.quickFixes
-                                )
+                                holder.registerProblem(string, string.contentRange(), "仅能导入wxss文件")
                             }
+                        } else {
+                            holder.registerProblem(
+                                    string, reference.rangeInElement, "路径无效", *reference.quickFixes
+                            )
                         }
                     }
                 }
@@ -149,7 +149,7 @@ class WXSSInvalidImportInspection : LocalInspectionTool() {
         }
     }
 
-    class DeleteImportQuickFix(wxssImport: WXSSImport) :
+    class DeleteImportQuickFix(wxssImport: CssImport) :
             LocalQuickFixOnPsiElement(wxssImport) {
 
         override fun getFamilyName(): String {
