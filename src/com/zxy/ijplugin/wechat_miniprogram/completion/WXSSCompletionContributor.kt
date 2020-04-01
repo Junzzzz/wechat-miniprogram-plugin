@@ -167,7 +167,8 @@ class WXSSCompletionContributor : CompletionContributor() {
                                 element,
                                 CssTermImpl::class.java
                         ) ?: return
-                        if (termImpl.termType == CssTermTypes.LENGTH) {
+                        val termType = termImpl.termType
+                        if (termType == CssTermTypes.NUMBER_WITH_UNKNOWN_UNIT) {
                             result.addElement(LookupElementBuilder.create("rpx"))
                         }
                     }
