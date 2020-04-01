@@ -71,10 +71,11 @@
  *    See the Mulan PSL v1 for more details.
  */
 
+@file:Suppress("unused")
+
 package com.zxy.ijplugin.wechat_miniprogram.lang.utils
 
 import com.intellij.psi.PsiElement
-
 
 fun PsiElement.findPrevSibling(predicate: (psiElement: PsiElement) -> Boolean): PsiElement? {
     var prev = this.prevSibling

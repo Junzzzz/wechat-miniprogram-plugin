@@ -84,7 +84,3 @@ fun <R : Any> ASTNode.mapChildren(transform: (ASTNode) -> R?): List<R?> {
     }
     return list
 }
-
-fun <R:Any> ASTNode.mapChildrenNotNull(transform: (ASTNode) -> R?): List<R> {
-    return this.mapChildren(transform).filterNotNull()
-}

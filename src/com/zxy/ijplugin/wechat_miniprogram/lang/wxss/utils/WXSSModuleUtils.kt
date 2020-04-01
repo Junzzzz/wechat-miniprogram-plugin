@@ -73,14 +73,10 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils
 
-import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiManager
 import com.intellij.psi.css.CssImport
 import com.intellij.psi.css.CssString
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
 import com.intellij.psi.util.PsiTreeUtil
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 
 object WXSSModuleUtils {
@@ -120,19 +116,6 @@ object WXSSModuleUtils {
                 addImportedFiles(it, result)
             }
         }
-    }
-
-    /**
-     * 查找app.wxss 以及 其导入的wxss文件
-     */
-    fun findAppFileWithImportedFiles(project: Project): Collection<WXSSPsiFile> {
-        val appWXSSFile = findAppFile(project, RelateFileType.WXSS)
-        val psiManager = PsiManager.getInstance(project)
-        val appWXSSPsiFile = appWXSSFile?.let { psiManager.findFile(appWXSSFile) }
-        if (appWXSSPsiFile is WXSSPsiFile) {
-            return findImportedFilesWithSelf(appWXSSPsiFile)
-        }
-        return emptyList()
     }
 
 }
