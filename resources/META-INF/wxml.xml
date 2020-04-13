@@ -88,8 +88,6 @@
         <completion.contributor id="wxml"
                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeCompletionContributor"
                                 language="WXML" order="before xmlNonFirst"/>
-        <highlightErrorFilter
-                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension.WXMLHighlightErrorFilter"/>
         <xml.xmlSuppressionProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.inspection.WXMLXmlSuppressionProvider"/>
         <lang.syntaxHighlighterFactory
