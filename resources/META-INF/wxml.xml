@@ -76,6 +76,8 @@
         <fileType name="WXML" extensions="wxml" language="WXML"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
                   fieldName="INSTANCE"/>
+        <fileType name="QML" extensions="qml" fieldName="INSTANCE" language="WXML"
+                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType"/>
         <xml.elementDescriptorProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptorProvider"/>
         <xml.xmlExtension implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension.WxmlXmlExtension"/>

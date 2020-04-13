@@ -73,30 +73,18 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
-import com.intellij.ide.highlighter.XmlLikeFileType
-import javax.swing.Icon
-
-open class WXMLFileType : XmlLikeFileType(WXMLLanguage.INSTANCE) {
-
-    companion object {
-        @JvmField
-        val INSTANCE = WXMLFileType()
-    }
-
-    override fun getIcon(): Icon? {
-        return WXMLIcons.FILE
-    }
+class QMLFileType : WXMLFileType() {
 
     override fun getName(): String {
-        return "WXML"
+        return "QML"
     }
 
     override fun getDefaultExtension(): String {
-        return "wxml"
+        return "qml"
     }
 
     override fun getDescription(): String {
-        return "Wechat xml template"
+        return "QQ Markup Language"
     }
 
 }
