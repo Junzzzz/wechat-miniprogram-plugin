@@ -73,30 +73,18 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
-import com.intellij.openapi.fileTypes.LanguageFileType
-import javax.swing.Icon
-
-open class WXSSFileType : LanguageFileType(WXSSLanguage.INSTANCE) {
-
-    companion object {
-        @JvmField
-        val INSTANCE = WXSSFileType()
-    }
-
-    override fun getIcon(): Icon? {
-        return WXSSIcons.FILE
-    }
+class QSSFileType : WXSSFileType() {
 
     override fun getName(): String {
-        return "WXSS"
+        return "QSS"
     }
 
     override fun getDefaultExtension(): String {
-        return "wxss"
+        return "qss"
     }
 
     override fun getDescription(): String {
-        return "WXSS file"
+        return "QQ Style Sheets"
     }
 
 }
