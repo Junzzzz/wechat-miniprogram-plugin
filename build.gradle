@@ -118,8 +118,8 @@ apply plugin: "kotlin"
 intellij {
 //    localPath "C:\\Users\\Administrator\\Downloads\\ideaIU-LATEST-EAP-SNAPSHOT"
     type = "IU"
-//    localPath = localIdeaPath
-    version 'IU-LATEST-EAP-SNAPSHOT'
+    localPath = localIdeaPath
+//    version 'IU-LATEST-EAP-SNAPSHOT'
     pluginName 'wechat mini program'
     downloadSources true
     updateSinceUntilBuild false
@@ -150,7 +150,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.1"
+version = "3.0.1"
 
 patchPluginXml {
     sinceBuild = "201"
