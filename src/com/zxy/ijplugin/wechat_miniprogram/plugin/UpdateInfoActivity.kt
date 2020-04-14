@@ -94,7 +94,7 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
 
     override fun runActivity(project: Project) {
         if (!isWechatMiniProgramContext(project)) return
-        val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(pluginId))!!
+        val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(pluginId)) ?: return
         val propertiesComponent = PropertiesComponent.getInstance()
         val lastVersion = propertiesComponent.getValue(LAST_VERSION_KEY)
         val version = pluginDescriptor.version
