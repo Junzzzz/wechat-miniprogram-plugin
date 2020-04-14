@@ -73,7 +73,14 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
+
 class QSSFileType : WXSSFileType() {
+
+    companion object {
+        @JvmField
+        val INSTANCE = WXSFileType()
+    }
 
     override fun getName(): String {
         return "QSS"

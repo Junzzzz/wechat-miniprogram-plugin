@@ -73,7 +73,14 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
+
 class QMLFileType : WXMLFileType() {
+
+    companion object {
+        @JvmField
+        val INSTANCE = WXSFileType()
+    }
 
     override fun getName(): String {
         return "QML"

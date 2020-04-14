@@ -73,6 +73,12 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxs
 
 class QSFileType : WXSFileType() {
+
+    companion object {
+        @JvmField
+        val INSTANCE = WXSFileType()
+    }
+
     override fun getName(): String {
         return "QS"
     }
