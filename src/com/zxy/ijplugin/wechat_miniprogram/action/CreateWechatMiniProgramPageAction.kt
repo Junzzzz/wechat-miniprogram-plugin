@@ -84,7 +84,6 @@ import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
 import javax.swing.JComponent
-import javax.swing.JTextField
 import kotlin.properties.Delegates
 
 /**

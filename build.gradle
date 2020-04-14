@@ -118,8 +118,8 @@ apply plugin: "kotlin"
 intellij {
 //    localPath "C:\\Users\\Administrator\\Downloads\\ideaIU-LATEST-EAP-SNAPSHOT"
     type = "IU"
-//    localPath = localIdeaPath
-    version '2019.3.3'
+    localPath = localIdeaPath
+//    version 'IU-LATEST-EAP-SNAPSHOT'
     pluginName 'wechat mini program'
     downloadSources true
     updateSinceUntilBuild false
@@ -150,19 +150,21 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "2.2.4"
+version = "3.0.1"
 
 patchPluginXml {
-    sinceBuild = "193"
-    untilBuild = "193.*"
+    sinceBuild = "201"
+    untilBuild = "201.*"
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 添加了WXML的代码折叠功能 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
+    <li> 修复style属性没有自动完成得错误 </li>
+    <li> 修复会导致一些语法错误不会正确显示得错误 </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Added WXML code folding function <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1CS9G">Issue</a> </li>
+    <li> Fix the error that the style attribute is not automatically completed </li>
+    <li> Fix will cause some syntax errors not to be displayed correctly </li>
 </ul>
 """
     pluginDescription = """

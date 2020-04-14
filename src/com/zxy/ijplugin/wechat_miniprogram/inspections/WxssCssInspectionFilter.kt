@@ -71,37 +71,23 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
+package com.zxy.ijplugin.wechat_miniprogram.inspections
 
-import com.intellij.formatting.*
-import com.intellij.lang.ASTNode
-import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
+import com.intellij.psi.PsiElement
+import com.intellij.psi.css.CssElement
+import com.intellij.psi.css.CssTerm
+import com.intellij.psi.css.inspections.CssApiBaseInspection
+import com.intellij.psi.css.inspections.CssInspectionFilter
+import com.intellij.psi.css.inspections.invalid.CssInvalidPropertyValueInspection
+import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
-class WXSSKeyframeBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings, alignment: Alignment? = null) :
-        WXSSAbstractBlock(node, null, alignment) {
-    override fun isLeaf(): Boolean {
-        return false
+class WxssCssInspectionFilter : CssInspectionFilter() {
+    override fun isSupported(clazz: Class<out CssApiBaseInspection>, element: PsiElement): Boolean {
+        // 忽略css对rpx单位的报错
+        return !(clazz.isAssignableFrom(
+                CssInvalidPropertyValueInspection::class.java
+        ) && element.findChildrenOfType<CssTerm>().flatMap { it.children.toList() }.any {
+            it is CssElement && it.text.endsWith("rpx")
+        })
     }
-
-    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
-        return if (node.elementType == WXSSTypes.STYLE_STATEMENT_SECTION) {
-            listOf(WXSSStyleStatementSectionBlock(node, this.codeStyleSettings))
-        } else {
-            listOf(WXSSLeafBlock(node))
-        }
-    }
-
-    override fun getSpacing(child1: Block?, child2: Block): Spacing? {
-        return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
-                .after(WXSSTypes.COMMA).spaces(1)
-                .before(WXSSTypes.STYLE_STATEMENT_SECTION).spaces(1)
-                .getSpacing(this, child1, child2)
-    }
-
-    override fun getIndent(): Indent? {
-        return Indent.getNormalIndent()
-    }
-
 }

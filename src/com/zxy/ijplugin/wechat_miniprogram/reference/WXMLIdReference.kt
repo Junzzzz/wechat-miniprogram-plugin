@@ -76,12 +76,12 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
+import com.intellij.psi.css.CssIdSelector
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlAttributeValue
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
 
 class WXMLIdReference(xmlAttributeValue: XmlAttributeValue, range: TextRange) :
@@ -89,14 +89,14 @@ class WXMLIdReference(xmlAttributeValue: XmlAttributeValue, range: TextRange) :
 
     override fun multiResolve(p0: Boolean): Array<ResolveResult> {
         val id = this.value
-        return getIdSelectorsFromRelatedWxssFile().filter { id == it.id }.map {
+        return getIdSelectorsFromRelatedWxssFile().filter { id == it.name }.map {
             PsiElementResolveResult(it)
         }.toTypedArray()
     }
 
     override fun isReferenceTo(element: PsiElement): Boolean {
         val cssId = this.value
-        if (element is WXSSIdSelector && element.id == cssId) {
+        if (element is CssIdSelector && element.name == cssId) {
             val wxmlFile = this.element.containingFile.virtualFile
             val wxssFile = findRelateFile(wxmlFile, RelateFileType.WXSS)
             if (this.containsSelector(element, wxssFile)) {
@@ -106,16 +106,16 @@ class WXMLIdReference(xmlAttributeValue: XmlAttributeValue, range: TextRange) :
         return false
     }
 
-    private fun containsSelector(selector: WXSSIdSelector, wxssFile: VirtualFile?): Boolean {
+    private fun containsSelector(selector: CssIdSelector, wxssFile: VirtualFile?): Boolean {
         val psiManager = PsiManager.getInstance(selector.project)
         val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
         val wxssPsiFiles = WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile as WXSSPsiFile)
         return wxssPsiFiles.any {
-            PsiTreeUtil.findChildrenOfType(it, WXSSIdSelector::class.java).contains(selector)
+            PsiTreeUtil.findChildrenOfType(it, CssIdSelector::class.java).contains(selector)
         }
     }
 
-    private fun getIdSelectorsFromRelatedWxssFile(): MutableCollection<WXSSIdSelector> {
+    private fun getIdSelectorsFromRelatedWxssFile(): MutableCollection<CssIdSelector> {
         val project = this.element.project
         val wxmlFile = this.element.containingFile.originalFile.virtualFile
         // 在wxml文件附近找同名的wxss文件
@@ -124,7 +124,7 @@ class WXMLIdReference(xmlAttributeValue: XmlAttributeValue, range: TextRange) :
         if (wxssFile != null) {
             val wxssPsiFile = psiManager.findFile(wxssFile)
             if (wxssPsiFile != null) {
-                return PsiTreeUtil.findChildrenOfType(wxssPsiFile, WXSSIdSelector::class.java)
+                return PsiTreeUtil.findChildrenOfType(wxssPsiFile, CssIdSelector::class.java)
             }
         }
         return mutableListOf()

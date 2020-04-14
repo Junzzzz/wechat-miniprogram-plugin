@@ -121,7 +121,7 @@ class ComponentFilesAutomaticRenamerFactory : AutomaticRenamerFactory {
 
 }
 
-class ComponentFilesAutomaticRenamer(private val psiFile: PsiFile, private val newName: String) : AutomaticRenamer() {
+class ComponentFilesAutomaticRenamer(private val psiFile: PsiFile, newName: String) : AutomaticRenamer() {
 
     init {
         val virtualFile = psiFile.originalFile.virtualFile

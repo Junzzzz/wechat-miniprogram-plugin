@@ -83,6 +83,4 @@ abstract class WechatMiniProgramInspectionBase : LocalInspectionTool() {
 
 }
 
-abstract class WXSSInspectionBase : WechatMiniProgramInspectionBase()
-
 abstract class WXMLInspectionBase : WechatMiniProgramInspectionBase()

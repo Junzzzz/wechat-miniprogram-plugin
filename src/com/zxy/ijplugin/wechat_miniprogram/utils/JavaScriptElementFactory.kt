@@ -76,7 +76,6 @@ package com.zxy.ijplugin.wechat_miniprogram.utils
 import com.intellij.lang.javascript.JavascriptLanguage
 import com.intellij.lang.javascript.psi.JSProperty
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 
@@ -88,10 +87,6 @@ object JavaScriptElementFactory {
                 $text
             })
         """.trimIndent()).findChildOfType()!!
-    }
-
-    fun createNewline(project: Project): PsiElement {
-        return createDummyFile(project,"\n").findElementAt(0)!!
     }
 
     private fun createDummyFile(project: Project, fileContent: String): PsiFile {

@@ -186,12 +186,6 @@ class WXMLMetadata(private val project: Project) {
             }
         }
 
-        fun findElementDescription(tagName: String, project: Project): WXMLElementDescription? {
-            return this.getElementDescriptions(project).find {
-                it.name == tagName
-            }
-        }
-
         fun findElementAttributeDescription(xmlTag: XmlTag, attributeName: String): WXMLElementAttributeDescription? {
             return this.findElementDescription(xmlTag)?.let { wxmlElementDescription ->
                 wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors.find {
@@ -213,8 +207,10 @@ class WXMLMetadata(private val project: Project) {
                 "animationstart", "animationiteration", "animationend", "touchforcechange"
         )
 
+        @Suppress("unused")
         val INNER_ELEMENT_NAMES = arrayOf("text")
 
+        @Suppress("unused")
         val ARIA_ATTRIBUTE = arrayOf(
                 "aria-hidden", "aria-role", "aria-label", "aria-checked", "aria-disabled",
                 "aria-describedby", "aria-expanded", "aria-haspopup", "aria-selected", "aria-required",
@@ -223,6 +219,7 @@ class WXMLMetadata(private val project: Project) {
                 "aria-multiselectable", "aria-labelledby"
         )
 
+        @Suppress("unused")
         val NATIVE_COMPONENTS = arrayOf(
                 "camera", "canvas", "input", "live-player", "live-pusher", "map", "textarea", "video"
         )
@@ -236,6 +233,7 @@ open class WXMLElementAttributeDescription(
         val default: Any? = null,
         val required: Boolean = false,
         val enums: Array<String> = emptyArray(),
+        @Suppress("unused")
         val requiredInEnums: Boolean = true,
         val description: String? = null
 ) {

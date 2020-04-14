@@ -200,7 +200,7 @@ internal fun handlerFileReferences(
             // 解析出文件夹
             val psiDirectory = fileReferences[fileReferences.size - 2].resolve()
             if (psiDirectory is PsiDirectory) {
-                val references = fileReferences.map { it as PsiReference }
+                val references: Array<PsiReference> = fileReferences.map { it }
                         .toTypedArray()
                 // 最后一个引用可能解析出多个文件 js|wxss|wxml|json
                 val lastFileReference = ComponentReference(psiElement, last.rangeInElement, psiDirectory, filename)

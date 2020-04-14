@@ -163,6 +163,8 @@
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
+        <fileType name="QS" fieldName="INSTANCE" extensions="qs" language="JavaScript 1.5"
+                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.QSFileType"/>
 
         <lang.parserDefinition language="WxmlJs"
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.parser.WxmlJsParserDefinition"/>

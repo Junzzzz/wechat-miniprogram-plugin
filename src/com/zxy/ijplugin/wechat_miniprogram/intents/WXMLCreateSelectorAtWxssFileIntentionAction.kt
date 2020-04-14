@@ -79,11 +79,11 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.codeStyle.CodeStyleManager
+import com.intellij.psi.css.CssElementFactory
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSElementFactory
 
 abstract class WXMLCreateSelectorAtWxssFileIntentionAction : IntentionAction, PsiElementBaseIntentionAction() {
 
@@ -97,21 +97,19 @@ abstract class WXMLCreateSelectorAtWxssFileIntentionAction : IntentionAction, Ps
 
     final override fun invoke(project: Project, editor: Editor?, p2: PsiElement) {
         val selectorText = this.getSelectorText()
-        val styleDefinition = WXSSElementFactory.createStyleDefinition(
-                project, "$selectorText{\n\n}"
-        )
+
+        val styleDefinition = CssElementFactory.getInstance(project)
+                .createRuleset("$selectorText{\n\t\n}", WXSSLanguage.INSTANCE)
         this.wxssPsiFile.add(
                 styleDefinition
         )
-        // 格式化代码
-        CodeStyleManager.getInstance(project).reformat(this.wxssPsiFile)
         // 将光标移动到样式定义的花括号中间
         val descriptor = OpenFileDescriptor(project, wxssPsiFile.virtualFile)
         val wxssFileEditor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true)
-        wxssFileEditor?.let {
-            PsiDocumentManager.getInstance(project).doPostponedOperationsAndUnblockDocument(it.document)
-            it.caretModel.moveToOffset(wxssPsiFile.lastChild.textOffset + 3 + selectorText.length)
-        }
+        styleDefinition.navigate(true)
+        wxssFileEditor?.caretModel?.moveToOffset(wxssPsiFile.textLength - 2)
+        // 格式化代码
+        CodeStyleManager.getInstance(project).reformat(this.wxssPsiFile)
     }
 
 }

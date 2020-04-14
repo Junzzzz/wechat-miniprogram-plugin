@@ -58,7 +58,7 @@
  *       i. Fill in the blanks in following statement, including insert your software name, the year of the first publication of your software, and your name identified as the copyright owner;
  *       ii. Create a file named “LICENSE” which contains the whole context of this License in the first directory of your software package;
  *       iii. Attach the statement to the appropriate annotated syntax at the beginning of each source file.
- *    
+ *
  *    Copyright (c) [2019] [name of copyright holder]
  *    [Software Name] is licensed under the Mulan PSL v1.
  *    You can use this software according to the terms and conditions of the Mulan PSL v1.
@@ -67,28 +67,35 @@
  *    THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  *    IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  *    PURPOSE.
- *    
+ *
  *    See the Mulan PSL v1 for more details.
  */
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
-import com.intellij.navigation.ItemPresentation
-import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
-import com.intellij.psi.presentation.java.SymbolPresentationUtil
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.search.ScopeOptimizer
+import com.intellij.psi.search.SearchScope
+import com.zxy.ijplugin.wechat_miniprogram.completion.isAppWxssFile
+import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
+import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
+import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 
-abstract class WXSSItemPresentation(private val element: PsiElement) : ItemPresentation {
-
-    override fun getLocationString(): String? {
-        val filePathPresentation = SymbolPresentationUtil.getFilePathPresentation(element.containingFile)
-        val psiDocumentManager = PsiDocumentManager.getInstance(element.project)
-        val document = psiDocumentManager.getDocument(element.containingFile)
-                ?: return filePathPresentation
-        return filePathPresentation + ":" + document.getLineNumber(element.textOffset)
-    }
-
-    override fun getPresentableText(): String? {
-        return element.text
+class WXSSScopeOptimizer : ScopeOptimizer {
+    override fun getRestrictedUseScope(element: PsiElement): SearchScope? {
+        if (isWechatMiniProgramContext(element) && element.containingFile is WXSSPsiFile) {
+            val wxssPsiFile = element.containingFile as WXSSPsiFile
+            return if (isAppWxssFile(wxssPsiFile.project, wxssPsiFile.virtualFile)) {
+                GlobalSearchScope.fileScope(wxssPsiFile)
+            } else {
+                GlobalSearchScope.filesScope(element.project, mutableListOf(
+                        wxssPsiFile, findRelatePsiFile<WXMLPsiFile>(wxssPsiFile),
+                        findAppFile<WXSSPsiFile>(element.project)
+                ).filterNotNull().map { it.virtualFile })
+            }
+        }
+        return null
     }
 }

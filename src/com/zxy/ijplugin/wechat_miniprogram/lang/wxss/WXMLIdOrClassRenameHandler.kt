@@ -71,22 +71,48 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
-import com.intellij.psi.util.parentOfType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStyleStatement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue
+import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiPolyVariantReference
+import com.intellij.refactoring.rename.PsiElementRenameHandler
+import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLClassReference
+import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLIdReference
 
-/**
- * 判断这个属性赋值语句是否是animation-name
- */
-fun WXSSStyleStatement.isAnimationNameStyleStatement(): Boolean {
-    return this.attributeName == "animation" || this.attributeName == "animation-name"
-}
+class WXMLIdOrClassRenameHandler : PsiElementRenameHandler() {
 
-/**
- * 判断这个属性值是否属于animation-name
- */
-fun WXSSValue.isAnimationNameValue(): Boolean {
-    return this.parentOfType<WXSSStyleStatement>()?.isAnimationNameStyleStatement() == true
+    companion object {
+        fun getIdOrClassReference(dataContext: DataContext): PsiPolyVariantReference? {
+            val reference = CommonDataKeys.PSI_FILE.getData(dataContext)
+                    ?.findReferenceAt(
+                            CommonDataKeys.EDITOR.getData(dataContext)?.caretModel?.offset ?: return null
+                    )
+            if (reference is WXMLIdReference) {
+                return reference
+            }
+            if (reference is WXMLClassReference) {
+                return reference
+            }
+            return null
+        }
+    }
+
+    override fun isAvailableOnDataContext(dataContext: DataContext): Boolean {
+        if (getIdOrClassReference(dataContext) != null) {
+            return true
+        }
+        return false
+    }
+
+    override fun invoke(project: Project, editor: Editor?, file: PsiFile?, dataContext: DataContext) {
+        val reference = getIdOrClassReference(dataContext)
+        val element = reference?.multiResolve(false)?.firstOrNull()?.element
+        if (element != null) {
+            invoke(element, project, null, editor)
+        }
+    }
 }

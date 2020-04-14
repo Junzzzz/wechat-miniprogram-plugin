@@ -71,28 +71,15 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
-import com.intellij.formatting.Block
-import com.intellij.formatting.Spacing
-import com.intellij.formatting.SpacingBuilder
-import com.intellij.lang.ASTNode
-import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
+import com.intellij.lang.Language
+import com.intellij.psi.css.impl.util.editor.CssBreadcrumbsInfoProvider
 
-class WXSSCalcExpressionBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
-        WXSSAbstractBlock(node, null, null) {
-    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
-        return null
-    }
+class WXSSBreadcrumbsInfoProvider : CssBreadcrumbsInfoProvider() {
 
-    override fun getSpacing(child1: Block?, child2: Block): Spacing? {
-        return SpacingBuilder(codeStyleSettings, WXSSLanguage.INSTANCE)
-                .around(WXSSTypes.OPERATOR).spaces(1)
-                .after(WXSSTypes.LEFT_PARENTHESES).spaces(0)
-                .before(WXSSTypes.RIGHT_PARENTHESES).spaces(0)
-                .getSpacing(this, child1, child2)
+    override fun getLanguages(): Array<Language> {
+        return arrayOf(WXSSLanguage.INSTANCE)
     }
 
 }

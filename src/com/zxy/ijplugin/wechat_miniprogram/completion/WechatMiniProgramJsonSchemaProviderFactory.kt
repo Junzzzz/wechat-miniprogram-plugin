@@ -95,6 +95,14 @@ fun isAppJsonFile(project: Project, virtualFile: VirtualFile): Boolean {
     return virtualFile.parent == contentRoot && virtualFile.name == "app.json"
 }
 
+fun isAppWxssFile(project: Project, virtualFile: VirtualFile): Boolean {
+    val contentRoot = ProjectFileIndex.SERVICE.getInstance(
+            project
+    ).getContentRootForFile(virtualFile)
+    // 在根目录下且名称为 app.wxss
+    return virtualFile.parent == contentRoot && virtualFile.name == "app.wxss"
+}
+
 private class AppJsonSchemaFileProvider(private val project: Project) : JsonSchemaFileProvider {
 
     override fun getName(): String {

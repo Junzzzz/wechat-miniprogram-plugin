@@ -76,7 +76,7 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 import com.intellij.ide.highlighter.XmlLikeFileType
 import javax.swing.Icon
 
-class WXMLFileType : XmlLikeFileType(WXMLLanguage.INSTANCE) {
+open class WXMLFileType : XmlLikeFileType(WXMLLanguage.INSTANCE) {
 
     companion object {
         @JvmField

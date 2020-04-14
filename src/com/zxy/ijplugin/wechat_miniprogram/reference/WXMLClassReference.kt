@@ -77,15 +77,16 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
+import com.intellij.psi.css.CssClass
+import com.intellij.psi.css.CssSelector
+import com.intellij.psi.css.CssSimpleSelector
 import com.intellij.psi.util.PsiTreeUtil
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
 import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
 import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSSelector
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
+import com.zxy.ijplugin.wechat_miniprogram.utils.findChildOfType
 import com.zxy.ijplugin.wechat_miniprogram.utils.substring
 
 /**
@@ -115,15 +116,10 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
         val selectors = getSelectors(project, wxssFile)
         return selectors.asSequence().mapNotNull {
             // 伪元素的选择器的第一个子元素也是基本选择器
-            val lastChild = it.lastChild
-            if (lastChild?.node?.elementType==WXSSTypes.PSEUDO_SELECTOR){
-                // 最后一个节点是伪元素 则取上一个兄弟节点
-                lastChild.prevSibling
-            }else{
-                lastChild
-            }
+            val lastChild = it.lastChild as? CssSimpleSelector ?: return@mapNotNull null
+            lastChild.findChildOfType<CssClass>()
         }.filter {
-            it is WXSSClassSelector && it.className == cssClass
+            it.name == cssClass
         }.map {
             PsiElementResolveResult(it)
         }.toMutableList()
@@ -131,19 +127,19 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
 
     private fun getSelectors(
             project: Project, wxssFile: VirtualFile?
-    ): List<WXSSSelector> {
+    ): List<CssSelector> {
         val psiManager = PsiManager.getInstance(project)
         val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) } ?: return emptyList()
         val wxssPsiFiles = WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile as WXSSPsiFile)
 
         return wxssPsiFiles.flatMap {
-            PsiTreeUtil.findChildrenOfType(it, WXSSSelector::class.java)
+            PsiTreeUtil.findChildrenOfType(it, CssSelector::class.java)
         }
     }
 
     override fun isReferenceTo(element: PsiElement): Boolean {
         val cssClass = this.element.text.substring(this.rangeInElement)
-        if (element is WXSSClassSelector && element.className == cssClass) {
+        if (element is CssClass && element.name == cssClass) {
             val project = this.element.project
             val wxmlFile = this.element.containingFile.virtualFile
             val wxssFile = findRelateFile(wxmlFile, RelateFileType.WXSS)
@@ -158,22 +154,22 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
         return false
     }
 
-    private fun containsSelector(selector: WXSSClassSelector, wxssFile: VirtualFile?): Boolean {
+    private fun containsSelector(selector: CssClass, wxssFile: VirtualFile?): Boolean {
         val psiManager = PsiManager.getInstance(selector.project)
         val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
         val wxssPsiFiles = WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile as WXSSPsiFile)
         return wxssPsiFiles.any {
-            PsiTreeUtil.findChildrenOfType(it, WXSSClassSelector::class.java).contains(selector)
+            PsiTreeUtil.findChildrenOfType(it, CssClass::class.java).contains(selector)
         }
     }
 
     override fun getVariants(): Array<Any> {
-        val result = arrayListOf<WXSSClassSelector>()
+        val result = arrayListOf<CssClass>()
         val psiManager = PsiManager.getInstance(this.element.project)
-        val wxssFile = findRelateFile(this.element.containingFile.originalFile.virtualFile,RelateFileType.WXSS)
+        val wxssFile = findRelateFile(this.element.containingFile.originalFile.virtualFile, RelateFileType.WXSS)
         val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
-        if (wxssPsiFile is WXSSPsiFile){
-            result.addAll(findClassSelectorFromFileAndImports(wxssPsiFile ))
+        if (wxssPsiFile is WXSSPsiFile) {
+            result.addAll(findClassSelectorFromFileAndImports(wxssPsiFile))
         }
         findAppFile(this.element.project, RelateFileType.WXSS)?.let {
             val appWXSSPsiFile = psiManager.findFile(it)
@@ -181,17 +177,19 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
                 result.addAll(findClassSelectorFromFileAndImports(appWXSSPsiFile))
             }
         }
-        return result.distinctBy { it.className }.toTypedArray()
+        // 获取已经存在的class
+        val existedClassNames = this.element.references.filterIsInstance<WXMLClassReference>().map { it.value }
+        return result.filter { !existedClassNames.contains(it.name) }.distinctBy { it.name }.toTypedArray()
     }
 
-    private fun findClassSelectorFromFileAndImports(wxssPsiFile: WXSSPsiFile): List<WXSSClassSelector> {
+    private fun findClassSelectorFromFileAndImports(wxssPsiFile: WXSSPsiFile): List<CssClass> {
         return WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile).flatMap {
             findClassSelectorFromFile(it)
         }.distinct()
     }
 
-    private fun findClassSelectorFromFile(wxssPsiFile: WXSSPsiFile): MutableCollection<WXSSClassSelector> {
-        return PsiTreeUtil.findChildrenOfType(wxssPsiFile, WXSSClassSelector::class.java)
+    private fun findClassSelectorFromFile(wxssPsiFile: WXSSPsiFile): MutableCollection<CssClass> {
+        return PsiTreeUtil.findChildrenOfType(wxssPsiFile, CssClass::class.java)
     }
 
 }

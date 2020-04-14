@@ -58,7 +58,7 @@
  *       i. Fill in the blanks in following statement, including insert your software name, the year of the first publication of your software, and your name identified as the copyright owner;
  *       ii. Create a file named “LICENSE” which contains the whole context of this License in the first directory of your software package;
  *       iii. Attach the statement to the appropriate annotated syntax at the beginning of each source file.
- *    
+ *
  *    Copyright (c) [2019] [name of copyright holder]
  *    [Software Name] is licensed under the Mulan PSL v1.
  *    You can use this software according to the terms and conditions of the Mulan PSL v1.
@@ -67,49 +67,21 @@
  *    THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  *    IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  *    PURPOSE.
- *    
+ *
  *    See the Mulan PSL v1 for more details.
  */
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxs
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
-
-import com.intellij.formatting.Block
-import com.intellij.formatting.Indent
-import com.intellij.formatting.Spacing
-import com.intellij.formatting.SpacingBuilder
-import com.intellij.lang.ASTNode
-import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
-
-class WXSSStyleStatementSectionBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
-        WXSSAbstractBlock(node, null, null) {
-
-    override fun isLeaf(): Boolean {
-        return false
+class QSFileType : WXSFileType() {
+    override fun getName(): String {
+        return "QS"
     }
 
-    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
-        return if (node.elementType == WXSSTypes.STYLE_STATEMENT_COLLECTION) {
-            listOf(WXSSStyleStatementCollectionBlock(node, this.codeStyleSettings))
-        } else {
-            listOf(WXSSLeafBlock(node))
-        }
+    override fun getDefaultExtension(): String {
+        return "qs"
     }
 
-    override fun getSpacing(p0: Block?, p1: Block): Spacing? {
-        return SpacingBuilder(this.codeStyleSettings, WXSSLanguage.INSTANCE)
-                .around(WXSSTypes.STYLE_STATEMENT_COLLECTION)
-                .lineBreakInCode()
-                .getSpacing(this, p0, p1)
+    override fun getDescription(): String {
+        return "QQ Script"
     }
-
-    override fun getChildIndent(): Indent? {
-        return Indent.getNormalIndent()
-    }
-
-    override fun getIndent(): Indent? {
-        return Indent.getNoneIndent()
-    }
-
 }

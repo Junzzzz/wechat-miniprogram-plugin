@@ -71,17 +71,14 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.reference.refactoring
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
-import com.intellij.lang.refactoring.RefactoringSupportProvider
 import com.intellij.psi.PsiElement
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSClassSelector
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSIdSelector
+import com.intellij.psi.css.CssSelectorSuffix
+import com.intellij.psi.css.usages.CssClassOrIdUsagesProvider
 
-class WXSSSelectorRefactoring : RefactoringSupportProvider() {
-
-
-    override fun isMemberInplaceRenameAvailable(element: PsiElement, context: PsiElement?): Boolean {
-        return element is WXSSIdSelector || element is WXSSClassSelector
+class WXSSIdOrClassUsageProvider : CssClassOrIdUsagesProvider {
+    override fun isUsage(p0: CssSelectorSuffix, p1: PsiElement, p2: Int): Boolean {
+        return false
     }
 }

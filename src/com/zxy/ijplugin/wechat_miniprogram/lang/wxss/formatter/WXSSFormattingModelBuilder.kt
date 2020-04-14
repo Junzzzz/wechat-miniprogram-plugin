@@ -73,19 +73,35 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
 
-import com.intellij.formatting.FormattingModel
-import com.intellij.formatting.FormattingModelBuilder
-import com.intellij.formatting.FormattingModelProvider
-import com.intellij.psi.PsiElement
+import com.intellij.formatting.Alignment
+import com.intellij.formatting.Indent
+import com.intellij.lang.ASTNode
+import com.intellij.lang.css.CSSLanguage
 import com.intellij.psi.codeStyle.CodeStyleSettings
+import com.intellij.psi.css.codeStyle.CssCodeStyleSettings
+import com.intellij.psi.css.impl.util.editor.CssFormattingModelBuilder
 
-class WXSSFormattingModelBuilder : FormattingModelBuilder {
+class WXSSFormattingModelBuilder : CssFormattingModelBuilder() {
+    override fun createExtension(settings: CodeStyleSettings): CssFormattingExtension {
+        return object : CssFormattingExtension(
+                settings.getCommonSettings(CSSLanguage.INSTANCE),
+                settings.getCustomSettings(
+                        CssCodeStyleSettings::class.java
+                )
+        ) {
 
-    override fun createModel(psiElement: PsiElement, codeStyleSettings: CodeStyleSettings): FormattingModel {
-        return FormattingModelProvider.createFormattingModelForPsiFile(
-                psiElement.containingFile, WXSSRootBlock(psiElement.node, codeStyleSettings),
-                codeStyleSettings
-        )
+            override fun createTermListBlock(
+                    _node: ASTNode?, indent: Indent?, alignment: Alignment?, shouldIndentContent: Boolean
+            ): CssTermListBlock {
+                return WXSSTermListBlock(_node, indent, this, alignment, shouldIndentContent)
+            }
+
+            override fun createPropertyBlock(
+                    _node: ASTNode?, indent: Indent?, extension: CssFormattingExtension?, alignment: Alignment?,
+                    childAlignment: Alignment?
+            ): CssPropertyBlock {
+                return WXSSPropertyBlock(_node, indent, extension, alignment, childAlignment)
+            }
+        }
     }
-
 }

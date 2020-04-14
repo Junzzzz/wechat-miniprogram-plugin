@@ -85,10 +85,10 @@ import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLIdReference
 
-class WXMLCreateIdAtWxssFileIntentionAction() : WXMLCreateSelectorAtWxssFileIntentionAction() {
+class WXMLCreateIdAtWxssFileIntentionAction : WXMLCreateSelectorAtWxssFileIntentionAction() {
     private lateinit var smartPsiElementPointer: SmartPsiElementPointer<WXSSPsiFile>
 
-    private lateinit var id:String
+    private lateinit var id: String
 
     override val wxssPsiFile: WXSSPsiFile
         get() = this.smartPsiElementPointer.element!!

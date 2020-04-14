@@ -71,8 +71,46 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
-import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiElement
+import com.intellij.psi.css.CssElementDescriptorProvider
+import com.intellij.psi.css.CssSimpleSelector
+import com.intellij.psi.xml.XmlTag
+import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
+import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeNameCompletionProvider.Companion.IGNORE_COMMON_ATTRIBUTE_TAG_NAMES
+import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
-abstract class WXSSRootChildrenBlock(node: ASTNode) : WXSSAbstractBlock(node, null, WXSSAlignments.ROOT_DEFINITION)
+class WXSSElementDescriptionProvider : CssElementDescriptorProvider() {
+    override fun getDeclarationsForSimpleSelector(p0: CssSimpleSelector): Array<PsiElement> {
+        return PsiElement.EMPTY_ARRAY
+    }
+
+    override fun isMyContext(element: PsiElement?): Boolean {
+        return element != null && isWechatMiniProgramContext(element)
+    }
+
+    override fun isPossibleSelector(selector: String, context: PsiElement): Boolean {
+        return selector == "page" || WXMLMetadata.getElementDescriptions(context.project).any { it.name == selector }
+    }
+
+    override fun getSimpleSelectors(context: PsiElement): Array<String> {
+        val result = mutableListOf("page")
+        val wxssPsiFile = (context.containingFile as? WXSSPsiFile)
+        if (wxssPsiFile != null) {
+            val wxmlPsiFile = findRelatePsiFile<WXMLPsiFile>(wxssPsiFile)
+            if (wxmlPsiFile != null) {
+                result.addAll(wxmlPsiFile.findChildrenOfType<XmlTag>().distinctBy { it.name }.map {
+                    it.name
+                }.filter {
+                    // 忽略部分标签
+                    !IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(it)
+                })
+            }
+        }
+        return result.toTypedArray()
+    }
+}

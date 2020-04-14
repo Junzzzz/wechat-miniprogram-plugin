@@ -71,24 +71,13 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.utils
+import com.intellij.lang.Language;
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage;
+import org.jetbrains.annotations.NotNull;
 
-import com.intellij.json.JsonFileType
-import com.intellij.json.psi.JsonProperty
-import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiFileFactory
-
-object JsonElementFactory {
-
-    fun createProperty(project: Project, text: String): JsonProperty {
-        val name = "dummy.wxss"
-        return PsiFileFactory.getInstance(project).createFileFromText(
-                name, JsonFileType.INSTANCE, """
-            {
-                $text
-            }
-        """.trimIndent()
-        ).findChildOfType<JsonProperty>()!!
+public class EmbeddedCssProvider extends com.intellij.psi.css.EmbeddedCssProvider {
+    @Override
+    public boolean enableEmbeddedCssFor(@NotNull Language language) {
+        return language == WXSSLanguage.INSTANCE;
     }
-
 }

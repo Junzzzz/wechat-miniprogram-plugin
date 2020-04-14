@@ -75,41 +75,50 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
+import com.intellij.psi.css.CssImport
+import com.intellij.psi.css.CssString
+import com.intellij.psi.css.CssTerm
+import com.intellij.psi.css.impl.CssElementTypes
+import com.intellij.psi.css.impl.util.CssUtil
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.elementType
 import com.intellij.util.ProcessingContext
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSImport
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSStringText
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSValue
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.isAnimationNameValue
 
 class WXSSReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(psiReferenceRegistrar: PsiReferenceRegistrar) {
         // 解析@import字符串中的路径
-        psiReferenceRegistrar.registerReferenceProvider(PlatformPatterns.psiElement(WXSSStringText::class.java),
+        psiReferenceRegistrar.registerReferenceProvider(
+                PlatformPatterns.psiElement(CssString::class.java),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext
                     ): Array<out PsiReference> {
-                        if (PsiTreeUtil.getParentOfType(psiElement, WXSSImport::class.java) != null) {
+                        if (PsiTreeUtil.getParentOfType(psiElement, CssImport::class.java) != null) {
                             return FileReferenceSet(psiElement).allReferences
                         }
                         return PsiReference.EMPTY_ARRAY
                     }
-
                 }
         )
 
         // 解析wxss animation-name的值
-        psiReferenceRegistrar.registerReferenceProvider(PlatformPatterns.psiElement(WXSSValue::class.java),
+        psiReferenceRegistrar.registerReferenceProvider(
+                PlatformPatterns.psiElement(CssElementTypes.CSS_IDENT),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             element: PsiElement, context: ProcessingContext
                     ): Array<PsiReference> {
-                        if (element is WXSSValue && element.isAnimationNameValue() && element.firstChild.elementType == WXSSTypes.IDENTIFIER) {
-                            return arrayOf(WXSSKeyframesReference(element))
+                        val parent = element.parent
+                        if (parent is CssTerm) {
+                            val declaration = CssUtil.getDeclaration(parent)
+                            if (declaration != null) {
+                                val propertyName = declaration.propertyName
+                                if ("animation-name".equals(propertyName, ignoreCase = true) || "animation".equals(
+                                                propertyName, ignoreCase = true
+                                        )) {
+                                    return arrayOf(WXSSKeyframesReference(element))
+                                }
+                            }
                         }
                         return PsiReference.EMPTY_ARRAY
                     }

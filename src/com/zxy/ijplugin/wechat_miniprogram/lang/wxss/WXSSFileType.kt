@@ -76,9 +76,9 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 import com.intellij.openapi.fileTypes.LanguageFileType
 import javax.swing.Icon
 
-class WXSSFileType :LanguageFileType(WXSSLanguage.INSTANCE){
+open class WXSSFileType : LanguageFileType(WXSSLanguage.INSTANCE) {
 
-    companion object{
+    companion object {
         @JvmField
         val INSTANCE = WXSSFileType()
     }

@@ -71,38 +71,20 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
-import com.intellij.formatting.Block
-import com.intellij.formatting.Spacing
-import com.intellij.formatting.SpacingBuilder
-import com.intellij.lang.ASTNode
-import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSFunctionArg
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.psi.WXSSTypes
+class QMLFileType : WXMLFileType() {
 
-class WXSSFunctionArgsBlock(node: ASTNode, private val codeStyleSettings: CodeStyleSettings) :
-        WXSSAbstractBlock(node, null, null) {
-
-    override fun mapChildrenBlock(node: ASTNode): List<Block>? {
-        return if (node.elementType == WXSSTypes.FUNCTION_ARG) {
-            val psi = node.psi
-            if (psi is WXSSFunctionArg && psi.calcExpression != null) {
-                listOf(WXSSCalcExpressionBlock(psi.calcExpression!!.node, this.codeStyleSettings))
-            } else {
-                listOf(WXSSLeafBlock(node))
-            }
-        } else {
-            null
-        }
+    override fun getName(): String {
+        return "QML"
     }
 
-    override fun getSpacing(child1: Block?, child2: Block): Spacing? {
-        return SpacingBuilder(this.codeStyleSettings, WXSSLanguage.INSTANCE)
-                .before(WXSSTypes.COMMA).spaces(0)
-                .after(WXSSTypes.COMMA).spaces(1)
-                .getSpacing(this, child1, child2)
+    override fun getDefaultExtension(): String {
+        return "qml"
+    }
+
+    override fun getDescription(): String {
+        return "QQ Markup Language"
     }
 
 }

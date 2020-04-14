@@ -91,6 +91,7 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
+import kotlin.reflect.KClass
 
 fun isWechatMiniProgramContext(psiElement: PsiElement, strict: Boolean = true): Boolean {
     return isWechatMiniProgramContext(psiElement.project)
@@ -170,15 +171,19 @@ inline fun <reified T : PsiFile> findRelatePsiFile(psiFile: PsiFile): T? {
 }
 
 inline fun <reified T : PsiFile> findRelatePsiFile(originFile: VirtualFile, project: Project): T? {
-    val relateFileType = when {
-        T::class == WXSSPsiFile::class -> RelateFileType.WXSS
-        T::class == WXMLPsiFile::class -> RelateFileType.WXML
-        T::class == JsonFile::class -> RelateFileType.JSON
-        T::class == JSFile::class -> RelateFileType.JS
-        else -> return null
-    }
+    val relateFileType = getRelateFileTypeFromClass(T::class) ?: return null
     val virtualFile = findRelateFile(originFile, relateFileType) ?: return null
     return PsiManager.getInstance(project).findFile(virtualFile) as? T
+}
+
+fun <T : PsiFile> getRelateFileTypeFromClass(clazz: KClass<T>): RelateFileType? {
+    return when (clazz) {
+        WXSSPsiFile::class -> RelateFileType.WXSS
+        WXMLPsiFile::class -> RelateFileType.WXML
+        JsonFile::class -> RelateFileType.JSON
+        JSFile::class -> RelateFileType.JS
+        else -> null
+    }
 }
 
 fun findRelatePsiFile(psiFile: PsiFile, relateFileType: RelateFileType): PsiFile? {
@@ -196,4 +201,10 @@ fun findAppFile(project: Project, relateFileType: RelateFileType): VirtualFile? 
         }
     }
     return null
+}
+
+inline fun <reified T : PsiFile> findAppFile(project: Project): T? {
+    val relateFileType = getRelateFileTypeFromClass(T::class) ?: return null
+    val virtualFile = findAppFile(project, relateFileType)
+    return virtualFile?.let { PsiManager.getInstance(project).findFile(it) } as? T
 }
