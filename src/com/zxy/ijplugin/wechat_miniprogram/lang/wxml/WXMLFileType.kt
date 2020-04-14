@@ -96,7 +96,7 @@ open class WXMLFileType : XmlLikeFileType(WXMLLanguage.INSTANCE) {
     }
 
     override fun getDescription(): String {
-        return "Wechat xml template"
+        return "WeiXin Markup Language"
     }
 
 }

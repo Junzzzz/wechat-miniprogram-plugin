@@ -96,7 +96,7 @@ open class WXSSFileType : LanguageFileType(WXSSLanguage.INSTANCE) {
     }
 
     override fun getDescription(): String {
-        return "WXSS file"
+        return "WeiXin Style Sheets"
     }
 
 }
