@@ -72,11 +72,19 @@
  */
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxs
 
-class QSFileType : WXSFileType() {
+import com.intellij.lang.javascript.JavaScriptSupportLoader
+import com.intellij.openapi.fileTypes.LanguageFileType
+import javax.swing.Icon
+
+class QSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_5) {
 
     companion object {
         @JvmField
-        val INSTANCE = WXSFileType()
+        val INSTANCE = QSFileType()
+    }
+
+    override fun getIcon(): Icon? {
+        return WXSIcons.FILE
     }
 
     override fun getName(): String {
