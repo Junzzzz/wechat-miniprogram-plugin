@@ -103,6 +103,9 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <projectConfigurable instance="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectConfigurable"/>
+        <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings"/>
+
         <postStartupActivity implementation="com.zxy.ijplugin.wechat_miniprogram.plugin.UpdateInfoActivity"/>
         <gotoRelatedProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WechatMiniProgramGotoRelatedProvider"/>
