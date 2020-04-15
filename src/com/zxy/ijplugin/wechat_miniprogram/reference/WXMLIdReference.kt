@@ -134,4 +134,8 @@ class WXMLIdReference(xmlAttributeValue: XmlAttributeValue, range: TextRange) :
         return getIdSelectorsFromRelatedWxssFile().toTypedArray()
     }
 
+    override fun isSoft(): Boolean {
+        return true
+    }
+
 }
