@@ -86,8 +86,7 @@ import com.intellij.psi.css.CssImport
 import com.intellij.psi.css.CssString
 import com.intellij.psi.css.resolve.StylesheetFileReference
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.utils.contentRange
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildOfType
@@ -122,12 +121,9 @@ class WXSSInvalidImportInspection : LocalInspectionTool() {
                         it !is StylesheetFileReference
                     }?.fileReferenceSet?.resolve()
                     if (resolveElement is WXSSPsiFile) {
-                        if (resolveElement.virtualFile == findAppFile(
-                                        resolveElement.project,
-                                        RelateFileType.STYLE
-                                )) {
+                        if (resolveElement.virtualFile == RelateFileHolder.STYLE.findAppFile(resolveElement.project)) {
                             holder.registerProblem(
-                                    string, string.contentRange(), "app.wxss是全局样式，无需导入",
+                                    string, string.contentRange(), "${resolveElement.name}是全局样式，无需导入",
                                     DeleteImportQuickFix(wxssImport)
                             )
                         }

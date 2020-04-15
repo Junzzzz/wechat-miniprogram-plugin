@@ -80,11 +80,9 @@ import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonProperty
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiManager
 import com.intellij.psi.XmlElementVisitor
 import com.intellij.psi.xml.XmlTag
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.nameTextRangeInSelf
@@ -117,11 +115,7 @@ class WXMLUnknownTagInspection : WXMLInspectionBase() {
 
                 val project = wxmlTag.project
 
-                val currentJsonFile = findRelateFile(wxmlTag.containingFile.virtualFile, RelateFileType.JSON)
-                val psiManager = PsiManager.getInstance(wxmlTag.project)
-                val currentJsonPsiFile = currentJsonFile?.let {
-                    psiManager.findFile(it)
-                } as? JsonFile
+                val currentJsonPsiFile = RelateFileHolder.JSON.findFile(wxmlTag.containingFile) as? JsonFile
                 val usingComponentItems = mutableListOf<JsonProperty>().apply {
                     currentJsonPsiFile?.let {
                         ComponentJsonUtils.getUsingComponentItems(it)

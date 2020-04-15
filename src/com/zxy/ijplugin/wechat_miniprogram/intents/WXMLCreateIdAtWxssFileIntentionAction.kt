@@ -76,12 +76,10 @@ package com.zxy.ijplugin.wechat_miniprogram.intents
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.SmartPsiElementPointer
 import com.intellij.psi.xml.XmlTokenType
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLIdReference
 
@@ -109,11 +107,7 @@ class WXMLCreateIdAtWxssFileIntentionAction : WXMLCreateSelectorAtWxssFileIntent
         if (psiElement.node.elementType !== XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN || editor == null) return false
         val reference = psiElement.containingFile.findReferenceAt(editor.caretModel.offset)
         if (reference is WXMLIdReference && reference.multiResolve(false).isEmpty()) {
-            findRelateFile(psiElement.containingFile.originalFile.virtualFile, RelateFileType.STYLE)?.let {
-                PsiManager.getInstance(psiElement.project).findFile(
-                        it
-                )
-            }?.let {
+            RelateFileHolder.STYLE.findFile(psiElement.containingFile.originalFile)?.let {
                 it as WXSSPsiFile
             }?.let {
                 this.smartPsiElementPointer = SmartPointerManager.createPointer(it)

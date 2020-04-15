@@ -132,7 +132,7 @@ enum class RelateFileType(val fileType: LanguageFileType) {
 
     }
 }
-
+@Deprecated("QQ")
 val componentFileClasses = arrayOf(
         JSFile::class.java, WXMLPsiFile::class.java, WXSSPsiFile::class.java, JsonFile::class.java
 )
@@ -169,7 +169,9 @@ fun findRelateFile(originFile: VirtualFile, relateFileType: RelateFileType): Vir
     return originFile.parent?.children?.find { it.nameWithoutExtension == originFile.nameWithoutExtension && it.extension == relateFileType.fileType.defaultExtension }
 }
 
-@Deprecated(message = "使用RelateFileHolder替换", replaceWith = ReplaceWith(expression = "RelateFileHolder.findFile"))
+@Deprecated(
+        message = "使用RelateFileHolder替换", replaceWith = ReplaceWith(expression = "RelateFileHolder.findFile(psiFile)")
+)
 inline fun <reified T : PsiFile> findRelatePsiFile(psiFile: PsiFile): T? {
     val originFile = psiFile.originalFile.virtualFile
     val project = psiFile.project
@@ -200,7 +202,10 @@ fun findRelatePsiFile(psiFile: PsiFile, relateFileType: RelateFileType): PsiFile
     return PsiManager.getInstance(psiFile.project).findFile(virtualFile)
 }
 
-@Deprecated(message = "使用RelateFileHolder替换", replaceWith = ReplaceWith(expression = "RelateFileHolder.findAppFile"))
+@Deprecated(
+        message = "使用RelateFileHolder替换",
+        replaceWith = ReplaceWith(expression = "RelateFileHolder.findAppFile(project)")
+)
 fun findAppFile(project: Project, relateFileType: RelateFileType): VirtualFile? {
     if (relateFileType == RelateFileType.MARKUP) return null
     val basePath = project.basePath
@@ -213,7 +218,10 @@ fun findAppFile(project: Project, relateFileType: RelateFileType): VirtualFile? 
     return null
 }
 
-@Deprecated(message = "使用RelateFileHolder替换", replaceWith = ReplaceWith(expression = "RelateFileHolder.findAppFile"))
+@Deprecated(
+        message = "使用RelateFileHolder替换",
+        replaceWith = ReplaceWith(expression = "RelateFileHolder.findAppFile(project)")
+)
 inline fun <reified T : PsiFile> findAppFile(project: Project): T? {
     val relateFileType = getRelateFileTypeFromClass(T::class) ?: return null
     val virtualFile = findAppFile(project, relateFileType)

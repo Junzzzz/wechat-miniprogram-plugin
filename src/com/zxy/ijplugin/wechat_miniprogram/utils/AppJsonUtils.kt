@@ -76,18 +76,12 @@ package com.zxy.ijplugin.wechat_miniprogram.utils
 import com.intellij.json.JsonElementTypes
 import com.intellij.json.psi.*
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiManager
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 
 object AppJsonUtils {
 
     fun findUsingComponentsValue(project: Project): JsonObject? {
-        val jsonFile = findAppFile(project, RelateFileType.JSON)
-        val jsonPsiFile = jsonFile?.let {
-            val psiManager = PsiManager.getInstance(project)
-            psiManager.findFile(it)
-        }
+        val jsonPsiFile = RelateFileHolder.JSON.findAppFile(project)
         return (jsonPsiFile as? JsonFile)?.let {
             ComponentJsonUtils.getUsingComponentPropertyValue(it)
         }

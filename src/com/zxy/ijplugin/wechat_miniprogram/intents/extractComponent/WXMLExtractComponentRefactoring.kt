@@ -83,7 +83,7 @@ import com.intellij.psi.xml.XmlTag
 import com.intellij.refactoring.util.CommonRefactoringUtil
 import com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction.Companion.JSON_TEMPLATE_NAME
 import com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramComponentAction.Companion.JS_TEMPLATE_NAME
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentFilesCreator
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
 
@@ -135,7 +135,7 @@ class WXMLExtractComponentRefactoring(
                 editor.document.insertString(startOffset, "<$componentName></$componentName>")
 
                 // 在json文件中注册此组件
-                findRelatePsiFile<JsonFile>(containingFile)?.let {
+                (RelateFileHolder.JSON.findFile(containingFile) as? JsonFile)?.let {
                     (psiDirectory.findFile("$componentName.json") as? JsonFile)?.let { targetComponentJsonFile ->
                         ComponentJsonUtils.registerComponent(it, targetComponentJsonFile)
                     }

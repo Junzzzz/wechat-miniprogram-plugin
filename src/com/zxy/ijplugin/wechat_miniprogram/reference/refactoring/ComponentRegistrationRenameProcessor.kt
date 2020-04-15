@@ -81,7 +81,7 @@ import com.intellij.psi.impl.source.xml.TagNameReference
 import com.intellij.psi.search.SearchScope
 import com.intellij.psi.xml.XmlTag
 import com.intellij.refactoring.rename.RenamePsiElementProcessor
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.reference.JsonRegistrationReference
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
@@ -97,7 +97,7 @@ class ComponentRegistrationRenameProcessor : RenamePsiElementProcessor() {
         element as JsonProperty
         val containingFile = element.containingFile
         if (containingFile !is JsonFile) return mutableListOf()
-        val wxmlPsiFile = findRelatePsiFile<WXMLPsiFile>(containingFile) ?: return mutableListOf()
+        val wxmlPsiFile = RelateFileHolder.MARKUP.findFile(containingFile) as? WXMLPsiFile ?: return mutableListOf()
         return wxmlPsiFile.findChildrenOfType<XmlTag>().filter {
             it.name == element.name
         }.flatMap {

@@ -73,13 +73,14 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.context
 
+import com.intellij.json.JsonFileType
+import com.intellij.lang.javascript.JavaScriptFileType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.QSFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.QSSFileType
 
@@ -87,9 +88,11 @@ abstract class RelateFileHolder {
 
     companion object {
         val MARKUP = QQCompatibleRelateFileHolder(QMLFileType.INSTANCE, WXMLFileType.INSTANCE)
-        val SCRIPT = QQCompatibleRelateFileHolder(QSFileType.INSTANCE, WXSFileType.INSTANCE)
+        val SCRIPT = SingleFileTypeFileHolder(JavaScriptFileType.INSTANCE)
         val STYLE = QQCompatibleRelateFileHolder(QSSFileType.INSTANCE, WXSFileType.INSTANCE)
-        val JSON = JSONRelateFileHolder()
+        val JSON = SingleFileTypeFileHolder(JsonFileType.INSTANCE)
+
+        val INSTANCES = arrayOf(MARKUP, SCRIPT, STYLE, JSON)
     }
 
     fun findAppFile(project: Project): PsiFile? {

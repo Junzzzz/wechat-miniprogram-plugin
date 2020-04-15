@@ -73,14 +73,14 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.context
 
-import com.intellij.json.psi.JsonFile
+import com.intellij.json.JsonFileType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 
 class JSONRelateFileHolder : RelateFileHolder() {
     override fun findFile(files: Array<PsiFile>, project: Project): PsiFile? {
         return files.find {
-            it is JsonFile
+            it.fileType == JsonFileType.INSTANCE
         }
     }
 }

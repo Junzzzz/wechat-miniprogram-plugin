@@ -80,15 +80,13 @@ import com.intellij.lang.javascript.psi.impl.JSReferenceExpressionImpl
 import com.intellij.lang.javascript.psi.resolve.JSReferenceExpressionResolver
 import com.intellij.psi.PsiElementResolveResult
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiManager
 import com.intellij.psi.ResolveResult
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlAttributeValue
 import com.zxy.ijplugin.wechat_miniprogram.context.MyJSPredefinedLibraryProvider.Companion.PAGE_LIFETIMES
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isEventHandler
 
@@ -115,31 +113,25 @@ class WxmlJsReferenceExpressionResolver(
         if (myReferencedName == null) return ResolveResult.EMPTY_ARRAY
         val project = expression.project
         if (myQualifier == null) {
-            val psiManager = PsiManager.getInstance(project)
             val injectionHost = InjectedLanguageManager.getInstance(project).getInjectionHost(
                     expression
             ) ?: return ResolveResult.EMPTY_ARRAY
-            val originFile = injectionHost.containingFile?.virtualFile ?: return ResolveResult.EMPTY_ARRAY
-            val jsFile = findRelateFile(
-                    originFile, RelateFileType.SCRIPT
-            )
-            if (jsFile != null) {
-                val jsPsiFile = psiManager.findFile(jsFile)
-                if (jsPsiFile != null) {
-                    if (injectionHost is XmlAttributeValue && PsiTreeUtil.getParentOfType(
-                                    injectionHost, XmlAttribute::class.java
-                            )?.isEventHandler() == true && !WxmlJSInjector.DOUBLE_BRACE_REGEX.matches(
-                                    injectionHost.value
-                            )) {
-                        // 事件
-                        // 找到js文件中的methods
-                        resolveMethods(jsPsiFile)?.let {
-                            return it
-                        }
-                    } else {
-                        resolveProperties(jsPsiFile)?.let {
-                            return it
-                        }
+            val originFile = injectionHost.containingFile ?: return ResolveResult.EMPTY_ARRAY
+            val jsPsiFile = RelateFileHolder.SCRIPT.findFile(originFile) as? JSFile
+            if (jsPsiFile != null) {
+                if (injectionHost is XmlAttributeValue && PsiTreeUtil.getParentOfType(
+                                injectionHost, XmlAttribute::class.java
+                        )?.isEventHandler() == true && !WxmlJSInjector.DOUBLE_BRACE_REGEX.matches(
+                                injectionHost.value
+                        )) {
+                    // 事件
+                    // 找到js文件中的methods
+                    resolveMethods(jsPsiFile)?.let {
+                        return it
+                    }
+                } else {
+                    resolveProperties(jsPsiFile)?.let {
+                        return it
                     }
                 }
             }
