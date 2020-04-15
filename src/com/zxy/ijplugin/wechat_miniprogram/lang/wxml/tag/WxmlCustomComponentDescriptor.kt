@@ -76,18 +76,16 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag
 import com.intellij.json.psi.JsonProperty
 import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.psi.PsiElement
-import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlTag
 import com.intellij.xml.XmlAttributeDescriptor
 import com.intellij.xml.XmlElementDescriptor
-import com.intellij.xml.XmlElementsGroup
-import com.intellij.xml.XmlNSDescriptor
+import com.intellij.xml.impl.schema.AnyXmlAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLUtils
 
 /**
  * [https://developers.weixin.qq.com/miniprogram/dev/reference/api/Component.html]
  */
-class WxmlCustomComponentDescriptor(private val element: JsonProperty) : XmlElementDescriptor {
+class WxmlCustomComponentDescriptor(private val element: JsonProperty) : WXMLBasicElementDescriptor() {
     override fun getDefaultValue(): String? {
         return null
     }
@@ -108,45 +106,26 @@ class WxmlCustomComponentDescriptor(private val element: JsonProperty) : XmlElem
 
     }
 
-    override fun getContentType(): Int {
-        return XmlElementDescriptor.CONTENT_TYPE_ANY
-    }
-
-    override fun getTopGroup(): XmlElementsGroup? {
-        return null
-    }
-
     override fun getDefaultName(): String {
         return this.name
     }
 
-    override fun getNSDescriptor(): XmlNSDescriptor? {
-        return null
-    }
 
     override fun getQualifiedName(): String {
         return (this.element.value as? JsonStringLiteral)?.value ?: this.name
     }
 
-    override fun getElementDescriptor(childTag: XmlTag?, contextTag: XmlTag?): XmlElementDescriptor? {
-        return null
-    }
 
     override fun getDeclaration(): JsonProperty {
         return this.element
     }
 
     override fun getAttributeDescriptor(attributeName: String, context: XmlTag?): XmlAttributeDescriptor? {
-        return WXMLUtils.getCustomComponentAttributeDescriptors(this).find {
+        return super.getAttributeDescriptor(attributeName, context) ?: WXMLUtils.getCustomComponentAttributeDescriptors(
+                this
+        ).find {
             it.name == attributeName
-        }
+        } ?: AnyXmlAttributeDescriptor(attributeName)
     }
 
-    override fun getAttributeDescriptor(attribute: XmlAttribute): XmlAttributeDescriptor? {
-        return this.getAttributeDescriptor(attribute.name, null)
-    }
-
-    override fun getAttributesDescriptors(context: XmlTag?): Array<out XmlAttributeDescriptor> {
-        return emptyArray()
-    }
 }

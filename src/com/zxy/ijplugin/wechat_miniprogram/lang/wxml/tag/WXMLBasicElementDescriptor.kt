@@ -71,89 +71,49 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag
 
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.util.elementType
+import com.intellij.psi.impl.source.xml.XmlElementDescriptorProvider
 import com.intellij.psi.xml.XmlAttribute
-import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.psi.xml.XmlTag
-import com.intellij.psi.xml.XmlTokenType
 import com.intellij.xml.XmlAttributeDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLCustomComponentAttributeDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WxmlCustomComponentDescriptor
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
+import com.intellij.xml.XmlElementDescriptor
+import com.intellij.xml.XmlElementsGroup
+import com.intellij.xml.XmlNSDescriptor
+import com.intellij.xml.impl.schema.AnyXmlAttributeDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLUtils
 
-object WXMLUtils {
+abstract class WXMLBasicElementDescriptor : XmlElementDescriptor {
+    override fun getContentType(): Int {
+        return XmlElementDescriptor.CONTENT_TYPE_ANY
+    }
 
-    @JvmStatic
-    fun getWXMLAttributeDescriptors(tag: XmlTag?): Array<XmlAttributeDescriptor> {
-        val result = mutableSetOf<XmlAttributeDescriptor>()
-        val xmlElementDescriptor = tag?.descriptor ?: return emptyArray()
-        if (xmlElementDescriptor is WxmlCustomComponentDescriptor) {
-            result.addAll(this.getCustomComponentAttributeDescriptors(xmlElementDescriptor))
-        } else if (xmlElementDescriptor is WXMLElementDescriptor) {
-            val wxmlElementDescription = xmlElementDescriptor.wxmlElementDescription
-            wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors.map {
-                WXMLAttributeDescriptor(it)
-            }.let {
-                result.addAll(it)
-            }
+    override fun getTopGroup(): XmlElementsGroup? {
+        return null
+    }
+
+    override fun getNSDescriptor(): XmlNSDescriptor? {
+        return null
+    }
+
+    override fun getElementDescriptor(child: XmlTag, context: XmlTag): XmlElementDescriptor? {
+        return XmlElementDescriptorProvider.EP_NAME.findExtension(WXMLElementDescriptorProvider::class.java)
+                ?.getDescriptor(child)
+    }
+
+    override fun getAttributeDescriptor(attributeName: String, context: XmlTag?): XmlAttributeDescriptor? {
+        if (WXMLUtils.isCommonAttributes(attributeName) || WXMLUtils.likeEventAttribute(attributeName)) {
+            // 公共属性或公共事件
+            return AnyXmlAttributeDescriptor(attributeName)
         }
-        return result.toTypedArray()
+        return null
     }
 
-    /**
-     * 根据属性名粗略判断是否是事件
-     */
-    @JvmStatic
-    fun likeEventAttribute(attributeName: String): Boolean {
-        return WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any { attributeName.startsWith(it) }
+    override fun getAttributeDescriptor(attribute: XmlAttribute?): XmlAttributeDescriptor? {
+        return this.getAttributeDescriptor(attribute?.name ?: return null, attribute.parent)
     }
 
-    fun generateEventAttributeFullName(eventNames: Array<String>): List<String> {
-        return eventNames.flatMap { eventName ->
-            WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.map {
-                it + eventName
-            }
-        }
+    override fun getAttributesDescriptors(p0: XmlTag?): Array<XmlAttributeDescriptor> {
+        return emptyArray()
     }
-
-    fun getCustomComponentAttributeDescriptors(
-            wxmlCustomComponentDescriptor: WxmlCustomComponentDescriptor
-    ): Array<WXMLCustomComponentAttributeDescriptor> {
-        return ComponentWxmlUtils.findCustomComponentDefinitionJsFile(
-                wxmlCustomComponentDescriptor.declaration
-        )?.let { jsFile ->
-            ComponentJsUtils.findPropertiesItems(jsFile)
-        }?.map {
-            WXMLCustomComponentAttributeDescriptor(it)
-        }?.toTypedArray() ?: emptyArray()
-    }
-
-    fun isCommonAttributes(attributeName: String): Boolean {
-        return WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.any {
-            it.key === attributeName
-        }
-    }
-}
-
-fun XmlAttribute.isEventHandler(): Boolean {
-    val name = this.name
-    return WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any {
-        name.startsWith(it)
-    }
-}
-
-fun XmlAttributeValue.valueTextRangeInSelf(): TextRange {
-    return TextRange.create(1, this.value.length + 1)
-}
-
-fun XmlTag.nameTextRangeInSelf(): TextRange? {
-    return this.children.find { it.elementType == XmlTokenType.XML_NAME }?.textRangeInParent
 }
