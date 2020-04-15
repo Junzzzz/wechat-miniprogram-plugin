@@ -118,7 +118,7 @@ apply plugin: "kotlin"
 intellij {
 //    localPath "C:\\Users\\Administrator\\Downloads\\ideaIU-LATEST-EAP-SNAPSHOT"
     type = "IU"
-//    localPath = localIdeaPath
+    localPath = localIdeaPath
     version 'IU-LATEST-EAP-SNAPSHOT'
     pluginName 'wechat mini program'
     downloadSources true
