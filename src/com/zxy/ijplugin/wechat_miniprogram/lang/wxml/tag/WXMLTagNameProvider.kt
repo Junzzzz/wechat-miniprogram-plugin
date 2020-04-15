@@ -77,12 +77,10 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonProperty
-import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.xml.XmlTag
 import com.intellij.xml.XmlTagNameProvider
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
@@ -102,23 +100,20 @@ class WXMLTagNameProvider : XmlTagNameProvider {
             })
 
             // 自定义组件
-            val currentJsonFile = findRelateFile(tag.containingFile.originalFile.virtualFile, RelateFileType.JSON)
-            if (currentJsonFile !== null) {
-                val project = tag.project
-                val psiManager = PsiManager.getInstance(project)
-                val currentJsonPsiFile = psiManager.findFile(currentJsonFile)
-                if (currentJsonPsiFile != null && currentJsonPsiFile is JsonFile) {
+            val currentJsonPsiFile = RelateFileHolder.JSON.findFile(tag.containingFile.originalFile)
+            if (currentJsonPsiFile !== null) {
+                if (currentJsonPsiFile is JsonFile) {
 
                     // 项目中所有的组件配置文件
                     val jsonFiles = ComponentJsonUtils.getAllComponentConfigurationFile(
-                            project
+                            currentJsonPsiFile.project
                     ).filter {
                         it != currentJsonPsiFile
                     }
                     val usingComponentsObjectValue = ComponentJsonUtils.getUsingComponentPropertyValue(
                             currentJsonPsiFile
                     )
-                    val appJsonUsingComponentsObjectValue = AppJsonUtils.findUsingComponentsValue(project)
+                    val appJsonUsingComponentsObjectValue = AppJsonUtils.findUsingComponentsValue(tag.project)
                     // 从app.json 和 相关的json文件中手机usingComponents
                     val usingComponentItems = mutableListOf<JsonProperty>().apply {
                         usingComponentsObjectValue?.propertyList?.let {
@@ -144,7 +139,7 @@ class WXMLTagNameProvider : XmlTagNameProvider {
                     elements.addAll(jsonFiles.mapNotNull { jsonFile ->
                         val configComponentName = usingComponentMap[jsonFile]
                         val componentPath = (jsonFile.virtualFile.getPathRelativeToRootRemoveExt(
-                                project
+                                jsonFile.project
                         ) ?: return@mapNotNull null)
                         if (configComponentName == null) {
                             // 没有注册的组件

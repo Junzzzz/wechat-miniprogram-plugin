@@ -77,10 +77,8 @@ import com.intellij.json.psi.JsonFile
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.psi.PsiDirectory
-import com.intellij.psi.PsiManager
 import com.intellij.ui.layout.panel
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
 import javax.swing.JComponent
@@ -111,8 +109,8 @@ class CreateWechatMiniProgramPageAction :
                 project
         )?.removePrefix("/")
         if (dirPath != null) {
-            findAppFile(project, RelateFileType.JSON)?.let {
-                val jsonPsiFile = PsiManager.getInstance(project).findFile(it) as? JsonFile
+            RelateFileHolder.JSON.findAppFile(project)?.let {
+                val jsonPsiFile = it as? JsonFile
                 if (jsonPsiFile != null) {
                     // 在app.json中注册该页面
                     AppJsonUtils.registerPage(jsonPsiFile, "$dirPath/$pageName")

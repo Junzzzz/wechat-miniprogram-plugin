@@ -74,20 +74,18 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.impl.source.xml.XmlDescriptorUtil
-import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlTag
 import com.intellij.xml.XmlAttributeDescriptor
 import com.intellij.xml.XmlElementDescriptor
 import com.intellij.xml.XmlElementsGroup
 import com.intellij.xml.XmlNSDescriptor
+import com.intellij.xml.impl.schema.AnyXmlAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLElementDescription
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
 
 class WXMLElementDescriptor(
         val wxmlElementDescription: WXMLElementDescription
-) :
-        XmlElementDescriptor {
+) : WXMLBasicElementDescriptor() {
 
     override fun getDefaultValue(): String? {
         return null
@@ -129,28 +127,17 @@ class WXMLElementDescriptor(
         return this.name
     }
 
-    override fun getElementDescriptor(p0: XmlTag, p1: XmlTag): XmlElementDescriptor? {
-        return XmlDescriptorUtil.getElementDescriptor(p0, p1)
-    }
-
     override fun getDeclaration(): PsiElement? {
         return this.wxmlElementDescription.definedElement
     }
 
-    override fun getAttributeDescriptor(attributeName: String?, p1: XmlTag?): XmlAttributeDescriptor? {
-        return this.wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors.find {
-            it.key == attributeName
-        }?.let {
-            WXMLAttributeDescriptor(it)
-        }
-    }
-
-    override fun getAttributeDescriptor(attribute: XmlAttribute?): XmlAttributeDescriptor? {
-        return this.getAttributeDescriptor(attribute?.name, attribute?.parent)
-    }
-
-    override fun getAttributesDescriptors(p0: XmlTag?): Array<XmlAttributeDescriptor> {
-        return emptyArray()
+    override fun getAttributeDescriptor(attributeName: String, context: XmlTag?): XmlAttributeDescriptor? {
+        return super.getAttributeDescriptor(attributeName, context)
+                ?: this.wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors.find {
+                    it.key == attributeName
+                }?.let {
+                    WXMLAttributeDescriptor(it)
+                } ?: AnyXmlAttributeDescriptor(attributeName)
     }
 
 }

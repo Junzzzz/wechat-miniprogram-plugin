@@ -76,11 +76,8 @@ package com.zxy.ijplugin.wechat_miniprogram.intents
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
 import com.intellij.psi.xml.XmlTokenType
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.reference.WXMLClassReference
 
@@ -118,14 +115,8 @@ class WXMLCreateClassAtComponentWxssFileIntentionAction : WXMLCreateClassAtWxssF
         if (reference is WXMLClassReference) {
             if (reference.multiResolve(false).isEmpty()) {
                 val className = reference.canonicalText
-                val wxssVirtualFile = findRelateFile(
-                        psiElement.containingFile.virtualFile, RelateFileType.WXSS
-                )
-                val wxssPsiFile = wxssVirtualFile?.let { it ->
-                    PsiManager.getInstance(psiElement.project).findFile(
-                            it
-                    )
-                }?.let {
+                val psiFile = RelateFileHolder.STYLE.findFile(psiElement.containingFile)
+                val wxssPsiFile = psiFile?.let {
                     it as? WXSSPsiFile
                 } ?: return false
                 super.wxssPsiFile = wxssPsiFile
@@ -148,11 +139,7 @@ class WXMLCreateClassAtAppWxssFileIntentionAction : WXMLCreateClassAtWxssFileInt
         if (isAvailableElementAndEditor(psiElement, editor)) return false
         val reference = psiElement.containingFile.findReferenceAt(editor!!.caretModel.offset)
         if (reference is WXMLClassReference && reference.multiResolve(false).isEmpty()) {
-            findAppFile(psiElement.project, RelateFileType.WXSS)?.let {
-                PsiManager.getInstance(psiElement.project).findFile(
-                        it
-                )
-            }?.let {
+            RelateFileHolder.STYLE.findAppFile(psiElement.project)?.let {
                 it as WXSSPsiFile
             }?.let {
                 super.wxssPsiFile = it

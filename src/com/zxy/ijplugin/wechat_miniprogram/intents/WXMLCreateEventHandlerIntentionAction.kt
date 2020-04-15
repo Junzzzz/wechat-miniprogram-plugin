@@ -89,7 +89,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlAttributeValue
 import com.zxy.ijplugin.wechat_miniprogram.context.MyJSPredefinedLibraryProvider
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.JavaScriptElementFactory
@@ -117,7 +117,7 @@ class WXMLCreateEventHandlerIntentionAction : IntentionAction, PsiElementBaseInt
         // 属性值是正确的js标识符
         val text = element.value
         if (!text.matches(Regex("^[a-zA-Z_$][a-zA-Z0-9_$]*"))) return false
-        val jsFile = findRelatePsiFile<JSFile>(element.containingFile.originalFile) ?: return false
+        val jsFile = RelateFileHolder.SCRIPT.findFile(element.containingFile.originalFile) as? JSFile ?: return false
         val callExpression = ComponentJsUtils.findComponentOrPageCallExpression(jsFile) ?: return false
         // 只要存在Page或Component方法调用切有第一个参数为对象即可
         val optionsObject = ComponentJsUtils.findCallExpressionFirstObjectArg(callExpression) ?: return false
@@ -142,7 +142,7 @@ class WXMLCreateEventHandlerIntentionAction : IntentionAction, PsiElementBaseInt
     override fun invoke(project: Project, editor: Editor, psiElement: PsiElement) {
         val element = InjectedLanguageManager.getInstance(project).getInjectionHost(psiElement) as? XmlAttributeValue
                 ?: return
-        val jsFile = findRelatePsiFile<JSFile>(element.containingFile) ?: return
+        val jsFile = RelateFileHolder.SCRIPT.findFile(element.containingFile) as? JSFile ?: return
         val callExpression = ComponentJsUtils.findComponentOrPageCallExpression(jsFile) ?: return
         val optionsObject = ComponentJsUtils.findCallExpressionFirstObjectArg(callExpression) ?: return
         val options = optionsObject.properties

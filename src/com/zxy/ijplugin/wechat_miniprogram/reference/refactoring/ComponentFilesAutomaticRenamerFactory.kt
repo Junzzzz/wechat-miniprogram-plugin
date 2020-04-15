@@ -73,27 +73,20 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.reference.refactoring
 
-import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.refactoring.rename.naming.AutomaticRenamer
 import com.intellij.refactoring.rename.naming.AutomaticRenamerFactory
 import com.intellij.usageView.UsageInfo
-import com.zxy.ijplugin.wechat_miniprogram.context.*
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
+import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
+import com.zxy.ijplugin.wechat_miniprogram.utils.isComponentFile
 
 class ComponentFilesAutomaticRenamerFactory : AutomaticRenamerFactory {
 
     companion object {
-        fun isComponentFile(element: PsiElement): Boolean {
-            return isWechatMiniProgramContext(element) && componentFileClasses.any {
-                it.isInstance(element)
-            } && element is PsiFile && (element.fileType as? LanguageFileType)?.getRelateFileType()?.let {
-                findAppFile(element.project, it)
-            } !== element.virtualFile && componentFileClasses.filter {
-                !it.isInstance(element)
-            }.any {
-                findRelateFile(element.originalFile.virtualFile, element.javaClass.getRelateFileType()!!) != null
-            }
+        fun isValidElement(element: PsiElement): Boolean {
+            return element is PsiFile && isWechatMiniProgramContext(element) && isComponentFile(element)
         }
     }
 
@@ -106,7 +99,7 @@ class ComponentFilesAutomaticRenamerFactory : AutomaticRenamerFactory {
     }
 
     override fun isApplicable(element: PsiElement): Boolean {
-        return isComponentFile(element)
+        return isValidElement(element)
     }
 
     override fun getOptionName(): String? {
@@ -129,15 +122,16 @@ class ComponentFilesAutomaticRenamer(private val psiFile: PsiFile, newName: Stri
         // 如果改变了扩展名，则忽略
         if (extension != null && newName.endsWith(extension)) {
             val newNameWithoutExtension = newName.removeSuffix(extension).removeSuffix(".")
-            componentFileClasses.filter {
-                !it.isInstance(psiFile)
+            RelateFileHolder.INSTANCES.mapNotNull {
+                it.findFile(psiFile)
+            }.filter {
+                it != psiFile
             }.forEach {
-                val relatePsiFile = findRelatePsiFile(psiFile, it.getRelateFileType()!!) ?: return@forEach
-                val relateFileOldName = relatePsiFile.name
+                val relateFileOldName = it.name
                 val relateFileNewName = newNameWithoutExtension + relateFileOldName.removePrefix(
                         virtualFile.nameWithoutExtension
                 )
-                myElements.add(relatePsiFile)
+                myElements.add(it)
                 suggestAllNames(relateFileOldName, relateFileNewName)
             }
         }

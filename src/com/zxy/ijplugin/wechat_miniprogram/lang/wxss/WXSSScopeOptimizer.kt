@@ -78,10 +78,8 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.ScopeOptimizer
 import com.intellij.psi.search.SearchScope
 import com.zxy.ijplugin.wechat_miniprogram.completion.isAppWxssFile
-import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 
 class WXSSScopeOptimizer : ScopeOptimizer {
     override fun getRestrictedUseScope(element: PsiElement): SearchScope? {
@@ -91,8 +89,8 @@ class WXSSScopeOptimizer : ScopeOptimizer {
                 GlobalSearchScope.fileScope(wxssPsiFile)
             } else {
                 GlobalSearchScope.filesScope(element.project, mutableListOf(
-                        wxssPsiFile, findRelatePsiFile<WXMLPsiFile>(wxssPsiFile),
-                        findAppFile<WXSSPsiFile>(element.project)
+                        wxssPsiFile, RelateFileHolder.MARKUP.findFile(wxssPsiFile),
+                        RelateFileHolder.STYLE.findAppFile(element.project)
                 ).filterNotNull().map { it.virtualFile })
             }
         }

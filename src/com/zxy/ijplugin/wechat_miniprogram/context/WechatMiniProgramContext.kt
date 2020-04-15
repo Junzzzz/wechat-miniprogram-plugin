@@ -73,25 +73,13 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.context
 
-import com.intellij.json.JsonFileType
-import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonStringLiteral
-import com.intellij.lang.javascript.JavaScriptFileType
-import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.openapi.application.runReadAction
-import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import kotlin.reflect.KClass
 
 fun isWechatMiniProgramContext(psiElement: PsiElement, strict: Boolean = true): Boolean {
     return isWechatMiniProgramContext(psiElement.project)
@@ -120,91 +108,4 @@ fun isWechatMiniProgramContext(project: Project, strict: Boolean = true): Boolea
         }
     }
     return false
-}
-
-enum class RelateFileType(val fileType: LanguageFileType) {
-    WXML(WXMLFileType.INSTANCE),
-    JSON(JsonFileType.INSTANCE),
-    JS(JavaScriptFileType.INSTANCE),
-    WXSS(WXSSFileType.INSTANCE)
-}
-
-val componentFileClasses = arrayOf(
-        JSFile::class.java, WXMLPsiFile::class.java, WXSSPsiFile::class.java, JsonFile::class.java
-)
-
-fun LanguageFileType.getRelateFileType(): RelateFileType? {
-    return when (this) {
-        WXMLFileType.INSTANCE -> RelateFileType.WXML
-        JsonFileType.INSTANCE -> RelateFileType.JSON
-        JavaScriptFileType.INSTANCE -> RelateFileType.JS
-        WXSSFileType.INSTANCE -> RelateFileType.WXSS
-        else -> null
-    }
-}
-
-fun <T : PsiFile> Class<T>.getRelateFileType(): RelateFileType? {
-    return when {
-        WXSSPsiFile::class.java.isAssignableFrom(this) -> RelateFileType.WXSS
-        WXMLPsiFile::class.java.isAssignableFrom(this) -> RelateFileType.WXML
-        JsonFile::class.java.isAssignableFrom(this) -> RelateFileType.JSON
-        JSFile::class.java.isAssignableFrom(this) -> RelateFileType.JS
-        else -> null
-    }
-}
-
-/**
- * 找到指定的文件所对应的指定扩展的文件
- * 例如：
- * 已知一个wxss
- * 找到其对应的文件
- * @param relateFileType 对应的文件类型
- */
-fun findRelateFile(originFile: VirtualFile, relateFileType: RelateFileType): VirtualFile? {
-    return originFile.parent?.children?.find { it.nameWithoutExtension == originFile.nameWithoutExtension && it.extension == relateFileType.fileType.defaultExtension }
-}
-
-inline fun <reified T : PsiFile> findRelatePsiFile(psiFile: PsiFile): T? {
-    val originFile = psiFile.originalFile.virtualFile
-    val project = psiFile.project
-    return findRelatePsiFile(originFile, project)
-}
-
-inline fun <reified T : PsiFile> findRelatePsiFile(originFile: VirtualFile, project: Project): T? {
-    val relateFileType = getRelateFileTypeFromClass(T::class) ?: return null
-    val virtualFile = findRelateFile(originFile, relateFileType) ?: return null
-    return PsiManager.getInstance(project).findFile(virtualFile) as? T
-}
-
-fun <T : PsiFile> getRelateFileTypeFromClass(clazz: KClass<T>): RelateFileType? {
-    return when (clazz) {
-        WXSSPsiFile::class -> RelateFileType.WXSS
-        WXMLPsiFile::class -> RelateFileType.WXML
-        JsonFile::class -> RelateFileType.JSON
-        JSFile::class -> RelateFileType.JS
-        else -> null
-    }
-}
-
-fun findRelatePsiFile(psiFile: PsiFile, relateFileType: RelateFileType): PsiFile? {
-    val virtualFile = findRelateFile(psiFile.originalFile.virtualFile, relateFileType) ?: return null
-    return PsiManager.getInstance(psiFile.project).findFile(virtualFile)
-}
-
-fun findAppFile(project: Project, relateFileType: RelateFileType): VirtualFile? {
-    if (relateFileType == RelateFileType.WXML) return null
-    val basePath = project.basePath
-    if (basePath != null) {
-        val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
-        if (baseDir != null) {
-            return baseDir.findChild("app." + relateFileType.fileType.defaultExtension)
-        }
-    }
-    return null
-}
-
-inline fun <reified T : PsiFile> findAppFile(project: Project): T? {
-    val relateFileType = getRelateFileTypeFromClass(T::class) ?: return null
-    val virtualFile = findAppFile(project, relateFileType)
-    return virtualFile?.let { PsiManager.getInstance(project).findFile(it) } as? T
 }

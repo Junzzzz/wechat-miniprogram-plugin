@@ -83,9 +83,7 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferen
 import com.intellij.psi.impl.source.xml.TagNameReference
 import com.intellij.psi.xml.XmlTag
 import com.intellij.util.ProcessingContext
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findAppFile
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelatePsiFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentFilesCreator
@@ -97,7 +95,7 @@ class JsonReferenceContributor : PsiReferenceContributor() {
                 PsiReferenceProvider() {
             override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
                 element as JsonProperty
-                val wxmlPsiFile = findRelatePsiFile<WXMLPsiFile>(element.containingFile)
+                val wxmlPsiFile = RelateFileHolder.MARKUP.findFile(element.containingFile)
                         ?: return PsiReference.EMPTY_ARRAY
                 if (wxmlPsiFile.findChildrenOfType<XmlTag>().filter {
                             it.name == element.name
@@ -147,8 +145,8 @@ class JsonReferenceContributor : PsiReferenceContributor() {
                     ): Array<out PsiReference> {
                         psiElement as JsonStringLiteral
                         val parentArray = psiElement.parent
-                        if (findAppFile(
-                                        psiElement.project, RelateFileType.JSON
+                        if (RelateFileHolder.JSON.findAppFile(
+                                        psiElement.project
                                 ) == psiElement.containingFile.originalFile.virtualFile) {
                             // 确定是app.json
                             if (parentArray is JsonArray) {
@@ -174,7 +172,7 @@ class JsonReferenceContributor : PsiReferenceContributor() {
 class JsonRegistrationReference(jsonProperty: JsonProperty) :
         PsiPolyVariantReferenceBase<JsonProperty>(jsonProperty, jsonProperty.nameElement.textRangeInParent) {
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        val wxmlPsiFile = findRelatePsiFile<WXMLPsiFile>(element.containingFile) ?: return ResolveResult.EMPTY_ARRAY
+        val wxmlPsiFile = RelateFileHolder.MARKUP.findFile(element.containingFile) ?: return ResolveResult.EMPTY_ARRAY
         return wxmlPsiFile.findChildrenOfType<XmlTag>().filter {
             it.name == element.name
         }.filter { xmlTag ->

@@ -78,7 +78,7 @@ import com.intellij.icons.AllIcons
 class WXMLIcons {
 
     companion object{
-        val FILE = AllIcons.FileTypes.Xml!!
+        val FILE = AllIcons.FileTypes.Xml
     }
 
 }

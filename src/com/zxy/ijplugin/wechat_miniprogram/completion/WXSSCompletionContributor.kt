@@ -80,7 +80,6 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.patterns.PsiElementPattern
 import com.intellij.patterns.StandardPatterns
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
 import com.intellij.psi.css.CssClass
 import com.intellij.psi.css.CssDeclaration
 import com.intellij.psi.css.CssIdSelector
@@ -91,8 +90,7 @@ import com.intellij.psi.css.impl.CssTermTypes
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.util.ProcessingContext
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
@@ -129,13 +127,9 @@ class WXSSCompletionContributor : CompletionContributor() {
                         )
 
                         // 收集wxml文件中的所有可见的类名
-                        val wxmlVirtualFile = findRelateFile(
-                                wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.WXML
-                        )
-                                ?: return
-                        val wxmlPsiFile = PsiManager.getInstance(psiElement.project).findFile(
-                                wxmlVirtualFile
-                        ) as? WXMLPsiFile ?: return
+                        wxssPsiFile.originalFile.virtualFile ?: return
+                        val wxmlPsiFile = RelateFileHolder.MARKUP.findFile(wxssPsiFile.originalFile)
+                                as? WXMLPsiFile ?: return
 
                         result.addAllElements(
                                 wxmlPsiFile.findChildrenOfType<XmlAttributeValue>().asSequence()
@@ -159,7 +153,10 @@ class WXSSCompletionContributor : CompletionContributor() {
                         PlatformPatterns.psiElement(CssElementTypes.CSS_NUMBER)
                 ).withSuperParent(2, CssTerm::class.java).inside(
                         CssDeclaration::class.java
-                ).inWXSSFile(),
+                ).andOr(
+                        PlatformPatterns.psiElement().inWXSSFile(),
+                        PlatformPatterns.psiElement().inFile(PlatformPatterns.psiFile(WXMLPsiFile::class.java))
+                ),
                 object : CompletionProvider<CompletionParameters>() {
                     override fun addCompletions(
                             parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
@@ -191,13 +188,9 @@ class WXSSCompletionContributor : CompletionContributor() {
                         val wxssPsiFile = (psiElement.containingFile as? WXSSPsiFile) ?: return
 
                         // 收集wxml文件中的所有可见的Id
-                        val wxmlVirtualFile = findRelateFile(
-                                wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.WXML
-                        )
-                                ?: return
-                        val wxmlPsiFile = PsiManager.getInstance(psiElement.project).findFile(
-                                wxmlVirtualFile
-                        ) as? WXMLPsiFile ?: return
+                        wxssPsiFile.originalFile.virtualFile ?: return
+                        val wxmlPsiFile = RelateFileHolder.MARKUP.findFile(wxssPsiFile.originalFile)
+                                as? WXMLPsiFile ?: return
                         result.addAllElements(wxmlPsiFile.findChildrenOfType<XmlAttributeValue>().asSequence().flatMap {
                             it.references.asSequence()
                         }.map {

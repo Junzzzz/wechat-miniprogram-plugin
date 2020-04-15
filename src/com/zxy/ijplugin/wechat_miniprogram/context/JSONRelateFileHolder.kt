@@ -71,23 +71,16 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.inspections
+package com.zxy.ijplugin.wechat_miniprogram.context
 
-import com.intellij.psi.PsiElement
-import com.intellij.psi.css.CssElement
-import com.intellij.psi.css.CssTerm
-import com.intellij.psi.css.inspections.CssApiBaseInspection
-import com.intellij.psi.css.inspections.CssInspectionFilter
-import com.intellij.psi.css.inspections.invalid.CssInvalidPropertyValueInspection
-import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
+import com.intellij.json.JsonFileType
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
 
-class WxssCssInspectionFilter : CssInspectionFilter() {
-    override fun isSupported(clazz: Class<out CssApiBaseInspection>, element: PsiElement): Boolean {
-        // 忽略css对rpx单位的报错
-        return !(clazz.isAssignableFrom(
-                CssInvalidPropertyValueInspection::class.java
-        ) && element.findChildrenOfType<CssTerm>().flatMap { it.children.toList() }.any {
-            it is CssElement && it.text.endsWith("rpx")
-        })
+class JSONRelateFileHolder : RelateFileHolder() {
+    override fun findFile(files: Array<PsiFile>, project: Project): PsiFile? {
+        return files.find {
+            it.fileType == JsonFileType.INSTANCE
+        }
     }
 }

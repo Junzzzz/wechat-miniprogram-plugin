@@ -81,6 +81,7 @@ import com.intellij.psi.xml.XmlTag
 import com.intellij.psi.xml.XmlTokenType
 import com.intellij.xml.XmlAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLCustomComponentAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
@@ -133,6 +134,12 @@ object WXMLUtils {
         }?.map {
             WXMLCustomComponentAttributeDescriptor(it)
         }?.toTypedArray() ?: emptyArray()
+    }
+
+    fun isCommonAttributes(attributeName: String): Boolean {
+        return WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.any {
+            it.key === attributeName
+        }
     }
 }
 

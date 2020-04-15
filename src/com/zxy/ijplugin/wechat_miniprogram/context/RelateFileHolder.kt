@@ -71,45 +71,47 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
+package com.zxy.ijplugin.wechat_miniprogram.context
 
-import com.intellij.psi.PsiElement
-import com.intellij.psi.css.CssElementDescriptorProvider
-import com.intellij.psi.css.CssSimpleSelector
-import com.intellij.psi.xml.XmlTag
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
-import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeNameCompletionProvider.Companion.IGNORE_COMMON_ATTRIBUTE_TAG_NAMES
-import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
+import com.intellij.json.JsonFileType
+import com.intellij.lang.javascript.JavaScriptFileType
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.QSSFileType
 
-class WXSSElementDescriptionProvider : CssElementDescriptorProvider() {
-    override fun getDeclarationsForSimpleSelector(p0: CssSimpleSelector): Array<PsiElement> {
-        return PsiElement.EMPTY_ARRAY
+abstract class RelateFileHolder {
+
+    companion object {
+        val MARKUP = QQCompatibleRelateFileHolder(QMLFileType.INSTANCE, WXMLFileType.INSTANCE)
+        val SCRIPT = SingleFileTypeFileHolder(JavaScriptFileType.INSTANCE)
+        val STYLE = QQCompatibleRelateFileHolder(QSSFileType.INSTANCE, WXSFileType.INSTANCE)
+        val JSON = SingleFileTypeFileHolder(JsonFileType.INSTANCE)
+
+        val INSTANCES = arrayOf(MARKUP, SCRIPT, STYLE, JSON)
     }
 
-    override fun isMyContext(element: PsiElement?): Boolean {
-        return element != null && isWechatMiniProgramContext(element)
-    }
-
-    override fun isPossibleSelector(selector: String, context: PsiElement): Boolean {
-        return selector == "page" || WXMLMetadata.getElementDescriptions(context.project).any { it.name == selector }
-    }
-
-    override fun getSimpleSelectors(context: PsiElement): Array<String> {
-        val result = mutableListOf("page")
-        val wxssPsiFile = (context.containingFile as? WXSSPsiFile)
-        if (wxssPsiFile != null) {
-            val wxmlPsiFile = RelateFileHolder.MARKUP.findFile(wxssPsiFile)
-            if (wxmlPsiFile != null) {
-                result.addAll(wxmlPsiFile.findChildrenOfType<XmlTag>().distinctBy { it.name }.map {
-                    it.name
-                }.filter {
-                    // 忽略部分标签
-                    !IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(it)
-                })
+    fun findAppFile(project: Project): PsiFile? {
+        val basePath = project.basePath
+        if (basePath != null) {
+            val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
+            if (baseDir != null) {
+                return this.findFile(PsiManager.getInstance(project).findDirectory(baseDir)?.files?.filter {
+                    it.name == "app"
+                }?.toTypedArray() ?: return null, project)
             }
         }
-        return result.toTypedArray()
+        return null
+    }
+
+    protected abstract fun findFile(files: Array<PsiFile>, project: Project): PsiFile?
+
+    fun findFile(relatedFile: PsiFile): PsiFile? {
+        val psiFiles = relatedFile.parent?.files ?: return null
+        return this.findFile(psiFiles, relatedFile.project)
     }
 }

@@ -71,45 +71,49 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag
 
-import com.intellij.psi.PsiElement
-import com.intellij.psi.css.CssElementDescriptorProvider
-import com.intellij.psi.css.CssSimpleSelector
+import com.intellij.psi.impl.source.xml.XmlElementDescriptorProvider
+import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlTag
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
-import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeNameCompletionProvider.Companion.IGNORE_COMMON_ATTRIBUTE_TAG_NAMES
-import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
+import com.intellij.xml.XmlAttributeDescriptor
+import com.intellij.xml.XmlElementDescriptor
+import com.intellij.xml.XmlElementsGroup
+import com.intellij.xml.XmlNSDescriptor
+import com.intellij.xml.impl.schema.AnyXmlAttributeDescriptor
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLUtils
 
-class WXSSElementDescriptionProvider : CssElementDescriptorProvider() {
-    override fun getDeclarationsForSimpleSelector(p0: CssSimpleSelector): Array<PsiElement> {
-        return PsiElement.EMPTY_ARRAY
+abstract class WXMLBasicElementDescriptor : XmlElementDescriptor {
+    override fun getContentType(): Int {
+        return XmlElementDescriptor.CONTENT_TYPE_ANY
     }
 
-    override fun isMyContext(element: PsiElement?): Boolean {
-        return element != null && isWechatMiniProgramContext(element)
+    override fun getTopGroup(): XmlElementsGroup? {
+        return null
     }
 
-    override fun isPossibleSelector(selector: String, context: PsiElement): Boolean {
-        return selector == "page" || WXMLMetadata.getElementDescriptions(context.project).any { it.name == selector }
+    override fun getNSDescriptor(): XmlNSDescriptor? {
+        return null
     }
 
-    override fun getSimpleSelectors(context: PsiElement): Array<String> {
-        val result = mutableListOf("page")
-        val wxssPsiFile = (context.containingFile as? WXSSPsiFile)
-        if (wxssPsiFile != null) {
-            val wxmlPsiFile = RelateFileHolder.MARKUP.findFile(wxssPsiFile)
-            if (wxmlPsiFile != null) {
-                result.addAll(wxmlPsiFile.findChildrenOfType<XmlTag>().distinctBy { it.name }.map {
-                    it.name
-                }.filter {
-                    // 忽略部分标签
-                    !IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(it)
-                })
-            }
+    override fun getElementDescriptor(child: XmlTag, context: XmlTag): XmlElementDescriptor? {
+        return XmlElementDescriptorProvider.EP_NAME.findExtension(WXMLElementDescriptorProvider::class.java)
+                ?.getDescriptor(child)
+    }
+
+    override fun getAttributeDescriptor(attributeName: String, context: XmlTag?): XmlAttributeDescriptor? {
+        if (WXMLUtils.isCommonAttributes(attributeName) || WXMLUtils.likeEventAttribute(attributeName)) {
+            // 公共属性或公共事件
+            return AnyXmlAttributeDescriptor(attributeName)
         }
-        return result.toTypedArray()
+        return null
+    }
+
+    override fun getAttributeDescriptor(attribute: XmlAttribute?): XmlAttributeDescriptor? {
+        return this.getAttributeDescriptor(attribute?.name ?: return null, attribute.parent)
+    }
+
+    override fun getAttributesDescriptors(p0: XmlTag?): Array<XmlAttributeDescriptor> {
+        return emptyArray()
     }
 }

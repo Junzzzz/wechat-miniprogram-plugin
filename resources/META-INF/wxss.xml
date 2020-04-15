@@ -99,6 +99,8 @@
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WXSSReferenceContributor"/>
         <lang.inspectionSuppressor language="WXSS"
                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"/>
+        <lang.inspectionSuppressor language="WXML"
+                                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"/>
         <css.classOrIdUsagesProvider order="first"
                                      implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSIdOrClassUsageProvider"/>
         <renameHandler implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXMLIdOrClassRenameHandler"/>
