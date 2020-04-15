@@ -130,7 +130,7 @@ class WXSSCompletionContributor : CompletionContributor() {
 
                         // 收集wxml文件中的所有可见的类名
                         val wxmlVirtualFile = findRelateFile(
-                                wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.WXML
+                                wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.MARKUP
                         )
                                 ?: return
                         val wxmlPsiFile = PsiManager.getInstance(psiElement.project).findFile(
@@ -192,7 +192,7 @@ class WXSSCompletionContributor : CompletionContributor() {
 
                         // 收集wxml文件中的所有可见的Id
                         val wxmlVirtualFile = findRelateFile(
-                                wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.WXML
+                                wxssPsiFile.originalFile.virtualFile ?: return, RelateFileType.MARKUP
                         )
                                 ?: return
                         val wxmlPsiFile = PsiManager.getInstance(psiElement.project).findFile(

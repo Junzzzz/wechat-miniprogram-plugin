@@ -123,10 +123,14 @@ fun isWechatMiniProgramContext(project: Project, strict: Boolean = true): Boolea
 }
 
 enum class RelateFileType(val fileType: LanguageFileType) {
-    WXML(WXMLFileType.INSTANCE),
+    MARKUP(WXMLFileType.INSTANCE),
     JSON(JsonFileType.INSTANCE),
-    JS(JavaScriptFileType.INSTANCE),
-    WXSS(WXSSFileType.INSTANCE)
+    SCRIPT(JavaScriptFileType.INSTANCE),
+    STYLE(WXSSFileType.INSTANCE);
+
+    fun findRelateSelf(virtualFile: VirtualFile) {
+
+    }
 }
 
 val componentFileClasses = arrayOf(
@@ -135,20 +139,20 @@ val componentFileClasses = arrayOf(
 
 fun LanguageFileType.getRelateFileType(): RelateFileType? {
     return when (this) {
-        WXMLFileType.INSTANCE -> RelateFileType.WXML
+        WXMLFileType.INSTANCE -> RelateFileType.MARKUP
         JsonFileType.INSTANCE -> RelateFileType.JSON
-        JavaScriptFileType.INSTANCE -> RelateFileType.JS
-        WXSSFileType.INSTANCE -> RelateFileType.WXSS
+        JavaScriptFileType.INSTANCE -> RelateFileType.SCRIPT
+        WXSSFileType.INSTANCE -> RelateFileType.STYLE
         else -> null
     }
 }
 
 fun <T : PsiFile> Class<T>.getRelateFileType(): RelateFileType? {
     return when {
-        WXSSPsiFile::class.java.isAssignableFrom(this) -> RelateFileType.WXSS
-        WXMLPsiFile::class.java.isAssignableFrom(this) -> RelateFileType.WXML
+        WXSSPsiFile::class.java.isAssignableFrom(this) -> RelateFileType.STYLE
+        WXMLPsiFile::class.java.isAssignableFrom(this) -> RelateFileType.MARKUP
         JsonFile::class.java.isAssignableFrom(this) -> RelateFileType.JSON
-        JSFile::class.java.isAssignableFrom(this) -> RelateFileType.JS
+        JSFile::class.java.isAssignableFrom(this) -> RelateFileType.SCRIPT
         else -> null
     }
 }
@@ -160,39 +164,45 @@ fun <T : PsiFile> Class<T>.getRelateFileType(): RelateFileType? {
  * 找到其对应的文件
  * @param relateFileType 对应的文件类型
  */
+@Deprecated(message = "使用RelateFileHolder替换", replaceWith = ReplaceWith(expression = "RelateFileHolder.findFile"))
 fun findRelateFile(originFile: VirtualFile, relateFileType: RelateFileType): VirtualFile? {
     return originFile.parent?.children?.find { it.nameWithoutExtension == originFile.nameWithoutExtension && it.extension == relateFileType.fileType.defaultExtension }
 }
 
+@Deprecated(message = "使用RelateFileHolder替换", replaceWith = ReplaceWith(expression = "RelateFileHolder.findFile"))
 inline fun <reified T : PsiFile> findRelatePsiFile(psiFile: PsiFile): T? {
     val originFile = psiFile.originalFile.virtualFile
     val project = psiFile.project
     return findRelatePsiFile(originFile, project)
 }
 
+@Deprecated(message = "使用RelateFileHolder替换", replaceWith = ReplaceWith(expression = "RelateFileHolder.findFile"))
 inline fun <reified T : PsiFile> findRelatePsiFile(originFile: VirtualFile, project: Project): T? {
     val relateFileType = getRelateFileTypeFromClass(T::class) ?: return null
     val virtualFile = findRelateFile(originFile, relateFileType) ?: return null
     return PsiManager.getInstance(project).findFile(virtualFile) as? T
 }
 
+@Deprecated(message = "使用RelateFileHolder替换", replaceWith = ReplaceWith(expression = "RelateFileHolder.findFile"))
 fun <T : PsiFile> getRelateFileTypeFromClass(clazz: KClass<T>): RelateFileType? {
     return when (clazz) {
-        WXSSPsiFile::class -> RelateFileType.WXSS
-        WXMLPsiFile::class -> RelateFileType.WXML
+        WXSSPsiFile::class -> RelateFileType.STYLE
+        WXMLPsiFile::class -> RelateFileType.MARKUP
         JsonFile::class -> RelateFileType.JSON
-        JSFile::class -> RelateFileType.JS
+        JSFile::class -> RelateFileType.SCRIPT
         else -> null
     }
 }
 
+@Deprecated(message = "使用RelateFileHolder替换", replaceWith = ReplaceWith(expression = "RelateFileHolder.findFile"))
 fun findRelatePsiFile(psiFile: PsiFile, relateFileType: RelateFileType): PsiFile? {
     val virtualFile = findRelateFile(psiFile.originalFile.virtualFile, relateFileType) ?: return null
     return PsiManager.getInstance(psiFile.project).findFile(virtualFile)
 }
 
+@Deprecated(message = "使用RelateFileHolder替换", replaceWith = ReplaceWith(expression = "RelateFileHolder.findAppFile"))
 fun findAppFile(project: Project, relateFileType: RelateFileType): VirtualFile? {
-    if (relateFileType == RelateFileType.WXML) return null
+    if (relateFileType == RelateFileType.MARKUP) return null
     val basePath = project.basePath
     if (basePath != null) {
         val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
@@ -203,6 +213,7 @@ fun findAppFile(project: Project, relateFileType: RelateFileType): VirtualFile? 
     return null
 }
 
+@Deprecated(message = "使用RelateFileHolder替换", replaceWith = ReplaceWith(expression = "RelateFileHolder.findAppFile"))
 inline fun <reified T : PsiFile> findAppFile(project: Project): T? {
     val relateFileType = getRelateFileTypeFromClass(T::class) ?: return null
     val virtualFile = findAppFile(project, relateFileType)

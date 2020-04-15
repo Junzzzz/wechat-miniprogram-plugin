@@ -124,7 +124,7 @@ class WXSSInvalidImportInspection : LocalInspectionTool() {
                     if (resolveElement is WXSSPsiFile) {
                         if (resolveElement.virtualFile == findAppFile(
                                         resolveElement.project,
-                                        RelateFileType.WXSS
+                                        RelateFileType.STYLE
                                 )) {
                             holder.registerProblem(
                                     string, string.contentRange(), "app.wxss是全局样式，无需导入",

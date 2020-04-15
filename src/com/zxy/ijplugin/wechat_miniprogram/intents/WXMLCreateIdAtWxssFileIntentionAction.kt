@@ -109,7 +109,7 @@ class WXMLCreateIdAtWxssFileIntentionAction : WXMLCreateSelectorAtWxssFileIntent
         if (psiElement.node.elementType !== XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN || editor == null) return false
         val reference = psiElement.containingFile.findReferenceAt(editor.caretModel.offset)
         if (reference is WXMLIdReference && reference.multiResolve(false).isEmpty()) {
-            findRelateFile(psiElement.containingFile.originalFile.virtualFile, RelateFileType.WXSS)?.let {
+            findRelateFile(psiElement.containingFile.originalFile.virtualFile, RelateFileType.STYLE)?.let {
                 PsiManager.getInstance(psiElement.project).findFile(
                         it
                 )

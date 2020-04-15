@@ -71,67 +71,33 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.reference
+package com.zxy.ijplugin.wechat_miniprogram.context
 
-import com.intellij.openapi.util.TextRange
-import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.*
-import com.intellij.psi.css.CssIdSelector
-import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.xml.XmlAttributeValue
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
+import com.intellij.openapi.fileTypes.LanguageFileType
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
+import com.zxy.ijplugin.wechat_miniprogram.settings.MiniProgramType
+import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
 
-class WXMLIdReference(xmlAttributeValue: XmlAttributeValue, range: TextRange) :
-        PsiPolyVariantReferenceBase<XmlAttributeValue>(xmlAttributeValue, range) {
-
-    override fun multiResolve(p0: Boolean): Array<ResolveResult> {
-        val id = this.value
-        return getIdSelectorsFromRelatedWxssFile().filter { id == it.name }.map {
-            PsiElementResolveResult(it)
-        }.toTypedArray()
-    }
-
-    override fun isReferenceTo(element: PsiElement): Boolean {
-        val cssId = this.value
-        if (element is CssIdSelector && element.name == cssId) {
-            val wxmlFile = this.element.containingFile.virtualFile
-            val wxssFile = findRelateFile(wxmlFile, RelateFileType.STYLE)
-            if (this.containsSelector(element, wxssFile)) {
-                return true
+class QQCompatibleRelateFileHolder(
+        private val onlyQQFileType: LanguageFileType,
+        private val compatibleWeiXinFileType: LanguageFileType
+) :
+        RelateFileHolder() {
+    override fun findFile(files: Array<PsiFile>, project: Project): PsiFile? {
+        val miniprogramType = MyProjectSettings.getState(project).miniprogramType
+        return if (miniprogramType == MiniProgramType.QQ) {
+            files.find {
+                it.fileType == onlyQQFileType
+            } ?: files.find {
+                it.fileType == compatibleWeiXinFileType
+            }
+        } else {
+            files.find {
+                it.fileType == compatibleWeiXinFileType
             }
         }
-        return false
     }
 
-    private fun containsSelector(selector: CssIdSelector, wxssFile: VirtualFile?): Boolean {
-        val psiManager = PsiManager.getInstance(selector.project)
-        val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
-        val wxssPsiFiles = WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile as WXSSPsiFile)
-        return wxssPsiFiles.any {
-            PsiTreeUtil.findChildrenOfType(it, CssIdSelector::class.java).contains(selector)
-        }
-    }
-
-    private fun getIdSelectorsFromRelatedWxssFile(): MutableCollection<CssIdSelector> {
-        val project = this.element.project
-        val wxmlFile = this.element.containingFile.originalFile.virtualFile
-        // 在wxml文件附近找同名的wxss文件
-        val wxssFile = findRelateFile(wxmlFile, RelateFileType.STYLE)
-        val psiManager = PsiManager.getInstance(project)
-        if (wxssFile != null) {
-            val wxssPsiFile = psiManager.findFile(wxssFile)
-            if (wxssPsiFile != null) {
-                return PsiTreeUtil.findChildrenOfType(wxssPsiFile, CssIdSelector::class.java)
-            }
-        }
-        return mutableListOf()
-    }
-
-    override fun getVariants(): Array<Any> {
-        return getIdSelectorsFromRelatedWxssFile().toTypedArray()
-    }
 
 }

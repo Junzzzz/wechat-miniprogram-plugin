@@ -119,7 +119,7 @@ class WXMLCreateClassAtComponentWxssFileIntentionAction : WXMLCreateClassAtWxssF
             if (reference.multiResolve(false).isEmpty()) {
                 val className = reference.canonicalText
                 val wxssVirtualFile = findRelateFile(
-                        psiElement.containingFile.virtualFile, RelateFileType.WXSS
+                        psiElement.containingFile.virtualFile, RelateFileType.STYLE
                 )
                 val wxssPsiFile = wxssVirtualFile?.let { it ->
                     PsiManager.getInstance(psiElement.project).findFile(
@@ -148,7 +148,7 @@ class WXMLCreateClassAtAppWxssFileIntentionAction : WXMLCreateClassAtWxssFileInt
         if (isAvailableElementAndEditor(psiElement, editor)) return false
         val reference = psiElement.containingFile.findReferenceAt(editor!!.caretModel.offset)
         if (reference is WXMLClassReference && reference.multiResolve(false).isEmpty()) {
-            findAppFile(psiElement.project, RelateFileType.WXSS)?.let {
+            findAppFile(psiElement.project, RelateFileType.STYLE)?.let {
                 PsiManager.getInstance(psiElement.project).findFile(
                         it
                 )

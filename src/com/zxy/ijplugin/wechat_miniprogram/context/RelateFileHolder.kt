@@ -71,67 +71,44 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.reference
+package com.zxy.ijplugin.wechat_miniprogram.context
 
-import com.intellij.openapi.util.TextRange
-import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.*
-import com.intellij.psi.css.CssIdSelector
-import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.xml.XmlAttributeValue
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileType
-import com.zxy.ijplugin.wechat_miniprogram.context.findRelateFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.utils.WXSSModuleUtils
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.QSFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.QSSFileType
 
-class WXMLIdReference(xmlAttributeValue: XmlAttributeValue, range: TextRange) :
-        PsiPolyVariantReferenceBase<XmlAttributeValue>(xmlAttributeValue, range) {
+abstract class RelateFileHolder {
 
-    override fun multiResolve(p0: Boolean): Array<ResolveResult> {
-        val id = this.value
-        return getIdSelectorsFromRelatedWxssFile().filter { id == it.name }.map {
-            PsiElementResolveResult(it)
-        }.toTypedArray()
+    companion object {
+        val MARKUP = QQCompatibleRelateFileHolder(QMLFileType.INSTANCE, WXMLFileType.INSTANCE)
+        val SCRIPT = QQCompatibleRelateFileHolder(QSFileType.INSTANCE, WXSFileType.INSTANCE)
+        val STYLE = QQCompatibleRelateFileHolder(QSSFileType.INSTANCE, WXSFileType.INSTANCE)
+        val JSON = JSONRelateFileHolder()
     }
 
-    override fun isReferenceTo(element: PsiElement): Boolean {
-        val cssId = this.value
-        if (element is CssIdSelector && element.name == cssId) {
-            val wxmlFile = this.element.containingFile.virtualFile
-            val wxssFile = findRelateFile(wxmlFile, RelateFileType.STYLE)
-            if (this.containsSelector(element, wxssFile)) {
-                return true
+    fun findAppFile(project: Project): PsiFile? {
+        val basePath = project.basePath
+        if (basePath != null) {
+            val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
+            if (baseDir != null) {
+                return this.findFile(PsiManager.getInstance(project).findDirectory(baseDir)?.files?.filter {
+                    it.name == "app"
+                }?.toTypedArray() ?: return null, project)
             }
         }
-        return false
+        return null
     }
 
-    private fun containsSelector(selector: CssIdSelector, wxssFile: VirtualFile?): Boolean {
-        val psiManager = PsiManager.getInstance(selector.project)
-        val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
-        val wxssPsiFiles = WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile as WXSSPsiFile)
-        return wxssPsiFiles.any {
-            PsiTreeUtil.findChildrenOfType(it, CssIdSelector::class.java).contains(selector)
-        }
-    }
+    protected abstract fun findFile(files: Array<PsiFile>, project: Project): PsiFile?
 
-    private fun getIdSelectorsFromRelatedWxssFile(): MutableCollection<CssIdSelector> {
-        val project = this.element.project
-        val wxmlFile = this.element.containingFile.originalFile.virtualFile
-        // 在wxml文件附近找同名的wxss文件
-        val wxssFile = findRelateFile(wxmlFile, RelateFileType.STYLE)
-        val psiManager = PsiManager.getInstance(project)
-        if (wxssFile != null) {
-            val wxssPsiFile = psiManager.findFile(wxssFile)
-            if (wxssPsiFile != null) {
-                return PsiTreeUtil.findChildrenOfType(wxssPsiFile, CssIdSelector::class.java)
-            }
-        }
-        return mutableListOf()
+    fun findFile(relatedFile: PsiFile): PsiFile? {
+        val psiFiles = relatedFile.parent?.files ?: return null
+        return this.findFile(psiFiles, relatedFile.project)
     }
-
-    override fun getVariants(): Array<Any> {
-        return getIdSelectorsFromRelatedWxssFile().toTypedArray()
-    }
-
 }

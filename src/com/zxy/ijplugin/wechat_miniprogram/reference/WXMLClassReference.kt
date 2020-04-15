@@ -100,11 +100,11 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
         val cssClass = this.element.text.substring(this.rangeInElement)
         val project = this.element.project
         val wxmlFile = this.element.containingFile.virtualFile
-        val wxssFile = findRelateFile(wxmlFile, RelateFileType.WXSS)
+        val wxssFile = findRelateFile(wxmlFile, RelateFileType.STYLE)
         // 相关的wxss文件中找class的定义
         results.addAll(findClassSelectorResult(wxssFile, cssClass, project))
 
-        val appWXSSFile = findAppFile(project, RelateFileType.WXSS)
+        val appWXSSFile = findAppFile(project, RelateFileType.STYLE)
         // 在app.wxss文件中找class的定义
         results.addAll(findClassSelectorResult(appWXSSFile, cssClass, project))
         return results.toTypedArray()
@@ -142,11 +142,11 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
         if (element is CssClass && element.name == cssClass) {
             val project = this.element.project
             val wxmlFile = this.element.containingFile.virtualFile
-            val wxssFile = findRelateFile(wxmlFile, RelateFileType.WXSS)
+            val wxssFile = findRelateFile(wxmlFile, RelateFileType.STYLE)
             if (this.containsSelector(element, wxssFile)) {
                 return true
             }
-            val appWXSSFile = findAppFile(project, RelateFileType.WXSS)
+            val appWXSSFile = findAppFile(project, RelateFileType.STYLE)
             if (this.containsSelector(element, appWXSSFile)) {
                 return true
             }
@@ -166,12 +166,12 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
     override fun getVariants(): Array<Any> {
         val result = arrayListOf<CssClass>()
         val psiManager = PsiManager.getInstance(this.element.project)
-        val wxssFile = findRelateFile(this.element.containingFile.originalFile.virtualFile, RelateFileType.WXSS)
+        val wxssFile = findRelateFile(this.element.containingFile.originalFile.virtualFile, RelateFileType.STYLE)
         val wxssPsiFile = wxssFile?.let { psiManager.findFile(wxssFile) }
         if (wxssPsiFile is WXSSPsiFile) {
             result.addAll(findClassSelectorFromFileAndImports(wxssPsiFile))
         }
-        findAppFile(this.element.project, RelateFileType.WXSS)?.let {
+        findAppFile(this.element.project, RelateFileType.STYLE)?.let {
             val appWXSSPsiFile = psiManager.findFile(it)
             if (appWXSSPsiFile is WXSSPsiFile) {
                 result.addAll(findClassSelectorFromFileAndImports(appWXSSPsiFile))
