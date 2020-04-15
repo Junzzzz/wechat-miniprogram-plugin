@@ -192,4 +192,8 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
         return PsiTreeUtil.findChildrenOfType(wxssPsiFile, CssClass::class.java)
     }
 
+    override fun isSoft(): Boolean {
+        return true
+    }
+
 }
