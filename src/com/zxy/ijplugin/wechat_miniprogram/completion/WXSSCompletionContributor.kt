@@ -159,7 +159,10 @@ class WXSSCompletionContributor : CompletionContributor() {
                         PlatformPatterns.psiElement(CssElementTypes.CSS_NUMBER)
                 ).withSuperParent(2, CssTerm::class.java).inside(
                         CssDeclaration::class.java
-                ).inWXSSFile(),
+                ).andOr(
+                        PlatformPatterns.psiElement().inWXSSFile(),
+                        PlatformPatterns.psiElement().inFile(PlatformPatterns.psiFile(WXMLPsiFile::class.java))
+                ),
                 object : CompletionProvider<CompletionParameters>() {
                     override fun addCompletions(
                             parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
