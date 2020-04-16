@@ -82,18 +82,16 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
 import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
+import com.zxy.ijplugin.wechat_miniprogram.localization.message
 
 /**
  * 找到一个组件或页面的相关文件
  */
 class WechatMiniProgramGotoRelatedProvider : GotoRelatedProvider() {
-
-    companion object {
-        const val GROUP_NAME = "Wechat Mini Program Component"
-    }
 
     override fun getItems(dataContext: DataContext): MutableList<out GotoRelatedItem> {
         val project = dataContext.getData(CommonDataKeys.PROJECT)
@@ -118,7 +116,11 @@ class WechatMiniProgramGotoRelatedProvider : GotoRelatedProvider() {
     class MyGotoRelatedItem(
             element: PsiElement, private val name: String, private val filename: String, mnemonic: Int
     ) :
-            GotoRelatedItem(element, GROUP_NAME, mnemonic) {
+            GotoRelatedItem(
+                    element,
+                    message("goto.related.group.name", message(if (element.project.isQQContext()) "qq" else "weixin")),
+                    mnemonic
+            ) {
 
         companion object {
             fun create(psiFile: PsiFile): MyGotoRelatedItem? = when (psiFile.fileType) {
