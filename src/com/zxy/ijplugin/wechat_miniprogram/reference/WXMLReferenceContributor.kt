@@ -82,6 +82,7 @@ import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.psi.xml.XmlTokenType
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
+import com.zxy.ijplugin.wechat_miniprogram.reference.patterns.FrameworkPatterns
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
@@ -130,7 +131,10 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
 
         // 解析wxml中的class
         psiReferenceRegistrar.registerReferenceProvider(
-                XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE),
+                XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE)
+                        .inFile(
+                                FrameworkPatterns.qmlFileAndQQContextPattern
+                        ),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext
@@ -196,9 +200,10 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
 
         // 解析wxml中的template.name属性
         psiReferenceRegistrar.registerReferenceProvider(
-                XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE).withLocalName("name").withSuperParent(
-                        2, XmlPatterns.xmlTag().withLocalName("template")
-                ),
+                XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE).withLocalName("name")
+                        .withSuperParent(
+                                2, XmlPatterns.xmlTag().withLocalName("template")
+                        ),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
                             psiElement: PsiElement, p1: ProcessingContext

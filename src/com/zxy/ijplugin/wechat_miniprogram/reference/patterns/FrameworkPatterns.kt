@@ -71,22 +71,22 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
+package com.zxy.ijplugin.wechat_miniprogram.reference.patterns
 
-import com.intellij.openapi.fileTypes.FileType
-import com.intellij.openapi.fileTypes.FileTypeRegistry
-import com.intellij.psi.FileViewProvider
-import com.intellij.psi.impl.source.xml.XmlFileImpl
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition
+import com.intellij.patterns.PatternCondition
+import com.intellij.patterns.PlatformPatterns
+import com.intellij.util.ProcessingContext
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 
-class WXMLPsiFile(fileViewProvider: FileViewProvider) :
-        XmlFileImpl(fileViewProvider, WXMLParserDefinition.iFileElementType) {
-    override fun getFileType(): FileType {
-        return FileTypeRegistry.getInstance().getFileTypeByFileName(this.name)
+object FrameworkPatterns {
+    val qmlFileTypeAndQQContextPattern = object : PatternCondition<WXMLPsiFile>("withQmlFileTypeAndQQContext") {
+        override fun accepts(wxmlPsiFile: WXMLPsiFile, context: ProcessingContext?): Boolean {
+            return wxmlPsiFile.project.isQQContext() && wxmlPsiFile.fileType == QMLFileType.INSTANCE
+        }
     }
 
-    override fun toString(): String {
-        return this.name
-    }
-
+    val qmlFileAndQQContextPattern = PlatformPatterns.psiFile(WXMLPsiFile::class.java)
+            .with(qmlFileTypeAndQQContextPattern)
 }
