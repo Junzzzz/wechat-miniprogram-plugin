@@ -76,10 +76,10 @@ package com.zxy.ijplugin.wechat_miniprogram.localization
 import com.intellij.AbstractBundle
 import org.jetbrains.annotations.PropertyKey
 
-const val SETTINGS_BUNDLE = "messages.settings"
+const val APP_BUNDLE = "messages.app"
 
-object SettingsBundle : AbstractBundle(APP_BUNDLE)
+object AppBundle : AbstractBundle(APP_BUNDLE)
 
-fun settingsMessage(@PropertyKey(resourceBundle = APP_BUNDLE) key: String, vararg params: Any): String {
-    return SettingsBundle.getMessage(key, *params)
+fun message(@PropertyKey(resourceBundle = APP_BUNDLE) key: String, vararg params: Any): String {
+    return AppBundle.getMessage(key, *params)
 }
