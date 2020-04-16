@@ -132,7 +132,7 @@ class WxmlXmlExtension : DefaultXmlExtension() {
     }
 
     /**
-     *  等标签可以自动关闭
+     *  部分标签可以自动关闭
      */
     override fun isSelfClosingTagAllowed(tag: XmlTag): Boolean {
         return selfClosingTagNames.contains(tag.name)
