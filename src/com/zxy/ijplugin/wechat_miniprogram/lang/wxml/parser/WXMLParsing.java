@@ -277,9 +277,10 @@ public class WXMLParsing {
                 parseComment();
             } else if (tt == XML_BAD_CHARACTER) {
                 xmlText = startText(xmlText);
-                final PsiBuilder.Marker error = mark();
+//                final PsiBuilder.Marker error = mark();
                 advance();
-                error.error("Unescaped \\& or nonterminated character/entity reference");
+                // 忽略 XML_BAD_CHARACTER 错误
+//                error.error("Unescaped \\& or nonterminated character/entity reference");
             } else if (tt instanceof ICustomParsingType || tt instanceof ILazyParseableElementType) {
                 xmlText = terminateText(xmlText);
                 advance();
@@ -380,9 +381,9 @@ public class WXMLParsing {
                 }
 
                 if (tt == XML_BAD_CHARACTER) {
-                    final PsiBuilder.Marker error = mark();
+//                    final PsiBuilder.Marker error = mark();
                     advance();
-                    error.error("Unescaped \\& or nonterminated character/entity reference");
+//                    error.error("Unescaped \\& or nonterminated character/entity reference");
                 } else if (tt == XML_ENTITY_REF_TOKEN) {
                     parseReference();
                 } else {
