@@ -76,9 +76,12 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension
 import com.intellij.psi.PsiFile
 import com.intellij.psi.xml.XmlTag
 import com.intellij.xml.DefaultXmlExtension
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isJsTypeAttribute
+import com.zxy.ijplugin.wechat_miniprogram.settings.MiniProgramType
+import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
 
 class WxmlXmlExtension : DefaultXmlExtension() {
 
@@ -87,7 +90,9 @@ class WxmlXmlExtension : DefaultXmlExtension() {
     }
 
     override fun isAvailable(file: PsiFile): Boolean {
-        return file.fileType is WXMLFileType
+        return file.fileType == WXMLFileType.INSTANCE || (MyProjectSettings.getState(
+                file.project
+        ).miniprogramType === MiniProgramType.QQ && file.fileType == QMLFileType.INSTANCE)
     }
 
     override fun getAttributeValuePresentation(
