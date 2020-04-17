@@ -80,7 +80,11 @@ import com.intellij.ui.layout.buttonGroup
 import com.intellij.ui.layout.panel
 import com.zxy.ijplugin.wechat_miniprogram.localization.settingsMessage
 
-class MyProjectConfigurable(private val project: Project) : BoundConfigurable("Wechat Mini Program") {
+class MyProjectConfigurable(private val project: Project) : BoundConfigurable(DISPLAY_NAME) {
+
+    companion object {
+        const val DISPLAY_NAME = "Wechat Mini Program"
+    }
 
     private val settings = MyProjectSettings.getState(this.project)
 
