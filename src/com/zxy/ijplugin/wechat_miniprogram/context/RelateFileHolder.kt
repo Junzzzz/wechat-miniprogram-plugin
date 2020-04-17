@@ -108,10 +108,16 @@ abstract class RelateFileHolder {
         return null
     }
 
+    /**
+     * 从一组文件中找到相关的文件
+     */
     protected abstract fun findFile(files: Array<PsiFile>, project: Project): PsiFile?
 
     fun findFile(relatedFile: PsiFile): PsiFile? {
         val psiFiles = relatedFile.parent?.files ?: return null
-        return this.findFile(psiFiles, relatedFile.project)
+        return this.findFile(
+                psiFiles.filter { it.virtualFile.nameWithoutExtension == relatedFile.virtualFile.nameWithoutExtension }
+                        .toTypedArray(), relatedFile.project
+        )
     }
 }
