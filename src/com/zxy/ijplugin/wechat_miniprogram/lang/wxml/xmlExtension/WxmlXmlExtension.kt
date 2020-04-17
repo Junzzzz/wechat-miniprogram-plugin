@@ -139,7 +139,7 @@ class WxmlXmlExtension : DefaultXmlExtension() {
 
     override fun getPrefixDeclaration(context: XmlTag, namespacePrefix: String?): SchemaPrefix? {
         if (namespacePrefix != null && (namespacePrefix == "wx"
-                        || (context.project.isQQContext() && namespacePrefix == "qq"))) {
+                        || (context.containingFile.fileType == QMLFileType.INSTANCE && namespacePrefix == "qq"))) {
             findAttributeSchema(context, namespacePrefix)
                     ?.let { return it }
         }
@@ -151,5 +151,6 @@ class WxmlXmlExtension : DefaultXmlExtension() {
                 .find { it.name.startsWith("$namespacePrefix:") }
                 ?.let { SchemaPrefix(it, TextRange.create(0, namespacePrefix.length), namespacePrefix) }
     }
+
 
 }
