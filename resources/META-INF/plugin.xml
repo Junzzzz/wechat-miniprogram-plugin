@@ -106,7 +106,9 @@
         <editorNotificationProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.qq.SetQQMiniProgramTypeNotification"/>
 
-        <projectConfigurable instance="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectConfigurable"/>
+        <projectConfigurable groupId="language"
+                             instance="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectConfigurable"/>
+
         <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings"/>
 
         <postStartupActivity implementation="com.zxy.ijplugin.wechat_miniprogram.plugin.UpdateInfoActivity"/>
