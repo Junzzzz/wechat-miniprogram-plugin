@@ -75,7 +75,7 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension
 
 import com.intellij.psi.xml.XmlFile
 import com.intellij.psi.xml.XmlFileNSInfoProvider
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 
 class WxmlFileNSInfoProvider : XmlFileNSInfoProvider {
     override fun getDefaultNamespaces(p0: XmlFile): Array<Array<String>>? {
@@ -83,6 +83,6 @@ class WxmlFileNSInfoProvider : XmlFileNSInfoProvider {
     }
 
     override fun overrideNamespaceFromDocType(p0: XmlFile): Boolean {
-        return p0.fileType == WXMLFileType.INSTANCE
+        return p0 is WXMLPsiFile
     }
 }
