@@ -160,15 +160,17 @@ patchPluginXml {
     changeNotes = """
 <ul lang='cn'>
     <li> 支持QQ小程序 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis/QQ%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%94%AF%E6%8C%81">Wiki</a></li>
+    <li> WXML换行会自动缩进 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1EJ2X">ISSUES</a></li>
     <li> 修复style属性没有自动完成得错误 </li>
-    <li> 修复会导致一些语法错误不会正确显示得错误 </li>
+    <li> 修复会导致一些语法错误不会正确显示得错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1EBUQ">ISSUES</a></li>
     <li> 修复一些已知错误 </li>
 </ul>
 <br/>
 <ul lang='en'>
     <li> Support QQ applet <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis/QQ%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%94%AF%E6%8C%81">Wiki</a></li>
+    <li> WXML line breaks are automatically indented <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1EJ2X">ISSUES</a></li>
     <li> Fix the error that the style attribute is not automatically completed </li>
-    <li> Fix will cause some syntax errors not to be displayed correctly </li>
+    <li> Fix will cause some syntax errors not to be displayed correctly <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1EBUQ">ISSUES</a></li>
     <li> Fix some known bugs </li>
 </ul>
 """
