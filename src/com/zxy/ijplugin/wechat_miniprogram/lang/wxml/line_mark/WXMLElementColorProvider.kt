@@ -80,6 +80,7 @@ import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.psi.xml.XmlToken
 import com.intellij.xml.util.ColorMap
+import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildOfType
 import java.awt.Color
@@ -96,11 +97,11 @@ class WXMLElementColorProvider : ElementColorProvider {
     }
 
     override fun getColorFrom(psiElement: PsiElement): Color? {
-        if (psiElement is XmlToken) {
-            val attributeValue = psiElement.parent as? XmlAttributeValue?:return null
-            val xmlAttribute = attributeValue.parent as? XmlAttribute?:return null
+        if (psiElement is XmlToken && isWechatMiniProgramContext(psiElement, true)) {
+            val attributeValue = psiElement.parent as? XmlAttributeValue ?: return null
+            val xmlAttribute = attributeValue.parent as? XmlAttribute ?: return null
             val name = xmlAttribute.name
-            if (name.endsWith("color") || name.endsWith("Color")){
+            if (name.endsWith("color") || name.endsWith("Color")) {
                 // 在属性值的字符串中
                 // 并且属性包含color
                 return ColorMap.getColor(psiElement.text)
