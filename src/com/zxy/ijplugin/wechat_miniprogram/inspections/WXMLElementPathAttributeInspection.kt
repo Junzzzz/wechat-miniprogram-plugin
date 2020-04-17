@@ -74,7 +74,6 @@
 package com.zxy.ijplugin.wechat_miniprogram.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElementVisitor
@@ -95,7 +94,7 @@ import com.zxy.ijplugin.wechat_miniprogram.reference.PathAttribute
  * @see fileType 路径指向的文件类型
  */
 abstract class WXMLElementPathAttributeInspection(
-        private val pathAttributes: Array<PathAttribute>, private val fileType: FileType
+        private val pathAttributes: Array<PathAttribute>, private val clazz: Class<out PsiFile>
 ) : WXMLInspectionBase() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
@@ -135,13 +134,12 @@ abstract class WXMLElementPathAttributeInspection(
                                 if (resolveElement is PsiDirectory) {
                                     continue
                                 } else if (resolveElement is PsiFile) {
-                                    if (resolveElement.fileType == fileType) {
+                                    if (clazz.isInstance(resolveElement)) {
                                         continue
                                     } else {
-                                        val suffix = fileType.defaultExtension
                                         holder.registerProblem(
                                                 xmlAttributeValue, xmlAttributeValue.valueTextRangeInSelf(),
-                                                "仅能导入${suffix}文件"
+                                                "仅能导入${resolveElement.language.displayName}文件"
                                         )
                                     }
                                 } else {

@@ -73,7 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.inspections
 
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.reference.PathAttribute
 
 /**
@@ -83,5 +83,6 @@ class WXMLInvalidImportInspection : WXMLElementPathAttributeInspection(
         arrayOf(
                 PathAttribute("import", "src"),
                 PathAttribute("include", "src")
-        ), WXMLFileType.INSTANCE
+        ),
+        WXMLPsiFile::class.java
 )
