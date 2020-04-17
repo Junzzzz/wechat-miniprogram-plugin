@@ -24,6 +24,7 @@ wechat-miniprogram-plugin
     - 同时移动自定义组件或页面的所有文件
 - 微信小程序配置文件支持
 - 代码检查以及自动修复
+- 支持QQ小程序
 
 在[Wiki](https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis)中浏览更多功能
 
