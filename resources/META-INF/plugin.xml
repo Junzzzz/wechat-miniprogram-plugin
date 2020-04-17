@@ -103,6 +103,9 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <editorNotificationProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.qq.SetQQMiniProgramTypeNotification"/>
+
         <projectConfigurable instance="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectConfigurable"/>
         <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings"/>
 
@@ -160,7 +163,7 @@
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
         <fileType name="QS" fieldName="INSTANCE" extensions="qs" language="JavaScript 1.5"
-                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.QSFileType"/>
+                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.qq.QSFileType"/>
 
         <lang.parserDefinition language="WxmlJs"
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.parser.WxmlJsParserDefinition"/>
