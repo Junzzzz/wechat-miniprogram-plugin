@@ -101,8 +101,6 @@
         <multiHostInjector implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector"/>
         <lang.foldingBuilder language="WXML"
                              implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLIncludeTagFolding"/>
-        <include.provider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WxmlJsModuleFileIncludeProvider"/>
         <lang.findUsagesProvider language="WXML"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXMLTemplateFindUsageProvider"/>
         <gotoSymbolContributor
