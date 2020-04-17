@@ -76,7 +76,7 @@
         <fileType name="WXSS" fieldName="INSTANCE" extensions="wxss" language="WXSS"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType"/>
         <fileType name="QSS" fieldName="INSTANCE" extensions="qss" language="WXSS"
-                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.QSSFileType"/>
+                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.qq.QSSFileType"/>
         <lang.parserDefinition language="WXSS"
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.parser.WXSSParserDefinition"/>
         <lang.syntaxHighlighterFactory language="WXSS"

@@ -70,32 +70,28 @@
  *
  *    See the Mulan PSL v1 for more details.
  */
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxs
 
-import com.intellij.lang.javascript.JavaScriptSupportLoader
-import com.intellij.openapi.fileTypes.LanguageFileType
-import javax.swing.Icon
+package com.zxy.ijplugin.wechat_miniprogram.qq
 
-class QSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_5) {
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
+
+class QSSFileType : WXSSFileType() {
 
     companion object {
         @JvmField
-        val INSTANCE = QSFileType()
-    }
-
-    override fun getIcon(): Icon? {
-        return WXSIcons.FILE
+        val INSTANCE = QSSFileType()
     }
 
     override fun getName(): String {
-        return "QS"
+        return "QSS"
     }
 
     override fun getDefaultExtension(): String {
-        return "qs"
+        return "qss"
     }
 
     override fun getDescription(): String {
-        return "QQ Script"
+        return "QQ Style Sheets"
     }
+
 }

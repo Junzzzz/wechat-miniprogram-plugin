@@ -71,7 +71,9 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
+package com.zxy.ijplugin.wechat_miniprogram.qq
+
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 
 class QMLFileType : WXMLFileType() {
 
