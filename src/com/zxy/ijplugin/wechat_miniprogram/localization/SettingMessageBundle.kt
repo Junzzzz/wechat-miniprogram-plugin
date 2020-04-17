@@ -78,8 +78,8 @@ import org.jetbrains.annotations.PropertyKey
 
 const val SETTINGS_BUNDLE = "messages.settings"
 
-object SettingsBundle : AbstractBundle(APP_BUNDLE)
+object SettingsBundle : AbstractBundle(SETTINGS_BUNDLE)
 
-fun settingsMessage(@PropertyKey(resourceBundle = APP_BUNDLE) key: String, vararg params: Any): String {
+fun settingsMessage(@PropertyKey(resourceBundle = SETTINGS_BUNDLE) key: String, vararg params: Any): String {
     return SettingsBundle.getMessage(key, *params)
 }
