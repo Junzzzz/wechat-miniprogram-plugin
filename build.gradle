@@ -151,7 +151,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.0.1"
+version = "3.1.0"
 
 patchPluginXml {
     sinceBuild = "201"
@@ -159,20 +159,24 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
+    <li> 支持QQ小程序 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis/QQ%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%94%AF%E6%8C%81">Wiki</a></li>
     <li> 修复style属性没有自动完成得错误 </li>
     <li> 修复会导致一些语法错误不会正确显示得错误 </li>
+    <li> 修复一些已知错误 </li>
 </ul>
 <br/>
 <ul lang='en'>
+    <li> Support QQ applet <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis/QQ%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%94%AF%E6%8C%81">Wiki</a></li>
     <li> Fix the error that the style attribute is not automatically completed </li>
     <li> Fix will cause some syntax errors not to be displayed correctly </li>
+    <li> Fix some known bugs </li>
 </ul>
 """
     pluginDescription = """
 Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> WeChat Mini Program </a> project
 <h3>使用入门</h3>
 <ul> 
-    <li>打开微信小程序项目</li>
+    <li>打开微信小程序或QQ小程序项目</li>
     <li>确保project.config.json配置文件存在</li>
     <li>现在您可以使用所有此插件提供的功能</li>
 </ul>
@@ -184,6 +188,7 @@ Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> We
     <li>微信小程序自定义组件支持</li> 
     <li>微信小程序配置文件支持</li>
     <li>代码检查和自动修复</li>
+    <li>支持QQ小程序项目 (v3.1.0)</li>
 </ul>
 <h3> Get started </h3>
 <ul>
