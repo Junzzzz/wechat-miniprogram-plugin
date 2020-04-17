@@ -77,8 +77,8 @@ import com.intellij.patterns.PatternCondition
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
 
 object FrameworkPatterns {
     val qmlFileTypeAndQQContextPattern = object : PatternCondition<WXMLPsiFile>("withQmlFileTypeAndQQContext") {

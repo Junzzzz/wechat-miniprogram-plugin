@@ -79,10 +79,10 @@ import com.intellij.psi.impl.source.xml.SchemaPrefix
 import com.intellij.psi.xml.XmlTag
 import com.intellij.xml.DefaultXmlExtension
 import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isJsTypeAttribute
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
 
 class WxmlXmlExtension : DefaultXmlExtension() {
 

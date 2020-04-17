@@ -75,12 +75,12 @@ package com.zxy.ijplugin.wechat_miniprogram.utils
 
 import com.intellij.json.psi.JsonFile
 import com.intellij.psi.PsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.QSFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.QSSFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.qq.QSFileType
+import com.zxy.ijplugin.wechat_miniprogram.qq.QSSFileType
 import com.zxy.ijplugin.wechat_miniprogram.settings.MiniProgramType
 import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
 

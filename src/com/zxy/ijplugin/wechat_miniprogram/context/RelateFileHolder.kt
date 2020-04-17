@@ -79,10 +79,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.QSSFileType
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.qq.QSSFileType
 
 abstract class RelateFileHolder {
 
