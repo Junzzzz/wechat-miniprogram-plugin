@@ -82,7 +82,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlElementType
 import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 
 class WXMLExtractComponentIntentionAction : PsiElementBaseIntentionAction() {
     override fun startInWriteAction(): Boolean {
@@ -94,7 +94,7 @@ class WXMLExtractComponentIntentionAction : PsiElementBaseIntentionAction() {
     }
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
-        if (!isWechatMiniProgramContext(project) || element.containingFile?.fileType != WXMLFileType.INSTANCE) {
+        if (!isWechatMiniProgramContext(project) || element.containingFile is WXMLPsiFile) {
             return false
         }
         return getSelectedTags(element, editor).isNotEmpty()
