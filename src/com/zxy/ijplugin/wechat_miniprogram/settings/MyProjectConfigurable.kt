@@ -78,6 +78,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.layout.buttonGroup
 import com.intellij.ui.layout.panel
+import com.zxy.ijplugin.wechat_miniprogram.localization.message
 import com.zxy.ijplugin.wechat_miniprogram.localization.settingsMessage
 
 class MyProjectConfigurable(private val project: Project) : BoundConfigurable(DISPLAY_NAME) {
@@ -92,8 +93,8 @@ class MyProjectConfigurable(private val project: Project) : BoundConfigurable(DI
         return panel {
             buttonGroup(settings::miniprogramType) {
                 row(settingsMessage("miniProgramType")) {
-                    radioButton("WeiXin", MiniProgramType.WEI_XIN)
-                    radioButton("QQ", MiniProgramType.QQ)
+                    radioButton(message("weixin"), MiniProgramType.WEI_XIN)
+                    radioButton(message("qq"), MiniProgramType.QQ)
                 }
             }
         }
