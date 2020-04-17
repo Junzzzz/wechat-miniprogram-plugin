@@ -82,6 +82,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import com.intellij.psi.PsiDirectory
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentFilesCreator.createWechatComponentFiles
 
 abstract class CreateWechatMiniProgramFileGroupAction<T : DialogWrapper> : WechatAction() {
@@ -104,7 +107,9 @@ abstract class CreateWechatMiniProgramFileGroupAction<T : DialogWrapper> : Wecha
                             this.getJsonComponentTemplate()
                     )
                     this.created(psiDirectory)
-                    val wxmlFile = psiDirectory.findFile("$fileName.wxml")!!
+                    val wxmlFile = psiDirectory.findFile(
+                            "$fileName." + if (project.isQQContext()) QMLFileType.INSTANCE.defaultExtension else WXMLFileType.INSTANCE.defaultExtension
+                    )!!
                     // 当文件创建完成之后  wxmlFile 获得焦点
                     FileEditorManager.getInstance(project).openFile(wxmlFile.virtualFile, true)
                 } catch (e: Exception) {
