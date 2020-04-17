@@ -101,14 +101,16 @@ class SetQQMiniProgramTypeNotification :
         )
     }
 
-    class MyEditorNotificationPanel(private val project: Project) : EditorNotificationPanel() {
+    class MyEditorNotificationPanel(
+            private val project: Project
+    ) : EditorNotificationPanel() {
         init {
             this.myLabel.text = settingsMessage("changeTypeToQQQuestion")
             this.createActionLabel(message("yes")) {
                 // 设置成QQ小程序类型
                 MyProjectSettings.getState(project).miniprogramType = MiniProgramType.QQ
                 // 并更新状态
-                EditorNotifications.updateAll()
+                EditorNotifications.getInstance(project).updateAllNotifications()
             }
             this.myGearLabel.icon = AllIcons.General.Settings
             this.myGearLabel.toolTipText = settingsMessage("openTip")
@@ -130,7 +132,9 @@ class SetQQMiniProgramTypeNotification :
             file: VirtualFile, fileEditor: FileEditor, project: Project
     ): MyEditorNotificationPanel? {
         val psiFile = PsiManager.getInstance(project).findFile(file)
-        if (psiFile != null && (psiFile.fileType == QMLFileType.INSTANCE || psiFile.fileType == QSFileType.INSTANCE || psiFile.fileType == QSSFileType.INSTANCE)) {
+        if (psiFile != null && MyProjectSettings.getState(
+                        project
+                ).miniprogramType == MiniProgramType.WEI_XIN && (psiFile.fileType == QMLFileType.INSTANCE || psiFile.fileType == QSFileType.INSTANCE || psiFile.fileType == QSSFileType.INSTANCE)) {
             // 在QQ小程序特有的文件上显示面板
             return MyEditorNotificationPanel(project)
         }
