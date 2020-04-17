@@ -101,7 +101,7 @@ abstract class RelateFileHolder {
             val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
             if (baseDir != null) {
                 return this.findFile(PsiManager.getInstance(project).findDirectory(baseDir)?.files?.filter {
-                    it.name == "app"
+                    it.virtualFile.nameWithoutExtension == "app"
                 }?.toTypedArray() ?: return null, project)
             }
         }
