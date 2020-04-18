@@ -88,6 +88,7 @@ import com.zxy.ijplugin.wechat_miniprogram.localization.settingsMessage
 import com.zxy.ijplugin.wechat_miniprogram.settings.MiniProgramType
 import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectConfigurable
 import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
+import icons.WechatMiniProgramIcons
 import java.awt.Cursor
 import java.awt.event.MouseEvent
 
@@ -105,6 +106,7 @@ class SetQQMiniProgramTypeNotification :
             private val project: Project
     ) : EditorNotificationPanel() {
         init {
+            this.icon(WechatMiniProgramIcons.QQ_LOGO)
             this.myLabel.text = settingsMessage("changeTypeToQQQuestion")
             this.createActionLabel(message("yes")) {
                 // 设置成QQ小程序类型
