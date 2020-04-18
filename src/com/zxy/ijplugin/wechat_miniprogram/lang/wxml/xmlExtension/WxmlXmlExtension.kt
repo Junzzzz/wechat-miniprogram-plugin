@@ -139,6 +139,8 @@ class WxmlXmlExtension : DefaultXmlExtension() {
 
     override fun getPrefixDeclaration(context: XmlTag, namespacePrefix: String?): SchemaPrefix? {
         if (namespacePrefix != null && (namespacePrefix == "wx"
+                        || namespacePrefix == "bind"
+                        || namespacePrefix == "catch"
                         || (context.containingFile.fileType == QMLFileType.INSTANCE && namespacePrefix == "qq"))) {
             findAttributeSchema(context, namespacePrefix)
                     ?.let { return it }
