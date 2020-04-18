@@ -80,21 +80,27 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer.WXMLLexer
 
 class WXMLParserDefinition : XMLParserDefinition() {
+
     companion object {
         val iFileElementType = IFileElementType(WXMLLanguage.INSTANCE)
+
+        fun createLexer(project: Project): WXMLLexer {
+            return WXMLLexer(if (project.isQQContext()) "qs" else "wxs")
+        }
     }
 
     override fun createParser(project: Project?): PsiParser {
         return WXMLXmlParser()
     }
 
-    override fun createLexer(project: Project?): Lexer {
-        return WXMLLexer()
+    override fun createLexer(project: Project): Lexer {
+        return WXMLParserDefinition.createLexer(project)
     }
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile {

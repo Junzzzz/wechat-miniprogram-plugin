@@ -77,19 +77,20 @@ import com.intellij.lang.HelpID
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner
 import com.intellij.lang.cacheBuilder.WordsScanner
 import com.intellij.lang.findUsages.FindUsagesProvider
+import com.intellij.lexer.XmlLexer
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.psi.xml.XmlTokenType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer.WXMLLexer
 
 class WXMLTemplateFindUsageProvider : FindUsagesProvider {
 
+
     override fun getWordsScanner(): WordsScanner? {
         return DefaultWordsScanner(
-                WXMLLexer(), TokenSet.create(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN),
+                XmlLexer(), TokenSet.create(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN),
                 XmlTokenType.COMMENTS,
                 TokenSet.create(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN),
                 TokenSet.andNot(TokenSet.ANY, TokenSet.create(XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN))
