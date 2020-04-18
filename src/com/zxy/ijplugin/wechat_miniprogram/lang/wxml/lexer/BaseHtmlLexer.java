@@ -87,7 +87,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.xml.XmlTokenType;
 import com.intellij.util.text.CharArrayUtil;
-import com.intellij.xml.util.documentation.HtmlDescriptorsTable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -249,8 +248,6 @@ public abstract class BaseHtmlLexer extends DelegateLexer {
         private static final String TOKEN_SCRIPT = "wxs";
         @NonNls
         private static final String TOKEN_STYLE = "style";
-        @NonNls
-        private static final String TOKEN_ON = "on";
 
         @Override
         public void handleElement(Lexer lexer) {
@@ -289,9 +286,7 @@ public abstract class BaseHtmlLexer extends DelegateLexer {
 
             final boolean style = name.equals(TOKEN_STYLE);
             final int state = getState() & BASE_STATE_MASK;
-            final boolean script = name.equals(TOKEN_SCRIPT) ||
-                    ((name.startsWith(TOKEN_ON) && name.indexOf(':') == -1 && !isHtmlTagState(state) &&
-                            HtmlDescriptorsTable.getAttributeDescriptor(name) != null));
+            final boolean script = name.equals(TOKEN_SCRIPT);
 
             if (style || script) {
                 // encountered tag name in end of tag
