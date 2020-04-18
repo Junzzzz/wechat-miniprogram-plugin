@@ -95,7 +95,9 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
                             "wechat-mini-program-api",
                             arrayOf(
                                     VfsUtil.findFileByURL(
-                                            ResourceUtil.getResource(javaClass, "/", "index.d.ts")
+                                            ResourceUtil.getResource(
+                                                    javaClass, "/", if (project.isQQContext()) "qq.d.ts" else "wx.d.ts"
+                                            )
                                     )
                             ).filterNotNull().toTypedArray(),
                             true
