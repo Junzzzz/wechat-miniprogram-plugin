@@ -82,6 +82,8 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
 import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
@@ -100,14 +102,20 @@ class WechatMiniProgramGotoRelatedProvider : GotoRelatedProvider() {
         if (project != null && isWechatMiniProgramContext(project)) {
             val virtualFile = dataContext.getData(LangDataKeys.VIRTUAL_FILE)
             if (virtualFile != null) {
-                val filename = virtualFile.nameWithoutExtension
-                val psiDirectory = dataContext.getData(LangDataKeys.IDE_VIEW)?.orChooseDirectory
-                if (psiDirectory != null) {
-                    return psiDirectory.files.asSequence().filter {
-                        // 找到同名的其他文件
-                        it.virtualFile.nameWithoutExtension == filename && it.virtualFile.extension != virtualFile.extension
-                    }.mapNotNull { sameNameFile ->
-                        MyGotoRelatedItem.create(sameNameFile)
+                val psiFile = PsiManager.getInstance(project).findFile(virtualFile) ?: return mutableListOf()
+                val currentFileHolder = RelateFileHolder.findInstance(psiFile) ?: return mutableListOf()
+                if (currentFileHolder.findFile(psiFile) == psiFile) {
+                    // 当前文件是正确的组件文件
+
+                    return RelateFileHolder.INSTANCES.filter {
+                        it != currentFileHolder
+                    }.mapNotNull {
+                        // 寻找其他类型的文件
+                        it.findFile(psiFile)
+                    }.toMutableList().apply {
+                        this.add(psiFile)
+                    }.mapNotNull {
+                        MyGotoRelatedItem.create(it)
                     }.toMutableList()
                 }
             }

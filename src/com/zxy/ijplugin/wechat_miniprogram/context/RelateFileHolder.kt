@@ -74,13 +74,17 @@
 package com.zxy.ijplugin.wechat_miniprogram.context
 
 import com.intellij.json.JsonFileType
+import com.intellij.json.psi.JsonFile
 import com.intellij.lang.javascript.JavaScriptFileType
+import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.qq.QSSFileType
 
@@ -93,6 +97,16 @@ abstract class RelateFileHolder {
         val JSON = SingleFileTypeFileHolder(JsonFileType.INSTANCE)
 
         val INSTANCES = arrayOf(MARKUP, SCRIPT, STYLE, JSON)
+
+        fun findInstance(psiFile: PsiFile): RelateFileHolder? {
+            return when (psiFile) {
+                is WXMLPsiFile -> MARKUP
+                is WXSSPsiFile -> STYLE
+                is JsonFile -> JSON
+                is JSFile -> SCRIPT
+                else -> null
+            }
+        }
     }
 
     fun findAppFile(project: Project): PsiFile? {
