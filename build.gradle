@@ -160,12 +160,14 @@ patchPluginXml {
     changeNotes = """
 <ul lang='cn'>
     <li> 修复wxml事件属性没有高亮显示的错误 </li>
+    <li> 修复wxml不支持bind和catch前缀的错误 </li>
     <li> 修复wxml不能正确支持wxs和qs标签的错误 </li>
     <li> 修复wxml会将on开头的属性作为事件来处理的错误 </li>
 </ul>
 <br/>
 <ul lang='en'>
     <li> Fix wxml event attribute not highlighted error </li>
+    <li> Fix wxml does not support bind and catch prefix errors </li>
     <li> Fix wxml cannot support wxs and qs tags correctly </li>
     <li> Fix the error that wxml will treat the attribute beginning with on as an event </li>
 </ul>
