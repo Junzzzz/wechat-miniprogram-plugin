@@ -119,6 +119,37 @@
     "canClose": false,
     "description": "在wxml中嵌入wxs脚本"
   },
+  "qs": {
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxs/",
+    "attributeDescriptors": [
+      {
+        "key": "module",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "此qs模块的名称"
+      },
+      {
+        "key": "src",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "引入的qs文件的路径"
+      }
+    ],
+    "events": [],
+    "canOpen": true,
+    "canClose": false,
+    "description": "在wxml中嵌入qs脚本"
+  },
   "slot": {
     "attributeDescriptors": [
       {
