@@ -80,7 +80,7 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.qq.QSSFileType
 
@@ -89,7 +89,7 @@ abstract class RelateFileHolder {
     companion object {
         val MARKUP = QQCompatibleRelateFileHolder(QMLFileType.INSTANCE, WXMLFileType.INSTANCE)
         val SCRIPT = SingleFileTypeFileHolder(JavaScriptFileType.INSTANCE)
-        val STYLE = QQCompatibleRelateFileHolder(QSSFileType.INSTANCE, WXSFileType.INSTANCE)
+        val STYLE = QQCompatibleRelateFileHolder(QSSFileType.INSTANCE, WXSSFileType.INSTANCE)
         val JSON = SingleFileTypeFileHolder(JsonFileType.INSTANCE)
 
         val INSTANCES = arrayOf(MARKUP, SCRIPT, STYLE, JSON)
