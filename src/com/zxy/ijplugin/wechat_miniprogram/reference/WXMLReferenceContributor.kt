@@ -73,6 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
+import com.intellij.patterns.PlatformPatterns
 import com.intellij.patterns.XmlPatterns
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
@@ -82,7 +83,7 @@ import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.psi.xml.XmlTokenType
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
-import com.zxy.ijplugin.wechat_miniprogram.reference.patterns.FrameworkPatterns
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentWxmlUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
@@ -133,7 +134,7 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
         psiReferenceRegistrar.registerReferenceProvider(
                 XmlPatterns.xmlAttributeValue().withLanguage(WXMLLanguage.INSTANCE)
                         .inFile(
-                                FrameworkPatterns.qmlFileAndQQContextPattern
+                                PlatformPatterns.psiFile(WXMLPsiFile::class.java)
                         ),
                 object : PsiReferenceProvider() {
                     override fun getReferencesByElement(
