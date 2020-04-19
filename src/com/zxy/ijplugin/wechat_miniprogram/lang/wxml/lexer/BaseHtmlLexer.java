@@ -433,7 +433,7 @@ public abstract class BaseHtmlLexer extends DelegateLexer {
                 }
             }
 
-            if (firstCh != 's' && firstCh != BaseHtmlLexer.this.scriptTagName.charAt(0) && (!caseInsensitive || (firstCh != 'S' && firstCh != BaseHtmlLexer.this.scriptTagName.toUpperCase().charAt(0)))) {
+            if (firstCh != 's' && firstCh != BaseHtmlLexer.this.scriptTagName.charAt(0) && firstCh != 'b' && firstCh != 'c' && (!caseInsensitive || (firstCh != 'S' && firstCh != BaseHtmlLexer.this.scriptTagName.toUpperCase().charAt(0)) && firstCh != 'B' && firstCh != 'C')) {
                 return; // optimization
             }
 
@@ -442,7 +442,7 @@ public abstract class BaseHtmlLexer extends DelegateLexer {
 
             final boolean style = name.equals(TOKEN_STYLE);
             final int state = getState() & BASE_STATE_MASK;
-            final boolean script = name.equals(BaseHtmlLexer.this.scriptTagName);
+            final boolean script = name.equals(BaseHtmlLexer.this.scriptTagName) || ((name.startsWith("catch") || name.startsWith("bind")) && !isHtmlTagState(state));
 
             if (style || script) {
                 // encountered tag name in end of tag
