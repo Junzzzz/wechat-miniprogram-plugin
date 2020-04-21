@@ -116,5 +116,7 @@
                           order="first"/>
         <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata"/>
         <lang.foldingBuilder language="WXML" implementationClass="com.intellij.lang.xml.XmlFoldingBuilder"/>
+        <highlightErrorFilter
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.inspection.WXMLStyleInterpolationErrorFilter"/>
     </extensions>
 </idea-plugin>
