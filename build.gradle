@@ -159,6 +159,8 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
+    <li> 修复slot会找不到引用的错误 </li>
+    <li> 过滤掉wxml的style属性中使用插值表达式所显示的错误 </li>
     <li> 修复wxml事件属性没有高亮显示的错误 </li>
     <li> 修复wxml不支持bind和catch前缀的错误 </li>
     <li> 修复wxml不能正确支持wxs和qs标签的错误 </li>
@@ -166,6 +168,8 @@ patchPluginXml {
 </ul>
 <br/>
 <ul lang='en'>
+    <li> Fix slot will not find the reference error </li>
+    <li> Filter out errors displayed using interpolation expressions in the style attribute of wxml </li>
     <li> Fix wxml event attribute not highlighted error </li>
     <li> Fix wxml does not support bind and catch prefix errors </li>
     <li> Fix wxml cannot support wxs and qs tags correctly </li>
