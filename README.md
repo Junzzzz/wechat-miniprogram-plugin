@@ -33,6 +33,7 @@ wechat-miniprogram-plugin
 可通过以下两种方式安装，在这之前请确保安装并启用了**JavaScript**和**CSS**插件
 - 通过IDE搜索并找到**Wechat mini program support**插件安装
 - 下载[发行版](https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases)附件中的jar文件，在IDE中选择从磁盘安装
+
 插件版本和IDE版本的对应可以在[插件官网](https://plugins.jetbrains.com/plugin/13396-wechat-mini-program-support/versions)找到
 
 使用
