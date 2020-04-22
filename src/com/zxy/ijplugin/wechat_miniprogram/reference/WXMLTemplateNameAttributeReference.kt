@@ -73,6 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElementResolveResult
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiPolyVariantReferenceBase
@@ -80,8 +81,10 @@ import com.intellij.psi.ResolveResult
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.xml.XmlAttributeValue
 import com.intellij.psi.xml.XmlTag
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.valueTextRangeInSelf
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
 class WXMLTemplateNameAttributeReference(element: XmlAttributeValue) :
@@ -90,7 +93,11 @@ class WXMLTemplateNameAttributeReference(element: XmlAttributeValue) :
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val project = element.project
         val psiManager = PsiManager.getInstance(project)
-        val wxmlFiles = FilenameIndex.getAllFilesByExt(project, WXMLFileType.INSTANCE.defaultExtension)
+        val wxmlFiles = mutableListOf<VirtualFile>()
+        wxmlFiles.addAll(FilenameIndex.getAllFilesByExt(project, WXMLFileType.INSTANCE.defaultExtension))
+        if (project.isQQContext()) {
+            wxmlFiles.addAll(FilenameIndex.getAllFilesByExt(project, QMLFileType.INSTANCE.defaultExtension))
+        }
         return wxmlFiles.filter {
             it != element.containingFile.virtualFile
         }.flatMap { it ->

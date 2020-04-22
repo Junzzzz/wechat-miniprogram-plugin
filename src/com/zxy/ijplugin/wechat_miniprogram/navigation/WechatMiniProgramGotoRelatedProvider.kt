@@ -82,32 +82,40 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
 import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
+import com.zxy.ijplugin.wechat_miniprogram.localization.message
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.qq.QSSFileType
 
 /**
  * 找到一个组件或页面的相关文件
  */
 class WechatMiniProgramGotoRelatedProvider : GotoRelatedProvider() {
 
-    companion object {
-        const val GROUP_NAME = "Wechat Mini Program Component"
-    }
-
     override fun getItems(dataContext: DataContext): MutableList<out GotoRelatedItem> {
         val project = dataContext.getData(CommonDataKeys.PROJECT)
         if (project != null && isWechatMiniProgramContext(project)) {
             val virtualFile = dataContext.getData(LangDataKeys.VIRTUAL_FILE)
             if (virtualFile != null) {
-                val filename = virtualFile.nameWithoutExtension
-                val psiDirectory = dataContext.getData(LangDataKeys.IDE_VIEW)?.orChooseDirectory
-                if (psiDirectory != null) {
-                    return psiDirectory.files.asSequence().filter {
-                        // 找到同名的其他文件
-                        it.virtualFile.nameWithoutExtension == filename && it.virtualFile.extension != virtualFile.extension
-                    }.mapNotNull { sameNameFile ->
-                        MyGotoRelatedItem.create(sameNameFile)
+                val psiFile = PsiManager.getInstance(project).findFile(virtualFile) ?: return mutableListOf()
+                val currentFileHolder = RelateFileHolder.findInstance(psiFile) ?: return mutableListOf()
+                if (currentFileHolder.findFile(psiFile) == psiFile) {
+                    // 当前文件是正确的组件文件
+
+                    return RelateFileHolder.INSTANCES.filter {
+                        it != currentFileHolder
+                    }.mapNotNull {
+                        // 寻找其他类型的文件
+                        it.findFile(psiFile)
+                    }.toMutableList().apply {
+                        this.add(psiFile)
+                    }.mapNotNull {
+                        MyGotoRelatedItem.create(it)
                     }.toMutableList()
                 }
             }
@@ -118,13 +126,17 @@ class WechatMiniProgramGotoRelatedProvider : GotoRelatedProvider() {
     class MyGotoRelatedItem(
             element: PsiElement, private val name: String, private val filename: String, mnemonic: Int
     ) :
-            GotoRelatedItem(element, GROUP_NAME, mnemonic) {
+            GotoRelatedItem(
+                    element,
+                    message("goto.related.group.name", message(if (element.project.isQQContext()) "qq" else "weixin")),
+                    mnemonic
+            ) {
 
         companion object {
             fun create(psiFile: PsiFile): MyGotoRelatedItem? = when (psiFile.fileType) {
                 JavaScriptFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Script", psiFile.name, 1)
-                WXMLFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Template", psiFile.name, 2)
-                WXSSFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Styles", psiFile.name, 3)
+                WXMLFileType.INSTANCE, QMLFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Template", psiFile.name, 2)
+                WXSSFileType.INSTANCE, QSSFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Styles", psiFile.name, 3)
                 JsonFileType.INSTANCE -> MyGotoRelatedItem(psiFile, "Configurations", psiFile.name, 4)
                 else -> null
             }

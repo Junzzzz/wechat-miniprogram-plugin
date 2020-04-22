@@ -74,25 +74,39 @@
 package com.zxy.ijplugin.wechat_miniprogram.context
 
 import com.intellij.json.JsonFileType
+import com.intellij.json.psi.JsonFile
 import com.intellij.lang.javascript.JavaScriptFileType
+import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.QSSFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.qq.QSSFileType
 
 abstract class RelateFileHolder {
 
     companion object {
         val MARKUP = QQCompatibleRelateFileHolder(QMLFileType.INSTANCE, WXMLFileType.INSTANCE)
         val SCRIPT = SingleFileTypeFileHolder(JavaScriptFileType.INSTANCE)
-        val STYLE = QQCompatibleRelateFileHolder(QSSFileType.INSTANCE, WXSFileType.INSTANCE)
+        val STYLE = QQCompatibleRelateFileHolder(QSSFileType.INSTANCE, WXSSFileType.INSTANCE)
         val JSON = SingleFileTypeFileHolder(JsonFileType.INSTANCE)
 
         val INSTANCES = arrayOf(MARKUP, SCRIPT, STYLE, JSON)
+
+        fun findInstance(psiFile: PsiFile): RelateFileHolder? {
+            return when (psiFile) {
+                is WXMLPsiFile -> MARKUP
+                is WXSSPsiFile -> STYLE
+                is JsonFile -> JSON
+                is JSFile -> SCRIPT
+                else -> null
+            }
+        }
     }
 
     fun findAppFile(project: Project): PsiFile? {
@@ -101,17 +115,23 @@ abstract class RelateFileHolder {
             val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
             if (baseDir != null) {
                 return this.findFile(PsiManager.getInstance(project).findDirectory(baseDir)?.files?.filter {
-                    it.name == "app"
+                    it.virtualFile.nameWithoutExtension == "app"
                 }?.toTypedArray() ?: return null, project)
             }
         }
         return null
     }
 
+    /**
+     * 从一组文件中找到相关的文件
+     */
     protected abstract fun findFile(files: Array<PsiFile>, project: Project): PsiFile?
 
     fun findFile(relatedFile: PsiFile): PsiFile? {
         val psiFiles = relatedFile.parent?.files ?: return null
-        return this.findFile(psiFiles, relatedFile.project)
+        return this.findFile(
+                psiFiles.filter { it.virtualFile.nameWithoutExtension == relatedFile.virtualFile.nameWithoutExtension }
+                        .toTypedArray(), relatedFile.project
+        )
     }
 }

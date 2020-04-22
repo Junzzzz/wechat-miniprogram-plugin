@@ -71,25 +71,76 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
+package com.zxy.ijplugin.wechat_miniprogram.qq
 
-class QSSFileType : WXSSFileType() {
+import com.intellij.icons.AllIcons
+import com.intellij.openapi.fileEditor.FileEditor
+import com.intellij.openapi.options.ShowSettingsUtil
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Key
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiManager
+import com.intellij.ui.ClickListener
+import com.intellij.ui.EditorNotificationPanel
+import com.intellij.ui.EditorNotifications
+import com.zxy.ijplugin.wechat_miniprogram.localization.message
+import com.zxy.ijplugin.wechat_miniprogram.localization.settingsMessage
+import com.zxy.ijplugin.wechat_miniprogram.settings.MiniProgramType
+import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectConfigurable
+import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
+import icons.WechatMiniProgramIcons
+import java.awt.Cursor
+import java.awt.event.MouseEvent
+
+class SetQQMiniProgramTypeNotification :
+        EditorNotifications.Provider<SetQQMiniProgramTypeNotification.MyEditorNotificationPanel>() {
 
     companion object {
-        @JvmField
-        val INSTANCE = QSSFileType()
+
+        var KEY: Key<MyEditorNotificationPanel> = Key.create(
+                "com.zxy.ijplugin.wechat_miniprogram.qq.MyEditorNotificationPanel"
+        )
     }
 
-    override fun getName(): String {
-        return "QSS"
+    class MyEditorNotificationPanel(
+            private val project: Project
+    ) : EditorNotificationPanel() {
+        init {
+            this.icon(WechatMiniProgramIcons.QQ_LOGO)
+            this.myLabel.text = settingsMessage("changeTypeToQQQuestion")
+            this.createActionLabel(message("yes")) {
+                // 设置成QQ小程序类型
+                MyProjectSettings.getState(project).miniprogramType = MiniProgramType.QQ
+                // 并更新状态
+                EditorNotifications.getInstance(project).updateAllNotifications()
+            }
+            this.myGearLabel.icon = AllIcons.General.Settings
+            this.myGearLabel.toolTipText = settingsMessage("openTip")
+            myGearLabel.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+            object : ClickListener() {
+                override fun onClick(e: MouseEvent, clickCount: Int): Boolean {
+                    ShowSettingsUtil.getInstance().showSettingsDialog(project, MyProjectConfigurable.DISPLAY_NAME)
+                    return true
+                }
+            }.installOn(myGearLabel)
+        }
     }
 
-    override fun getDefaultExtension(): String {
-        return "qss"
+    override fun getKey(): Key<MyEditorNotificationPanel> {
+        return KEY
     }
 
-    override fun getDescription(): String {
-        return "QQ Style Sheets"
+    override fun createNotificationPanel(
+            file: VirtualFile, fileEditor: FileEditor, project: Project
+    ): MyEditorNotificationPanel? {
+        val psiFile = PsiManager.getInstance(project).findFile(file)
+        if (psiFile != null && MyProjectSettings.getState(
+                        project
+                ).miniprogramType == MiniProgramType.WEI_XIN && (psiFile.fileType == QMLFileType.INSTANCE || psiFile.fileType == QSFileType.INSTANCE || psiFile.fileType == QSSFileType.INSTANCE)) {
+            // 在QQ小程序特有的文件上显示面板
+            return MyEditorNotificationPanel(project)
+        }
+        return null
     }
 
 }

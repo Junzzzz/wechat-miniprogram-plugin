@@ -71,31 +71,27 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.reference
+package com.zxy.ijplugin.wechat_miniprogram.qq
 
-import com.intellij.openapi.fileTypes.FileType
-import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.impl.include.FileIncludeInfo
-import com.intellij.psi.impl.include.FileIncludeProvider
-import com.intellij.util.Consumer
-import com.intellij.util.indexing.FileContent
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 
-class WxmlJsModuleFileIncludeProvider : FileIncludeProvider() {
-    override fun registerFileTypesUsedForIndexing(consumer: Consumer<FileType>) {
-        return consumer.consume(WXMLFileType.INSTANCE)
+class QMLFileType : WXMLFileType() {
+
+    companion object {
+        @JvmField
+        val INSTANCE = QMLFileType()
     }
 
-    override fun getId(): String {
-        return WXMLLanguage.INSTANCE.id
+    override fun getName(): String {
+        return "QML"
     }
 
-    override fun getIncludeInfos(fileContent: FileContent?): Array<FileIncludeInfo> {
-        return FileIncludeInfo.EMPTY
+    override fun getDefaultExtension(): String {
+        return "qml"
     }
 
-    override fun acceptFile(virtualFile: VirtualFile): Boolean {
-        return virtualFile.fileType == WXMLFileType.INSTANCE
+    override fun getDescription(): String {
+        return "QQ Markup Language"
     }
+
 }

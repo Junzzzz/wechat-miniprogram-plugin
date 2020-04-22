@@ -77,7 +77,7 @@
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType"
                   fieldName="INSTANCE"/>
         <fileType name="QML" extensions="qml" fieldName="INSTANCE" language="WXML"
-                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.QMLFileType"/>
+                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType"/>
         <xml.elementDescriptorProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptorProvider"/>
         <xml.xmlExtension implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.xmlExtension.WxmlXmlExtension"/>
@@ -101,8 +101,6 @@
         <multiHostInjector implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector"/>
         <lang.foldingBuilder language="WXML"
                              implementationClass="com.zxy.ijplugin.wechat_miniprogram.folding.WXMLIncludeTagFolding"/>
-        <include.provider
-                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.WxmlJsModuleFileIncludeProvider"/>
         <lang.findUsagesProvider language="WXML"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.WXMLTemplateFindUsageProvider"/>
         <gotoSymbolContributor
@@ -118,5 +116,7 @@
                           order="first"/>
         <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata"/>
         <lang.foldingBuilder language="WXML" implementationClass="com.intellij.lang.xml.XmlFoldingBuilder"/>
+        <highlightErrorFilter
+                implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.inspection.WXMLStyleInterpolationErrorFilter"/>
     </extensions>
 </idea-plugin>

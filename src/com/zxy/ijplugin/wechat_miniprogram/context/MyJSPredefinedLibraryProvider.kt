@@ -81,8 +81,11 @@ import com.intellij.webcore.libraries.ScriptingLibraryModel
 
 class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
 
-    companion object{
-        val PAGE_LIFETIMES = arrayOf("onLoad","onShow","onReady","onHide","onUnload","onPullDownRefresh","onReachBottom","onShareAppMessage","onPageScroll","onResize","onTabItemTap")
+    companion object {
+        val PAGE_LIFETIMES = arrayOf(
+                "onLoad", "onShow", "onReady", "onHide", "onUnload", "onPullDownRefresh", "onReachBottom",
+                "onShareAppMessage", "onPageScroll", "onResize", "onTabItemTap"
+        )
     }
 
     override fun getPredefinedLibraries(project: Project): Array<out ScriptingLibraryModel> {
@@ -90,7 +93,13 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
             return arrayOf(
                     ScriptingLibraryModel.createPredefinedLibrary(
                             "wechat-mini-program-api",
-                            arrayOf(VfsUtil.findFileByURL(ResourceUtil.getResource(javaClass, "/", "index.d.ts"))),
+                            arrayOf(
+                                    VfsUtil.findFileByURL(
+                                            ResourceUtil.getResource(
+                                                    javaClass, "/", if (project.isQQContext()) "qq.d.ts" else "wx.d.ts"
+                                            )
+                                    )
+                            ).filterNotNull().toTypedArray(),
                             true
                     )
             )

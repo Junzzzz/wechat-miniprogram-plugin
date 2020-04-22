@@ -71,109 +71,15 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.inspections
+package com.zxy.ijplugin.wechat_miniprogram.localization
 
-import com.intellij.codeInspection.LocalQuickFix
-import com.intellij.codeInspection.ProblemDescriptor
-import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonProperty
-import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.XmlElementVisitor
-import com.intellij.psi.xml.XmlTag
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.nameTextRangeInSelf
-import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
+import com.intellij.AbstractBundle
+import org.jetbrains.annotations.PropertyKey
 
-class WXMLUnknownTagInspection : WXMLInspectionBase() {
+const val APP_BUNDLE = "messages.app"
 
-    companion object {
-        const val QUICK_FIX_FAMILY_NAME = "WXML标签"
-    }
+object AppBundle : AbstractBundle(APP_BUNDLE)
 
-    override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
-        return object : XmlElementVisitor() {
-
-            override fun visitXmlTag(wxmlTag: XmlTag) {
-                if (wxmlTag.language != WXMLLanguage.INSTANCE) {
-                    return
-                }
-                val tagName = wxmlTag.name.ifBlank {
-                    return
-                }
-                if (WXMLMetadata.getElementDescriptions(wxmlTag.project).any {
-                            it.name == tagName
-                        }) {
-                    // 是自带组件
-                    return
-                }
-
-                val project = wxmlTag.project
-
-                val currentJsonPsiFile = RelateFileHolder.JSON.findFile(wxmlTag.containingFile) as? JsonFile
-                val usingComponentItems = mutableListOf<JsonProperty>().apply {
-                    currentJsonPsiFile?.let {
-                        ComponentJsonUtils.getUsingComponentItems(it)
-                    }?.let {
-                        this.addAll(it)
-                    }
-                    AppJsonUtils.findUsingComponentItems(project)?.let {
-                        this.addAll(it)
-                    }
-                }
-                if (!usingComponentItems.any {
-                            it.name == tagName
-                        }) {
-                    // 没有注册的标签
-                    val jsonConfigurationFiles = ComponentJsonUtils.getAllComponentConfigurationFile(project).filter {
-                        it != currentJsonPsiFile
-                    }
-                    val quickFixList = if (currentJsonPsiFile == null) {
-                        emptyArray()
-                    } else {
-                        jsonConfigurationFiles.filter {
-                            it.virtualFile.nameWithoutExtension == tagName
-                        }.let { list ->
-                            list.map {
-                                object : LocalQuickFix {
-
-                                    override fun getFamilyName(): String {
-                                        return QUICK_FIX_FAMILY_NAME
-                                    }
-
-                                    override fun getName(): String {
-                                        // 如果有多个组件匹配
-                                        // 则显示他们相对于根目录的路径
-                                        val componentName = if (list.size > 1) it.virtualFile.getPathRelativeToRootRemoveExt(
-                                                it.project
-                                        ) else {
-                                            it.virtualFile.nameWithoutExtension
-                                        }
-                                        return "在${currentJsonPsiFile.name}中注册$componentName"
-                                    }
-
-                                    override fun applyFix(p0: Project, problemDescriptor: ProblemDescriptor) {
-                                        ComponentJsonUtils.registerComponent(currentJsonPsiFile, it)
-                                    }
-                                }
-
-                            }.toTypedArray<LocalQuickFix>()
-                        }
-                    }
-                    holder.registerProblem(
-                            wxmlTag, wxmlTag.nameTextRangeInSelf(), "未知的标签：$tagName",
-                            *quickFixList
-                    )
-
-                }
-            }
-        }
-    }
-
+fun message(@PropertyKey(resourceBundle = APP_BUNDLE) key: String, vararg params: Any): String {
+    return AppBundle.getMessage(key, *params)
 }
-

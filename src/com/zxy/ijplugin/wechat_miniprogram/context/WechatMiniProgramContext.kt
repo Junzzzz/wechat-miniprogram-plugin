@@ -80,6 +80,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
+import com.zxy.ijplugin.wechat_miniprogram.settings.MiniProgramType
+import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
 
 fun isWechatMiniProgramContext(psiElement: PsiElement, strict: Boolean = true): Boolean {
     return isWechatMiniProgramContext(psiElement.project)
@@ -108,4 +110,10 @@ fun isWechatMiniProgramContext(project: Project, strict: Boolean = true): Boolea
         }
     }
     return false
+}
+
+fun Project.isQQContext(): Boolean {
+    return MyProjectSettings.getState(
+            this
+    ).miniprogramType === MiniProgramType.QQ
 }

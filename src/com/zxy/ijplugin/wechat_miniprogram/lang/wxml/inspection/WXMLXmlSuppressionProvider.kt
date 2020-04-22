@@ -76,7 +76,7 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.inspection
 import com.intellij.codeInspection.XmlSuppressionProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 
 class WXMLXmlSuppressionProvider : XmlSuppressionProvider() {
     override fun suppressForTag(element: PsiElement, inspectionId: String) {
@@ -90,6 +90,6 @@ class WXMLXmlSuppressionProvider : XmlSuppressionProvider() {
     }
 
     override fun isProviderAvailable(file: PsiFile): Boolean {
-        return file.fileType == WXMLFileType.INSTANCE
+        return file is WXMLPsiFile
     }
 }

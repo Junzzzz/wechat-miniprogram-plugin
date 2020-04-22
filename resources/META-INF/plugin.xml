@@ -103,7 +103,12 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectConfigurable instance="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectConfigurable"/>
+        <editorNotificationProvider
+                implementation="com.zxy.ijplugin.wechat_miniprogram.qq.SetQQMiniProgramTypeNotification"/>
+
+        <projectConfigurable groupId="language"
+                             instance="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectConfigurable"/>
+
         <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings"/>
 
         <postStartupActivity implementation="com.zxy.ijplugin.wechat_miniprogram.plugin.UpdateInfoActivity"/>
@@ -156,18 +161,11 @@
                 groupName="Wechat mini program"
                 shortName="WXMLInvalidImport"
                 enabledByDefault="true" level="ERROR"/>
-        <localInspection
-                language="WXML"
-                implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WXMLUnknownTagInspection"
-                displayName="Unknown wxml tag"
-                groupName="Wechat mini program"
-                shortName="WXMLUnknownTag"
-                enabledByDefault="true" level="ERROR"/>
 
         <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
         <fileType name="QS" fieldName="INSTANCE" extensions="qs" language="JavaScript 1.5"
-                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.QSFileType"/>
+                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.qq.QSFileType"/>
 
         <lang.parserDefinition language="WxmlJs"
                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.expr.parser.WxmlJsParserDefinition"/>

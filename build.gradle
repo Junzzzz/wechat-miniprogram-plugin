@@ -153,7 +153,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.0.1"
+version = "3.1.1"
 
 patchPluginXml {
     sinceBuild = "201"
@@ -161,20 +161,28 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 修复style属性没有自动完成得错误 </li>
-    <li> 修复会导致一些语法错误不会正确显示得错误 </li>
+    <li> 修复slot会找不到引用的错误 </li>
+    <li> 过滤掉wxml的style属性中使用插值表达式所显示的错误 </li>
+    <li> 修复wxml事件属性没有高亮显示的错误 </li>
+    <li> 修复wxml不支持bind和catch前缀的错误 </li>
+    <li> 修复wxml不能正确支持wxs和qs标签的错误 </li>
+    <li> 修复wxml会将on开头的属性作为事件来处理的错误 </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Fix the error that the style attribute is not automatically completed </li>
-    <li> Fix will cause some syntax errors not to be displayed correctly </li>
+    <li> Fix slot will not find the reference error </li>
+    <li> Filter out errors displayed using interpolation expressions in the style attribute of wxml </li>
+    <li> Fix wxml event attribute not highlighted error </li>
+    <li> Fix wxml does not support bind and catch prefix errors </li>
+    <li> Fix wxml cannot support wxs and qs tags correctly </li>
+    <li> Fix the error that wxml will treat the attribute beginning with on as an event </li>
 </ul>
 """
     pluginDescription = """
 Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> WeChat Mini Program </a> project
 <h3>使用入门</h3>
 <ul> 
-    <li>打开微信小程序项目</li>
+    <li>打开微信小程序或QQ小程序项目</li>
     <li>确保project.config.json配置文件存在</li>
     <li>现在您可以使用所有此插件提供的功能</li>
 </ul>
@@ -186,6 +194,7 @@ Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> We
     <li>微信小程序自定义组件支持</li> 
     <li>微信小程序配置文件支持</li>
     <li>代码检查和自动修复</li>
+    <li>支持QQ小程序项目 (v3.1.0)</li>
 </ul>
 <h3> Get started </h3>
 <ul>

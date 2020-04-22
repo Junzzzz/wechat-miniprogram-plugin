@@ -107,12 +107,12 @@ public class WXMLLexer extends BaseHtmlLexer {
     private int myTokenStart;
     private int myTokenEnd;
 
-    public WXMLLexer() {
-        this(new MergingLexerAdapter(new FlexAdapter(new __XmlLexer(null)), TOKENS_TO_MERGE), true);
+    public WXMLLexer(String scriptTagName) {
+        this(new MergingLexerAdapter(new FlexAdapter(new __XmlLexer(null)), TOKENS_TO_MERGE), true, scriptTagName);
     }
 
-    protected WXMLLexer(Lexer _baseLexer, boolean _caseInsensitive) {
-        super(_baseLexer, _caseInsensitive);
+    protected WXMLLexer(Lexer _baseLexer, boolean _caseInsensitive, String scriptTagName) {
+        super(_baseLexer, _caseInsensitive, scriptTagName);
     }
 
     private static boolean isStartOfEmbeddmentAttributeValue(final IElementType tokenType) {

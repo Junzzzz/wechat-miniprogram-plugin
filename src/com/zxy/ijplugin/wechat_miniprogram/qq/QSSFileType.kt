@@ -71,16 +71,27 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.context
+package com.zxy.ijplugin.wechat_miniprogram.qq
 
-import com.intellij.json.JsonFileType
-import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiFile
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 
-class JSONRelateFileHolder : RelateFileHolder() {
-    override fun findFile(files: Array<PsiFile>, project: Project): PsiFile? {
-        return files.find {
-            it.fileType == JsonFileType.INSTANCE
-        }
+class QSSFileType : WXSSFileType() {
+
+    companion object {
+        @JvmField
+        val INSTANCE = QSSFileType()
     }
+
+    override fun getName(): String {
+        return "QSS"
+    }
+
+    override fun getDefaultExtension(): String {
+        return "qss"
+    }
+
+    override fun getDescription(): String {
+        return "QQ Style Sheets"
+    }
+
 }

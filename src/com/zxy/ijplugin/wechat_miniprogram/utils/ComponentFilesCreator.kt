@@ -78,10 +78,13 @@ import com.intellij.ide.fileTemplates.FileTemplateUtil
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSLanguage
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.qq.QSSFileType
 
 object ComponentFilesCreator {
 
@@ -110,13 +113,13 @@ object ComponentFilesCreator {
                 psiDirectory
         )
 
-        // 创建空的wxml和wxss文件
+        // 创建空的标记文件和样式文件
         val wxmlFile = PsiFileFactory.getInstance(project).createFileFromText(
-                fileName + "." + WXMLFileType.INSTANCE.defaultExtension,
+                fileName + "." + if (project.isQQContext()) QMLFileType.INSTANCE.defaultExtension else WXMLFileType.INSTANCE.defaultExtension,
                 WXMLLanguage.INSTANCE, wxmlTemplate
         )
         val wxssFile = PsiFileFactory.getInstance(project).createFileFromText(
-                fileName + "." + WXSSFileType.INSTANCE.defaultExtension,
+                fileName + "." + if (project.isQQContext()) QSSFileType.INSTANCE.defaultExtension else WXSSFileType.INSTANCE.defaultExtension,
                 WXSSLanguage.INSTANCE, ""
         )
         psiDirectory.add(wxmlFile)

@@ -71,25 +71,39 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.inspection
 
-class QMLFileType : WXMLFileType() {
+import com.intellij.codeInsight.highlighting.HighlightErrorFilter
+import com.intellij.lang.injection.InjectedLanguageManager
+import com.intellij.psi.PsiErrorElement
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 
-    companion object {
-        @JvmField
-        val INSTANCE = QMLFileType()
+/**
+ * 过滤掉对style属性中的插值的红色高亮显示
+ */
+class WXMLStyleInterpolationErrorFilter : HighlightErrorFilter() {
+    override fun shouldHighlightErrorElement(psiErrorElement: PsiErrorElement): Boolean {
+        val containingFile = psiErrorElement.containingFile
+        return !(containingFile.language == WXMLLanguage.INSTANCE &&
+                // 是注入js语言的元素 或者在其周围的双括号
+                InjectedLanguageManager.getInstance(psiErrorElement.project).let {
+                    val textOffset = psiErrorElement.textOffset
+                    val text = containingFile.findElementAt(textOffset)?.text
+                    (text == "{" &&
+                            (it.findInjectedElementAt(
+                                    containingFile,
+                                    textOffset + 1
+                            ) != null || it.findInjectedElementAt(
+                                    containingFile, textOffset + 2
+                            ) != null))
+                            ||
+                            (text == "}" && (it.findInjectedElementAt(
+                                    containingFile,
+                                    textOffset - 1
+                            ) != null || it.findInjectedElementAt(
+                                    containingFile, textOffset - 2
+                            ) != null))
+                            || it.findInjectedElementAt(containingFile, textOffset) != null
+                })
     }
-
-    override fun getName(): String {
-        return "QML"
-    }
-
-    override fun getDefaultExtension(): String {
-        return "qml"
-    }
-
-    override fun getDescription(): String {
-        return "QQ Markup Language"
-    }
-
 }

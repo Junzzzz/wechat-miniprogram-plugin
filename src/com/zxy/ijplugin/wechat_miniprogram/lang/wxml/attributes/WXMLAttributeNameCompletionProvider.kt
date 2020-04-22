@@ -80,20 +80,21 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.impl.source.xml.XmlAttributeReference
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.util.ProcessingContext
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WXMLElementDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.tag.WxmlCustomComponentDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLAttributeInsertUtils
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLUtils
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
 
 class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParameters>() {
 
     companion object {
-        val WX_ATTRIBUTES = arrayOf("wx:for", "wx:elif", "wx:else", "wx:key", "wx:if")
+        val STRUCTURE_ATTRIBUTES = arrayOf("for", "elif", "else", "key", "if")
 
-        const val NO_VALUE_ATTRIBUTE = "wx:else"
+        val NO_VALUE_ATTRIBUTE = "else"
 
         /**
          * 忽略公共的属性的标签名
@@ -114,8 +115,9 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
     override fun addCompletions(
             parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
     ) {
-        if (parameters.position.containingFile.fileType !== WXMLFileType.INSTANCE) return
-        val reference = parameters.position.containingFile
+        val containingFile = parameters.position.containingFile
+        if (containingFile !is WXMLPsiFile) return
+        val reference = containingFile
                 .findReferenceAt(parameters.offset)
         if (reference is XmlAttributeReference) {
             val xmlTag = reference.element.parent
@@ -135,7 +137,7 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                                 .withInsertHandler(WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler())
                     }
                 })
-                addFixedWXAttribute(result, xmlAttributes)
+                addStructureAttribute(result, xmlAttributes, containingFile)
                 addCommonAttribute(result, xmlAttributes)
                 addCommonEvents(result, xmlAttributes)
             } else if (descriptor is WXMLElementDescriptor) {
@@ -173,7 +175,7 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                 val tagName = descriptor.name
                 if (!IGNORE_WX_ATTRIBUTE_TAG_NAMES.contains(tagName)) {
                     // 提供固定的wx前缀完成
-                    addFixedWXAttribute(result, xmlAttributes)
+                    addStructureAttribute(result, xmlAttributes, containingFile)
                 }
 
                 if (!IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(tagName)) {
@@ -214,13 +216,25 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                         })
     }
 
-    private fun addFixedWXAttribute(
+    private fun addStructureAttribute(
             result: CompletionResultSet,
-            xmlAttributes: Array<out XmlAttribute>
+            xmlAttributes: Array<out XmlAttribute>,
+            file: WXMLPsiFile
     ) {
+        val isQQ = file.fileType === QMLFileType.INSTANCE
         result.addAllElements(
-                WX_ATTRIBUTES.filter { wxAttribute -> xmlAttributes.none { it.name == wxAttribute } }.map {
-                    if (it == NO_VALUE_ATTRIBUTE) {
+                STRUCTURE_ATTRIBUTES.filter { attribute ->
+                    xmlAttributes.none {
+                        it.name == "wx:$attribute" || (isQQ && it.name == "qq:$attribute")
+                    }
+                }.flatMap {
+                    if (isQQ) {
+                        listOf("qq:$it", "wx:$it")
+                    } else {
+                        listOf("wx:$it")
+                    }
+                }.map {
+                    if (it.endsWith(NO_VALUE_ATTRIBUTE)) {
                         LookupElementBuilder.create(it)
                     } else {
                         LookupElementBuilder.create(it).withInsertHandler(
@@ -229,5 +243,6 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                     }
                 })
     }
+
 
 }

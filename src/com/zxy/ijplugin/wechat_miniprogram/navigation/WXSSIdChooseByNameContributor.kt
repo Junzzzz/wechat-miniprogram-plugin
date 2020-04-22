@@ -76,13 +76,16 @@ package com.zxy.ijplugin.wechat_miniprogram.navigation
 import com.intellij.navigation.ChooseByNameContributor
 import com.intellij.navigation.NavigationItem
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.css.CssIdSelector
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.qq.QSSFileType
 
 
 class WXSSIdChooseByNameContributor : ChooseByNameContributor {
@@ -101,9 +104,20 @@ class WXSSIdChooseByNameContributor : ChooseByNameContributor {
     }
 
     private fun getIdSelectorsByProject(project: Project): List<CssIdSelector> {
-        val virtualFiles = FileTypeIndex.getFiles(
-                WXSSFileType.INSTANCE, GlobalSearchScope.allScope(project)
+        val virtualFiles = mutableListOf<VirtualFile>()
+        val allScope = GlobalSearchScope.allScope(project)
+        virtualFiles.addAll(
+                FileTypeIndex.getFiles(
+                        WXSSFileType.INSTANCE, allScope
+                )
         )
+        if (project.isQQContext()) {
+            virtualFiles.addAll(
+                    FileTypeIndex.getFiles(
+                            QSSFileType.INSTANCE, allScope
+                    )
+            )
+        }
         return virtualFiles.flatMap { virtualFile ->
             val wxssFile = PsiManager.getInstance(project).findFile(virtualFile) as WXSSPsiFile?
             wxssFile?.let {

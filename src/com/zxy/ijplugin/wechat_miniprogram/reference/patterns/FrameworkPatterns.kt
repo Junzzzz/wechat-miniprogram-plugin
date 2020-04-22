@@ -70,32 +70,23 @@
  *
  *    See the Mulan PSL v1 for more details.
  */
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxs
 
-import com.intellij.lang.javascript.JavaScriptSupportLoader
-import com.intellij.openapi.fileTypes.LanguageFileType
-import javax.swing.Icon
+package com.zxy.ijplugin.wechat_miniprogram.reference.patterns
 
-class QSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_5) {
+import com.intellij.patterns.PatternCondition
+import com.intellij.patterns.PlatformPatterns
+import com.intellij.util.ProcessingContext
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
 
-    companion object {
-        @JvmField
-        val INSTANCE = QSFileType()
+object FrameworkPatterns {
+    val qmlFileTypeAndQQContextPattern = object : PatternCondition<WXMLPsiFile>("withQmlFileTypeAndQQContext") {
+        override fun accepts(wxmlPsiFile: WXMLPsiFile, context: ProcessingContext?): Boolean {
+            return wxmlPsiFile.project.isQQContext() && wxmlPsiFile.fileType == QMLFileType.INSTANCE
+        }
     }
 
-    override fun getIcon(): Icon? {
-        return WXSIcons.FILE
-    }
-
-    override fun getName(): String {
-        return "QS"
-    }
-
-    override fun getDefaultExtension(): String {
-        return "qs"
-    }
-
-    override fun getDescription(): String {
-        return "QQ Script"
-    }
+    val qmlFileAndQQContextPattern = PlatformPatterns.psiFile(WXMLPsiFile::class.java)
+            .with(qmlFileTypeAndQQContextPattern)
 }

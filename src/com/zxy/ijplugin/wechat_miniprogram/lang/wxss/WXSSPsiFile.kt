@@ -74,15 +74,16 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
 import com.intellij.openapi.fileTypes.FileType
+import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.css.impl.CssFileImpl
 
 class WXSSPsiFile(fileViewProvider: FileViewProvider) : CssFileImpl(fileViewProvider, WXSSLanguage.INSTANCE) {
     override fun getFileType(): FileType {
-        return WXSSFileType.INSTANCE
+        return FileTypeRegistry.getInstance().getFileTypeByFileName(this.name)
     }
 
     override fun toString(): String {
-        return "WxssFile:$name"
+        return this.name
     }
 }

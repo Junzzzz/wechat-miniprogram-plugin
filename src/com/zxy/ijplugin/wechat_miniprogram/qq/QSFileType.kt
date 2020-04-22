@@ -70,48 +70,33 @@
  *
  *    See the Mulan PSL v1 for more details.
  */
+package com.zxy.ijplugin.wechat_miniprogram.qq
 
-package com.zxy.ijplugin.wechat_miniprogram.reference
+import com.intellij.lang.javascript.JavaScriptSupportLoader
+import com.intellij.openapi.fileTypes.LanguageFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSIcons
+import javax.swing.Icon
 
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonProperty
-import com.intellij.psi.PsiReferenceBase
-import com.intellij.psi.xml.XmlTag
-import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.nameTextRangeInSelf
-import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentJsonUtils
+class QSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_5) {
 
-class WXMLCustomComponentTagReference(element: XmlTag) :
-        PsiReferenceBase<XmlTag>(
-                element, element.nameTextRangeInSelf()
-        ) {
-
-    override fun resolve(): JsonProperty? {
-        val tagName = this.value
-        val wxmlPsiFile = this.element.containingFile
-        val jsonFile = RelateFileHolder.JSON.findFile(wxmlPsiFile.originalFile) as? JsonFile ?: return null
-        // 找到usingComponents的配置
-        val usingComponentItems = mutableListOf<JsonProperty>().apply {
-            ComponentJsonUtils.getUsingComponentItems(jsonFile)?.let {
-                this.addAll(it)
-            }
-            AppJsonUtils.findUsingComponentItems(element.project)?.let {
-                this.addAll(it)
-            }
-        }
-        return usingComponentItems.find {
-            it.name == tagName
-        }
+    companion object {
+        @JvmField
+        val INSTANCE = QSFileType()
     }
 
-    override fun isSoft(): Boolean {
-        return false
+    override fun getIcon(): Icon? {
+        return WXSIcons.FILE
     }
 
-}
+    override fun getName(): String {
+        return "QS"
+    }
 
-fun XmlTag.findWXMLCustomComponentTagReference(): WXMLCustomComponentTagReference? {
-    return this.references.asSequence()
-            .filterIsInstance<WXMLCustomComponentTagReference>().firstOrNull()
+    override fun getDefaultExtension(): String {
+        return "qs"
+    }
+
+    override fun getDescription(): String {
+        return "QQ Script"
+    }
 }

@@ -76,8 +76,6 @@ package com.zxy.ijplugin.wechat_miniprogram.context
 import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
-import com.zxy.ijplugin.wechat_miniprogram.settings.MiniProgramType
-import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
 
 class QQCompatibleRelateFileHolder(
         private val onlyQQFileType: LanguageFileType,
@@ -85,8 +83,7 @@ class QQCompatibleRelateFileHolder(
 ) :
         RelateFileHolder() {
     override fun findFile(files: Array<PsiFile>, project: Project): PsiFile? {
-        val miniprogramType = MyProjectSettings.getState(project).miniprogramType
-        return if (miniprogramType == MiniProgramType.QQ) {
+        return if (project.isQQContext()) {
             files.find {
                 it.fileType == onlyQQFileType
             } ?: files.find {

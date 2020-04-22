@@ -83,4 +83,6 @@ public interface WechatMiniProgramIcons {
 
     Icon PAGE = IconLoader.getIcon("/icons/Page.svg");
 
+    Icon QQ_LOGO = IconLoader.getIcon("/icons/qqIcon.svg");
+
 }

@@ -74,14 +74,12 @@
 package com.zxy.ijplugin.wechat_miniprogram.utils
 
 import com.intellij.json.psi.JsonProperty
-import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.reference.findWXMLCustomComponentTagReference
 
 object ComponentWxmlUtils {
 
@@ -114,9 +112,9 @@ object ComponentWxmlUtils {
 
     private fun findCustomComponentDefinitionFiles(xmlTag: XmlTag): List<PsiFile>? {
         // 先找到json文件的定义
-        val componentNameJsonLiteral = xmlTag.findWXMLCustomComponentTagReference()?.resolve() as? JsonStringLiteral
+        val componentNameJsonProperty = xmlTag.descriptor?.declaration as? JsonProperty
         // 解析其路径可以找到自定义组件的位置
-        return (componentNameJsonLiteral?.parent as? JsonProperty)?.let { this.findCustomComponentDefinitionFiles(it) }
+        return componentNameJsonProperty?.let { this.findCustomComponentDefinitionFiles(it) }
     }
 
     private fun findCustomComponentDefinitionFiles(jsonProperty: JsonProperty): List<PsiFile>? {

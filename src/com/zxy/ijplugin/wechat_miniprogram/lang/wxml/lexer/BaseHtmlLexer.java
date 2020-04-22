@@ -87,7 +87,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.xml.XmlTokenType;
 import com.intellij.util.text.CharArrayUtil;
-import com.intellij.xml.util.documentation.HtmlDescriptorsTable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -134,10 +133,12 @@ public abstract class BaseHtmlLexer extends DelegateLexer {
     private Lexer lexerOfCacheBufferSequence;
     private final boolean caseInsensitive;
     private final HashMap<IElementType, TokenHandler> tokenHandlers = new HashMap<>();
+    private final String scriptTagName;
 
-    protected BaseHtmlLexer(Lexer _baseLexer, boolean _caseInsensitive) {
+    protected BaseHtmlLexer(Lexer _baseLexer, boolean _caseInsensitive, String scriptTagName) {
         super(_baseLexer);
         caseInsensitive = _caseInsensitive;
+        this.scriptTagName = scriptTagName;
 
         XmlNameHandler value = new XmlNameHandler();
         tokenHandlers.put(XmlTokenType.XML_NAME, value);
@@ -244,75 +245,10 @@ public abstract class BaseHtmlLexer extends DelegateLexer {
         void handleElement(Lexer lexer);
     }
 
-    public class XmlNameHandler implements TokenHandler {
-        @NonNls
-        private static final String TOKEN_SCRIPT = "wxs";
-        @NonNls
-        private static final String TOKEN_STYLE = "style";
-        @NonNls
-        private static final String TOKEN_ON = "on";
-
-        @Override
-        public void handleElement(Lexer lexer) {
-            final CharSequence buffer;
-            if (lexerOfCacheBufferSequence == lexer) {
-                buffer = cachedBufferSequence;
-            } else {
-                cachedBufferSequence = lexer.getBufferSequence();
-                buffer = cachedBufferSequence;
-                lexerOfCacheBufferSequence = lexer;
-            }
-            final char firstCh = buffer.charAt(lexer.getTokenStart());
-
-            if (seenScript && !seenTag) {
-                seenContentType = false;
-                if (((firstCh == 'l' || firstCh == 't') || (caseInsensitive && (firstCh == 'L' || firstCh == 'T')))) {
-                    @NonNls String name = TreeUtil.getTokenText(lexer);
-                    seenContentType = Comparing.strEqual("language", name, !caseInsensitive) || Comparing.strEqual("type", name, !caseInsensitive);
-                    return;
-                }
-            }
-            if (seenStyle && !seenTag) {
-                seenStylesheetType = false;
-                if (firstCh == 't' || caseInsensitive && firstCh == 'T') {
-                    seenStylesheetType = Comparing.strEqual(TreeUtil.getTokenText(lexer), "type", !caseInsensitive);
-                    return;
-                }
-            }
-
-            if (firstCh != 's' && firstCh != 'w' && (!caseInsensitive || (firstCh != 'S' && firstCh != 'W'))) {
-                return; // optimization
-            }
-
-            String name = TreeUtil.getTokenText(lexer);
-            if (caseInsensitive) name = StringUtil.toLowerCase(name);
-
-            final boolean style = name.equals(TOKEN_STYLE);
-            final int state = getState() & BASE_STATE_MASK;
-            final boolean script = name.equals(TOKEN_SCRIPT) ||
-                    ((name.startsWith(TOKEN_ON) && name.indexOf(':') == -1 && !isHtmlTagState(state) &&
-                            HtmlDescriptorsTable.getAttributeDescriptor(name) != null));
-
-            if (style || script) {
-                // encountered tag name in end of tag
-                if (seenTag) {
-                    if (isHtmlTagState(state)) {
-                        seenTag = false;
-                    }
-                    return;
-                }
-
-                // If we have seenAttribute it means that we need to pop state
-                if (seenAttribute) {
-                    popScriptStyle();
-                }
-                pushScriptStyle(script, style);
-
-                if (!isHtmlTagState(state)) {
-                    seenAttribute = true;
-                }
-            }
-        }
+    protected boolean endOfTheEmbeddment(String name) {
+        return (hasSeenScript() && this.scriptTagName.equals(name)) ||
+                (hasSeenStyle() && XmlNameHandler.TOKEN_STYLE.equals(name)) ||
+                CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED.equalsIgnoreCase(name);
     }
 
     class XmlAttributeValueEndHandler implements TokenHandler {
@@ -465,10 +401,69 @@ public abstract class BaseHtmlLexer extends DelegateLexer {
         return tokenEnd;
     }
 
-    protected boolean endOfTheEmbeddment(String name) {
-        return (hasSeenScript() && XmlNameHandler.TOKEN_SCRIPT.equals(name)) ||
-                (hasSeenStyle() && XmlNameHandler.TOKEN_STYLE.equals(name)) ||
-                CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED.equalsIgnoreCase(name);
+    public class XmlNameHandler implements TokenHandler {
+        @NonNls
+        private static final String TOKEN_STYLE = "style";
+
+        @Override
+        public void handleElement(Lexer lexer) {
+            final CharSequence buffer;
+            if (lexerOfCacheBufferSequence == lexer) {
+                buffer = cachedBufferSequence;
+            } else {
+                cachedBufferSequence = lexer.getBufferSequence();
+                buffer = cachedBufferSequence;
+                lexerOfCacheBufferSequence = lexer;
+            }
+            final char firstCh = buffer.charAt(lexer.getTokenStart());
+
+            if (seenScript && !seenTag) {
+                seenContentType = false;
+                if (((firstCh == 'l' || firstCh == 't') || (caseInsensitive && (firstCh == 'L' || firstCh == 'T')))) {
+                    @NonNls String name = TreeUtil.getTokenText(lexer);
+                    seenContentType = Comparing.strEqual("language", name, !caseInsensitive) || Comparing.strEqual("type", name, !caseInsensitive);
+                    return;
+                }
+            }
+            if (seenStyle && !seenTag) {
+                seenStylesheetType = false;
+                if (firstCh == 't' || caseInsensitive && firstCh == 'T') {
+                    seenStylesheetType = Comparing.strEqual(TreeUtil.getTokenText(lexer), "type", !caseInsensitive);
+                    return;
+                }
+            }
+
+            if (firstCh != 's' && firstCh != BaseHtmlLexer.this.scriptTagName.charAt(0) && firstCh != 'b' && firstCh != 'c' && (!caseInsensitive || (firstCh != 'S' && firstCh != BaseHtmlLexer.this.scriptTagName.toUpperCase().charAt(0)) && firstCh != 'B' && firstCh != 'C')) {
+                return; // optimization
+            }
+
+            String name = TreeUtil.getTokenText(lexer);
+            if (caseInsensitive) name = StringUtil.toLowerCase(name);
+
+            final boolean style = name.equals(TOKEN_STYLE);
+            final int state = getState() & BASE_STATE_MASK;
+            final boolean script = name.equals(BaseHtmlLexer.this.scriptTagName) || ((name.startsWith("catch") || name.startsWith("bind")) && !isHtmlTagState(state));
+
+            if (style || script) {
+                // encountered tag name in end of tag
+                if (seenTag) {
+                    if (isHtmlTagState(state)) {
+                        seenTag = false;
+                    }
+                    return;
+                }
+
+                // If we have seenAttribute it means that we need to pop state
+                if (seenAttribute) {
+                    popScriptStyle();
+                }
+                pushScriptStyle(script, style);
+
+                if (!isHtmlTagState(state)) {
+                    seenAttribute = true;
+                }
+            }
+        }
     }
 
     protected boolean isValidAttributeValueTokenType(final IElementType tokenType) {

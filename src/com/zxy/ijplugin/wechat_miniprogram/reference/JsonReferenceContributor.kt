@@ -147,7 +147,7 @@ class JsonReferenceContributor : PsiReferenceContributor() {
                         val parentArray = psiElement.parent
                         if (RelateFileHolder.JSON.findAppFile(
                                         psiElement.project
-                                ) == psiElement.containingFile.originalFile.virtualFile) {
+                                ) == psiElement.containingFile.originalFile) {
                             // 确定是app.json
                             if (parentArray is JsonArray) {
                                 val parentProperty = parentArray.parent

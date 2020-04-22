@@ -74,6 +74,7 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
 import com.intellij.openapi.fileTypes.FileType
+import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.impl.source.xml.XmlFileImpl
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition
@@ -81,6 +82,11 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.parser.WXMLParserDefinition
 class WXMLPsiFile(fileViewProvider: FileViewProvider) :
         XmlFileImpl(fileViewProvider, WXMLParserDefinition.iFileElementType) {
     override fun getFileType(): FileType {
-        return WXMLFileType.INSTANCE
+        return FileTypeRegistry.getInstance().getFileTypeByFileName(this.name)
     }
+
+    override fun toString(): String {
+        return this.name
+    }
+
 }

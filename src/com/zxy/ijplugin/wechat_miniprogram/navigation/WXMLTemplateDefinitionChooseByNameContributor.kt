@@ -76,14 +76,17 @@ package com.zxy.ijplugin.wechat_miniprogram.navigation
 import com.intellij.navigation.ChooseByNameContributor
 import com.intellij.navigation.NavigationItem
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.source.xml.XmlAttributeValueImpl
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.xml.XmlAttributeValue
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLModuleUtils
+import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
 
 class WXMLTemplateDefinitionChooseByNameContributor : ChooseByNameContributor {
     override fun getItemsByName(
@@ -101,9 +104,20 @@ class WXMLTemplateDefinitionChooseByNameContributor : ChooseByNameContributor {
     }
 
     private fun getTemplateDefinition(project: Project): List<XmlAttributeValue> {
-        val virtualFiles = FileTypeIndex.getFiles(
-                WXMLFileType.INSTANCE, GlobalSearchScope.allScope(project)
+        val virtualFiles = mutableListOf<VirtualFile>()
+        val allScope = GlobalSearchScope.allScope(project)
+        virtualFiles.addAll(
+                FileTypeIndex.getFiles(
+                        WXMLFileType.INSTANCE, allScope
+                )
         )
+        if (project.isQQContext()) {
+            virtualFiles.addAll(
+                    FileTypeIndex.getFiles(
+                            QMLFileType.INSTANCE, allScope
+                    )
+            )
+        }
         return virtualFiles.flatMap { virtualFile ->
             val wxmlPsiFile = PsiManager.getInstance(project).findFile(virtualFile) as WXMLPsiFile?
             wxmlPsiFile?.let {
