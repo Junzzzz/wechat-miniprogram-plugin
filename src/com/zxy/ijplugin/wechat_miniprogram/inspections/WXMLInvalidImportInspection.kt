@@ -73,7 +73,9 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.inspections
 
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
 import com.zxy.ijplugin.wechat_miniprogram.reference.PathAttribute
 
 /**
@@ -83,6 +85,13 @@ class WXMLInvalidImportInspection : WXMLElementPathAttributeInspection(
         arrayOf(
                 PathAttribute("import", "src"),
                 PathAttribute("include", "src")
-        ),
-        WXMLPsiFile::class.java
-)
+        )
+) {
+    override fun getFileTypeText(project: Project): String {
+        return if (project.isQQContext()) "qml,wxml" else "wxml"
+    }
+
+    override fun match(psiFile: PsiFile): Boolean {
+        return psiFile.fileType is PsiFile
+    }
+}

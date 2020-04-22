@@ -73,11 +73,23 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.inspections
 
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType
+import com.zxy.ijplugin.wechat_miniprogram.qq.QSFileType
 import com.zxy.ijplugin.wechat_miniprogram.reference.PathAttribute
 
 /**
  * 检查wxml中的wxs标签的导入是否有效
  */
 class WxmlWxsModuleImportInspection :
-        WXMLElementPathAttributeInspection(arrayOf(PathAttribute("wxs", "src")), WXSSPsiFile::class.java)
+        WXMLElementPathAttributeInspection(arrayOf(PathAttribute("wxs", "src"))) {
+    override fun getFileTypeText(project: Project): String {
+        return if (project.isQQContext()) "wxs,qs" else "wxs"
+    }
+
+    override fun match(psiFile: PsiFile): Boolean {
+        return psiFile.fileType == WXSFileType.INSTANCE || (psiFile.project.isQQContext() && psiFile.fileType == QSFileType.INSTANCE)
+    }
+}

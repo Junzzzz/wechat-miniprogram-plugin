@@ -74,6 +74,7 @@
 package com.zxy.ijplugin.wechat_miniprogram.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElementVisitor
@@ -91,11 +92,20 @@ import com.zxy.ijplugin.wechat_miniprogram.reference.PathAttribute
 /**
  * 检查wxml中可以被解析为路径的标签的路径的正确性
  * @see pathAttributes 目标标签和属性
- * @see fileType 路径指向的文件类型
  */
 abstract class WXMLElementPathAttributeInspection(
-        private val pathAttributes: Array<PathAttribute>, private val clazz: Class<out PsiFile>
+        private val pathAttributes: Array<PathAttribute>
 ) : WXMLInspectionBase() {
+
+    /**
+     * 显示在意图中的文件类型描述
+     */
+    abstract fun getFileTypeText(project: Project): String
+
+    /**
+     * 判断是否是正确的文件
+     */
+    abstract fun match(psiFile: PsiFile): Boolean
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : XmlElementVisitor() {
@@ -134,12 +144,12 @@ abstract class WXMLElementPathAttributeInspection(
                                 if (resolveElement is PsiDirectory) {
                                     continue
                                 } else if (resolveElement is PsiFile) {
-                                    if (clazz.isInstance(resolveElement)) {
+                                    if (match(resolveElement)) {
                                         continue
                                     } else {
                                         holder.registerProblem(
                                                 xmlAttributeValue, xmlAttributeValue.valueTextRangeInSelf(),
-                                                "仅能导入${resolveElement.language.displayName}文件"
+                                                "仅能导入${getFileTypeText(resolveElement.project)}文件"
                                         )
                                     }
                                 } else {
