@@ -83,7 +83,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.xml.XmlTokenType;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.List;
 
@@ -113,11 +112,11 @@ public class WXMLLexer extends BaseHtmlLexer {
         ourInlineStyleElementType = inlineStyleElementType;
     }
 
-    public WXMLLexer(@Nonnull String scriptTagName) {
+    public WXMLLexer(@NotNull String scriptTagName) {
         this(new MergingLexerAdapter(new FlexAdapter(new _HtmlLexer()), TOKENS_TO_MERGE), true, scriptTagName);
     }
 
-    protected WXMLLexer(Lexer _baseLexer, boolean _caseInsensitive, @Nonnull String scriptTagName) {
+    protected WXMLLexer(Lexer _baseLexer, boolean _caseInsensitive, @NotNull String scriptTagName) {
         super(_baseLexer, _caseInsensitive, scriptTagName);
     }
 
