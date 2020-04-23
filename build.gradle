@@ -153,7 +153,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.1.2"
+version = "3.1.3"
 
 patchPluginXml {
     sinceBuild = "201"
@@ -161,13 +161,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 修复wxml中wxs标签的src属性正确的引用了脚本文件，还会显示错误的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1F7CN">ISSUES</a></li>
-    <li> 修复插值表达式中小于符号会被识别成标签的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1F78O">ISSUES</a></li>
+    <li> 跳转到关联文件功能现在不会列举当前文件 </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Fix the src attribute of the wxs tag in wxml correctly referring to the script file, and also display the wrong error <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1F7CN">ISSUES</a> </li>
-    <li> Fix the error that the less-than symbol in the interpolation expression will be recognized as a label <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1F78O">ISSUES</a></li>
+    <li> Jump to associated file function now does not list current file </li>
 </ul>
 """
     pluginDescription = """
