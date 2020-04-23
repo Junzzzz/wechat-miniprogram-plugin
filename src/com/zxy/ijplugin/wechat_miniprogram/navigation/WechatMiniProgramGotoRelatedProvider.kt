@@ -112,8 +112,6 @@ class WechatMiniProgramGotoRelatedProvider : GotoRelatedProvider() {
                     }.mapNotNull {
                         // 寻找其他类型的文件
                         it.findFile(psiFile)
-                    }.toMutableList().apply {
-                        this.add(psiFile)
                     }.mapNotNull {
                         MyGotoRelatedItem.create(it)
                     }.toMutableList()
