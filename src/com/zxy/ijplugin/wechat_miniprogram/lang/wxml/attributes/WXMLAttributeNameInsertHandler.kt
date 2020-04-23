@@ -125,14 +125,14 @@ abstract class WXMLAttributeNameInsertHandler : InsertHandler<LookupElement> {
      */
     class DoubleBraceInsertHandler :
             WXMLAttributeNameInsertHandler() {
-        override fun handleInsert(insertionContext: InsertionContext, item: LookupElement) {
+        override fun handleInsert(context: InsertionContext, item: LookupElement) {
             // 额外插入 [=""]
             // 额外插入 [="{{}}"]
-            val editor = insertionContext.editor
+            val editor = context.editor
             val offset = editor.caretModel.offset
-            insertionContext.document.insertString(offset, "=\"{{}}\"")
+            context.document.insertString(offset, "=\"{{}}\"")
             editor.caretModel.moveToOffset(offset + 4)
-            super.handleInsert(insertionContext, item)
+            super.handleInsert(context, item)
         }
 
     }
