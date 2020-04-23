@@ -71,14 +71,6 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-/// <reference path="./wx/index.d.ts" />
-/// <reference path="./lib.wx.app.d.ts" />
-/// <reference path="./lib.wx.page.d.ts" />
-/// <reference path="./lib.wx.api.d.ts" />
-/// <reference path="./lib.wx.cloud.d.ts" />
-/// <reference path="./lib.wx.component.d.ts" />
-/// <reference path="./lib.wx.behavior.d.ts" />
-
 declare namespace WechatMiniprogram {
     type IAnyObject = Record<string, any>
     type Optional<F> = F extends (arg: infer P) => infer R ? (arg?: P) => R : F
