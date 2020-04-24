@@ -162,10 +162,12 @@ patchPluginXml {
     changeNotes = """
 <ul lang='cn'>
     <li> 跳转到关联文件功能现在不会列举当前文件 </li>
+    <li> 当wxml的style属性中有表达式插值时，忽略掉css的错误 </li>
 </ul>
 <br/>
 <ul lang='en'>
     <li> Jump to associated file function now does not list current file </li>
+    <li> When there is expression interpolation in the style attribute of wxml, the css error is ignored </li>
 </ul>
 """
     pluginDescription = """
