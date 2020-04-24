@@ -76,6 +76,9 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.inspection
 import com.intellij.codeInsight.highlighting.HighlightErrorFilter
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.PsiErrorElement
+import com.intellij.psi.util.parentOfType
+import com.intellij.psi.xml.XmlAttribute
+import com.intellij.psi.xml.XmlAttributeValue
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 
 /**
@@ -84,26 +87,17 @@ import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 class WXMLStyleInterpolationErrorFilter : HighlightErrorFilter() {
     override fun shouldHighlightErrorElement(psiErrorElement: PsiErrorElement): Boolean {
         val containingFile = psiErrorElement.containingFile
-        return !(containingFile.language == WXMLLanguage.INSTANCE &&
-                // 是注入js语言的元素 或者在其周围的双括号
-                InjectedLanguageManager.getInstance(psiErrorElement.project).let {
-                    val textOffset = psiErrorElement.textOffset
-                    val text = containingFile.findElementAt(textOffset)?.text
-                    (text == "{" &&
-                            (it.findInjectedElementAt(
-                                    containingFile,
-                                    textOffset + 1
-                            ) != null || it.findInjectedElementAt(
-                                    containingFile, textOffset + 2
-                            ) != null))
-                            ||
-                            (text == "}" && (it.findInjectedElementAt(
-                                    containingFile,
-                                    textOffset - 1
-                            ) != null || it.findInjectedElementAt(
-                                    containingFile, textOffset - 2
-                            ) != null))
-                            || it.findInjectedElementAt(containingFile, textOffset) != null
-                })
+        if (containingFile.language == WXMLLanguage.INSTANCE) {
+            val xmlAttributeValue = psiErrorElement.parentOfType<XmlAttributeValue>() ?: return false
+            val xmlAttribute = xmlAttributeValue.parentOfType<XmlAttribute>() ?: return false
+            val valueTextRange = xmlAttributeValue.valueTextRange
+            if (xmlAttribute.name == "style") {
+                return (valueTextRange.startOffset..valueTextRange.endOffset).none {
+                    InjectedLanguageManager.getInstance(psiErrorElement.project)
+                            .findInjectedElementAt(psiErrorElement.containingFile, it) != null
+                }
+            }
+        }
+        return true
     }
 }
