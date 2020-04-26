@@ -78,7 +78,6 @@ import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.impl.source.xml.XmlAttributeReference
-import com.intellij.psi.xml.XmlAttribute
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
@@ -122,12 +121,13 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
         if (reference is XmlAttributeReference) {
             val xmlTag = reference.element.parent
             val descriptor = xmlTag.descriptor
-            val xmlAttributes = xmlTag.attributes
+            val xmlAttributes = xmlTag.attributes.map { it.name }.toTypedArray()
             if (descriptor is WxmlCustomComponentDescriptor) {
                 // 自定义组件的属性
-                result.addAllElements(WXMLUtils.getCustomComponentAttributeDescriptors(descriptor).filter { desc ->
+                val customComponentAttributeDescriptors = WXMLUtils.getCustomComponentAttributeDescriptors(descriptor)
+                result.addAllElements(customComponentAttributeDescriptors.filter { desc ->
                     xmlAttributes.none {
-                        it.name == desc.name
+                        it == desc.name
                     }
                 }.map {
                     if (WXMLAttributeInsertUtils.isBooleanTypeAttribute(it) && it.defaultValue == "false") {
@@ -137,6 +137,13 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                                 .withInsertHandler(WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler())
                     }
                 })
+                addTwoWayBindings(
+                        result, xmlAttributes, customComponentAttributeDescriptors
+                        .map {
+                            it.name
+                        }.toTypedArray()
+                )
+
                 addStructureAttribute(result, xmlAttributes, containingFile)
                 addCommonAttribute(result, xmlAttributes)
                 addCommonEvents(result, xmlAttributes)
@@ -145,7 +152,7 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                 // wxml组件属性
                 attributes.filter { desc ->
                     xmlAttributes.none {
-                        it.name == desc.key
+                        it == desc.key
                     }
                 }.map {
                     val insertHandler = WXMLAttributeNameInsertHandler.createFromAttributeDescription(it)
@@ -154,11 +161,15 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                     result.addAllElements(it)
                 }
 
+                addTwoWayBindings(result, xmlAttributes, attributes.map {
+                    it.key
+                }.toTypedArray())
+
                 // wxml组件事件
                 descriptor.wxmlElementDescription.events.filter { event ->
                     xmlAttributes.none { attr ->
                         WXMLLanguage.EVENT_ATTRIBUTE_PREFIX_ARRAY.any {
-                            attr.name == it + event
+                            attr == it + event
                         }
                     }
                 }.flatMap { event ->
@@ -193,10 +204,33 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
         }
     }
 
-    private fun addCommonEvents(result: CompletionResultSet, xmlAttributes: Array<out XmlAttribute>) {
+    private fun addTwoWayBindings(
+            result: CompletionResultSet, xmlAttributes: Array<String>, attributes: Array<String>
+    ) {
+        // 简易双向绑定
+        // https://developers.weixin.qq.com/miniprogram/dev/framework/view/two-way-bindings.html
+        result.addAllElements(attributes
+                .filter { attribute ->
+                    xmlAttributes.none {
+                        it == attribute
+                    }
+                }.map {
+                    "model:$it"
+                }.filter { modelAttribute ->
+                    xmlAttributes.none {
+                        it == modelAttribute
+                    }
+                }.map {
+                    LookupElementBuilder.create(
+                            it
+                    ).withInsertHandler(WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler())
+                })
+    }
+
+    private fun addCommonEvents(result: CompletionResultSet, xmlAttributes: Array<String>) {
         result.addAllElements(
                 WXMLUtils.generateEventAttributeFullName(WXMLMetadata.COMMON_ELEMENT_EVENTS).filter { event ->
-                    xmlAttributes.none { it.name == event }
+                    xmlAttributes.none { it == event }
                 }.map {
                     LookupElementBuilder.create(it)
                 }
@@ -205,10 +239,10 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
 
     private fun addCommonAttribute(
             result: CompletionResultSet,
-            xmlAttributes: Array<out XmlAttribute>
+            xmlAttributes: Array<out String>
     ) {
         result.addAllElements(
-                WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.filter { attribute -> xmlAttributes.none { it.name == attribute.key } }
+                WXMLMetadata.COMMON_ELEMENT_ATTRIBUTE_DESCRIPTORS.filter { attribute -> xmlAttributes.none { it == attribute.key } }
                         .map {
                             LookupElementBuilder.create(it.key).withInsertHandler(
                                     WXMLAttributeNameInsertHandler.createFromAttributeDescription(it)
@@ -218,14 +252,14 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
 
     private fun addStructureAttribute(
             result: CompletionResultSet,
-            xmlAttributes: Array<out XmlAttribute>,
+            xmlAttributes: Array<out String>,
             file: WXMLPsiFile
     ) {
         val isQQ = file.fileType === QMLFileType.INSTANCE
         result.addAllElements(
                 STRUCTURE_ATTRIBUTES.filter { attribute ->
                     xmlAttributes.none {
-                        it.name == "wx:$attribute" || (isQQ && it.name == "qq:$attribute")
+                        it == "wx:$attribute" || (isQQ && it == "qq:$attribute")
                     }
                 }.flatMap {
                     if (isQQ) {
