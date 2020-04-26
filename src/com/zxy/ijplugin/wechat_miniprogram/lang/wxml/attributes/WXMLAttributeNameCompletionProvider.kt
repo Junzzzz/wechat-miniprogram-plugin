@@ -127,7 +127,7 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                 val customComponentAttributeDescriptors = WXMLUtils.getCustomComponentAttributeDescriptors(descriptor)
                 result.addAllElements(customComponentAttributeDescriptors.filter { desc ->
                     xmlAttributes.none {
-                        it == desc.name
+                        it == desc.name || it == "model:" + desc.name
                     }
                 }.map {
                     if (WXMLAttributeInsertUtils.isBooleanTypeAttribute(it) && it.defaultValue == "false") {
@@ -152,7 +152,7 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                 // wxml组件属性
                 attributes.filter { desc ->
                     xmlAttributes.none {
-                        it == desc.key
+                        it == desc.key || it == "model:" + desc.key
                     }
                 }.map {
                     val insertHandler = WXMLAttributeNameInsertHandler.createFromAttributeDescription(it)
