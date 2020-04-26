@@ -142,6 +142,7 @@ class WxmlXmlExtension : DefaultXmlExtension() {
                         || namespacePrefix == "bind"
                         || namespacePrefix == "catch"
                         || namespacePrefix == "model:"
+                        || namespacePrefix == "mark:"
                         || (context.containingFile.fileType == QMLFileType.INSTANCE && namespacePrefix == "qq"))) {
             findAttributeSchema(context, namespacePrefix)
                     ?.let { return it }
