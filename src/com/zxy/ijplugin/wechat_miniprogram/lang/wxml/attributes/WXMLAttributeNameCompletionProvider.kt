@@ -202,7 +202,10 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
 
             // mark:
             if (!IGNORE_COMMON_ATTRIBUTE_TAG_NAMES.contains(xmlTag.name)) {
-                result.addElement(LookupElementBuilder.create("mark:"))
+                result.addElement(
+                        LookupElementBuilder.create("mark:")
+                                .withInsertHandler(WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler())
+                )
             }
 
         }
