@@ -232,6 +232,21 @@ class WXMLReferenceContributor : PsiReferenceContributor() {
                 }
         )
 
+        psiReferenceRegistrar.registerReferenceProvider(
+                XmlPatterns.xmlAttribute().withLanguage(WXMLLanguage.INSTANCE),
+                object : PsiReferenceProvider() {
+                    override fun getReferencesByElement(
+                            element: PsiElement, context: ProcessingContext
+                    ): Array<PsiReference> {
+                        element as XmlAttribute
+                        if (element.name.startsWith("model:")) {
+                            return arrayOf(MarkupTwoWayBindingReference(element))
+                        }
+                        return PsiReference.EMPTY_ARRAY
+                    }
+                }
+        )
+
     }
 
 }
