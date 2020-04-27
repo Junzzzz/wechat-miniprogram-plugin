@@ -79,6 +79,7 @@ import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.util.parentOfType
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlTag
+import com.intellij.xml.XmlAttributeDescriptor
 
 class MarkupTwoWayBindingReference(xmlAttribute: XmlAttribute) : PsiReferenceBase<XmlAttribute>(
         xmlAttribute,
@@ -89,9 +90,12 @@ class MarkupTwoWayBindingReference(xmlAttribute: XmlAttribute) : PsiReferenceBas
 ) {
 
     override fun resolve(): PsiElement? {
+        return this.getAttributeDescriptor()?.declaration
+    }
+
+    fun getAttributeDescriptor(): XmlAttributeDescriptor? {
         return this.element.parentOfType<XmlTag>()?.descriptor
                 ?.getAttributeDescriptor(this.value, null)
-                ?.declaration
     }
 
 }

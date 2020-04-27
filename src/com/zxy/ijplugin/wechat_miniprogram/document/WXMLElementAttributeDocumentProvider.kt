@@ -87,6 +87,7 @@ import com.intellij.psi.xml.XmlAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLMetadata
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.attributes.WXMLAttributeDescriptor
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.WXMLElementFactory
+import com.zxy.ijplugin.wechat_miniprogram.reference.MarkupTwoWayBindingReference
 import com.zxy.ijplugin.wechat_miniprogram.utils.findStringPropertyValue
 
 /**
@@ -96,9 +97,15 @@ class WXMLElementAttributeDocumentProvider : DocumentationProvider {
 
     override fun getQuickNavigateInfo(element: PsiElement, originalElement: PsiElement): String? {
         if (element is JsonStringLiteral && originalElement is XmlAttribute) {
-            val wxmlElementAttributeDescription = (originalElement.descriptor as? WXMLAttributeDescriptor)?.wxmlElementAttributeDescription
-                    ?: return null
-            return "Element Attribute " + originalElement.parent.name + "." + wxmlElementAttributeDescription.key + " " + wxmlElementAttributeDescription.description
+            val attributeDescriptor: WXMLAttributeDescriptor? = if (originalElement.name.startsWith("model:")) {
+                originalElement.references.filterIsInstance<MarkupTwoWayBindingReference>().firstOrNull()
+                        ?.getAttributeDescriptor() as? WXMLAttributeDescriptor
+            } else {
+                (originalElement.descriptor as? WXMLAttributeDescriptor)
+            }
+            attributeDescriptor?.wxmlElementAttributeDescription?.let {
+                return "Element Attribute " + originalElement.parent.name + "." + it.key + " " + it.description
+            }
         }
         return null
     }
