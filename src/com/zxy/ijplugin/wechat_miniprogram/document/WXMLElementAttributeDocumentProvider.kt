@@ -166,9 +166,10 @@ class WXMLElementAttributeDocumentProvider : DocumentationProvider {
                 it.name == elementName
             }?.definedElement ?: return null
             definedElement.putUserData(
-                    DocumentationManager.ORIGINAL_ELEMENT_KEY, SmartPointerManagerImpl.createPointer(
-                    WXMLElementFactory.createTagName(element.project, elementName)
-            )
+                    DocumentationManager.ORIGINAL_ELEMENT_KEY,
+                    SmartPointerManagerImpl.createPointer(
+                            WXMLElementFactory.createTagName(element.project, elementName)
+                    )
             )
             return definedElement
         }

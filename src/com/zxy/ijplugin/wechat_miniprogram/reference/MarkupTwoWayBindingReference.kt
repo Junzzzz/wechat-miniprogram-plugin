@@ -93,5 +93,5 @@ class MarkupTwoWayBindingReference(xmlAttribute: XmlAttribute) : PsiReferenceBas
                 ?.getAttributeDescriptor(this.value, null)
                 ?.declaration
     }
-    
+
 }
