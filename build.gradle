@@ -162,8 +162,8 @@ patchPluginXml {
     changeNotes = """
 <ul lang='cn'>
     <li> WXML支持<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/view/two-way-bindings.html">model</a>双向绑定 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FJJA">I1FJJA</a></li>
-    <li> WXML支持“mark:”前缀的属性 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FJJA">I1FJJA</a></li>
-    <li> WXML支持“mut-bind”前缀的事件 </li>
+    <li> WXML支持mark:前缀的属性 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FJJA">I1FJJA</a></li>
+    <li> WXML支持mut-bind前缀的事件 </li>
 </ul>
 <br/>
 <ul lang='en'>
