@@ -80,17 +80,8 @@ import com.intellij.lang.css.CSSLanguage
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.css.codeStyle.CssCodeStyleSettings
 import com.intellij.psi.css.impl.util.editor.CssFormattingModelBuilder
-import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 
 class WXSSFormattingModelBuilder : CssFormattingModelBuilder() {
-
-    companion object {
-        fun isMiniProgramContext(node: ASTNode?): Boolean {
-            return node?.psi?.project?.let {
-                isWechatMiniProgramContext(it)
-            } == true
-        }
-    }
 
     override fun createExtension(settings: CodeStyleSettings): CssFormattingExtension {
         return object : CssFormattingExtension(
