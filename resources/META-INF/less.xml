@@ -74,7 +74,12 @@
 <idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
         <lang.formatter language="LESS"
+                        id="MiniProgramLessFormattingModelBuilder"
                         order="first"
-                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.less.MyLessFormattingModelBuilder"/>
+                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.less.MiniProgramLessFormattingModelBuilder"/>
+        <lang.syntaxHighlighter language="LESS"
+                                id="MiniProgramLessSyntaxHighlighter"
+                                order="first"
+                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.less.MiniProgramLessSyntaxHighlighter"/>
     </extensions>
 </idea-plugin>
