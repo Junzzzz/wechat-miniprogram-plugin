@@ -84,11 +84,11 @@
                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"/>
         <lang.formatter language="SASS" order="first"
                         id="MiniProgramSassFormattingModelBuilder"
-                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.scss.MiniProgramSassFormattingModelBuilder"/>
+                        implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.sass.MiniProgramSassFormattingModelBuilder"/>
         <lang.syntaxHighlighter language="SASS"
                                 id="MiniProgramSassSyntaxHighlighter"
                                 order="first"
-                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.scss.MiniProgramSassSyntaxHighlighter"/>
+                                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.sass.MiniProgramSassSyntaxHighlighter"/>
         <lang.inspectionSuppressor language="SASS"
                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"/>
     </extensions>
