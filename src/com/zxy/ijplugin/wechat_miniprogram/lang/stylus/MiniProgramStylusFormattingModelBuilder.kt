@@ -71,42 +71,35 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
+package com.zxy.ijplugin.wechat_miniprogram.lang.stylus
 
 import com.intellij.formatting.Alignment
-import com.intellij.formatting.Block
 import com.intellij.formatting.Indent
-import com.intellij.formatting.Spacing
 import com.intellij.lang.ASTNode
-import com.intellij.psi.css.impl.CssElementTypes
-import com.intellij.psi.css.impl.util.editor.CssFormattingModelBuilder
-import com.intellij.psi.css.impl.util.editor.CssFormattingModelBuilder.CssFormatterBlock
-import com.intellij.psi.templateLanguages.OuterLanguageElement
+import com.intellij.psi.codeStyle.CodeStyleSettings
+import com.zxy.ijplugin.wechat_miniprogram.lang.utils.StyleLanguageUtils
+import org.jetbrains.plugins.stylus.StylusLanguage
+import org.jetbrains.plugins.stylus.formatter.StylusFormattingModelBuilder
+import org.jetbrains.plugins.stylus.settings.StylusCodeStyleSettings
 
-open class WXSSTermListBlock(
-        _node: ASTNode?, indent: Indent?, extension: CssFormattingModelBuilder.CssFormattingExtension?,
-        alignment: Alignment?, private val shouldIndentContent: Boolean
-) : CssFormattingModelBuilder.CssTermListBlock(_node, indent, extension, alignment, shouldIndentContent) {
+class MiniProgramStylusFormattingModelBuilder : StylusFormattingModelBuilder() {
 
-    override fun getSpacing(formatterBlock: Block?, formatterBlock2: Block): Spacing? {
-        return if (formatterBlock is CssFormatterBlock && formatterBlock2 is CssFormatterBlock) {
-            if (formatterBlock.myType !== CssElementTypes.CSS_COLON && formatterBlock2.myType !== CssElementTypes.CSS_COLON && formatterBlock.myType !== CssElementTypes.CSS_EQ && formatterBlock2.myType !== CssElementTypes.CSS_EQ && formatterBlock.myType !== CssElementTypes.CSS_PERIOD && formatterBlock2.myType !== CssElementTypes.CSS_PERIOD) {
-                if (formatterBlock.myType !== CssElementTypes.CSS_SLASH && formatterBlock2.myType !== CssElementTypes.CSS_SLASH && formatterBlock.node !is OuterLanguageElement && formatterBlock2.node !is OuterLanguageElement) {
-                    WXSSPropertyBlock(this.node, this.indent, this.myExtension, this.alignment, null).getSpacing(
-                            formatterBlock, formatterBlock2
-                    )
-                } else Spacing.getReadOnlySpacing()
-            } else {
-                Spacing.createSpacing(0, 0, 0, false, 0)
+    override fun createExtension(settings: CodeStyleSettings): StylusFormattingExtension {
+        return object : StylusFormattingModelBuilder.StylusFormattingExtension(
+                settings.getCommonSettings(StylusLanguage.INSTANCE),
+                settings.getCustomSettings(StylusCodeStyleSettings::class.java)
+        ) {
+
+            override fun createTermListBlock(
+                    _node: ASTNode?, indent: Indent?, alignment: Alignment?, shouldIndentContent: Boolean
+            ): CssTermListBlock {
+                return if (StyleLanguageUtils.isMiniProgramContext(_node)) {
+                    MyStylusTermListBlock(_node, indent, this, alignment)
+                } else {
+                    super.createTermListBlock(_node, indent, alignment, shouldIndentContent)
+                }
             }
-        } else {
-            null
         }
     }
-
-    override fun shouldIndentContent(): Boolean {
-        return shouldIndentContent
-    }
-
 
 }
