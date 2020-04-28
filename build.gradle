@@ -125,7 +125,7 @@ intellij {
     pluginName 'wechat mini program'
     downloadSources true
     updateSinceUntilBuild false
-    plugins = ['JavaScriptLanguage', 'CSS']
+    plugins = ['JavaScriptLanguage', 'CSS', 'less', 'sass']
 }
 
 repositories {
