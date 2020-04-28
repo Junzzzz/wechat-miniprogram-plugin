@@ -91,9 +91,11 @@ import com.zxy.ijplugin.wechat_miniprogram.qq.QMLFileType
 class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParameters>() {
 
     companion object {
-        val STRUCTURE_ATTRIBUTES = arrayOf("for", "elif", "else", "key", "if")
+        val STRUCTURE_ATTRIBUTES = arrayOf("for", "elif", "else", "key", "if", "for-index", "for-item")
 
-        val NO_VALUE_ATTRIBUTE = "else"
+        const val NO_VALUE_ATTRIBUTE = "else"
+
+        val NO_BRACE_ATTRIBUTES = arrayOf("for-index", "for-item", "key")
 
         /**
          * 忽略公共的属性的标签名
@@ -275,12 +277,21 @@ class WXMLAttributeNameCompletionProvider : CompletionProvider<CompletionParamet
                         listOf("wx:$it")
                     }
                 }.map {
-                    if (it.endsWith(NO_VALUE_ATTRIBUTE)) {
-                        LookupElementBuilder.create(it)
-                    } else {
-                        LookupElementBuilder.create(it).withInsertHandler(
-                                WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
-                        )
+                    when {
+                        it.endsWith(NO_VALUE_ATTRIBUTE) -> {
+                            LookupElementBuilder.create(it)
+                        }
+                        NO_BRACE_ATTRIBUTES.any { noBraceAttribute ->
+                            it.endsWith(noBraceAttribute)
+                        } -> {
+                            LookupElementBuilder.create(it)
+                                    .withInsertHandler(WXMLAttributeNameInsertHandler.DoubleQuotaInsertHandler())
+                        }
+                        else -> {
+                            LookupElementBuilder.create(it).withInsertHandler(
+                                    WXMLAttributeNameInsertHandler.DoubleBraceInsertHandler()
+                            )
+                        }
                     }
                 })
     }
