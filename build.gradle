@@ -125,7 +125,7 @@ intellij {
     pluginName 'wechat mini program'
     downloadSources true
     updateSinceUntilBuild false
-    plugins = ['JavaScriptLanguage', 'CSS', 'less', 'sass']
+    plugins = ['JavaScriptLanguage', 'CSS', 'less', 'sass', 'stylus']
 }
 
 repositories {
@@ -153,7 +153,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.1.4"
+version = "3.2.0"
 
 patchPluginXml {
     sinceBuild = "201"
@@ -161,15 +161,17 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> WXML支持<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/view/two-way-bindings.html">model</a>双向绑定 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FJJA">I1FJJA</a></li>
-    <li> WXML支持mark:前缀的属性 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FJJA">I1FJJA</a></li>
-    <li> WXML支持mut-bind前缀的事件 </li>
+    <li> 支持通过设置来启用小程序支持（在没有配置文件的特殊项目中）<a hrf="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FQQG">I1FQQG</a> </li>
+    <li> less/scss/sass/stylus支持rpx单位(代码高亮/检查压制/格式化) </li>
+    <li> WXML支持"wx:for-item"和"wx:for-index"属性 <a hrf="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FQWD">I1FQWD</a></li>
+    <li> WXML的"wx:key"属性在自动完成时只会插入引号 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FQVH">I1FQVH</a> </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> WXML supports <a href="https://developers.weixin.qq.com/miniprogram/dev/framework/view/two-way-bindings.html">model</a> two-way binding <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FJJA">I1FJJA</a></li>
-    <li> WXML supports "mark:" prefixed attributes <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FJJA">I1FJJA</a></li>
-    <li> WXML supports "mut-bind" prefixed events </li>
+    <li> Support to enable applet support through settings (in special projects without configuration files) <a hrf="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FQQG">I1FQQG</a> </li>
+    <li> less / scss / sass / stylus supports rpx units (code highlighting / check suppression / formatting) </li>
+    <li> WXML supports "wx: for-item" and "wx: for-index" attributes <a hrf="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FQWD">I1FQWD</a></li>
+    <li> WXML "wx: key" attribute will only insert quotes when auto-complete <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1FQVH">I1FQVH</a> </li>
 </ul>
 """
     pluginDescription = """
