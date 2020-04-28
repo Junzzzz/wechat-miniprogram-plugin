@@ -76,6 +76,7 @@ package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 import com.intellij.codeInspection.InspectionSuppressor
 import com.intellij.codeInspection.SuppressQuickFix
 import com.intellij.psi.PsiElement
+import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 
 class WxssCssInspectionFilter : InspectionSuppressor {
 
@@ -84,6 +85,8 @@ class WxssCssInspectionFilter : InspectionSuppressor {
     }
 
     override fun isSuppressedFor(element: PsiElement, toolId: String): Boolean {
-        return toolId == "CssInvalidPropertyValue"
+        return toolId == "CssInvalidPropertyValue" && element.text.contains("rpx") && isWechatMiniProgramContext(
+                element, false
+        )
     }
 }
