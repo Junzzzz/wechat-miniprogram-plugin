@@ -71,47 +71,47 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter
+package com.zxy.ijplugin.wechat_miniprogram.lang.less
 
 import com.intellij.formatting.Alignment
 import com.intellij.formatting.Indent
 import com.intellij.lang.ASTNode
-import com.intellij.lang.css.CSSLanguage
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.intellij.psi.css.codeStyle.CssCodeStyleSettings
-import com.intellij.psi.css.impl.util.editor.CssFormattingModelBuilder
-import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSPropertyBlock
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSTermListBlock
+import org.jetbrains.plugins.less.LESSLanguage
+import org.jetbrains.plugins.less.formatter.LessFormattingModelBuilder
+import org.jetbrains.plugins.less.settings.LessCodeStyleSettings
 
-class WXSSFormattingModelBuilder : CssFormattingModelBuilder() {
+class MyLessFormattingModelBuilder : LessFormattingModelBuilder() {
 
-    companion object {
-        fun isMiniProgramContext(node: ASTNode?): Boolean {
-            return node?.psi?.project?.let {
-                isWechatMiniProgramContext(it)
-            } == true
-        }
-    }
-
-    override fun createExtension(settings: CodeStyleSettings): CssFormattingExtension {
-        return object : CssFormattingExtension(
-                settings.getCommonSettings(CSSLanguage.INSTANCE),
-                settings.getCustomSettings(
-                        CssCodeStyleSettings::class.java
-                )
+    override fun createExtension(settings: CodeStyleSettings): LessFormattingExtension {
+        return object : LessFormattingExtension(
+                settings.getCommonSettings(LESSLanguage.INSTANCE),
+                settings.getCustomSettings(LessCodeStyleSettings::class.java)
         ) {
-
             override fun createTermListBlock(
                     _node: ASTNode?, indent: Indent?, alignment: Alignment?, shouldIndentContent: Boolean
             ): CssTermListBlock {
-                return WXSSTermListBlock(_node, indent, this, alignment, shouldIndentContent)
+                return if (WXSSFormattingModelBuilder.isMiniProgramContext(_node)) {
+                    WXSSTermListBlock(_node, indent, this, alignment, shouldIndentContent)
+                } else {
+                    super.createTermListBlock(_node, indent, alignment, shouldIndentContent)
+                }
             }
 
             override fun createPropertyBlock(
                     _node: ASTNode?, indent: Indent?, extension: CssFormattingExtension?, alignment: Alignment?,
                     childAlignment: Alignment?
             ): CssPropertyBlock {
-                return WXSSPropertyBlock(_node, indent, extension, alignment, childAlignment)
+                return if (WXSSFormattingModelBuilder.isMiniProgramContext(_node)) {
+                    WXSSPropertyBlock(_node, indent, extension, alignment, childAlignment)
+                } else {
+                    super.createPropertyBlock(_node, indent, extension, alignment, childAlignment)
+                }
             }
+
         }
     }
 }
