@@ -80,6 +80,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
+import com.zxy.ijplugin.wechat_miniprogram.settings.EnableSupportType
 import com.zxy.ijplugin.wechat_miniprogram.settings.MiniProgramType
 import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
 
@@ -91,6 +92,9 @@ fun isWechatMiniProgramContext(psiElement: PsiElement, strict: Boolean = true): 
  * @param strict 是否去检查project.config.json的值
  */
 fun isWechatMiniProgramContext(project: Project, strict: Boolean = true): Boolean {
+    if (MyProjectSettings.getState(project).enableSupport == EnableSupportType.ENABLE) {
+        return true
+    }
     val basePath = project.basePath
     if (basePath != null) {
         val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)

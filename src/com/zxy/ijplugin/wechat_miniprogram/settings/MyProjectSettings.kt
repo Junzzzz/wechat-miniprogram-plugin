@@ -91,7 +91,8 @@ class MyProjectSettings : PersistentStateComponent<MyProjectSettings.MyState> {
     private var myState = MyState()
 
     data class MyState(
-            var miniprogramType: MiniProgramType = MiniProgramType.WEI_XIN
+            var miniprogramType: MiniProgramType = MiniProgramType.WEI_XIN,
+            var enableSupport: EnableSupportType = EnableSupportType.CONFIG_DETECT
     )
 
     override fun getState(): MyState? {
@@ -105,4 +106,9 @@ class MyProjectSettings : PersistentStateComponent<MyProjectSettings.MyState> {
 
 enum class MiniProgramType {
     WEI_XIN, QQ
+}
+
+enum class EnableSupportType {
+    CONFIG_DETECT,
+    ENABLE
 }

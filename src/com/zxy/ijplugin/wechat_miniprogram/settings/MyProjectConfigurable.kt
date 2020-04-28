@@ -91,6 +91,12 @@ class MyProjectConfigurable(private val project: Project) : BoundConfigurable(DI
 
     override fun createPanel(): DialogPanel {
         return panel {
+            buttonGroup(settings::enableSupport) {
+                row(settingsMessage("enableSupportLabel")) {
+                    radioButton(settingsMessage("detect"), EnableSupportType.CONFIG_DETECT)
+                    radioButton(settingsMessage("enable"), EnableSupportType.ENABLE)
+                }
+            }
             buttonGroup(settings::miniprogramType) {
                 row(settingsMessage("miniProgramType")) {
                     radioButton(message("weixin"), MiniProgramType.WEI_XIN)
