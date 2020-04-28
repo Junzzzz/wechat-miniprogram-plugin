@@ -81,5 +81,7 @@
                                 id="MiniProgramLessSyntaxHighlighter"
                                 order="first"
                                 implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.less.MiniProgramLessSyntaxHighlighter"/>
+        <lang.inspectionSuppressor language="WXSS"
+                                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WxssCssInspectionFilter"/>
     </extensions>
 </idea-plugin>
