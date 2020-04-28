@@ -77,14 +77,14 @@ import com.intellij.formatting.Alignment
 import com.intellij.formatting.Indent
 import com.intellij.lang.ASTNode
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSFormattingModelBuilder
+import com.zxy.ijplugin.wechat_miniprogram.lang.utils.StyleLanguageUtils
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSPropertyBlock
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.formatter.WXSSTermListBlock
 import org.jetbrains.plugins.less.LESSLanguage
 import org.jetbrains.plugins.less.formatter.LessFormattingModelBuilder
 import org.jetbrains.plugins.less.settings.LessCodeStyleSettings
 
-class MyLessFormattingModelBuilder : LessFormattingModelBuilder() {
+class MiniProgramLessFormattingModelBuilder : LessFormattingModelBuilder() {
 
     override fun createExtension(settings: CodeStyleSettings): LessFormattingExtension {
         return object : LessFormattingExtension(
@@ -94,7 +94,7 @@ class MyLessFormattingModelBuilder : LessFormattingModelBuilder() {
             override fun createTermListBlock(
                     _node: ASTNode?, indent: Indent?, alignment: Alignment?, shouldIndentContent: Boolean
             ): CssTermListBlock {
-                return if (WXSSFormattingModelBuilder.isMiniProgramContext(_node)) {
+                return if (StyleLanguageUtils.isMiniProgramContext(_node)) {
                     WXSSTermListBlock(_node, indent, this, alignment, shouldIndentContent)
                 } else {
                     super.createTermListBlock(_node, indent, alignment, shouldIndentContent)
@@ -105,7 +105,7 @@ class MyLessFormattingModelBuilder : LessFormattingModelBuilder() {
                     _node: ASTNode?, indent: Indent?, extension: CssFormattingExtension?, alignment: Alignment?,
                     childAlignment: Alignment?
             ): CssPropertyBlock {
-                return if (WXSSFormattingModelBuilder.isMiniProgramContext(_node)) {
+                return if (StyleLanguageUtils.isMiniProgramContext(_node)) {
                     WXSSPropertyBlock(_node, indent, extension, alignment, childAlignment)
                 } else {
                     super.createPropertyBlock(_node, indent, extension, alignment, childAlignment)
