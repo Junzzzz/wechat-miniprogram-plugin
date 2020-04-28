@@ -83,6 +83,7 @@
     <depends>com.intellij.css</depends>
     <depends>com.intellij.modules.platform</depends>
     <depends optional="true" config-file="less.xml">org.jetbrains.plugins.less</depends>
+    <depends optional="true" config-file="sass.xml">org.jetbrains.plugins.sass</depends>
 
     <actions>
         <action class="com.zxy.ijplugin.wechat_miniprogram.action.CreateWechatMiniProgramPageAction"
