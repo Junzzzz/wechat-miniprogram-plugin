@@ -91,4 +91,10 @@ public interface WechatMiniProgramIcons {
 
     Icon WXSS = IconLoader.getIcon("/icons/wxss.svg");
 
+    Icon QSS = IconLoader.getIcon("/icons/qss.svg");
+
+    Icon WXS = IconLoader.getIcon("/icons/wxs.svg");
+
+    Icon QS = IconLoader.getIcon("/icons/qs.svg");
+
 }

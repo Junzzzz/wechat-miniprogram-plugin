@@ -74,7 +74,7 @@ package com.zxy.ijplugin.wechat_miniprogram.qq
 
 import com.intellij.lang.javascript.JavaScriptSupportLoader
 import com.intellij.openapi.fileTypes.LanguageFileType
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSIcons
+import icons.WechatMiniProgramIcons
 import javax.swing.Icon
 
 class QSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_5) {
@@ -85,7 +85,7 @@ class QSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_5) {
     }
 
     override fun getIcon(): Icon? {
-        return WXSIcons.FILE
+        return WechatMiniProgramIcons.QS
     }
 
     override fun getName(): String {

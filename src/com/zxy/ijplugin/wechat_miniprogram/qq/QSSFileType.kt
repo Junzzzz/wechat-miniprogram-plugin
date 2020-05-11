@@ -74,6 +74,8 @@
 package com.zxy.ijplugin.wechat_miniprogram.qq
 
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
+import icons.WechatMiniProgramIcons
+import javax.swing.Icon
 
 class QSSFileType : WXSSFileType() {
 
@@ -92,6 +94,10 @@ class QSSFileType : WXSSFileType() {
 
     override fun getDescription(): String {
         return "QQ Style Sheets"
+    }
+
+    override fun getIcon(): Icon? {
+        return WechatMiniProgramIcons.QSS
     }
 
 }
