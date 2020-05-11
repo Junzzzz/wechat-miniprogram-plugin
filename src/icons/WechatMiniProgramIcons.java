@@ -87,4 +87,6 @@ public interface WechatMiniProgramIcons {
 
     Icon WXML = IconLoader.getIcon("/icons/wxml.svg");
 
+    Icon QML = IconLoader.getIcon("/icons/qml.svg");
+
 }

@@ -74,6 +74,8 @@
 package com.zxy.ijplugin.wechat_miniprogram.qq
 
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import icons.WechatMiniProgramIcons
+import javax.swing.Icon
 
 class QMLFileType : WXMLFileType() {
 
@@ -92,6 +94,10 @@ class QMLFileType : WXMLFileType() {
 
     override fun getDescription(): String {
         return "QQ Markup Language"
+    }
+
+    override fun getIcon(): Icon? {
+        return WechatMiniProgramIcons.QML
     }
 
 }
