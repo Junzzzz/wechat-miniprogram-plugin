@@ -74,6 +74,7 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
 import com.intellij.ide.highlighter.XmlLikeFileType
+import icons.WechatMiniProgramIcons
 import javax.swing.Icon
 
 open class WXMLFileType : XmlLikeFileType(WXMLLanguage.INSTANCE) {
@@ -84,7 +85,7 @@ open class WXMLFileType : XmlLikeFileType(WXMLLanguage.INSTANCE) {
     }
 
     override fun getIcon(): Icon? {
-        return WXMLIcons.FILE
+        return WechatMiniProgramIcons.WXML
     }
 
     override fun getName(): String {
