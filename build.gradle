@@ -153,7 +153,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.2.1"
+version = "3.2.2"
 
 patchPluginXml {
     sinceBuild = "201"
@@ -161,11 +161,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 添加自定义图标以区分html、css、js文件<a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1GTFU">I1GTFU</a> </li>
+    <li> 更新小程序d.ts文件 </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Add custom icons to distinguish html, css, js files<a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1GTFU">I1GTFU</a> </li>
+    <li> Update applet d.ts file </li>
 </ul>
 """
     pluginDescription = """
