@@ -76,9 +76,11 @@ package com.zxy.ijplugin.wechat_miniprogram.completion
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiManager
 import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider
 import com.jetbrains.jsonSchema.extension.JsonSchemaProviderFactory
 import com.jetbrains.jsonSchema.extension.SchemaType
+import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 
 class WechatMiniProgramJsonSchemaProviderFactory : JsonSchemaProviderFactory {
@@ -88,11 +90,22 @@ class WechatMiniProgramJsonSchemaProviderFactory : JsonSchemaProviderFactory {
 }
 
 fun isAppJsonFile(project: Project, virtualFile: VirtualFile): Boolean {
+    return isRootFile(project, virtualFile) && virtualFile.name == "app.json"
+}
+
+fun isPageJsonFile(project: Project, virtualFile: VirtualFile): Boolean {
+    val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
+    return virtualFile.extension == "json" && psiFile?.let {
+        RelateFileHolder.MARKUP.findFile(it)
+    } != null
+}
+
+fun isRootFile(project: Project, virtualFile: VirtualFile): Boolean {
     val contentRoot = ProjectFileIndex.SERVICE.getInstance(
             project
     ).getContentRootForFile(virtualFile)
     // 在根目录下且名称为 app.json
-    return virtualFile.parent == contentRoot && virtualFile.name == "app.json"
+    return virtualFile.parent == contentRoot
 }
 
 fun isAppWxssFile(project: Project, virtualFile: VirtualFile): Boolean {
@@ -110,7 +123,7 @@ private class AppJsonSchemaFileProvider(private val project: Project) : JsonSche
     }
 
     override fun isAvailable(virtualFile: VirtualFile): Boolean {
-        return isAppJsonFile(project, virtualFile)
+        return isWechatMiniProgramContext(project) && isAppJsonFile(project, virtualFile)
     }
 
     override fun getSchemaFile(): VirtualFile? {
@@ -132,7 +145,7 @@ private class PageJsonSchemaFileProvider(private val project: Project) : JsonSch
     }
 
     override fun isAvailable(virtualFile: VirtualFile): Boolean {
-        return isWechatMiniProgramContext(this.project) && !isAppJsonFile(project, virtualFile)
+        return isWechatMiniProgramContext(this.project) && isPageJsonFile(project, virtualFile)
     }
 
     override fun getSchemaFile(): VirtualFile? {
