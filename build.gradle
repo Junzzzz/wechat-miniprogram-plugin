@@ -153,7 +153,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.2.2"
+version = "3.2.3"
 
 patchPluginXml {
     sinceBuild = "201"
@@ -161,11 +161,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 更新小程序d.ts文件 </li>
+    <li> 修复会导致tsconfig.json等配置文件的代码提示失效的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1HXJ5">I1HXJ5</a></li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Update applet d.ts file </li>
+    <li> Fixed an error that would cause the code prompt for configuration files such as "tsconfig.json" to fail <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1HXJ5">I1HXJ5</a></li>
 </ul>
 """
     pluginDescription = """
