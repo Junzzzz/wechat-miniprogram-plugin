@@ -78,12 +78,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class WXSSLanguage extends Language {
-
-    public static List<String> UNITS = Arrays.asList("rpx", "px", "%", "deg", "s", "rgb", "rect", "ex", "rem", "Hz", "pt", "rad", "in", "kHz", "mm", "ms", "cm", "vw", "vh", "vmin", "vmax", "ch", "q", "qt");
 
     public static WXSSLanguage INSTANCE = new WXSSLanguage();
 
