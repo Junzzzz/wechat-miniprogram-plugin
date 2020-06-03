@@ -74,8 +74,6 @@
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
 import com.intellij.json.psi.*
-import com.intellij.lang.javascript.psi.JSFile
-import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
@@ -84,9 +82,6 @@ import com.intellij.psi.impl.source.xml.TagNameReference
 import com.intellij.psi.xml.XmlTag
 import com.intellij.util.ProcessingContext
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
-import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentFilesCreator
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildrenOfType
 
 class JsonReferenceContributor : PsiReferenceContributor() {
@@ -212,40 +207,3 @@ internal fun handlerFileReferences(
     return PsiReference.EMPTY_ARRAY
 }
 
-class ComponentReference(
-        psiElement: JsonStringLiteral, range: TextRange, private val psiDirectory: PsiDirectory,
-        private val name: String
-) : PsiPolyVariantReferenceBase<JsonStringLiteral>(
-        psiElement, range, false
-) {
-    override fun multiResolve(p0: Boolean): Array<ResolveResult> {
-        return psiDirectory.files.filter {
-            it.virtualFile.nameWithoutExtension == name
-                    && (it is JSFile
-                    || it is WXMLPsiFile
-                    || it is WXSSPsiFile
-                    || it is JsonFile)
-        }.map {
-            PsiElementResolveResult(it)
-        }.toTypedArray()
-    }
-
-    override fun handleElementRename(newElementName: String): PsiElement {
-        // 重命名移除文件名后缀
-        return super.handleElementRename(
-                newElementName.substring(0 until newElementName.lastIndexOf("."))
-        )
-    }
-
-    override fun bindToElement(element: PsiElement): PsiElement {
-        ComponentFilesCreator.createComponentPathFromFile(element.containingFile)?.let {
-            return this.element.replace(
-                    JsonElementGenerator(element.project).createStringLiteral(
-                            it
-                    )
-            )
-        }
-        return this.element
-    }
-
-}

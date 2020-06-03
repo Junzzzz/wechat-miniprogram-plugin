@@ -194,6 +194,8 @@
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.JsonTagNameRegistrationManipulator"/>
         <renamePsiElementProcessor
                 implementation="com.zxy.ijplugin.wechat_miniprogram.reference.refactoring.ComponentRegistrationRenameProcessor"/>
+        <psi.fileReferenceHelper
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.ComponentFileReferenceHelper"/>
 
         <lang.inspectionSuppressor language="JavaScript"
                                    implementationClass="com.zxy.ijplugin.wechat_miniprogram.inspections.WxmlJsInspectionFilter"/>
