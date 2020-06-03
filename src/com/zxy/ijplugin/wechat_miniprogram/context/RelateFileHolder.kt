@@ -78,9 +78,7 @@ import com.intellij.json.psi.JsonFile
 import com.intellij.lang.javascript.JavaScriptFileType
 import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSFileType
@@ -110,16 +108,9 @@ abstract class RelateFileHolder {
     }
 
     fun findAppFile(project: Project): PsiFile? {
-        val basePath = project.basePath
-        if (basePath != null) {
-            val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
-            if (baseDir != null) {
-                return this.findFile(PsiManager.getInstance(project).findDirectory(baseDir)?.files?.filter {
-                    it.virtualFile.nameWithoutExtension == "app"
-                }?.toTypedArray() ?: return null, project)
-            }
-        }
-        return null
+        return this.findFile(findMiniProgramRootDir(project)?.files?.filter {
+            it.virtualFile.nameWithoutExtension == "app"
+        }?.toTypedArray() ?: return null, project)
     }
 
     /**

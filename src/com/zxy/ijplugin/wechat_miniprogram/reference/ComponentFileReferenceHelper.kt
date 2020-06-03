@@ -90,7 +90,7 @@ class ComponentFileReferenceHelper : PsiFileReferenceHelper() {
 
     override fun getRoots(module: Module): MutableCollection<PsiFileSystemItem> {
         return findMiniProgramRootDir(module.project)?.let {
-            mutableListOf(it)
+            mutableListOf(it as PsiFileSystemItem)
         } ?: super.getRoots(module)
     }
 }
