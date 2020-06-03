@@ -79,6 +79,7 @@ import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.zxy.ijplugin.wechat_miniprogram.settings.EnableSupportType
@@ -114,20 +115,24 @@ fun isWechatMiniProgramContext(project: Project): Boolean {
     } == true
 }
 
-fun findProjectConfigJsonFile(project: Project): JsonFile? {
+fun findProjectConfigJsonVirtualFile(project: Project): VirtualFile? {
     val basePath = project.basePath
     if (basePath != null) {
         val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
         if (baseDir != null) {
-            return baseDir.children.find { it.name == "project.config.json" }?.let {
-                runReadAction {
-                    // 读取文件内容创建文件
-                    PsiManager.getInstance(project).findFile(it) as? JsonFile
-                }
-            }
+            return baseDir.children.find { it.name == "project.config.json" }
         }
     }
     return null
+}
+
+fun findProjectConfigJsonFile(project: Project): JsonFile? {
+    return findProjectConfigJsonVirtualFile(project)?.let {
+        runReadAction {
+            // 读取文件内容创建文件
+            PsiManager.getInstance(project).findFile(it) as? JsonFile
+        }
+    }
 }
 
 fun Project.isQQContext(): Boolean {

@@ -97,7 +97,7 @@ class WXMLElementColorProvider : ElementColorProvider {
     }
 
     override fun getColorFrom(psiElement: PsiElement): Color? {
-        if (psiElement is XmlToken && isWechatMiniProgramContext(psiElement, true)) {
+        if (psiElement is XmlToken && isWechatMiniProgramContext(psiElement)) {
             val attributeValue = psiElement.parent as? XmlAttributeValue ?: return null
             val xmlAttribute = attributeValue.parent as? XmlAttribute ?: return null
             val name = xmlAttribute.name
