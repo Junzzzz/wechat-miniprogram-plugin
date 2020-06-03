@@ -153,5 +153,16 @@ fun findMiniProgramRootDir(project: Project): PsiDirectory? {
         FileReferenceSet(jsonStringLiteral).allReferences.last {
             it.text.isNotBlank()
         }?.resolve()
-    } as? PsiDirectory
+    } as? PsiDirectory ?: findProjectRootDir(project)
+}
+
+fun findProjectRootDir(project: Project): PsiDirectory? {
+    return project.basePath?.let {
+        LocalFileSystem.getInstance().findFileByPath(it)
+    }?.let {
+        runReadAction {
+            // 读取文件内容创建文件
+            PsiManager.getInstance(project).findDirectory(it)
+        }
+    }
 }
