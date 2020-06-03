@@ -73,6 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.context
 
+import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.openapi.application.runReadAction
@@ -84,14 +85,11 @@ import com.zxy.ijplugin.wechat_miniprogram.settings.EnableSupportType
 import com.zxy.ijplugin.wechat_miniprogram.settings.MiniProgramType
 import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
 
-fun isWechatMiniProgramContext(psiElement: PsiElement, strict: Boolean = true): Boolean {
+fun isWechatMiniProgramContext(psiElement: PsiElement): Boolean {
     return isWechatMiniProgramContext(psiElement.project)
 }
 
-/**
- * @param strict 是否去检查project.config.json的值
- */
-fun isWechatMiniProgramContext(project: Project, strict: Boolean = true): Boolean {
+fun isWechatMiniProgramContext(project: Project): Boolean {
     if (MyProjectSettings.getState(project).enableSupport == EnableSupportType.ENABLE) {
         return true
     }
@@ -100,20 +98,36 @@ fun isWechatMiniProgramContext(project: Project, strict: Boolean = true): Boolea
         val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
         if (baseDir != null) {
             val projectConfigJsonFile = baseDir.children.find { it.name == "project.config.json" } ?: return false
-            return if (strict) {
-                runReadAction {
-                    // 读取文件内容创建文件
-                    val jsonFile = PsiManager.getInstance(project).findFile(projectConfigJsonFile)
-                    ((jsonFile?.children?.getOrNull(0) as? JsonObject)?.propertyList?.find {
-                        it.name == "compileType"
-                    }?.value as? JsonStringLiteral)?.value == "miniprogram"
-                }
-            } else {
-                true
+            return runReadAction {
+                // 读取文件内容创建文件
+                val jsonFile = PsiManager.getInstance(project).findFile(projectConfigJsonFile)
+                ((jsonFile?.children?.getOrNull(0) as? JsonObject)?.propertyList?.find {
+                    it.name == "compileType"
+                }?.value as? JsonStringLiteral)?.value == "miniprogram"
             }
         }
     }
-    return false
+    return findProjectConfigJsonFile(project)?.let { jsonFile ->
+        ((jsonFile.children.getOrNull(0) as? JsonObject)?.propertyList?.find {
+            it.name == "compileType"
+        }?.value as? JsonStringLiteral)?.value == "miniprogram"
+    } == true
+}
+
+fun findProjectConfigJsonFile(project: Project): JsonFile? {
+    val basePath = project.basePath
+    if (basePath != null) {
+        val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
+        if (baseDir != null) {
+            return baseDir.children.find { it.name == "project.config.json" }?.let {
+                runReadAction {
+                    // 读取文件内容创建文件
+                    PsiManager.getInstance(project).findFile(it) as? JsonFile
+                }
+            }
+        }
+    }
+    return null
 }
 
 fun Project.isQQContext(): Boolean {
