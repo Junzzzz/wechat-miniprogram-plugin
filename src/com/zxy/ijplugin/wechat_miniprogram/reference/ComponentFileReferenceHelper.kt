@@ -73,15 +73,12 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.reference
 
-import com.intellij.json.psi.JsonObject
-import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFileSystemItem
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReferenceHelper
-import com.zxy.ijplugin.wechat_miniprogram.context.findProjectConfigJsonFile
+import com.zxy.ijplugin.wechat_miniprogram.context.findMiniProgramRootDir
 import com.zxy.ijplugin.wechat_miniprogram.context.findProjectConfigJsonVirtualFile
 import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 
@@ -92,16 +89,7 @@ class ComponentFileReferenceHelper : PsiFileReferenceHelper() {
     }
 
     override fun getRoots(module: Module): MutableCollection<PsiFileSystemItem> {
-        val jsonFile = findProjectConfigJsonFile(module.project)
-        return jsonFile?.let {
-            ((jsonFile.children.getOrNull(0) as? JsonObject)?.propertyList?.find {
-                it.name == "miniprogramRoot"
-            }?.value as? JsonStringLiteral)
-        }?.let { jsonStringLiteral ->
-            FileReferenceSet(jsonStringLiteral).allReferences.last {
-                it.text.isNotBlank()
-            }?.resolve()
-        }?.let {
+        return findMiniProgramRootDir(module.project)?.let {
             mutableListOf(it)
         } ?: super.getRoots(module)
     }

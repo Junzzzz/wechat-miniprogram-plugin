@@ -80,8 +80,10 @@ import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.zxy.ijplugin.wechat_miniprogram.settings.EnableSupportType
 import com.zxy.ijplugin.wechat_miniprogram.settings.MiniProgramType
 import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
@@ -139,4 +141,17 @@ fun Project.isQQContext(): Boolean {
     return MyProjectSettings.getState(
             this
     ).miniprogramType === MiniProgramType.QQ
+}
+
+fun findMiniProgramRootDir(project: Project): PsiDirectory? {
+    val jsonFile = findProjectConfigJsonFile(project)
+    return jsonFile?.let {
+        ((jsonFile.children.getOrNull(0) as? JsonObject)?.propertyList?.find {
+            it.name == "miniprogramRoot"
+        }?.value as? JsonStringLiteral)
+    }?.let { jsonStringLiteral ->
+        FileReferenceSet(jsonStringLiteral).allReferences.last {
+            it.text.isNotBlank()
+        }?.resolve()
+    } as? PsiDirectory
 }
