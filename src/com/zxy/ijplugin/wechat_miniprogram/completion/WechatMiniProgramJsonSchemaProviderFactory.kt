@@ -73,6 +73,7 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.completion
 
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
@@ -94,10 +95,12 @@ fun isAppJsonFile(project: Project, virtualFile: VirtualFile): Boolean {
 }
 
 fun isPageJsonFile(project: Project, virtualFile: VirtualFile): Boolean {
-    val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
-    return virtualFile.extension == "json" && psiFile?.let {
-        RelateFileHolder.MARKUP.findFile(it)
-    } != null
+    return runReadAction {
+        val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
+        virtualFile.extension == "json" && psiFile?.let {
+            RelateFileHolder.MARKUP.findFile(it)
+        } != null
+    }
 }
 
 fun isRootFile(project: Project, virtualFile: VirtualFile): Boolean {
