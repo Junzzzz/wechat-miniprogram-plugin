@@ -153,7 +153,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.2.3"
+version = "3.3.0"
 
 patchPluginXml {
     sinceBuild = "201"
@@ -161,11 +161,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 修复会导致tsconfig.json等配置文件的代码提示失效的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1HXJ5">I1HXJ5</a></li>
+    <li> 根据项目根目录下的<em>project.config.json</em>文件中的<em>miniprogramRoot</em>配置来确定小程序文件夹位置，默认为项目跟目录 </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Fixed an error that would cause the code prompt for configuration files such as "tsconfig.json" to fail <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1HXJ5">I1HXJ5</a></li>
+    <li> Determine the location of the mini program folder according to the <em>miniprogramRoot</em> configuration in the <em>project.config.json</em> file in the project root directory. The default is the project and directory </li>
 </ul>
 """
     pluginDescription = """
