@@ -73,15 +73,18 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.context
 
+import com.intellij.json.JsonLanguage
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.zxy.ijplugin.wechat_miniprogram.settings.EnableSupportType
@@ -103,7 +106,8 @@ fun isWechatMiniProgramContext(project: Project): Boolean {
             val projectConfigJsonFile = baseDir.children.find { it.name == "project.config.json" } ?: return false
             return runReadAction {
                 // 读取文件内容创建文件
-                val jsonFile = PsiManager.getInstance(project).findFile(projectConfigJsonFile)
+                val jsonFile = PsiFileFactory.getInstance(project)
+                        .createFileFromText(JsonLanguage.INSTANCE, VfsUtil.loadText(projectConfigJsonFile))
                 ((jsonFile?.children?.getOrNull(0) as? JsonObject)?.propertyList?.find {
                     it.name == "compileType"
                 }?.value as? JsonStringLiteral)?.value == "miniprogram"

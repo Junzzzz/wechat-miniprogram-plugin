@@ -74,7 +74,6 @@
 package com.zxy.ijplugin.wechat_miniprogram.context
 
 import com.intellij.lang.javascript.library.JSPredefinedLibraryProvider
-import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.util.ResourceUtil
@@ -90,7 +89,7 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
     }
 
     override fun getPredefinedLibraries(project: Project): Array<out ScriptingLibraryModel> {
-        if (!DumbService.getInstance(project).isDumb && isWechatMiniProgramContext(project)) {
+        if (isWechatMiniProgramContext(project)) {
             return arrayOf(
                     ScriptingLibraryModel.createPredefinedLibrary(
                             "wechat-mini-program-api",
