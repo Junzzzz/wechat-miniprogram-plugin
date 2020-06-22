@@ -84,7 +84,7 @@ buildscript {
 }
 
 plugins {
-    id "org.jetbrains.intellij" version "0.4.16"
+    id "org.jetbrains.intellij" version "0.4.21"
 }
 
 // JDK compatibility
@@ -121,7 +121,7 @@ intellij {
     if (project.properties.containsKey("localIdeaPath")) {
         localPath = project.properties.get("localIdeaPath")
     }
-    version 'IU-LATEST-EAP-SNAPSHOT'
+    version '2020.1.2'
     pluginName 'wechat mini program'
     downloadSources true
     updateSinceUntilBuild false
