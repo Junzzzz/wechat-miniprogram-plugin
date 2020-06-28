@@ -73,7 +73,8 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.context
 
-import com.intellij.json.JsonLanguage
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonStringLiteral
@@ -84,7 +85,6 @@ import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.zxy.ijplugin.wechat_miniprogram.settings.EnableSupportType
@@ -95,7 +95,11 @@ fun isWechatMiniProgramContext(psiElement: PsiElement): Boolean {
     return isWechatMiniProgramContext(psiElement.project)
 }
 
-fun isWechatMiniProgramContext(project: Project): Boolean {
+/**
+ * @param strict 如果为false则找到project.config.json即可
+ * 如果为true 还需判断里面的compileType = miniprogram
+ */
+fun isWechatMiniProgramContext(project: Project, strict: Boolean = true): Boolean {
     if (MyProjectSettings.getState(project).enableSupport == EnableSupportType.ENABLE) {
         return true
     }
@@ -104,13 +108,14 @@ fun isWechatMiniProgramContext(project: Project): Boolean {
         val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath)
         if (baseDir != null) {
             val projectConfigJsonFile = baseDir.children.find { it.name == "project.config.json" } ?: return false
-            return runReadAction {
+            return !strict || runReadAction {
                 // 读取文件内容创建文件
-                val jsonFile = PsiFileFactory.getInstance(project)
-                        .createFileFromText(JsonLanguage.INSTANCE, VfsUtil.loadText(projectConfigJsonFile))
-                ((jsonFile?.children?.getOrNull(0) as? JsonObject)?.propertyList?.find {
-                    it.name == "compileType"
-                }?.value as? JsonStringLiteral)?.value == "miniprogram"
+                val gson = Gson()
+                val configs = gson.fromJson<Map<String, Any>>(
+                        VfsUtil.loadText(projectConfigJsonFile),
+                        object : TypeToken<Map<String, Any>>() {}.type
+                )
+                configs["compileType"] == "miniprogram"
             }
         }
     }
