@@ -89,22 +89,32 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
     }
 
     override fun getPredefinedLibraries(project: Project): Array<out ScriptingLibraryModel> {
-        if (isWechatMiniProgramContext(project)) {
-            return arrayOf(
-                    ScriptingLibraryModel.createPredefinedLibrary(
-                            "wechat-mini-program-api",
-                            arrayOf(
-                                    VfsUtil.findFileByURL(
-                                            ResourceUtil.getResource(
-                                                    javaClass, "/", if (project.isQQContext()) "qq.d.ts" else "wx.d.ts"
-                                            )
-                                    )
-                            ).filterNotNull().toTypedArray(),
-                            true
-                    )
-            )
-        }
-        return ScriptingLibraryModel.EMPTY_ARRAY
+        val isOn = isWechatMiniProgramContext(project, false)
+
+        return arrayOf(
+                ScriptingLibraryModel.createPredefinedLibrary(
+                        "wechat-mini-program-api",
+                        arrayOf(
+                                VfsUtil.findFileByURL(
+                                        ResourceUtil.getResource(
+                                                javaClass, "/", "wx.d.ts"
+                                        )
+                                )
+                        ).filterNotNull().toTypedArray(),
+                        isOn && project.isQQContext()
+                ),
+                ScriptingLibraryModel.createPredefinedLibrary(
+                        "qq-mini-program-api",
+                        arrayOf(
+                                VfsUtil.findFileByURL(
+                                        ResourceUtil.getResource(
+                                                javaClass, "/", "qq.d.ts"
+                                        )
+                                )
+                        ).filterNotNull().toTypedArray(),
+                        isOn && !project.isQQContext()
+                )
+        )
     }
 
 }
