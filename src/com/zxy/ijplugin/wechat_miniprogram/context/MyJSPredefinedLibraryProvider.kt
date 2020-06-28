@@ -91,6 +91,7 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
     override fun getPredefinedLibraries(project: Project): Array<out ScriptingLibraryModel> {
         val isOn = isWechatMiniProgramContext(project, false)
 
+        val isQQ = project.isQQContext()
         return arrayOf(
                 ScriptingLibraryModel.createPredefinedLibrary(
                         "wechat-mini-program-api",
@@ -101,7 +102,7 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
                                         )
                                 )
                         ).filterNotNull().toTypedArray(),
-                        isOn && project.isQQContext()
+                        isOn && !isQQ
                 ),
                 ScriptingLibraryModel.createPredefinedLibrary(
                         "qq-mini-program-api",
@@ -112,7 +113,7 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
                                         )
                                 )
                         ).filterNotNull().toTypedArray(),
-                        isOn && !project.isQQContext()
+                        isOn && isQQ
                 )
         )
     }
