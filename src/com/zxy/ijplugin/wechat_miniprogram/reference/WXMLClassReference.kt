@@ -125,7 +125,7 @@ class WXMLClassReference(psiElement: PsiElement, textRange: TextRange) :
             wxssFile: WXSSPsiFile?
     ): List<CssSelector> {
         val wxssPsiFile = wxssFile ?: return emptyList()
-        val wxssPsiFiles = WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile as WXSSPsiFile)
+        val wxssPsiFiles = WXSSModuleUtils.findImportedFilesWithSelf(wxssPsiFile)
 
         return wxssPsiFiles.flatMap {
             PsiTreeUtil.findChildrenOfType(it, CssSelector::class.java)

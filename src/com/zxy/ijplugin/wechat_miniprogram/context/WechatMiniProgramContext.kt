@@ -109,7 +109,7 @@ fun isWechatMiniProgramContext(project: Project, strict: Boolean = true): Boolea
         if (baseDir != null) {
             val projectConfigJsonFile = baseDir.children.find { it.name == "project.config.json" } ?: return false
             return !strict || runReadAction {
-                // 读取文件内容创建文件
+                // 读取文件内容
                 val gson = Gson()
                 val configs = gson.fromJson<Map<String, Any>>(
                         VfsUtil.loadText(projectConfigJsonFile),
