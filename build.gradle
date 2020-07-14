@@ -120,8 +120,9 @@ intellij {
     type = "IU"
     if (project.properties.containsKey("localIdeaPath")) {
         localPath = project.properties.get("localIdeaPath")
+    }else {
+        version 'IU-LATEST-EAP-SNAPSHOT'
     }
-    version '2020.1.2'
     pluginName 'wechat mini program'
     downloadSources true
     updateSinceUntilBuild false
@@ -153,11 +154,11 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.3.2"
+version = "3.4.0"
 
 patchPluginXml {
     sinceBuild = "201"
-    untilBuild = "201.*"
+    untilBuild = "202.*"
     version = version
     changeNotes = """
 <ul lang='cn'>
