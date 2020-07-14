@@ -83,7 +83,4 @@ class WxmlJsLanguage : JSLanguageDialect("WxmlJs", DialectOptionHolder.ECMA_6, J
         val INSTANCE: WxmlJsLanguage = WxmlJsLanguage()
     }
 
-    override fun getFileExtension(): String {
-        return "js"
-    }
 }

@@ -77,7 +77,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType
 import icons.WechatMiniProgramIcons
 import javax.swing.Icon
 
-class QSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_5) {
+class QSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_8) {
 
     companion object {
         @JvmField

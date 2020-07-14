@@ -78,7 +78,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType
 import icons.WechatMiniProgramIcons
 import javax.swing.Icon
 
-open class WXSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_5) {
+open class WXSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_8) {
     companion object {
         @JvmField
         val INSTANCE = WXSFileType()

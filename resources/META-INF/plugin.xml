@@ -165,9 +165,9 @@
                 shortName="WXMLInvalidImport"
                 enabledByDefault="true" level="ERROR"/>
 
-        <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.5"
+        <fileType name="WXS" fieldName="INSTANCE" extensions="wxs" language="JavaScript 1.8"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxs.WXSFileType"/>
-        <fileType name="QS" fieldName="INSTANCE" extensions="qs" language="JavaScript 1.5"
+        <fileType name="QS" fieldName="INSTANCE" extensions="qs" language="JavaScript 1.8"
                   implementationClass="com.zxy.ijplugin.wechat_miniprogram.qq.QSFileType"/>
 
         <lang.parserDefinition language="WxmlJs"
