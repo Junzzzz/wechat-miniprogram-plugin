@@ -157,18 +157,16 @@ publishPlugin {
 version = "3.4.0"
 
 patchPluginXml {
-    sinceBuild = "201"
+    sinceBuild = "202"
     untilBuild = "202.*"
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 修复有时启动时会导致ide崩溃的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1KKTW">I1KKTW</a> </li>
-    <li> 在<strong>File | Settings | Languages & Frameworks | JavaScript | Libraries</strong>中显示微信小程序和qq小程序的预定义库</li>
+    <li> 兼容IDEA版本202.* </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Fix bug that sometimes causes IDE to crash when starting <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1KKTW">I1KKTW</a> </li>
-    <li> Display the predefined libraries of WeChat applets and qq applets in <strong>File | Settings | Languages ​​& Frameworks | JavaScript | Libraries</strong></li>
+    <li> Compatible with IDEA version 202.* </li>
 </ul>
 """
     pluginDescription = """
