@@ -81,7 +81,6 @@ import com.intellij.lang.javascript.inspections.JSUnresolvedVariableInspection
 import com.intellij.lang.javascript.intentions.JSSplitDeclarationIntention
 import com.intellij.lang.javascript.psi.JSEmbeddedContent
 import com.intellij.psi.PsiElement
-import com.intellij.util.containers.mapSmartSet
 import com.sixrr.inspectjs.confusing.CommaExpressionJSInspection
 import com.sixrr.inspectjs.control.UnnecessaryLabelJSInspection
 import com.sixrr.inspectjs.validity.BadExpressionStatementJSInspection
@@ -101,7 +100,7 @@ class WxmlJsInspectionFilter : IntentionAndInspectionFilter(), InspectionSuppres
                 JSSplitDeclarationIntention::class,
                 CommaExpressionJSInspection::class,
                 UnnecessaryLabelJSInspection::class
-        ).mapSmartSet { InspectionProfileEntry.getShortName(it.java.simpleName) }
+        ).map { InspectionProfileEntry.getShortName(it.java.simpleName) }.toSet()
     }
 
     override fun getSuppressActions(element: PsiElement?, toolId: String): Array<SuppressQuickFix> {
