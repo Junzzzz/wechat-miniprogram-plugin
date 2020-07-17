@@ -76,6 +76,8 @@ package com.zxy.ijplugin.wechat_miniprogram.inspections
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.reference.PathAttribute
 
 /**
@@ -92,6 +94,6 @@ class WXMLInvalidImportInspection : WXMLElementPathAttributeInspection(
     }
 
     override fun match(psiFile: PsiFile): Boolean {
-        return psiFile.fileType is PsiFile
+        return if (psiFile.project.isQQContext()) psiFile is WXMLPsiFile else psiFile.fileType == WXMLFileType.INSTANCE
     }
 }
