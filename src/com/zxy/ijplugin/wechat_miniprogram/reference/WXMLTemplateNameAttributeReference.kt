@@ -98,9 +98,7 @@ class WXMLTemplateNameAttributeReference(element: XmlAttributeValue) :
         if (project.isQQContext()) {
             wxmlFiles.addAll(FilenameIndex.getAllFilesByExt(project, QMLFileType.INSTANCE.defaultExtension))
         }
-        return wxmlFiles.filter {
-            it != element.containingFile.virtualFile
-        }.flatMap { it ->
+        return wxmlFiles.flatMap { it ->
             psiManager.findFile(it)?.findChildrenOfType<XmlTag>()?.filter { xmlTag ->
                 xmlTag.name == "template"
             }?.mapNotNull {
@@ -113,6 +111,10 @@ class WXMLTemplateNameAttributeReference(element: XmlAttributeValue) :
         }.map {
             PsiElementResolveResult(it)
         }.toTypedArray()
+    }
+
+    override fun isSoft(): Boolean {
+        return true
     }
 
 }
