@@ -118,5 +118,8 @@
         <lang.foldingBuilder language="WXML" implementationClass="com.intellij.lang.xml.XmlFoldingBuilder"/>
         <highlightErrorFilter
                 implementation="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.inspection.WXMLStyleInterpolationErrorFilter"/>
+        <lang.formatter
+                implementationClass="com.zxy.ijplugin.wechat_miniprogram.lang.wxml.formatter.WXMLFormattingModelBuilder"
+                language="WXML"/>
     </extensions>
 </idea-plugin>

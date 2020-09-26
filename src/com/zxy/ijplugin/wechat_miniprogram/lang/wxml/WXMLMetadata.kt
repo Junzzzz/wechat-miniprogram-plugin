@@ -208,7 +208,7 @@ class WXMLMetadata(private val project: Project) {
         )
 
         @Suppress("unused")
-        val INNER_ELEMENT_NAMES = arrayOf("text")
+        val TEXT_ELEMENT_NAMES = arrayOf("text")
 
         @Suppress("unused")
         val ARIA_ATTRIBUTE = arrayOf(
