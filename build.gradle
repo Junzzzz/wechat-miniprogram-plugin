@@ -79,7 +79,7 @@ buildscript {
         maven { url 'https://plugins.gradle.org/m2/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
     }
 
     dependencies {
@@ -158,7 +158,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.4.0"
+version = "3.4.1"
 
 patchPluginXml {
     sinceBuild = "202"
@@ -166,17 +166,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 兼容IDEA版本<strong>202.*</strong> </li>
-    <li> <code>template</code>标签的<code>name</code>属性未被使用不会显示为错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1NFDI">I1NFDI</a> </li>
-    <li> <code>template</code>标签的<code>name</code>引用搜索会包含自身所在文件 </li>
-    <li> 修复错误导入检查功无法识别文件类型的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1NFDI">I1NFDI</a> </li>
+    <li> WXML格式化时，text标签不会再换行 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1WADV">I1WADV</a></li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Compatible with IDEA version <strong>202.*</strong> </li>
-    <li> <code>template</code> tag's <code>name</code> attribute is not used and will not be displayed as an error <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1NFDI">I1NFDI</a> </li>
-    <li> The <code>template</code> tag’s <code>name</code> reference search will include the file where it is located </li>
-    <li> Fix the error that the import check function cannot recognize the file type <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1NFDI">I1NFDI</a> </li>
+    <li> When WXML is formatted, the text tag will no longer wrap <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1WADV">I1WADV</a></li>
 </ul>
 """
     pluginDescription = """
