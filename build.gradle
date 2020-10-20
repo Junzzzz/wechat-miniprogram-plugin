@@ -92,8 +92,8 @@ plugins {
 }
 
 // JDK compatibility
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
+sourceCompatibility = "11"
+targetCompatibility = "11"
 tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 
 // Kotlin compatibility
@@ -158,19 +158,21 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.4.1"
+version = "3.4.2"
 
 patchPluginXml {
     sinceBuild = "202"
-    untilBuild = "202.*"
+    untilBuild = "203.*"
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> WXML格式化时，text标签不会再换行 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1WADV">I1WADV</a></li>
+    <li> 兼容2020.3版本 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1YMIN">I1YMIN</a></li>
+    <li> 修复wxml js表达式会注入到非wxml语言中的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1Y1NS">I1Y1NS</a></li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> When WXML is formatted, the text tag will no longer wrap <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1WADV">I1WADV</a></li>
+    <li> Compatible with 2020.3 version <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1YMIN">I1YMIN</a></li>
+    <li> Fix the error that wxml js expression will be injected into non-wxml language <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1Y1NS">I1Y1NS</a></li>
 </ul>
 """
     pluginDescription = """
