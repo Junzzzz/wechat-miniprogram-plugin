@@ -96,12 +96,14 @@ class WxmlJSInjector : MultiHostInjector {
     }
 
     override fun getLanguagesToInject(multiHostRegistrar: MultiHostRegistrar, psiElement: PsiElement) {
-        when (psiElement) {
-            is XmlTextImpl -> {
-                injectInText(psiElement, multiHostRegistrar)
-            }
-            is XmlAttributeValueImpl -> {
-                injectInAttributeValue(psiElement, multiHostRegistrar)
+        if (psiElement.language is WXMLLanguage) {
+            when (psiElement) {
+                is XmlTextImpl -> {
+                    injectInText(psiElement, multiHostRegistrar)
+                }
+                is XmlAttributeValueImpl -> {
+                    injectInAttributeValue(psiElement, multiHostRegistrar)
+                }
             }
         }
     }
