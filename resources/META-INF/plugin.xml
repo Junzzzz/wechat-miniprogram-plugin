@@ -106,6 +106,13 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!--suppress PluginXmlCapitalization -->
+        <notificationGroup displayType="balloon"
+                           id="com.zxy.ijplugin.wechat_miniprogram.plugin.UpdateInfoActivity"
+                           key="groupId"
+                           isLogByDefault="false"
+                           bundle="messages.notify"/>
+
         <editorNotificationProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.qq.SetQQMiniProgramTypeNotification"/>
 

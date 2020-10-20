@@ -71,108 +71,15 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.plugin
+package com.zxy.ijplugin.wechat_miniprogram.localization
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor
-import com.intellij.ide.plugins.PluginManagerCore
-import com.intellij.ide.util.PropertiesComponent
-import com.intellij.notification.*
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.extensions.PluginId
-import com.intellij.openapi.project.DumbAwareAction
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.startup.StartupActivity
-import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
-import com.zxy.ijplugin.wechat_miniprogram.localization.notifyMessage
-import javax.swing.event.HyperlinkEvent
+import com.intellij.AbstractBundle
+import org.jetbrains.annotations.PropertyKey
 
-class UpdateInfoActivity : StartupActivity.DumbAware {
+const val NOTIFY_BUNDLE = "messages.notify"
 
-    companion object {
-        private const val LAST_VERSION_KEY = "$pluginId.lastVersion"
+object NotifyBundle : AbstractBundle(NOTIFY_BUNDLE)
 
-    }
-
-    override fun runActivity(project: Project) {
-        if (!isWechatMiniProgramContext(project)) return
-        val pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(pluginId)) ?: return
-        val propertiesComponent = PropertiesComponent.getInstance()
-        val lastVersion = propertiesComponent.getValue(LAST_VERSION_KEY)
-        val version = pluginDescriptor.version
-//        if (version == lastVersion) {
-//            return
-//        }
-
-        showUpdateOrInstallNotification(pluginDescriptor, version, project, lastVersion)
-
-        propertiesComponent.setValue(LAST_VERSION_KEY, version)
-    }
-
-    private fun showUpdateOrInstallNotification(
-            pluginDescriptor: IdeaPluginDescriptor, version: String,
-            project: Project,
-            lastVersion: String?
-    ) {
-        // 显示更新通知
-        val isInstall = lastVersion == null
-        val title = if (isInstall) {
-            notifyMessage("install.title", pluginDescriptor.name, version)
-        } else {
-            notifyMessage("update.title", pluginDescriptor.name, version)
-        }
-        val changeNotesSection = if (isInstall) {
-            ""
-        } else {
-            """更新说明：<br/>
-                ${pluginDescriptor.changeNotes.split("<br/>").first { it.contains("lang='cn'") }}
-                <br/>"""
-        }
-        val content = """
-                $changeNotesSection
-                如果此插件对您有帮助，请
-                <b><a href="$HTML_DESCRIPTION_SUPPORT">支持我们</a>。</b>
-                <br/>
-                感谢您的支持!
-                <br/>
-                <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases">发行记录/更新日志</a>
-                <br/>
-                <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis">使用文档</a>
-                <br/>
-            """.trimIndent()
-
-        val notification = NotificationGroupManager.getInstance().getNotificationGroup(this.javaClass.name)
-                .createNotification(
-                        title, content, NotificationType.INFORMATION,
-                        object : NotificationListener.Adapter() {
-                            private val urlOpeningBehavior = NotificationListener.UrlOpeningListener(false)
-
-                            override fun hyperlinkActivated(
-                                    notification: Notification, hyperlinkEvent: HyperlinkEvent
-                            ) {
-                                if (hyperlinkEvent.description == HTML_DESCRIPTION_SUPPORT) {
-                                    SupportDialog(project).show()
-                                } else {
-                                    urlOpeningBehavior.hyperlinkUpdate(notification, hyperlinkEvent)
-                                }
-                            }
-                        }
-                )
-        notification
-                .addAction(SupportAction(project, notification))
-                .setImportant(true)
-                .let {
-                    Notifications.Bus.notify(it, project)
-                }
-    }
-
-    class SupportAction(
-            private val project: Project,
-            private val notification: Notification
-    ) : DumbAwareAction("支持一下") {
-        override fun actionPerformed(e: AnActionEvent) {
-            notification.hideBalloon()
-            SupportDialog(project).show()
-        }
-    }
-
+fun notifyMessage(@PropertyKey(resourceBundle = NOTIFY_BUNDLE) key: String, vararg params: Any): String {
+    return NotifyBundle.getMessage(key, *params)
 }
