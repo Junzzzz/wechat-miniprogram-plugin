@@ -99,9 +99,10 @@ tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 // Kotlin compatibility
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = targetCompatibility
         languageVersion = "1.3"
         apiVersion = "1.3"
+        freeCompilerArgs = ["-Xjvm-default=enable"]
     }
 }
 
@@ -139,7 +140,7 @@ repositories {
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = targetCompatibility
     }
 }
 
