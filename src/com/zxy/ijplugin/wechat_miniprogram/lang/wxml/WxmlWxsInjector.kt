@@ -70,125 +70,38 @@
  *
  *    See the Mulan PSL v1 for more details.
  */
-package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.lexer;
 
+package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
-import com.intellij.lang.HtmlInlineScriptTokenTypesProvider;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageHtmlInlineScriptTokenTypesProvider;
-import com.intellij.lang.LanguageUtil;
-import com.intellij.lexer.*;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.xml.XmlTokenType;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Iterator;
-import java.util.List;
+import com.intellij.lang.injection.MultiHostInjector
+import com.intellij.lang.injection.MultiHostRegistrar
+import com.intellij.lang.javascript.JavascriptLanguage
+import com.intellij.openapi.util.TextRange
+import com.intellij.psi.PsiElement
+import com.intellij.psi.impl.source.xml.XmlTextImpl
+import com.intellij.psi.util.parentOfType
+import com.intellij.psi.xml.XmlTag
+import com.zxy.ijplugin.wechat_miniprogram.context.isQQContext
 
 /**
- * Copy from {@see com.intellij.lexer.HtmlLexer}
+ * 在wxml中的wxs标签中注入js语言
  */
-public class WXMLLexer extends BaseHtmlLexer {
-    private static final IElementType ourInlineStyleElementType;
-    public static final String INLINE_STYLE_NAME = "css-ruleset-block";
-    private IElementType myTokenType;
-    private int myTokenStart;
-    private int myTokenEnd;
+class WxmlWxsInjector : MultiHostInjector {
 
-    static {
-        List<EmbeddedTokenTypesProvider> extensions = EmbeddedTokenTypesProvider.EXTENSION_POINT_NAME.getExtensionList();
-        IElementType inlineStyleElementType = null;
-        Iterator var2 = extensions.iterator();
-
-        while (var2.hasNext()) {
-            EmbeddedTokenTypesProvider extension = (EmbeddedTokenTypesProvider) var2.next();
-            if ("css-ruleset-block".equals(extension.getName())) {
-                inlineStyleElementType = extension.getElementType();
-                break;
+    override fun getLanguagesToInject(registrar: MultiHostRegistrar, context: PsiElement) {
+        if (context.language is WXMLLanguage && context is XmlTextImpl) {
+            val xmlTag = context.parentOfType<XmlTag>()
+            val scriptTagName = if (context.project.isQQContext()) "qs" else "wxs"
+            if (xmlTag != null && xmlTag.name == scriptTagName) {
+                registrar.startInjecting(JavascriptLanguage.INSTANCE)
+                        .addPlace(null, null, context, TextRange.from(0, context.textLength))
+                        .doneInjecting()
             }
         }
-
-        ourInlineStyleElementType = inlineStyleElementType;
     }
 
-    public WXMLLexer(@NotNull String scriptTagName) {
-        this(new MergingLexerAdapter(new FlexAdapter(new _HtmlLexer()), TOKENS_TO_MERGE), true, scriptTagName);
+    override fun elementsToInjectIn(): MutableList<out Class<out PsiElement>> {
+        return mutableListOf(XmlTextImpl::class.java)
     }
 
-    protected WXMLLexer(Lexer _baseLexer, boolean _caseInsensitive, @NotNull String scriptTagName) {
-        super(_baseLexer, _caseInsensitive, scriptTagName);
-    }
-
-    private static boolean isStartOfEmbeddmentAttributeValue(IElementType tokenType) {
-        return tokenType == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN;
-    }
-
-    private static boolean isStartOfEmbeddmentTagContent(IElementType tokenType) {
-        return tokenType == XmlTokenType.XML_DATA_CHARACTERS || tokenType == XmlTokenType.XML_CDATA_START || tokenType == XmlTokenType.XML_COMMENT_START || tokenType == XmlTokenType.XML_START_TAG_START || tokenType == XmlTokenType.XML_REAL_WHITE_SPACE || tokenType == TokenType.WHITE_SPACE || tokenType == XmlTokenType.XML_ENTITY_REF_TOKEN || tokenType == XmlTokenType.XML_CHAR_ENTITY_REF;
-    }
-
-    public void start(@NotNull CharSequence buffer, int startOffset, int endOffset, int initialState) {
-        this.myTokenType = null;
-        super.start(buffer, startOffset, endOffset, initialState);
-    }
-
-    public void advance() {
-        this.myTokenType = null;
-        super.advance();
-    }
-
-    public IElementType getTokenType() {
-        if (this.myTokenType != null) {
-            return this.myTokenType;
-        } else {
-            IElementType tokenType = super.getTokenType();
-            this.myTokenStart = super.getTokenStart();
-            this.myTokenEnd = super.getTokenEnd();
-            Language scriptLanguage;
-            IElementType inlineScriptElementType;
-            if (this.hasSeenStyle()) {
-                if (this.hasSeenTag() && isStartOfEmbeddmentTagContent(tokenType)) {
-                    scriptLanguage = this.getStyleLanguage();
-                    if (scriptLanguage == null || LanguageUtil.isInjectableLanguage(scriptLanguage)) {
-                        this.myTokenEnd = this.skipToTheEndOfTheEmbeddment();
-                        inlineScriptElementType = this.getCurrentStylesheetElementType();
-                        tokenType = inlineScriptElementType == null ? XmlTokenType.XML_DATA_CHARACTERS : inlineScriptElementType;
-                    }
-                } else if (ourInlineStyleElementType != null && isStartOfEmbeddmentAttributeValue(tokenType) && this.hasSeenAttribute()) {
-                    tokenType = ourInlineStyleElementType;
-                }
-            } else if (this.hasSeenScript()) {
-                if (this.hasSeenTag() && isStartOfEmbeddmentTagContent(tokenType)) {
-                    scriptLanguage = this.getScriptLanguage();
-                    if (scriptLanguage == null || LanguageUtil.isInjectableLanguage(scriptLanguage)) {
-                        this.myTokenEnd = this.skipToTheEndOfTheEmbeddment();
-                        inlineScriptElementType = this.getCurrentScriptElementType();
-                        tokenType = inlineScriptElementType == null ? XmlTokenType.XML_DATA_CHARACTERS : inlineScriptElementType;
-                    }
-                } else if (this.hasSeenAttribute() && isStartOfEmbeddmentAttributeValue(tokenType)) {
-                    HtmlInlineScriptTokenTypesProvider provider = LanguageHtmlInlineScriptTokenTypesProvider.getInlineScriptProvider(Language.findLanguageByID("JavaScript"));
-                    inlineScriptElementType = provider != null ? provider.getElementType() : null;
-                    if (inlineScriptElementType != null) {
-                        this.myTokenEnd = this.skipToTheEndOfTheEmbeddment();
-                        tokenType = inlineScriptElementType;
-                    }
-                }
-            }
-
-            return this.myTokenType = tokenType;
-        }
-    }
-
-    protected boolean isHtmlTagState(int state) {
-        return state == 6 || state == 8;
-    }
-
-    public int getTokenStart() {
-        return this.myTokenType != null ? this.myTokenStart : super.getTokenStart();
-    }
-
-    public int getTokenEnd() {
-        return this.myTokenType != null ? this.myTokenEnd : super.getTokenEnd();
-    }
 }
