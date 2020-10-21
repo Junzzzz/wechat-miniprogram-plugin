@@ -77,24 +77,20 @@ import com.intellij.openapi.util.IconLoader;
 
 import javax.swing.*;
 
-public interface WechatMiniProgramIcons {
+public final class WechatMiniProgramIcons {
 
-    Icon COMPONENT = IconLoader.getIcon("/icons/Component.svg");
+    public static final Icon COMPONENT = IconLoader.getIcon("/icons/Component.svg", WechatMiniProgramIcons.class);
+    public static final Icon PAGE = IconLoader.getIcon("/icons/Page.svg", WechatMiniProgramIcons.class);
+    public static final Icon QQ_LOGO = IconLoader.getIcon("/icons/qqIcon.svg", WechatMiniProgramIcons.class);
+    public static final Icon WXML = IconLoader.getIcon("/icons/wxml.svg", WechatMiniProgramIcons.class);
+    public static final Icon QML = IconLoader.getIcon("/icons/qml.svg", WechatMiniProgramIcons.class);
+    public static final Icon WXSS = IconLoader.getIcon("/icons/wxss.svg", WechatMiniProgramIcons.class);
+    public static final Icon QSS = IconLoader.getIcon("/icons/qss.svg", WechatMiniProgramIcons.class);
+    public static final Icon WXS = IconLoader.getIcon("/icons/wxs.svg", WechatMiniProgramIcons.class);
+    public static final Icon QS = IconLoader.getIcon("/icons/qs.svg", WechatMiniProgramIcons.class);
 
-    Icon PAGE = IconLoader.getIcon("/icons/Page.svg");
+    private WechatMiniProgramIcons() {
 
-    Icon QQ_LOGO = IconLoader.getIcon("/icons/qqIcon.svg");
-
-    Icon WXML = IconLoader.getIcon("/icons/wxml.svg");
-
-    Icon QML = IconLoader.getIcon("/icons/qml.svg");
-
-    Icon WXSS = IconLoader.getIcon("/icons/wxss.svg");
-
-    Icon QSS = IconLoader.getIcon("/icons/qss.svg");
-
-    Icon WXS = IconLoader.getIcon("/icons/wxs.svg");
-
-    Icon QS = IconLoader.getIcon("/icons/qs.svg");
+    }
 
 }
