@@ -162,7 +162,7 @@ publishPlugin {
 version = "3.4.2"
 
 patchPluginXml {
-    sinceBuild = "202"
+    sinceBuild = "203"
     untilBuild = "203.*"
     version = version
     changeNotes = """
