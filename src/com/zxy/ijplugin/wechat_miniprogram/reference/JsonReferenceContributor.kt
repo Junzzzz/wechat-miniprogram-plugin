@@ -76,8 +76,6 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 import com.intellij.json.psi.*
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
 import com.intellij.psi.impl.source.xml.TagNameReference
 import com.intellij.psi.xml.XmlTag
 import com.intellij.util.ProcessingContext
@@ -121,8 +119,7 @@ class JsonReferenceContributor : PsiReferenceContributor() {
                                 // 找到usingComponents配置
                                 val wrapObject = usingComponentsProperty.parent
                                 if (wrapObject is JsonObject && wrapObject.parent is JsonFile) {
-                                    val fileReferences = FileReferenceSet(psiElement).allReferences
-                                    return handlerFileReferences(psiElement, fileReferences)
+                                    return ComponentFileReferenceSet(psiElement).allReferences
                                 }
                             }
                         }
@@ -150,9 +147,7 @@ class JsonReferenceContributor : PsiReferenceContributor() {
                                     val rootObject = parentProperty.parent
                                     if (rootObject is JsonObject && rootObject.parent is JsonFile) {
                                         // 确定是app.json下的pages配置项
-                                        val fileReferences = FileReferenceSet(psiElement).allReferences
-                                        return handlerFileReferences(psiElement, fileReferences)
-//                                        return ComponentFilesReferenceSet(psiElement).allReferences
+                                        return ComponentFileReferenceSet(psiElement).allReferences
                                     }
                                 }
                             }
@@ -179,31 +174,5 @@ class JsonRegistrationReference(jsonProperty: JsonProperty) :
         }.toTypedArray()
     }
 
-}
-
-internal fun handlerFileReferences(
-        psiElement: JsonStringLiteral, fileReferences: Array<out FileReference>
-): Array<out PsiReference> {
-    if (fileReferences.isNotEmpty()) {
-        val last = fileReferences.last()
-        if (last.resolve() == null && fileReferences.size >= 2) {
-            // 没有文件扩展名 最后一个引用无法解析出文件
-            val filename = last.text
-            // 获取倒数第二项
-            // 解析出文件夹
-            val psiDirectory = fileReferences[fileReferences.size - 2].resolve()
-            if (psiDirectory is PsiDirectory) {
-                val references: Array<PsiReference> = fileReferences.map { it }
-                        .toTypedArray()
-                // 最后一个引用可能解析出多个文件 js|wxss|wxml|json
-                val lastFileReference = ComponentReference(psiElement, last.rangeInElement, psiDirectory, filename)
-                references[fileReferences.size - 1] = lastFileReference
-                return references
-            }
-        } else {
-            return fileReferences
-        }
-    }
-    return PsiReference.EMPTY_ARRAY
 }
 

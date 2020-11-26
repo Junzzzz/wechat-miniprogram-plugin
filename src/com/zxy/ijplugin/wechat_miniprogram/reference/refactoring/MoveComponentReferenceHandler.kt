@@ -83,19 +83,19 @@ import com.intellij.psi.PsiReference
 import com.intellij.refactoring.move.MoveCallback
 import com.intellij.refactoring.move.MoveHandlerDelegate
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesHandler
-import com.zxy.ijplugin.wechat_miniprogram.reference.ComponentReference
+import com.zxy.ijplugin.wechat_miniprogram.reference.ComponentFileReference
 
 /**
  * 对json文件中配置的组件进行移动
  * 在json文件引用的最后一段调用
- * @see ComponentReference
+ * @see ComponentFileReference
  */
 class MoveComponentReferenceHandler : MoveHandlerDelegate() {
 
     override fun canMove(
             elements: Array<out PsiElement>?, targetContainer: PsiElement?, reference: PsiReference?
     ): Boolean {
-        return reference is ComponentReference
+        return reference is ComponentFileReference
     }
 
     override fun doMove(
@@ -112,7 +112,8 @@ class MoveComponentReferenceHandler : MoveHandlerDelegate() {
             editor: Editor?
     ): Boolean {
         element ?: return false
-        val componentReference = element.references.asSequence().filterIsInstance<ComponentReference>().firstOrNull()
+        val componentReference = element.references.asSequence().filterIsInstance<ComponentFileReference>()
+                .firstOrNull()
         if (element is JsonStringLiteral && componentReference != null) {
             this.doMove(
                     project, componentReference.multiResolve(false).mapNotNull { it.element }.toTypedArray(),

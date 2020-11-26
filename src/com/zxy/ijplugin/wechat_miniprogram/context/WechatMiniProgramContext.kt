@@ -175,3 +175,18 @@ fun findProjectRootDir(project: Project): PsiDirectory? {
         }
     }
 }
+
+/**
+ * Find "miniprogram_npm" Directory
+ */
+fun findMiniProgramNpmRootDir(project: Project): PsiDirectory? {
+    return findProjectRootDir(project)?.let {
+        if (it.findFile("package.json") != null && it.findSubdirectory("node_modules") != null) {
+            // package.json is existing
+            // node_modules is existing
+            it.findSubdirectory("miniprogram_npm")
+        } else {
+            null
+        }
+    }
+}
