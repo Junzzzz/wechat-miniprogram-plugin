@@ -75,37 +75,92 @@ package com.zxy.ijplugin.wechat_miniprogram.reference
 
 import com.intellij.json.psi.JsonElementGenerator
 import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
+import com.zxy.ijplugin.wechat_miniprogram.context.findMiniProgramNpmRootDir
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxss.WXSSPsiFile
 import com.zxy.ijplugin.wechat_miniprogram.utils.ComponentFilesCreator
 
-class ComponentReference(
-        psiElement: JsonStringLiteral, range: TextRange, private val psiDirectory: PsiDirectory,
-        private val name: String
-) : PsiPolyVariantReferenceBase<JsonStringLiteral>(
-        psiElement, range, false
+class ComponentFileReferenceSet(psiElement: PsiElement) : FileReferenceSet(psiElement) {
+
+    override fun createFileReference(range: TextRange, index: Int, text: String): FileReference {
+        return ComponentFileReference(this, range, index, text)
+    }
+
+}
+
+class ComponentFileReference(
+        componentFileReferenceSet: ComponentFileReferenceSet,
+        range: TextRange,
+        index: Int,
+        text: String
+) : FileReference(
+        componentFileReferenceSet,
+        range, index, text
 ) {
-    override fun multiResolve(p0: Boolean): Array<ResolveResult> {
-        return psiDirectory.files.filter {
-            it.virtualFile.nameWithoutExtension == name
-                    && (it is JSFile
-                    || it is WXMLPsiFile
-                    || it is WXSSPsiFile
-                    || it is JsonFile)
-        }.map {
-            PsiElementResolveResult(it)
-        }.toTypedArray()
+
+    override fun innerResolveInContext(
+            text: String, context: PsiFileSystemItem, result: MutableCollection<ResolveResult>, caseSensitive: Boolean
+    ) {
+        super.innerResolveInContext(text, context, result, caseSensitive)
+        val isFirst = index == 0
+        val miniProgramNpmRootDir = findMiniProgramNpmRootDir(context.project)
+        val tryToSearchInNpm = isFirst && !fileReferenceSet.element.text.startsWith(
+                "/"
+        ) && !fileReferenceSet.element.text.startsWith(
+                ".."
+        ) && miniProgramNpmRootDir != null
+
+        val directoryFromNpm = if (tryToSearchInNpm) {
+            // is first reference
+
+            // search directory in npm root
+            miniProgramNpmRootDir!!.findSubdirectory(text)
+        } else {
+            null
+        }
+        directoryFromNpm?.let {
+            result.add(PsiElementResolveResult(it))
+        }
+
+
+        if (isLast && context is PsiDirectory) {
+            result.addAll(findRelateFilesFromDirectory(context, text))
+        }
+
+        if (directoryFromNpm != null && isLast) {
+            // resolving index files from npm directory
+            result.addAll(findRelateFilesFromDirectory(directoryFromNpm, "index"))
+        }
+
+    }
+
+    private fun findRelateFilesFromDirectory(
+            directoryFromNpm: PsiDirectory, text: String
+    ) = directoryFromNpm.files.filter {
+        it.virtualFile.nameWithoutExtension == text
+                && (it is JSFile
+                || it is WXMLPsiFile
+                || it is WXSSPsiFile
+                || it is JsonFile)
+    }.map {
+        PsiElementResolveResult(it)
     }
 
     override fun handleElementRename(newElementName: String): PsiElement {
         // 重命名移除文件名后缀
-        return super.handleElementRename(
-                newElementName.substring(0 until newElementName.lastIndexOf("."))
-        )
+        val dotIndex = newElementName.lastIndexOf(".")
+        return if (dotIndex == -1) {
+            super.handleElementRename(newElementName)
+        } else {
+            super.handleElementRename(
+                    newElementName.substring(0 until dotIndex)
+            )
+        }
     }
 
     override fun bindToElement(element: PsiElement): PsiElement {

@@ -75,6 +75,7 @@ package com.zxy.ijplugin.wechat_miniprogram.utils
 
 import com.intellij.lang.javascript.psi.*
 import com.intellij.lang.javascript.psi.impl.JSLiteralExpressionImpl
+import com.intellij.psi.util.findDescendantOfType
 
 object ComponentJsUtils {
 
@@ -93,7 +94,7 @@ object ComponentJsUtils {
     /**
      * 找到Component API或Page API的方法调用
      */
-    fun findComponentOrPageCallExpression(jsFile: JSFile): JSCallExpression?  {
+    fun findComponentOrPageCallExpression(jsFile: JSFile): JSCallExpression? {
         return jsFile.children.filterIsInstance(JSExpressionStatement::class.java).mapNotNull {
             it.firstChild as? JSCallExpression
         }.find { jsCallExpression ->
@@ -109,17 +110,14 @@ object ComponentJsUtils {
     }
 
     /**
-     * 找到js文件中的component API的选项列表
+     * 找到js文件中的第一个component API的选项列表
      */
     private fun findComponentApiOptionProperties(jsFile: JSFile): Array<JSProperty>? {
-        return jsFile.children.filterIsInstance(JSExpressionStatement::class.java).mapNotNull {
-            it.firstChild as? JSCallExpression
-        }.find { jsCallExpression ->
-            jsCallExpression.children.any { it is JSReferenceExpression && it.text == "Component" }
-        }?.let { jsCallExpression ->
-            jsCallExpression.argumentList?.children?.asSequence()?.filterIsInstance<JSObjectLiteralExpression>()
-                    ?.firstOrNull()
-        }?.properties
+        return jsFile.findDescendantOfType<JSCallExpression> { jsCallExpression -> jsCallExpression.children.any { it is JSReferenceExpression && it.text == "Component" } }
+                ?.let { jsCallExpression ->
+                    jsCallExpression.argumentList?.children?.asSequence()?.filterIsInstance<JSObjectLiteralExpression>()
+                            ?.firstOrNull()
+                }?.properties
     }
 
     /**
