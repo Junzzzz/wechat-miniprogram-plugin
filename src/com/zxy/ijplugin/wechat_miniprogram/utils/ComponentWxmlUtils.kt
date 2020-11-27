@@ -76,7 +76,7 @@ package com.zxy.ijplugin.wechat_miniprogram.utils
 import com.intellij.json.psi.JsonProperty
 import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiPolyVariantReferenceBase
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReference
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlTag
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLPsiFile
@@ -119,7 +119,7 @@ object ComponentWxmlUtils {
 
     private fun findCustomComponentDefinitionFiles(jsonProperty: JsonProperty): List<PsiFile>? {
         // 解析其路径可以找到自定义组件的位置
-        val lastComponentPathReference = jsonProperty.value?.references?.lastOrNull() as? PsiPolyVariantReferenceBase<*>
+        val lastComponentPathReference = jsonProperty.value?.references?.lastOrNull() as? PsiFileReference
         return lastComponentPathReference?.multiResolve(
                 false
         )?.mapNotNull { it.element as? PsiFile }
