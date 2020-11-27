@@ -159,7 +159,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.4.2"
+version = "3.5.0"
 
 patchPluginXml {
     sinceBuild = "203"
@@ -167,13 +167,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 兼容2020.3版本 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1YMIN">I1YMIN</a></li>
-    <li> 修复wxml js表达式会注入到非wxml语言中的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1Y1NS">I1Y1NS</a></li>
+    <li> 添加NPM中的组件支持 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I26I4W">I26I4W</a></li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Compatible with 2020.3 version <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1YMIN">I1YMIN</a></li>
-    <li> Fix the error that wxml js expression will be injected into non-wxml language <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I1Y1NS">I1Y1NS</a></li>
+    <li> Add component support in NPM <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I26I4W">I26I4W</a></li>
 </ul>
 """
     pluginDescription = """
@@ -193,6 +191,7 @@ Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> We
     <li>微信小程序配置文件支持</li>
     <li>代码检查和自动修复</li>
     <li>支持QQ小程序项目 (v3.1.0)</li>
+    <li>支持npm中的组件</li>
 </ul>
 <h3> Get started </h3>
 <ul>
