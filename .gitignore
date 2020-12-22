@@ -106,7 +106,6 @@ fabric.properties
 .idea/misc.xml
 .idea/vcs.xml
 build.gradle
-gradle/
 gradlew
 gradlew.bat
 settings.gradle
