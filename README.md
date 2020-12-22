@@ -25,6 +25,7 @@ wechat-miniprogram-plugin
 - 微信小程序配置文件支持
 - 代码检查以及自动修复
 - 支持QQ小程序
+- 支持NPM中的组件
 
 在[Wiki](https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis)中浏览更多功能
 

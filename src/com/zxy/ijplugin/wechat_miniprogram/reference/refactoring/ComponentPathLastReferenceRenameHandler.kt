@@ -83,7 +83,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.refactoring.rename.PsiElementRenameHandler
 import com.intellij.refactoring.rename.RenameHandler
-import com.zxy.ijplugin.wechat_miniprogram.reference.ComponentReference
+import com.zxy.ijplugin.wechat_miniprogram.reference.ComponentFileReference
 
 
 class ComponentPathLastReferenceRenameHandler : RenameHandler {
@@ -107,12 +107,12 @@ class ComponentPathLastReferenceRenameHandler : RenameHandler {
 
 }
 
-private fun findComponentReference(dataContext: DataContext): ComponentReference? {
+private fun findComponentReference(dataContext: DataContext): ComponentFileReference? {
     val file = dataContext.getData(CommonDataKeys.PSI_FILE) ?: return null
     return findComponentReference(file, dataContext)
 }
 
-private fun findComponentReference(file: PsiFile, dataContext: DataContext): ComponentReference? {
+private fun findComponentReference(file: PsiFile, dataContext: DataContext): ComponentFileReference? {
     val offset = dataContext.getData(CommonDataKeys.CARET)?.offset ?: return null
-    return file.findReferenceAt(offset) as? ComponentReference
+    return file.findReferenceAt(offset) as? ComponentFileReference
 }
