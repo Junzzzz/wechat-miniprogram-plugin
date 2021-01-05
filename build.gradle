@@ -159,7 +159,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.5.0"
+version = "3.5.1"
 
 patchPluginXml {
     sinceBuild = "203"
@@ -167,11 +167,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 添加NPM中的组件支持 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I26I4W">I26I4W</a></li>
+    <li> 修复导致wxml无法识别事件属性的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2859G">I2859G</a></li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Add component support in NPM <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I26I4W">I26I4W</a></li>
+    <li> Fixed an error that caused WXML to fail to detect event attributes <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2859G">I2859G</a></li>
 </ul>
 """
     pluginDescription = """
