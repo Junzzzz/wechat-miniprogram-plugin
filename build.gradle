@@ -159,7 +159,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.5.1"
+version = "3.5.2"
 
 patchPluginXml {
     sinceBuild = "203"
@@ -167,11 +167,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 修复导致wxml无法识别事件属性的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2859G">I2859G</a></li>
+    <li> 增加ad-custom标签 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2CC12">I2CC12</a></li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Fixed an error that caused WXML to fail to detect event attributes <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2859G">I2859G</a></li>
+    <li> Add ad-custom wxml element <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2CC12">I2CC12</a></li>
 </ul>
 """
     pluginDescription = """
