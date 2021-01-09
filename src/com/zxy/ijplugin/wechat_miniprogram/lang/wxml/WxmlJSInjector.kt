@@ -83,6 +83,7 @@ import com.intellij.psi.xml.XmlAttribute
 import com.zxy.ijplugin.wechat_miniprogram.lang.expr.WxmlJsLanguage
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WxmlJSInjector.Companion.DOUBLE_BRACE_REGEX
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.isEventHandler
+import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils.valueTextRangeInSelf
 import com.zxy.ijplugin.wechat_miniprogram.utils.toTextRange
 
 class WxmlJSInjector : MultiHostInjector {
@@ -127,8 +128,9 @@ class WxmlJSInjector : MultiHostInjector {
         if (attribute.isEventHandler() && !DOUBLE_BRACE_REGEX.matches(psiElement.text)) {
             // 此属性是事件
             // 并且属性值中没有双括号
-            // 2.0版本后事件在Lexer中直接注入js
-            return
+            multiHostRegistrar.startInjecting(WxmlJsLanguage.INSTANCE)
+                    .addPlace(null, "();", psiElement, psiElement.valueTextRangeInSelf())
+                    .doneInjecting()
         } else {
             // 对字符串中的双括号注入js语言
             searchDoubleBraceAndInject(psiElement, multiHostRegistrar)

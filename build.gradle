@@ -159,7 +159,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.5.0"
+version = "3.5.2"
 
 patchPluginXml {
     sinceBuild = "203"
@@ -167,11 +167,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 添加NPM中的组件支持 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I26I4W">I26I4W</a></li>
+    <li> 增加ad-custom标签 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2CC12">I2CC12</a></li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Add component support in NPM <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I26I4W">I26I4W</a></li>
+    <li> Add ad-custom wxml element <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2CC12">I2CC12</a></li>
 </ul>
 """
     pluginDescription = """
