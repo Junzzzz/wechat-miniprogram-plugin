@@ -93,7 +93,7 @@ object WXMLModuleUtils {
         for (fileReference in fileReferences) {
             val resolveFile = fileReference.resolve()
             if (resolveFile is WXMLPsiFile) {
-                findTemplateDefinitionOnlySingleFile(resolveFile, templateName).let {
+                findTemplateDefinitionOnlySingleFile(resolveFile, templateName)?.let {
                     return it
                 }
             }
@@ -102,8 +102,8 @@ object WXMLModuleUtils {
     }
 
     private fun findSrcImportedFileReferences(
-            elements: Collection<XmlTag>
-    ): Sequence<FileReference> {
+        elements: Collection<XmlTag>
+    ): Set<FileReference> {
         return elements.asSequence().filter {
             it.name == "import"
         }.mapNotNull { xmlTag ->
@@ -117,19 +117,20 @@ object WXMLModuleUtils {
                 it is FileReference
             }
         }.filterIsInstance<FileReference>()
+            .toSet()
     }
 
     private fun findTemplateDefinitionOnlySingleFile(
-            wxmlPsiFile: WXMLPsiFile, templateName: String
+        wxmlPsiFile: WXMLPsiFile, templateName: String
     ): XmlAttributeValue? {
         return this.findTemplateDefinitionWithSingleFile(
-                PsiTreeUtil.findChildrenOfType(wxmlPsiFile, XmlTag::class.java), templateName
+            PsiTreeUtil.findChildrenOfType(wxmlPsiFile, XmlTag::class.java), templateName
         )
     }
 
 
     private fun findTemplateDefinitionWithSingleFile(
-            tags: Collection<XmlTag>, templateName: String
+        tags: Collection<XmlTag>, templateName: String
     ): XmlAttributeValue? {
         val templateElements = tags.filter {
             it.name == "template"
@@ -176,9 +177,11 @@ object WXMLModuleUtils {
         val elements = PsiTreeUtil.findChildrenOfType(wxmlPsiFile, XmlTag::class.java)
         results.addAll(findTemplateDefinitions(elements))
         val fileReferences = this.findSrcImportedFileReferences(elements)
-        results.addAll(fileReferences.mapNotNull { it.resolve()  }.mapNotNull { it as? WXMLPsiFile }.toList().toTypedArray().flatMap {
-            findTemplateDefinitions(it)
-        })
+        results.addAll(
+            fileReferences.mapNotNull { it.resolve() }.mapNotNull { it as? WXMLPsiFile }.toList().toTypedArray()
+                .flatMap {
+                    findTemplateDefinitions(it)
+                })
         return results
     }
 
