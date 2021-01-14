@@ -159,7 +159,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.5.2"
+version = "3.5.3"
 
 patchPluginXml {
     sinceBuild = "203"
@@ -167,11 +167,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 增加ad-custom标签 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2CC12">I2CC12</a></li>
+    <li> 修复无法解析<template>的is属性的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2CC15">I2CC15</a></li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Add ad-custom wxml element <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2CC12">I2CC12</a></li>
+    <li> Repair a error that the reference can't be resolved <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2CC15">I2CC15</a></li>
 </ul>
 """
     pluginDescription = """
