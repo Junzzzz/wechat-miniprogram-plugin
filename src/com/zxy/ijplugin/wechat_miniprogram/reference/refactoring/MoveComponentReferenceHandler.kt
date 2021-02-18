@@ -93,13 +93,13 @@ import com.zxy.ijplugin.wechat_miniprogram.reference.ComponentFileReference
 class MoveComponentReferenceHandler : MoveHandlerDelegate() {
 
     override fun canMove(
-            elements: Array<out PsiElement>?, targetContainer: PsiElement?, reference: PsiReference?
+        elements: Array<out PsiElement>?, targetContainer: PsiElement?, reference: PsiReference?
     ): Boolean {
         return reference is ComponentFileReference
     }
 
     override fun doMove(
-            project: Project?, elements: Array<out PsiElement>?, targetContainer: PsiElement?, callback: MoveCallback?
+        project: Project?, elements: Array<out PsiElement>?, targetContainer: PsiElement?, callback: MoveCallback?
     ) {
         val moveFilesOrDirectoriesHandler = MoveFilesOrDirectoriesHandler()
         if (moveFilesOrDirectoriesHandler.canMove(elements, targetContainer, null)) {
@@ -108,8 +108,8 @@ class MoveComponentReferenceHandler : MoveHandlerDelegate() {
     }
 
     override fun tryToMove(
-            element: PsiElement?, project: Project, dataContext: DataContext, reference: PsiReference?,
-            editor: Editor?
+        element: PsiElement?, project: Project, dataContext: DataContext, reference: PsiReference?,
+        editor: Editor?
     ): Boolean {
         element ?: return false
         val componentReference = element.references.asSequence().filterIsInstance<ComponentFileReference>()
