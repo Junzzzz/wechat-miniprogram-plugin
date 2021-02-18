@@ -116,6 +116,7 @@ class MoveComponentReferenceHandler : MoveHandlerDelegate() {
         val componentReference = element.parentOfType<JsonStringLiteral>()?.references?.asSequence()
             ?.filterIsInstance<ComponentFileReference>()
             ?.lastOrNull()
+        // TODO Change component registration when it moved
         if (componentReference != null) {
             this.doMove(
                 project, componentReference.multiResolve(false).mapNotNull { it.element }.toTypedArray(),
