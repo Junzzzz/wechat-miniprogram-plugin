@@ -162,8 +162,7 @@ publishPlugin {
 version = "3.5.3"
 
 patchPluginXml {
-    sinceBuild = "203"
-    untilBuild = "203.*"
+    sinceBuild = "211"
     version = version
     changeNotes = """
 <ul lang='cn'>
