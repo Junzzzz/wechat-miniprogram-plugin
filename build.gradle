@@ -166,11 +166,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 修复无法解析<template>的is属性的错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2CC15">I2CC15</a></li>
+    <li> WXML添加<share-element>和<page-container>标签 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I3C9KR">I3C9KR</a></li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Repair a error that the reference can't be resolved <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I2CC15">I2CC15</a></li>
+    <li> Add <share-element> and <page-container> element for WXML <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I3C9KR">I3C9KR</a></li>
 </ul>
 """
     pluginDescription = """
