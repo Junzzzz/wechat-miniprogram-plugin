@@ -71,7 +71,7 @@
  *    See the Mulan PSL v1 for more details.
  */
 buildscript {
-    ext.kotlin_version = '1.3.61'
+    ext.kotlin_version = '1.4.21'
 
     repositories {
         mavenCentral()
@@ -100,8 +100,8 @@ tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
     kotlinOptions {
         jvmTarget = targetCompatibility
-        languageVersion = "1.3"
-        apiVersion = "1.3"
+        languageVersion = "1.4"
+        apiVersion = "1.4"
         freeCompilerArgs = ["-Xjvm-default=enable"]
     }
 }
