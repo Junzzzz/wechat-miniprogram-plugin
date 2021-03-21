@@ -80,6 +80,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
+import com.intellij.psi.util.parentOfType
 import com.intellij.refactoring.move.MoveCallback
 import com.intellij.refactoring.move.MoveHandlerDelegate
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesHandler
@@ -93,13 +94,13 @@ import com.zxy.ijplugin.wechat_miniprogram.reference.ComponentFileReference
 class MoveComponentReferenceHandler : MoveHandlerDelegate() {
 
     override fun canMove(
-            elements: Array<out PsiElement>?, targetContainer: PsiElement?, reference: PsiReference?
+        elements: Array<out PsiElement>?, targetContainer: PsiElement?, reference: PsiReference?
     ): Boolean {
         return reference is ComponentFileReference
     }
 
     override fun doMove(
-            project: Project?, elements: Array<out PsiElement>?, targetContainer: PsiElement?, callback: MoveCallback?
+        project: Project?, elements: Array<out PsiElement>?, targetContainer: PsiElement?, callback: MoveCallback?
     ) {
         val moveFilesOrDirectoriesHandler = MoveFilesOrDirectoriesHandler()
         if (moveFilesOrDirectoriesHandler.canMove(elements, targetContainer, null)) {
@@ -108,16 +109,18 @@ class MoveComponentReferenceHandler : MoveHandlerDelegate() {
     }
 
     override fun tryToMove(
-            element: PsiElement?, project: Project, dataContext: DataContext, reference: PsiReference?,
-            editor: Editor?
+        element: PsiElement?, project: Project, dataContext: DataContext, reference: PsiReference?,
+        editor: Editor?
     ): Boolean {
         element ?: return false
-        val componentReference = element.references.asSequence().filterIsInstance<ComponentFileReference>()
-                .firstOrNull()
-        if (element is JsonStringLiteral && componentReference != null) {
+        val componentReference = element.parentOfType<JsonStringLiteral>()?.references?.asSequence()
+            ?.filterIsInstance<ComponentFileReference>()
+            ?.lastOrNull()
+        // TODO Change component registration when it moved
+        if (componentReference != null) {
             this.doMove(
-                    project, componentReference.multiResolve(false).mapNotNull { it.element }.toTypedArray(),
-                    LangDataKeys.TARGET_PSI_ELEMENT.getData(dataContext), null
+                project, componentReference.multiResolve(false).mapNotNull { it.element }.toTypedArray(),
+                LangDataKeys.TARGET_PSI_ELEMENT.getData(dataContext), null
             )
             return true
         }

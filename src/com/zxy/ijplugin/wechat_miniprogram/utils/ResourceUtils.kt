@@ -79,6 +79,12 @@ import com.intellij.util.ResourceUtil
 
 object ResourceUtils {
     fun findWXMLMetaDataFile(): VirtualFile? {
-        return VfsUtil.findFileByURL(ResourceUtil.getResource(ResourceUtils.javaClass, "wxml", "elementDescriptions.json"))
+        return VfsUtil.findFileByURL(
+            ResourceUtil.getResource(
+                ResourceUtils.javaClass.classLoader,
+                "wxml",
+                "elementDescriptions.json"
+            )
+        )
     }
 }
