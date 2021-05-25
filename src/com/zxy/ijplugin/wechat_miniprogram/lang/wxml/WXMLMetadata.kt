@@ -147,7 +147,7 @@ class WXMLMetadata(private val project: Project) {
                                 if (attributeJsonObject is JsonObject) {
                                     WXMLPresetElementAttributeDescription(
                                             attributeJsonObject.findStringPropertyValue("key")!!,
-                                            attributeJsonObject.findStringArrayPropertyValue("types")?.map {
+                                            attributeJsonObject.findStringArrayPropertyValue("library")?.map {
                                                 WXMLElementAttributeDescription.ValueType.valueOf(it)
                                             }?.toTypedArray() ?: emptyArray(),
                                             attributeJsonObject.findPropertyValue("default"),
