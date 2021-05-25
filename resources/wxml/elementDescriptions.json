@@ -1,4 +1,188 @@
 {
+  "share-element": {
+    "description": "共享元素，一种动画形式，类似于 flutter Hero动画，表现为元素像是在页面间穿越一样。该组件需与 page-container 组件结合使用。",
+    "attributeDescriptors": [
+      {
+        "key": "key",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": true,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "映射标记，与 page-container 中的 shar-element 对应。"
+      },
+      {
+        "key": "transform",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [
+          true,
+          false
+        ],
+        "requiredInEnums": true,
+        "description": "是否进行动画"
+      },
+      {
+        "key": "duration",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 300,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "动画时长，单位毫秒"
+      },
+      {
+        "key": "easing-function",
+        "types": [
+          "STRING"
+        ],
+        "default": "ease-out",
+        "required": false,
+        "enums": [
+          "ease-out",
+          "out",
+          "ease-in",
+          "in"
+        ],
+        "requiredInEnums": true,
+        "description": "css 缓动函数"
+      }
+    ],
+    "events": [
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/share-element.html"
+  },
+  "page-container": {
+    "description": "页面容器，“假页”容器组件，效果类似于 popup 弹出层，页面内存在该容器时，当用户进行返回操作，关闭该容器不关闭页面。返回操作包括三种情形，右滑手势、安卓物理返回键和调用 navigateBack 接口。",
+    "attributeDescriptors": [
+      {
+        "key": "show",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "是否显示容器组件。"
+      },
+      {
+        "key": "duration",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 300,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "动画时长，单位毫秒。"
+      },
+      {
+        "key": "z-index",
+        "types": [
+          "NUMBER"
+        ],
+        "default": 100,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "z-index 层级"
+      },
+      {
+        "key": "overlay",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": true,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "是否显示遮罩层。"
+      },
+      {
+        "key": "position",
+        "types": [
+          "STRING"
+        ],
+        "default": "bottom",
+        "required": false,
+        "enums": [
+          "top",
+          "bottom",
+          "right",
+          "center"
+        ],
+        "requiredInEnums": true,
+        "description": "弹出位置。"
+      },
+      {
+        "key": "round",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "是否显示圆角"
+      },
+      {
+        "key": "close-on-slideDown",
+        "types": [
+          "BOOLEAN"
+        ],
+        "default": false,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "是否在下滑一段距离后关闭。"
+      },
+      {
+        "key": "overlay-style",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "自定义遮罩层样式。"
+      },
+      {
+        "key": "custom-style",
+        "types": [
+          "STRING"
+        ],
+        "default": null,
+        "required": false,
+        "enums": [],
+        "requiredInEnums": true,
+        "description": "自定义弹出层样式。"
+      }
+    ],
+    "events": [
+      "beforeenter",
+      "enter",
+      "afterenter",
+      "beforeleave",
+      "leave",
+      "afterleave",
+      "afterleave",
+      "clickoverlay"
+    ],
+    "canOpen": true,
+    "canClose": false,
+    "url": "https://developers.weixin.qq.com/miniprogram/dev/component/page-container.html"
+  },
   "block": {
     "attributeDescriptors": [],
     "events": [],
