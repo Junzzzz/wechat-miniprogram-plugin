@@ -159,18 +159,21 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.5.4"
+version = "3.5.5"
 
 patchPluginXml {
     sinceBuild = "211"
+    untilBuild = "211.*"
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> WXML添加<share-element>和<page-container>标签 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I3C9KR">I3C9KR</a></li>
+    <li> 兼容211.*版本 </li>
+    <li> 更新微信和QQ的typescript库 </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Add <share-element> and <page-container> element for WXML <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I3C9KR">I3C9KR</a></li>
+    <li> Compatible with 211.* version </li>
+    <li> Update the typescript library of WeChat and QQ </li>
 </ul>
 """
     pluginDescription = """

@@ -75,7 +75,6 @@ package com.zxy.ijplugin.wechat_miniprogram.utils
 
 import com.intellij.lang.javascript.psi.*
 import com.intellij.lang.javascript.psi.impl.JSLiteralExpressionImpl
-import com.intellij.psi.util.descendantsOfType
 
 object ComponentJsUtils {
 
@@ -113,8 +112,8 @@ object ComponentJsUtils {
      * 找到js文件中的第一个component API的选项列表
      */
     private fun findComponentApiOptionProperties(jsFile: JSFile): Array<JSProperty>? {
-        return jsFile.descendantsOfType<JSCallExpression>()
-            .find { jsCallExpression -> jsCallExpression.children.any { it is JSReferenceExpression && it.text == "Component" } }
+        return jsFile.findChildrenOfType<JSCallExpression>()
+            .firstOrNull { jsCallExpression -> jsCallExpression.children.any { it is JSReferenceExpression && it.text == "Component" } }
             ?.let { jsCallExpression ->
                 jsCallExpression.argumentList?.children?.asSequence()?.filterIsInstance<JSObjectLiteralExpression>()
                     ?.firstOrNull()

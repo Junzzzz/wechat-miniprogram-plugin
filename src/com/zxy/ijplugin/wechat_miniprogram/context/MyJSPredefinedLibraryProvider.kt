@@ -83,8 +83,8 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
 
     companion object {
         val PAGE_LIFETIMES = arrayOf(
-                "onLoad", "onShow", "onReady", "onHide", "onUnload", "onPullDownRefresh", "onReachBottom",
-                "onShareAppMessage", "onPageScroll", "onResize", "onTabItemTap"
+            "onLoad", "onShow", "onReady", "onHide", "onUnload", "onPullDownRefresh", "onReachBottom",
+            "onShareAppMessage", "onPageScroll", "onResize", "onTabItemTap"
         )
     }
 
@@ -93,28 +93,28 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
 
         val isQQ = project.isQQContext()
         return arrayOf(
-                ScriptingLibraryModel.createPredefinedLibrary(
-                        "wechat-mini-program-api",
-                        arrayOf(
-                                VfsUtil.findFileByURL(
-                                        ResourceUtil.getResource(
-                                            javaClass.classLoader, "./", "wx.d.ts"
-                                        )
-                                )
-                        ).filterNotNull().toTypedArray(),
-                        isOn && !isQQ
-                ),
-                ScriptingLibraryModel.createPredefinedLibrary(
-                        "qq-mini-program-api",
-                        arrayOf(
-                                VfsUtil.findFileByURL(
-                                        ResourceUtil.getResource(
-                                            javaClass.classLoader, "./", "qq.d.ts"
-                                        )
-                                )
-                        ).filterNotNull().toTypedArray(),
-                        isOn && isQQ
-                )
+            ScriptingLibraryModel.createPredefinedLibrary(
+                "wechat-mini-program-api",
+                arrayOf(
+                    VfsUtil.findFileByURL(
+                        ResourceUtil.getResource(
+                            javaClass.classLoader, "/library/wx", "typings"
+                        )
+                    )
+                ).filterNotNull().toTypedArray(),
+                isOn && !isQQ
+            ),
+            ScriptingLibraryModel.createPredefinedLibrary(
+                "qq-mini-program-api",
+                arrayOf(
+                    VfsUtil.findFileByURL(
+                        ResourceUtil.getResource(
+                            javaClass.classLoader, "/library/qq", "typings"
+                        )
+                    )
+                ).filterNotNull().toTypedArray(),
+                isOn && isQQ
+            )
         )
     }
 
