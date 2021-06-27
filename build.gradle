@@ -159,7 +159,7 @@ publishPlugin {
     token intellijPublishToken
 }
 
-version = "3.5.5"
+version = "3.5.6"
 
 patchPluginXml {
     sinceBuild = "211"
@@ -167,13 +167,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 兼容211.*版本 </li>
-    <li> 更新微信和QQ的typescript库 </li>
+    <li> 更新创建组件弹窗的输入框标签 </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Compatible with 211.* version </li>
-    <li> Update the typescript library of WeChat and QQ </li>
+    <li> Update the input label of the created component pop-up window </li>
 </ul>
 """
     pluginDescription = """
