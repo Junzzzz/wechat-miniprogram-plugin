@@ -134,7 +134,7 @@ class CreateWechatMiniProgramComponentAction :
         override fun createCenterPanel(): JComponent? {
             return panel {
                 row {
-                    label("Page name:")
+                    label("Component name:")
                     textField({ componentName }, { componentName = it }).apply {
                         preferredFocusedComponent = this.component
                     }
