@@ -167,11 +167,11 @@ patchPluginXml {
     version = version
     changeNotes = """
 <ul lang='cn'>
-    <li> 更新创建组件弹窗的输入框标签 </li>
+    <li> 兼容 212.* </li>
 </ul>
 <br/>
 <ul lang='en'>
-    <li> Update the input label of the created component pop-up window </li>
+    <li> Compatible with 212.* </li>
 </ul>
 """
     pluginDescription = """
