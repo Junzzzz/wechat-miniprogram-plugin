@@ -71,110 +71,54 @@
  *    See the Mulan PSL v1 for more details.
  */
 buildscript {
-    ext.kotlin_version = '1.4.21'
 
     repositories {
         mavenCentral()
-        maven { url 'https://dl.bintray.com/jetbrains/intellij-plugin-service' }
-        maven { url 'https://plugins.gradle.org/m2/' }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
     }
 
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
     }
 }
-
+fun properties(key: String) = project.findProperty(key).toString()
 plugins {
-    id "org.jetbrains.intellij" version "0.4.21"
+    id("org.jetbrains.intellij") version "1.1.4"
 }
 
 // JDK compatibility
-sourceCompatibility = "11"
-targetCompatibility = "11"
-tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 
-// Kotlin compatibility
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
-    kotlinOptions {
-        jvmTarget = targetCompatibility
-        languageVersion = "1.4"
-        apiVersion = "1.4"
-        freeCompilerArgs = ["-Xjvm-default=enable"]
+//tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
+
+tasks {
+    withType<JavaCompile> {
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
     }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs 'src'
-            srcDirs 'gen'
-        }
-        resources {
-            srcDirs 'resources'
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "11"
+            languageVersion = "1.5"
+            apiVersion = "1.5"
+            freeCompilerArgs = freeCompilerArgs + "-Xjvm-default=enable"
         }
     }
-}
-
-apply plugin: "kotlin"
-
-intellij {
-//    localPath "C:\\Users\\Administrator\\Downloads\\ideaIU-LATEST-EAP-SNAPSHOT"
-    type = "IU"
-    if (project.properties.containsKey("localIdeaPath")) {
-        localPath = project.properties.get("localIdeaPath")
-    } else {
-        version 'IU-LATEST-EAP-SNAPSHOT'
+    publishPlugin {
+        token.set(properties("intellijPublishToken"))
     }
-    pluginName 'wechat mini program'
-    downloadSources true
-    updateSinceUntilBuild false
-    plugins = ['JavaScriptLanguage', 'CSS', 'less', 'sass', 'stylus']
-}
-
-repositories {
-    mavenCentral()
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = targetCompatibility
-    }
-}
-
-runIde {
-
-}
-
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "org.jetbrains:annotations-java5:17.0.0"
-    compile "org.jetbrains.kotlin:kotlin-script-runtime:1.3.50"
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-}
-
-publishPlugin {
-    token intellijPublishToken
-}
-
-version = "3.5.7"
-
-patchPluginXml {
-    sinceBuild = "212"
-    untilBuild = "212.*"
-    version = version
-    changeNotes = """
-<ul lang='cn'>
+    patchPluginXml {
+        sinceBuild.set("212")
+        untilBuild.set("212.*")
+        version.set(version)
+        val changeNotes = """
+<ul lang="cn">
     <li> 兼容 212.* </li>
 </ul>
 <br/>
-<ul lang='en'>
+<ul lang="en">
     <li> Compatible with 212.* </li>
 </ul>
 """
-    pluginDescription = """
+        val pluginDescription = """
 Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> WeChat Mini Program </a> project
 <h3>使用入门</h3>
 <ul> 
@@ -211,4 +155,43 @@ Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> We
 For detailed usage documents and function descriptions, please visit
 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis"> Gitee Wiki </a>
 """
+        this.changeNotes.set(changeNotes)
+        this.pluginDescription.set(pluginDescription)
+    }
+
 }
+
+sourceSets {
+    main {
+        java {
+            srcDirs("src")
+            srcDirs("gen")
+        }
+        resources {
+            srcDirs("resources")
+        }
+    }
+}
+
+intellij {
+//    localPath "C:\\Users\\Administrator\\Downloads\\ideaIU-LATEST-EAP-SNAPSHOT"
+    type.set("IU")
+    version.set("IU-LATEST-EAP-SNAPSHOT")
+    pluginName.set("wechat mini program")
+    downloadSources.set(true)
+    updateSinceUntilBuild.set(false)
+    plugins.set(listOf("JavaScriptLanguage", "CSS", "less", "sass", "stylus"))
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.10")
+    implementation("org.jetbrains:annotations-java5:17.0.0")
+    implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.5.10")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+}
+
+version = "3.5.7"

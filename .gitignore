@@ -105,10 +105,10 @@ fabric.properties
 .idea/.name
 .idea/misc.xml
 .idea/vcs.xml
-build.gradle
+build.gradle.kts
 gradlew
 gradlew.bat
-settings.gradle
+settings.gradle.kts
 /gen/
 
 note.md
