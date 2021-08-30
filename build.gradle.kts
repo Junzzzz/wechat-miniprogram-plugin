@@ -70,24 +70,14 @@
  *
  *    See the Mulan PSL v1 for more details.
  */
-buildscript {
-
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
-    }
-}
 fun properties(key: String) = project.findProperty(key).toString()
 plugins {
-    id("org.jetbrains.intellij") version "1.1.4"
+    id("org.jetbrains.intellij") version "1.0"
+    java
+    id("org.jetbrains.kotlin.jvm") version "1.5.10"
 }
 
-// JDK compatibility
-
-//tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
+version = "3.5.7"
 
 tasks {
     withType<JavaCompile> {
@@ -97,8 +87,6 @@ tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
             jvmTarget = "11"
-            languageVersion = "1.5"
-            apiVersion = "1.5"
             freeCompilerArgs = freeCompilerArgs + "-Xjvm-default=enable"
         }
     }
@@ -108,7 +96,6 @@ tasks {
     patchPluginXml {
         sinceBuild.set("212")
         untilBuild.set("212.*")
-        version.set(version)
         val changeNotes = """
 <ul lang="cn">
     <li> 兼容 212.* </li>
@@ -174,13 +161,12 @@ sourceSets {
 }
 
 intellij {
-//    localPath "C:\\Users\\Administrator\\Downloads\\ideaIU-LATEST-EAP-SNAPSHOT"
     type.set("IU")
-    version.set("IU-LATEST-EAP-SNAPSHOT")
+    version.set("2021.2.1")
     pluginName.set("wechat mini program")
     downloadSources.set(true)
     updateSinceUntilBuild.set(false)
-    plugins.set(listOf("JavaScriptLanguage", "CSS", "less", "sass", "stylus"))
+    plugins.set(listOf("Javascript", "CSS", "less", "sass", "stylus"))
 }
 
 repositories {
@@ -189,9 +175,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.10")
-    implementation("org.jetbrains:annotations-java5:17.0.0")
+    implementation("org.jetbrains:annotations-java5:22.0.0")
     implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.5.10")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.10")
 }
-
-version = "3.5.7"
