@@ -97,6 +97,10 @@ class QSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_8) {
     }
 
     override fun getDescription(): String {
+        return "Script of QQ miniprogram"
+    }
+
+    override fun getDisplayName(): String {
         return "QQ Script"
     }
 }

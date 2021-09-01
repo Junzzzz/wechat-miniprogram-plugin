@@ -97,6 +97,10 @@ open class WXSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_8
     }
 
     override fun getDescription(): String {
-        return "WeiXin Script"
+        return "Script of wechat miniprogram"
+    }
+
+    override fun getDisplayName(): String {
+        return "Weixin Script"
     }
 }
