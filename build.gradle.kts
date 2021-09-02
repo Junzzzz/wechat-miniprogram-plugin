@@ -78,7 +78,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.5.10"
 }
 
-version = "3.5.9"
+version = "3.5.8"
 
 tasks {
     withType<JavaCompile> {
@@ -99,11 +99,13 @@ tasks {
         untilBuild.set("212.*")
         val changeNotes = """
 <ul lang="cn">
-    <li> 兼容 212.* </li>
+    <li> 修复启动错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I48AOH"></a></li>
+    <li> 替换以过时的API </li>
 </ul>
 <br/>
 <ul lang="en">
-    <li> Compatible with 212.* </li>
+    <li> Fix boot error <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I48AOH"></a></li>
+    <li> Replaced deprecated API </li>
 </ul>
 """
         val pluginDescription = """
