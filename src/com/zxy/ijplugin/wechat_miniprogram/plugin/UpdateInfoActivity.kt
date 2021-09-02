@@ -109,9 +109,9 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
     }
 
     private fun showUpdateOrInstallNotification(
-            pluginDescriptor: IdeaPluginDescriptor, version: String,
-            project: Project,
-            lastVersion: String?
+        pluginDescriptor: IdeaPluginDescriptor, version: String,
+        project: Project,
+        lastVersion: String?
     ) {
         // 显示更新通知
         val isInstall = lastVersion == null
@@ -124,7 +124,7 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
             ""
         } else {
             """更新说明：<br/>
-                ${pluginDescriptor.changeNotes.split("<br/>").first { it.contains("lang='cn'") }}
+                ${pluginDescriptor.changeNotes.split("<br/>").firstOrNull().orEmpty()}
                 <br/>"""
         }
         val content = """
@@ -141,33 +141,34 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
             """.trimIndent()
 
         val notification = NotificationGroupManager.getInstance().getNotificationGroup(this.javaClass.name)
-                .createNotification(
-                        title, content, NotificationType.INFORMATION,
-                        object : NotificationListener.Adapter() {
-                            private val urlOpeningBehavior = NotificationListener.UrlOpeningListener(false)
+            .createNotification(
+                title, content, NotificationType.INFORMATION
+            ).apply {
+                this.setListener(object : NotificationListener.Adapter() {
+                    private val urlOpeningBehavior = NotificationListener.UrlOpeningListener(false)
 
-                            override fun hyperlinkActivated(
-                                    notification: Notification, hyperlinkEvent: HyperlinkEvent
-                            ) {
-                                if (hyperlinkEvent.description == HTML_DESCRIPTION_SUPPORT) {
-                                    SupportDialog(project).show()
-                                } else {
-                                    urlOpeningBehavior.hyperlinkUpdate(notification, hyperlinkEvent)
-                                }
-                            }
+                    override fun hyperlinkActivated(
+                        notification: Notification, hyperlinkEvent: HyperlinkEvent
+                    ) {
+                        if (hyperlinkEvent.description == HTML_DESCRIPTION_SUPPORT) {
+                            SupportDialog(project).show()
+                        } else {
+                            urlOpeningBehavior.hyperlinkUpdate(notification, hyperlinkEvent)
                         }
-                )
+                    }
+                })
+            }
         notification
-                .addAction(SupportAction(project, notification))
-                .setImportant(true)
-                .let {
-                    Notifications.Bus.notify(it, project)
-                }
+            .addAction(SupportAction(project, notification))
+            .setImportant(true)
+            .let {
+                Notifications.Bus.notify(it, project)
+            }
     }
 
     class SupportAction(
-            private val project: Project,
-            private val notification: Notification
+        private val project: Project,
+        private val notification: Notification
     ) : DumbAwareAction("支持一下") {
         override fun actionPerformed(e: AnActionEvent) {
             notification.hideBalloon()
