@@ -78,7 +78,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.5.10"
 }
 
-version = "3.5.8"
+version = "3.5.9"
 
 tasks {
     withType<JavaCompile> {
@@ -95,17 +95,15 @@ tasks {
         token.set(properties("intellijPublishToken"))
     }
     patchPluginXml {
-        sinceBuild.set("212")
+        sinceBuild.set("212.2")
         untilBuild.set("212.*")
         val changeNotes = """
 <ul lang="cn">
-    <li> 修复启动错误 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I48AOH"></a></li>
-    <li> 替换以过时的API </li>
+    <li> 兼容2021.2.2 </li>
 </ul>
 <br/>
 <ul lang="en">
-    <li> Fix boot error <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/issues/I48AOH"></a></li>
-    <li> Replaced deprecated API </li>
+    <li> Compatible with 2021.2.2 </li>
 </ul>
 """
         val pluginDescription = """
