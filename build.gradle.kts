@@ -165,7 +165,7 @@ sourceSets {
 
 intellij {
     type.set("IU")
-    version.set("2021.2.1")
+    version.set("2021.2.2")
     pluginName.set("wechat mini program")
     downloadSources.set(true)
     updateSinceUntilBuild.set(false)

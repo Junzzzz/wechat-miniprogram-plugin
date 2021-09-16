@@ -84,12 +84,13 @@ import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
 import com.zxy.ijplugin.wechat_miniprogram.utils.findChildOfType
 import java.awt.Color
+import java.util.*
 
 class WXMLElementColorProvider : ElementColorProvider {
     override fun setColorTo(psiElement: PsiElement, color: Color) {
-        val hex = String.format("#%02x%02x%02x", color.red, color.blue, color.green).toUpperCase()
+        val hex = String.format("#%02x%02x%02x", color.red, color.blue, color.green).uppercase(Locale.ENGLISH)
         val xmlToken = PsiFileFactory.getInstance(psiElement.project).createFileFromText(
-                "dummy.wxml", WXMLFileType.INSTANCE, """
+            "dummy.wxml", WXMLFileType.INSTANCE, """
             <a k="$hex"></a>
         """.trimIndent()
         ).findChildOfType<XmlAttributeValue>()!!.children[1] as XmlToken

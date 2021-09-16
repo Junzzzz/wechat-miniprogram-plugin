@@ -73,27 +73,35 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.settings
 
-import com.intellij.openapi.components.*
+import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.State
+import com.intellij.openapi.components.Storage
+import com.intellij.openapi.components.StoragePathMacros
 import com.intellij.openapi.project.Project
 
 @State(
-        name = "com.zxy.ijplugin.zApiForSpring.settings.module.ProjectSettings",
-        storages = [Storage(StoragePathMacros.WORKSPACE_FILE)]
+    name = "com.zxy.ijplugin.zApiForSpring.settings.module.ProjectSettings",
+    storages = [Storage(StoragePathMacros.WORKSPACE_FILE)]
 )
 class MyProjectSettings : PersistentStateComponent<MyProjectSettings.MyState> {
 
     companion object {
         fun getState(project: Project): MyState {
-            return ServiceManager.getService(project, MyProjectSettings::class.java).myState
+            return project.getService(MyProjectSettings::class.java).myState
         }
+
+        const val DEFAULT_COMPONENT_ROOT = "/"
     }
 
     private var myState = MyState()
 
     data class MyState(
-            var miniprogramType: MiniProgramType = MiniProgramType.WEI_XIN,
-            var enableSupport: EnableSupportType = EnableSupportType.CONFIG_DETECT
-    )
+        var miniprogramType: MiniProgramType = MiniProgramType.WEI_XIN,
+        var enableSupport: EnableSupportType = EnableSupportType.CONFIG_DETECT,
+        var componentRoot: String = DEFAULT_COMPONENT_ROOT
+    ) {
+
+    }
 
     override fun getState(): MyState? {
         return myState
