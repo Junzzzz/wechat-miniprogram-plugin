@@ -79,6 +79,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.css.CssElementFactory
@@ -99,9 +100,9 @@ abstract class WXMLCreateSelectorAtWxssFileIntentionAction : IntentionAction, Ps
         val selectorText = this.getSelectorText()
 
         val styleDefinition = CssElementFactory.getInstance(project)
-                .createRuleset("$selectorText{\n\t\n}", WXSSLanguage.INSTANCE)
+            .createRuleset("$selectorText{\n\t\n}", WXSSLanguage.INSTANCE)
         this.wxssPsiFile.add(
-                styleDefinition
+            styleDefinition
         )
         // 将光标移动到样式定义的花括号中间
         val descriptor = OpenFileDescriptor(project, wxssPsiFile.virtualFile)
@@ -109,6 +110,10 @@ abstract class WXMLCreateSelectorAtWxssFileIntentionAction : IntentionAction, Ps
         styleDefinition.navigate(true)
         wxssFileEditor?.caretModel?.moveToOffset(wxssPsiFile.textLength - 2)
         // 格式化代码
+        val psiDocumentManager = PsiDocumentManager.getInstance(project)
+        psiDocumentManager.doPostponedOperationsAndUnblockDocument(
+            psiDocumentManager.getDocument(this.wxssPsiFile) ?: return
+        )
         CodeStyleManager.getInstance(project).reformat(this.wxssPsiFile)
     }
 
