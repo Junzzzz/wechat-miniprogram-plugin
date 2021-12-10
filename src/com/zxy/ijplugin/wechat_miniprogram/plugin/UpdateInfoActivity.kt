@@ -124,7 +124,7 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
             ""
         } else {
             """更新说明：<br/>
-                ${pluginDescriptor.changeNotes.split("<br/>").firstOrNull().orEmpty()}
+                ${pluginDescriptor.changeNotes?.split("<br/>")?.firstOrNull().orEmpty()}
                 <br/>"""
         }
         val content = """

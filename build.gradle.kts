@@ -78,7 +78,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.5.10"
 }
 
-version = "3.5.9"
+version = "3.5.10"
 
 tasks {
     withType<JavaCompile> {
@@ -95,15 +95,17 @@ tasks {
         token.set(properties("intellijPublishToken"))
     }
     patchPluginXml {
-        sinceBuild.set("212.2")
-        untilBuild.set("212.*")
+        sinceBuild.set("213.*")
+        untilBuild.set("213.*")
         val changeNotes = """
 <ul lang="cn">
-    <li> 兼容2021.2.2 </li>
+    <li> 兼容2021.2.3 </li>
+    <li> 修复部分已知错误 </li>
 </ul>
 <br/>
 <ul lang="en">
-    <li> Compatible with 2021.2.2 </li>
+    <li> Compatible with 2021.2.3 </li>
+    <li> fix some known bugs </li>
 </ul>
 """
         val pluginDescription = """
@@ -163,7 +165,7 @@ sourceSets {
 
 intellij {
     type.set("IU")
-    version.set("2021.2.2")
+    version.set("2021.3")
     pluginName.set("wechat mini program")
     downloadSources.set(true)
     updateSinceUntilBuild.set(false)

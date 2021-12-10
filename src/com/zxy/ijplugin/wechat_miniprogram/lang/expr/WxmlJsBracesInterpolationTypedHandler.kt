@@ -108,6 +108,7 @@ class WxmlJsBracesInterpolationTypedHandler : TypedHandlerDelegate() {
     private fun insertWithEndCompletion(
             c: Char, editor: Editor?, file: PsiFile?
     ) {
+        editor ?: return
         var caretBackOffset = end.length
         val interpolation: String
         when {
