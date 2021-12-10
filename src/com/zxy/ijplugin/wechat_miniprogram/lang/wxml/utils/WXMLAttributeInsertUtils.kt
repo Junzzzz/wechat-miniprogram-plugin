@@ -73,7 +73,6 @@
 
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml.utils
 
-import com.intellij.lang.javascript.psi.JSLiteralExpression
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression
 import com.intellij.lang.javascript.psi.JSReferenceExpression
 import com.intellij.xml.XmlAttributeDescriptor
@@ -95,19 +94,7 @@ object WXMLAttributeInsertUtils {
             val jsProperty = xmlAttributeDescriptor.declaration
             val propertyConfig = jsProperty.value
             if (propertyConfig is JSObjectLiteralExpression) {
-                return propertyConfig.findProperty("type")?.value?.let {
-                    when (it) {
-                        is JSLiteralExpression -> {
-                            it.text
-                        }
-                        is JSReferenceExpression -> {
-                            it.text
-                        }
-                        else -> {
-                            null
-                        }
-                    }
-                } == "Boolean"
+                return propertyConfig.findProperty("type")?.value?.text == "Boolean"
             } else if (propertyConfig is JSReferenceExpression) {
                 return propertyConfig.text == "Boolean"
             }
