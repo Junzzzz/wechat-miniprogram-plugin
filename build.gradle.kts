@@ -95,7 +95,7 @@ tasks {
         token.set(properties("intellijPublishToken"))
     }
     patchPluginXml {
-        sinceBuild.set("213.*")
+        sinceBuild.set("213")
         untilBuild.set("213.*")
         val changeNotes = """
 <ul lang="cn">
