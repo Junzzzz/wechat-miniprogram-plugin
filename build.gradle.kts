@@ -78,7 +78,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.5.10"
 }
 
-version = "3.5.10"
+version = "3.5.11"
 
 tasks {
     withType<JavaCompile> {
@@ -99,13 +99,11 @@ tasks {
         untilBuild.set("213.*")
         val changeNotes = """
 <ul lang="cn">
-    <li> 兼容2021.2.3 </li>
-    <li> 修复部分已知错误 </li>
+    <li> 修复可能会导致空指针的错误 </li>
 </ul>
 <br/>
 <ul lang="en">
-    <li> Compatible with 2021.2.3 </li>
-    <li> fix some known bugs </li>
+    <li> Fix a bug that could cause a null pointer exception </li>
 </ul>
 """
         val pluginDescription = """
