@@ -106,10 +106,10 @@ class WXMLElementDocumentProvider : DocumentationProvider {
         return "Element <code>${wxmlElementDescription.name}</code> ${wxmlElementDescription.description ?: ""}"
     }
 
-    override fun getUrlFor(element: PsiElement, originalElement: PsiElement): MutableList<String> {
+    override fun getUrlFor(element: PsiElement, originalElement: PsiElement?): MutableList<String> {
         if (isInsideJsonConfigFile(element)) {
             if (element.parent?.parent?.parent == element.containingFile) {
-                val wxmlElementDescription = getDescription(originalElement)
+                val wxmlElementDescription = originalElement?.let(::getDescription)
                 return wxmlElementDescription?.url?.let {
                     mutableListOf(it)
                 } ?: mutableListOf()
