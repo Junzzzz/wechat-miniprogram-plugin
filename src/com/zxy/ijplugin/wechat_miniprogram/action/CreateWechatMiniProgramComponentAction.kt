@@ -75,7 +75,8 @@ package com.zxy.ijplugin.wechat_miniprogram.action
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 import javax.swing.JComponent
 
 /**
@@ -135,7 +136,7 @@ class CreateWechatMiniProgramComponentAction :
             return panel {
                 row {
                     label("Component name:")
-                    textField({ componentName }, { componentName = it }).apply {
+                    textField().bindText({ componentName }, { componentName = it }).apply {
                         preferredFocusedComponent = this.component
                     }
                 }
