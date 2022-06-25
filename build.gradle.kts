@@ -73,9 +73,9 @@
 
 fun properties(key: String) = project.findProperty(key).toString()
 plugins {
-    id("org.jetbrains.intellij") version "1.1.4"
+    id("org.jetbrains.intellij") version "1.6.0"
     java
-    id("org.jetbrains.kotlin.jvm") version "1.5.10"
+    id("org.jetbrains.kotlin.jvm") version "1.7.0"
 }
 
 version = "3.5.11"
@@ -95,8 +95,8 @@ tasks {
         token.set(properties("intellijPublishToken"))
     }
     patchPluginXml {
-        sinceBuild.set("213")
-        untilBuild.set("213.*")
+        sinceBuild.set("221")
+        untilBuild.set("221.*")
         val changeNotes = """
 <ul lang="cn">
     <li> 修复可能会导致空指针的错误 </li>
@@ -163,7 +163,7 @@ sourceSets {
 
 intellij {
     type.set("IU")
-    version.set("2021.3")
+    version.set("2022.1.2")
     pluginName.set("wechat mini program")
     downloadSources.set(true)
     updateSinceUntilBuild.set(false)
@@ -175,8 +175,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.10")
-    implementation("org.jetbrains:annotations-java5:22.0.0")
-    implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.5.10")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.10")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0")
+    implementation("org.jetbrains:annotations-java5:23.0.0")
+    implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.7.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.0")
 }
