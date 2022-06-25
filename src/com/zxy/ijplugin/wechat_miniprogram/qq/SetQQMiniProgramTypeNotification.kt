@@ -77,11 +77,11 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.ui.ClickListener
 import com.intellij.ui.EditorNotificationPanel
+import com.intellij.ui.EditorNotificationProvider
 import com.intellij.ui.EditorNotifications
 import com.zxy.ijplugin.wechat_miniprogram.localization.message
 import com.zxy.ijplugin.wechat_miniprogram.localization.settingsMessage
@@ -91,19 +91,14 @@ import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
 import icons.WechatMiniProgramIcons
 import java.awt.Cursor
 import java.awt.event.MouseEvent
+import java.util.function.Function
+import javax.swing.JComponent
 
 class SetQQMiniProgramTypeNotification :
-        EditorNotifications.Provider<SetQQMiniProgramTypeNotification.MyEditorNotificationPanel>() {
-
-    companion object {
-
-        var KEY: Key<MyEditorNotificationPanel> = Key.create(
-                "com.zxy.ijplugin.wechat_miniprogram.qq.MyEditorNotificationPanel"
-        )
-    }
+    EditorNotificationProvider {
 
     class MyEditorNotificationPanel(
-            private val project: Project
+        private val project: Project
     ) : EditorNotificationPanel() {
         init {
             this.icon(WechatMiniProgramIcons.QQ_LOGO)
@@ -126,21 +121,30 @@ class SetQQMiniProgramTypeNotification :
         }
     }
 
-    override fun getKey(): Key<MyEditorNotificationPanel> {
-        return KEY
-    }
-
-    override fun createNotificationPanel(
-            file: VirtualFile, fileEditor: FileEditor, project: Project
+    private fun createNotificationPanel(
+        file: VirtualFile, fileEditor: FileEditor, project: Project
     ): MyEditorNotificationPanel? {
         val psiFile = PsiManager.getInstance(project).findFile(file)
         if (psiFile != null && MyProjectSettings.getState(
-                        project
-                ).miniprogramType == MiniProgramType.WEI_XIN && (psiFile.fileType == QMLFileType.INSTANCE || psiFile.fileType == QSFileType.INSTANCE || psiFile.fileType == QSSFileType.INSTANCE)) {
+                project
+            ).miniprogramType == MiniProgramType.WEI_XIN && (psiFile.fileType == QMLFileType.INSTANCE || psiFile.fileType == QSFileType.INSTANCE || psiFile.fileType == QSSFileType.INSTANCE)
+        ) {
             // 在QQ小程序特有的文件上显示面板
             return MyEditorNotificationPanel(project)
         }
         return null
+    }
+
+    override fun collectNotificationData(
+        project: Project,
+        file: VirtualFile
+    ): Function<in FileEditor, out JComponent?> {
+        return Function { fileEditor: FileEditor? ->
+            createNotificationPanel(
+                file,
+                fileEditor!!, project
+            )
+        }
     }
 
 }

@@ -78,7 +78,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.7.0"
 }
 
-version = "3.5.11"
+version = "3.5.12"
 
 tasks {
     withType<JavaCompile> {

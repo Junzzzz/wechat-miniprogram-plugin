@@ -76,8 +76,8 @@ package com.zxy.ijplugin.wechat_miniprogram.settings
 import com.intellij.openapi.options.BoundConfigurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
-import com.intellij.ui.layout.buttonGroup
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.bind
+import com.intellij.ui.dsl.builder.panel
 import com.zxy.ijplugin.wechat_miniprogram.localization.message
 import com.zxy.ijplugin.wechat_miniprogram.localization.settingsMessage
 
@@ -91,18 +91,18 @@ class MyProjectConfigurable(private val project: Project) : BoundConfigurable(DI
 
     override fun createPanel(): DialogPanel {
         return panel {
-            buttonGroup(settings::enableSupport) {
-                row(settingsMessage("enableSupportLabel")) {
+            buttonsGroup {
+                row {
                     radioButton(settingsMessage("detect"), EnableSupportType.CONFIG_DETECT)
                     radioButton(settingsMessage("enable"), EnableSupportType.ENABLE)
                 }
-            }
-            buttonGroup(settings::miniprogramType) {
+            }.bind(settings::enableSupport)
+            buttonsGroup {
                 row(settingsMessage("miniProgramType")) {
                     radioButton(message("weixin"), MiniProgramType.WEI_XIN)
                     radioButton(message("qq"), MiniProgramType.QQ)
                 }
-            }
+            }.bind(settings::miniprogramType)
         }
     }
 

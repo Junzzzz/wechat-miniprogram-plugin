@@ -84,7 +84,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 import com.zxy.ijplugin.wechat_miniprogram.localization.notifyMessage
-import javax.swing.event.HyperlinkEvent
 
 class UpdateInfoActivity : StartupActivity.DumbAware {
 
@@ -129,10 +128,7 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
         }
         val content = """
                 $changeNotesSection
-                如果此插件对您有帮助，请
-                <b><a href="$HTML_DESCRIPTION_SUPPORT">支持我们</a>。</b>
-                <br/>
-                感谢您的支持!
+                如果此插件对您有帮助，请支持一下
                 <br/>
                 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/releases">发行记录/更新日志</a>
                 <br/>
@@ -144,17 +140,11 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
             .createNotification(
                 title, content, NotificationType.INFORMATION
             ).apply {
-                this.setListener(object : NotificationListener.Adapter() {
+                this.addAction(object : NotificationAction(notifyMessage("support.action.text")) {
                     private val urlOpeningBehavior = NotificationListener.UrlOpeningListener(false)
 
-                    override fun hyperlinkActivated(
-                        notification: Notification, hyperlinkEvent: HyperlinkEvent
-                    ) {
-                        if (hyperlinkEvent.description == HTML_DESCRIPTION_SUPPORT) {
-                            SupportDialog(project).show()
-                        } else {
-                            urlOpeningBehavior.hyperlinkUpdate(notification, hyperlinkEvent)
-                        }
+                    override fun actionPerformed(e: AnActionEvent, notification: Notification) {
+                        SupportDialog(project).show()
                     }
                 })
             }
