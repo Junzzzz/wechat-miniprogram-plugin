@@ -99,11 +99,11 @@ tasks {
         untilBuild.set("221.*")
         val changeNotes = """
 <ul lang="cn">
-    <li> 修复可能会导致空指针的错误 </li>
+    <li> 兼容IDEA 221.* </li>
 </ul>
 <br/>
 <ul lang="en">
-    <li> Fix a bug that could cause a null pointer exception </li>
+    <li> Compatible with IDEA 221.* </li>
 </ul>
 """
         val pluginDescription = """
