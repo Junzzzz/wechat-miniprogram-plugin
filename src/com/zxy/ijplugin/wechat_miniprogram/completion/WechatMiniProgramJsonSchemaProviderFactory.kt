@@ -104,16 +104,16 @@ fun isPageJsonFile(project: Project, virtualFile: VirtualFile): Boolean {
 }
 
 fun isRootFile(project: Project, virtualFile: VirtualFile): Boolean {
-    val contentRoot = ProjectFileIndex.SERVICE.getInstance(
-            project
+    val contentRoot = ProjectFileIndex.getInstance(
+        project
     ).getContentRootForFile(virtualFile)
     // 在根目录下且名称为 app.json
     return virtualFile.parent == contentRoot
 }
 
 fun isAppWxssFile(project: Project, virtualFile: VirtualFile): Boolean {
-    val contentRoot = ProjectFileIndex.SERVICE.getInstance(
-            project
+    val contentRoot = ProjectFileIndex.getInstance(
+        project
     ).getContentRootForFile(virtualFile)
     // 在根目录下且名称为 app.wxss
     return virtualFile.parent == contentRoot && virtualFile.name == "app.wxss"

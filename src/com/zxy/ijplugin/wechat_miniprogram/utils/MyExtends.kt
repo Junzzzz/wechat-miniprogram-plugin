@@ -105,8 +105,8 @@ fun PsiElement.contentRange(): TextRange {
  * 以'/'开头
  */
 fun VirtualFile.getPathRelativeToRoot(project: Project): String? {
-    val rootPath = ProjectFileIndex.SERVICE.getInstance(
-            project
+    val rootPath = ProjectFileIndex.getInstance(
+        project
     ).getContentRootForFile(this)?.path ?: return null
     return this.path.removePrefix(rootPath)
 }

@@ -73,12 +73,12 @@
 
 fun properties(key: String) = project.findProperty(key).toString()
 plugins {
-    id("org.jetbrains.intellij") version "1.6.0"
+    id("org.jetbrains.intellij") version "1.7.0"
     java
     id("org.jetbrains.kotlin.jvm") version "1.7.0"
 }
 
-version = "3.5.12"
+version = "3.5.13"
 
 tasks {
     withType<JavaCompile> {
@@ -95,15 +95,15 @@ tasks {
         token.set(properties("intellijPublishToken"))
     }
     patchPluginXml {
-        sinceBuild.set("221")
-        untilBuild.set("221.*")
+        sinceBuild.set("222")
+        untilBuild.set("222.*")
         val changeNotes = """
 <ul lang="cn">
-    <li> 兼容IDEA 221.* </li>
+    <li> 兼容IDEA 222.* </li>
 </ul>
 <br/>
 <ul lang="en">
-    <li> Compatible with IDEA 221.* </li>
+    <li> Compatible with IDEA 222.* </li>
 </ul>
 """
         val pluginDescription = """
@@ -163,7 +163,7 @@ sourceSets {
 
 intellij {
     type.set("IU")
-    version.set("2022.1.2")
+    version.set("222.3345.118")
     pluginName.set("wechat mini program")
     downloadSources.set(true)
     updateSinceUntilBuild.set(false)
