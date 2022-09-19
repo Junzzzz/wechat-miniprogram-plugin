@@ -98,9 +98,9 @@ class UpdateInfoActivity : StartupActivity.DumbAware {
         val propertiesComponent = PropertiesComponent.getInstance()
         val lastVersion = propertiesComponent.getValue(LAST_VERSION_KEY)
         val version = pluginDescriptor.version
-//        if (version == lastVersion) {
-//            return
-//        }
+        if (version == lastVersion) {
+            return
+        }
 
         showUpdateOrInstallNotification(pluginDescriptor, version, project, lastVersion)
 
