@@ -71,10 +71,12 @@
  *    See the Mulan PSL v1 for more details.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.zxy.ijplugin.wechat_miniprogram.document
 
-import com.intellij.codeInsight.documentation.DocumentationManager
-import com.intellij.codeInsight.documentation.DocumentationManagerProtocol
+import com.intellij.codeInsight.documentation.DocumentationManager.ORIGINAL_ELEMENT_KEY
+import com.intellij.codeInsight.documentation.DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL
 import com.intellij.json.psi.JsonStringLiteral
 import com.intellij.lang.documentation.DocumentationMarkup.*
 import com.intellij.lang.documentation.DocumentationProvider
@@ -163,9 +165,9 @@ class WXMLElementDocumentProvider : DocumentationProvider {
             )
             wxmlElementDescription.attributeDescriptorPresetElementAttributeDescriptors.forEach { wxmlElementAttributeDescriptor ->
                 stringBuilder.append("<tr>")
-                        .append(SECTION_START)
-                        .append(GRAYED_START)
-                        .append("<a href='${DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL}elements/${wxmlElementDescription.name}/attributes/${wxmlElementAttributeDescriptor.key}'>")
+                    .append(SECTION_START)
+                    .append(GRAYED_START)
+                    .append("<a href='${PSI_ELEMENT_PROTOCOL}elements/${wxmlElementDescription.name}/attributes/${wxmlElementAttributeDescriptor.key}'>")
                         .append(wxmlElementAttributeDescriptor.key)
                         .append("</a>")
                         .append(GRAYED_END)
@@ -201,9 +203,9 @@ class WXMLElementDocumentProvider : DocumentationProvider {
 
                 // 将打开一个内存中的元素的文档
                 definedElement?.putUserData(
-                        DocumentationManager.ORIGINAL_ELEMENT_KEY, SmartPointerManagerImpl.createPointer(
+                    ORIGINAL_ELEMENT_KEY, SmartPointerManagerImpl.createPointer(
                         WXMLElementFactory.createAttributeName(element.project, attributeName, tagName)
-                )
+                    )
                 )
                 return definedElement
             }

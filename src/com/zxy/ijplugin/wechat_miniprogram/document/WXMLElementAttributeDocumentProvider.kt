@@ -71,9 +71,11 @@
  *    See the Mulan PSL v1 for more details.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.zxy.ijplugin.wechat_miniprogram.document
 
-import com.intellij.codeInsight.documentation.DocumentationManager
+import com.intellij.codeInsight.documentation.DocumentationManager.ORIGINAL_ELEMENT_KEY
 import com.intellij.codeInsight.documentation.DocumentationManagerProtocol
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonProperty
@@ -173,10 +175,10 @@ class WXMLElementAttributeDocumentProvider : DocumentationProvider {
                 it.name == elementName
             }?.definedElement ?: return null
             definedElement.putUserData(
-                    DocumentationManager.ORIGINAL_ELEMENT_KEY,
-                    SmartPointerManagerImpl.createPointer(
-                            WXMLElementFactory.createTagName(element.project, elementName)
-                    )
+                ORIGINAL_ELEMENT_KEY,
+                SmartPointerManagerImpl.createPointer(
+                    WXMLElementFactory.createTagName(element.project, elementName)
+                )
             )
             return definedElement
         }

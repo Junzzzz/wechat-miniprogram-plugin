@@ -122,7 +122,7 @@ class SetQQMiniProgramTypeNotification :
     }
 
     private fun createNotificationPanel(
-        file: VirtualFile, fileEditor: FileEditor, project: Project
+        file: VirtualFile, project: Project
     ): MyEditorNotificationPanel? {
         val psiFile = PsiManager.getInstance(project).findFile(file)
         if (psiFile != null && MyProjectSettings.getState(
@@ -139,10 +139,10 @@ class SetQQMiniProgramTypeNotification :
         project: Project,
         file: VirtualFile
     ): Function<in FileEditor, out JComponent?> {
-        return Function { fileEditor: FileEditor? ->
+        return Function { _: FileEditor? ->
             createNotificationPanel(
                 file,
-                fileEditor!!, project
+                project
             )
         }
     }

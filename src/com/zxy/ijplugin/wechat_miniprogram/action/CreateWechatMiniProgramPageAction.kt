@@ -77,7 +77,9 @@ import com.intellij.json.psi.JsonFile
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.psi.PsiDirectory
-import com.intellij.ui.layout.panel
+import com.intellij.ui.dsl.builder.bindSelected
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
 import com.zxy.ijplugin.wechat_miniprogram.context.RelateFileHolder
 import com.zxy.ijplugin.wechat_miniprogram.utils.AppJsonUtils
 import com.zxy.ijplugin.wechat_miniprogram.utils.getPathRelativeToRootRemoveExt
@@ -168,12 +170,13 @@ class CreateWechatMiniProgramPageAction :
             return panel {
                 row {
                     label("Page name:")
-                    textField({ pageName }, { pageName = it }).apply {
+                    textField().apply {
+                        this.bindText({ pageName }, { pageName = it })
                         preferredFocusedComponent = this.component
                     }
                 }
                 row {
-                    checkBox("Use component API", { useComponentApi }, { useComponentApi = it })
+                    checkBox("Use component API").bindSelected({ useComponentApi }, { useComponentApi = it })
                 }
             }
         }
