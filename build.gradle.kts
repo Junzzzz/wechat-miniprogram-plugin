@@ -78,7 +78,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.7.0"
 }
 
-version = "3.5.13"
+version = "3.5.14"
 
 tasks {
     withType<JavaCompile> {
@@ -99,11 +99,13 @@ tasks {
         untilBuild.set("222.*")
         val changeNotes = """
 <ul lang="cn">
-    <li> 兼容IDEA 222.* </li>
+    <li> 修复会重复弹出更新提醒的错误 </li>
+    <li> 兼容性升级 </li>
 </ul>
 <br/>
 <ul lang="en">
-    <li> Compatible with IDEA 222.* </li>
+    <li> Compatibility upgrade </li>
+    <li> Fixed a bug that repeatedly popped up update notification </li>
 </ul>
 """
         val pluginDescription = """
