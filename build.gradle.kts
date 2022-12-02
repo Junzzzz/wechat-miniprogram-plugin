@@ -73,39 +73,37 @@
 
 fun properties(key: String) = project.findProperty(key).toString()
 plugins {
-    id("org.jetbrains.intellij") version "1.7.0"
+    id("org.jetbrains.intellij") version "1.10.0"
     java
-    id("org.jetbrains.kotlin.jvm") version "1.7.0"
+    id("org.jetbrains.kotlin.jvm") version "1.7.21"
 }
 
-version = "3.5.14"
+version = "3.5.15"
 
 tasks {
     withType<JavaCompile> {
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
-            jvmTarget = "11"
+            jvmTarget = "17"
             freeCompilerArgs = freeCompilerArgs + "-Xjvm-default=enable"
         }
     }
     publishPlugin {
-        token.set(properties("intellijPublishToken"))
+        token.set(System.getenv("TOKEN"))
     }
     patchPluginXml {
-        sinceBuild.set("222")
-        untilBuild.set("222.*")
+        sinceBuild.set("223")
+        untilBuild.set("223.*")
         val changeNotes = """
 <ul lang="cn">
-    <li> 修复会重复弹出更新提醒的错误 </li>
-    <li> 兼容性升级 </li>
+    <li> 兼容2022.3 </li>
 </ul>
 <br/>
 <ul lang="en">
-    <li> Compatibility upgrade </li>
-    <li> Fixed a bug that repeatedly popped up update notification </li>
+    <li> Compatible with 2022.3 </li>
 </ul>
 """
         val pluginDescription = """
@@ -165,11 +163,11 @@ sourceSets {
 
 intellij {
     type.set("IU")
-    version.set("222.3345.118")
+    version.set("2022.3")
     pluginName.set("wechat mini program")
     downloadSources.set(true)
     updateSinceUntilBuild.set(false)
-    plugins.set(listOf("JavaScript", "CSS", "less", "sass", "stylus"))
+    plugins.set(listOf("JavaScript", "com.intellij.css", "less", "sass", "org.jetbrains.plugins.stylus:223.7571.203"))
 }
 
 repositories {
