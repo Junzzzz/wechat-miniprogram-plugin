@@ -90,8 +90,4 @@ public final class WechatMiniProgramIcons {
     public static final Icon WXS = IconLoader.getIcon("/icons/wxs.svg", WechatMiniProgramIcons.class);
     public static final Icon QS = IconLoader.getIcon("/icons/qs.svg", WechatMiniProgramIcons.class);
 
-    private WechatMiniProgramIcons() {
-
-    }
-
 }
