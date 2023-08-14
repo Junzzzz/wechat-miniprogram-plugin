@@ -74,7 +74,7 @@ package com.zxy.ijplugin.wechat_miniprogram.qq
 
 import com.intellij.lang.javascript.JavaScriptSupportLoader
 import com.intellij.openapi.fileTypes.LanguageFileType
-import icons.WechatMiniProgramIcons
+import com.zxy.ijplugin.wechat_miniprogram.icons.WechatMiniProgramIcons
 import javax.swing.Icon
 
 class QSFileType : LanguageFileType(JavaScriptSupportLoader.JAVASCRIPT_1_8) {

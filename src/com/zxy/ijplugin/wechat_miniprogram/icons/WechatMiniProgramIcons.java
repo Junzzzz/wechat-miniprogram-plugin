@@ -1,3 +1,4 @@
+
 /*
  *    Copyright (c) [2019] [zxy]
  *    [wechat-miniprogram-plugin] is licensed under the Mulan PSL v1.
@@ -71,50 +72,26 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-package com.zxy.ijplugin.wechat_miniprogram.settings
+package com.zxy.ijplugin.wechat_miniprogram.icons;
 
-import com.intellij.openapi.components.*
-import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.IconLoader;
 
-@State(
-    name = "com.zxy.ijplugin.zApiForSpring.settings.module.ProjectSettings",
-    storages = [Storage(StoragePathMacros.WORKSPACE_FILE)]
-)
-@Service(Service.Level.PROJECT)
-class MyProjectSettings : PersistentStateComponent<MyProjectSettings.MyState> {
+import javax.swing.*;
 
-    companion object {
-        fun getState(project: Project): MyState {
-            return project.getService(MyProjectSettings::class.java).myState
-        }
+public final class WechatMiniProgramIcons {
 
-        const val DEFAULT_COMPONENT_ROOT = "/"
-    }
+    public static final Icon COMPONENT = IconLoader.getIcon("/icons/Component.svg", WechatMiniProgramIcons.class);
+    public static final Icon PAGE = IconLoader.getIcon("/icons/Page.svg", WechatMiniProgramIcons.class);
+    public static final Icon QQ_LOGO = IconLoader.getIcon("/icons/qqIcon.svg", WechatMiniProgramIcons.class);
+    public static final Icon WXML = IconLoader.getIcon("/icons/wxml.svg", WechatMiniProgramIcons.class);
+    public static final Icon QML = IconLoader.getIcon("/icons/qml.svg", WechatMiniProgramIcons.class);
+    public static final Icon WXSS = IconLoader.getIcon("/icons/wxss.svg", WechatMiniProgramIcons.class);
+    public static final Icon QSS = IconLoader.getIcon("/icons/qss.svg", WechatMiniProgramIcons.class);
+    public static final Icon WXS = IconLoader.getIcon("/icons/wxs.svg", WechatMiniProgramIcons.class);
+    public static final Icon QS = IconLoader.getIcon("/icons/qs.svg", WechatMiniProgramIcons.class);
 
-    private var myState = MyState()
-
-    data class MyState(
-        var miniprogramType: MiniProgramType = MiniProgramType.WEI_XIN,
-        var enableSupport: EnableSupportType = EnableSupportType.CONFIG_DETECT,
-        var componentRoot: String = DEFAULT_COMPONENT_ROOT
-    ) {
+    private WechatMiniProgramIcons() {
 
     }
 
-    override fun getState(): MyState? {
-        return myState
-    }
-
-    override fun loadState(state: MyState) {
-        this.myState = state
-    }
-}
-
-enum class MiniProgramType {
-    WEI_XIN, QQ
-}
-
-enum class EnableSupportType {
-    CONFIG_DETECT,
-    ENABLE
 }

@@ -71,45 +71,40 @@
  *    See the Mulan PSL v1 for more details.
  */
 
-fun properties(key: String) = project.findProperty(key).toString()
 plugins {
-    id("org.jetbrains.intellij") version "1.10.0"
-    java
-    id("org.jetbrains.kotlin.jvm") version "1.7.21"
+    kotlin("jvm") version "1.9.0"
+    id("org.jetbrains.intellij") version "1.15.0"
 }
 
-version = "3.5.15"
+group = "com.zxy.ijplugin"
+version = "3.5.16"
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
 
 tasks {
-    withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-    }
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "17"
-            freeCompilerArgs = freeCompilerArgs + "-Xjvm-default=enable"
-        }
-    }
-    publishPlugin {
-        token.set(System.getenv("TOKEN"))
-    }
+    compileKotlin { kotlinOptions.jvmTarget = "17" }
+
     patchPluginXml {
-        sinceBuild.set("223")
-        untilBuild.set("223.*")
-        val changeNotes = """
+        sinceBuild = "223"
+        untilBuild = "232.*"
+
+        changeNotes = """
 <ul lang="cn">
-    <li> 兼容2022.3 </li>
+    <li> 兼容2023.1 </li>
 </ul>
 <br/>
 <ul lang="en">
-    <li> Compatible with 2022.3 </li>
+    <li> Compatible with 2023.1 </li>
 </ul>
 """
-        val pluginDescription = """
+        pluginDescription = """
 Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> WeChat Mini Program </a> project
 <h3>使用入门</h3>
-<ul> 
+<ul>
     <li>打开微信小程序或QQ小程序项目</li>
     <li>确保project.config.json配置文件存在</li>
     <li>现在您可以使用所有此插件提供的功能</li>
@@ -119,7 +114,7 @@ Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> We
     <li>wxml / wxss / wxs文件支持</li>
     <li>创建微信小程序组件和页面</li>
     <li>相关文件导航</li>
-    <li>微信小程序自定义组件支持</li> 
+    <li>微信小程序自定义组件支持</li>
     <li>微信小程序配置文件支持</li>
     <li>代码检查和自动修复</li>
     <li>支持QQ小程序项目 (v3.1.0)</li>
@@ -143,10 +138,26 @@ Support <a href="https://developers.weixin.qq.com/miniprogram/introduction/"> We
 For detailed usage documents and function descriptions, please visit
 <a href="https://gitee.com/zxy_c/wechat-miniprogram-plugin/wikis"> Gitee Wiki </a>
 """
-        this.changeNotes.set(changeNotes)
-        this.pluginDescription.set(pluginDescription)
     }
 
+    publishPlugin {
+        // 发布插件用的 TOKEN
+        // token.set(System.getenv("TOKEN"))
+    }
+}
+
+intellij {
+    version = "2023.1"
+    pluginName = "wechat mini program"
+    type = "IU"
+    updateSinceUntilBuild = false
+    downloadSources = true
+    plugins = listOf("JavaScript", "com.intellij.css", "less", "sass", "org.jetbrains.plugins.stylus:231.8109.91")
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
 }
 
 sourceSets {
@@ -161,22 +172,9 @@ sourceSets {
     }
 }
 
-intellij {
-    type.set("IU")
-    version.set("2022.3")
-    pluginName.set("wechat mini program")
-    downloadSources.set(true)
-    updateSinceUntilBuild.set(false)
-    plugins.set(listOf("JavaScript", "com.intellij.css", "less", "sass", "org.jetbrains.plugins.stylus:223.7571.203"))
-}
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0")
-    implementation("org.jetbrains:annotations-java5:23.0.0")
-    implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.7.0")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+    implementation("org.jetbrains:annotations-java5:24.0.1")
+    implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.9.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
 }

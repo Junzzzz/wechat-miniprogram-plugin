@@ -77,7 +77,8 @@ import com.intellij.lang.javascript.DialectOptionHolder
 import com.intellij.lang.javascript.JSLanguageDialect
 import com.intellij.lang.javascript.JavaScriptSupportLoader
 
-class WxmlJsLanguage : JSLanguageDialect("WxmlJs", DialectOptionHolder.ECMA_6, JavaScriptSupportLoader.ECMA_SCRIPT_6) {
+class WxmlJsLanguage :
+    JSLanguageDialect("WxmlJs", DialectOptionHolder.JS_WITHOUT_JSX, JavaScriptSupportLoader.ECMA_SCRIPT_6) {
 
     companion object {
         val INSTANCE: WxmlJsLanguage = WxmlJsLanguage()

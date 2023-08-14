@@ -74,7 +74,7 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxml
 
 import com.intellij.ide.highlighter.XmlLikeFileType
-import icons.WechatMiniProgramIcons
+import com.zxy.ijplugin.wechat_miniprogram.icons.WechatMiniProgramIcons
 import javax.swing.Icon
 
 open class WXMLFileType : XmlLikeFileType(WXMLLanguage.INSTANCE) {

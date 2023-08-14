@@ -88,7 +88,7 @@ import com.zxy.ijplugin.wechat_miniprogram.localization.settingsMessage
 import com.zxy.ijplugin.wechat_miniprogram.settings.MiniProgramType
 import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectConfigurable
 import com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings
-import icons.WechatMiniProgramIcons
+import com.zxy.ijplugin.wechat_miniprogram.icons.WechatMiniProgramIcons
 import java.awt.Cursor
 import java.awt.event.MouseEvent
 import java.util.function.Function

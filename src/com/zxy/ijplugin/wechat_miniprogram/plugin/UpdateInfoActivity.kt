@@ -81,15 +81,20 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.startup.StartupActivity
 import com.zxy.ijplugin.wechat_miniprogram.context.isWechatMiniProgramContext
 import com.zxy.ijplugin.wechat_miniprogram.localization.notifyMessage
 
-class UpdateInfoActivity : StartupActivity.DumbAware {
+class UpdateInfoActivity : StartupActivity.DumbAware, ProjectActivity {
 
     companion object {
         private const val LAST_VERSION_KEY = "$pluginId.lastVersion"
 
+    }
+
+    override suspend fun execute(project: Project) {
+        runActivity(project)
     }
 
     override fun runActivity(project: Project) {

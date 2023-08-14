@@ -73,9 +73,8 @@
 
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
     <id>com.zxy.ijplugin.wechat-miniprogram</id>
-    <name>Wechat mini program support</name>
+    <name>Wechat Mini Program Support</name>
     <vendor url="https://gitee.com/zxy_c/wechat-miniprogram-plugin">ZXY</vendor>
-    <xi:include href="intents.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="wxml.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="wxss.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
@@ -107,7 +106,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!--suppress PluginXmlCapitalization -->
-        <notificationGroup displayType="balloon"
+        <notificationGroup displayType="BALLOON"
                            id="com.zxy.ijplugin.wechat_miniprogram.plugin.UpdateInfoActivity"
                            key="groupId"
                            isLogByDefault="false"
@@ -119,35 +118,42 @@
         <projectConfigurable groupId="language"
                              instance="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectConfigurable"/>
 
-        <projectService serviceImplementation="com.zxy.ijplugin.wechat_miniprogram.settings.MyProjectSettings"/>
-
         <postStartupActivity implementation="com.zxy.ijplugin.wechat_miniprogram.plugin.UpdateInfoActivity"/>
         <gotoRelatedProvider
                 implementation="com.zxy.ijplugin.wechat_miniprogram.navigation.WechatMiniProgramGotoRelatedProvider"/>
 
         <intentionAction>
+            <language>WXML</language>
             <descriptionDirectoryName>WXMLCreateClassAtAppWxssFileIntentionAction</descriptionDirectoryName>
-            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtAppWxssFileIntentionAction</className>
+            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtAppWxssFileIntentionAction
+            </className>
             <category>Wechat mini program</category>
         </intentionAction>
         <intentionAction>
+            <language>WXML</language>
             <descriptionDirectoryName>WXMLCreateClassAtComponentWxssFileIntentionAction</descriptionDirectoryName>
-            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtComponentWxssFileIntentionAction</className>
+            <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateClassAtComponentWxssFileIntentionAction
+            </className>
             <category>Wechat mini program</category>
         </intentionAction>
         <intentionAction>
+            <language>WXML</language>
             <descriptionDirectoryName>WXMLCreateIdAtWxssFileIntentionAction</descriptionDirectoryName>
             <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateIdAtWxssFileIntentionAction</className>
             <category>Wechat mini program</category>
         </intentionAction>
         <intentionAction>
+            <language>WXML</language>
             <descriptionDirectoryName>WXMLCreateEventHandlerIntentionAction</descriptionDirectoryName>
             <className>com.zxy.ijplugin.wechat_miniprogram.intents.WXMLCreateEventHandlerIntentionAction</className>
             <category>Wechat mini program</category>
         </intentionAction>
         <intentionAction>
+            <language>WXML</language>
             <descriptionDirectoryName>WXMLExtractComponentIntentionAction</descriptionDirectoryName>
-            <className>com.zxy.ijplugin.wechat_miniprogram.intents.extractComponent.WXMLExtractComponentIntentionAction</className>
+            <className>
+                com.zxy.ijplugin.wechat_miniprogram.intents.extractComponent.WXMLExtractComponentIntentionAction
+            </className>
             <category>Wechat mini program</category>
         </intentionAction>
         <localInspection
@@ -196,7 +202,8 @@
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.usage.ComponentRegistrationFindUsageProvider"
                                  order="first"/>
         <psi.referenceContributor
-                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.JsonReferenceContributor"/>
+                implementation="com.zxy.ijplugin.wechat_miniprogram.reference.JsonReferenceContributor"
+                language="JSON"/>
         <lang.elementManipulator forClass="com.intellij.json.psi.JsonProperty"
                                  implementationClass="com.zxy.ijplugin.wechat_miniprogram.reference.manipulator.JsonTagNameRegistrationManipulator"/>
         <renamePsiElementProcessor

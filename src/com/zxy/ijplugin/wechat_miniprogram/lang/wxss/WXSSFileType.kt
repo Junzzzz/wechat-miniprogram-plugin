@@ -74,7 +74,7 @@
 package com.zxy.ijplugin.wechat_miniprogram.lang.wxss
 
 import com.intellij.openapi.fileTypes.LanguageFileType
-import icons.WechatMiniProgramIcons
+import com.zxy.ijplugin.wechat_miniprogram.icons.WechatMiniProgramIcons
 import javax.swing.Icon
 
 open class WXSSFileType : LanguageFileType(WXSSLanguage.INSTANCE) {

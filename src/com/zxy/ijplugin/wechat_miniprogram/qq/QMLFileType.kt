@@ -74,7 +74,7 @@
 package com.zxy.ijplugin.wechat_miniprogram.qq
 
 import com.zxy.ijplugin.wechat_miniprogram.lang.wxml.WXMLFileType
-import icons.WechatMiniProgramIcons
+import com.zxy.ijplugin.wechat_miniprogram.icons.WechatMiniProgramIcons
 import javax.swing.Icon
 
 class QMLFileType : WXMLFileType() {
@@ -88,6 +88,9 @@ class QMLFileType : WXMLFileType() {
         return "QML"
     }
 
+    override fun getDisplayName(): String {
+        return "QML"
+    }
     override fun getDefaultExtension(): String {
         return "qml"
     }
