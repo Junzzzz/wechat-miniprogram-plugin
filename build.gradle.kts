@@ -89,7 +89,7 @@ tasks {
     compileKotlin { kotlinOptions.jvmTarget = "17" }
 
     patchPluginXml {
-        sinceBuild = "223"
+        sinceBuild = "231"
         untilBuild = "232.*"
 
         changeNotes = """
@@ -158,18 +158,6 @@ intellij {
 repositories {
     mavenLocal()
     mavenCentral()
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs("src")
-            srcDirs("gen")
-        }
-        resources {
-            srcDirs("resources")
-        }
-    }
 }
 
 dependencies {

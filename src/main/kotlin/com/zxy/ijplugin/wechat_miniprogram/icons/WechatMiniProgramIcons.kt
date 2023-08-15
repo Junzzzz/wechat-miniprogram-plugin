@@ -1,4 +1,3 @@
-
 /*
  *    Copyright (c) [2019] [zxy]
  *    [wechat-miniprogram-plugin] is licensed under the Mulan PSL v1.
@@ -71,23 +70,18 @@
  *
  *    See the Mulan PSL v1 for more details.
  */
+package com.zxy.ijplugin.wechat_miniprogram.icons
 
-package com.zxy.ijplugin.wechat_miniprogram.icons;
+import com.intellij.openapi.util.IconLoader.getIcon
 
-import com.intellij.openapi.util.IconLoader;
-
-import javax.swing.*;
-
-public final class WechatMiniProgramIcons {
-
-    public static final Icon COMPONENT = IconLoader.getIcon("/icons/Component.svg", WechatMiniProgramIcons.class);
-    public static final Icon PAGE = IconLoader.getIcon("/icons/Page.svg", WechatMiniProgramIcons.class);
-    public static final Icon QQ_LOGO = IconLoader.getIcon("/icons/qqIcon.svg", WechatMiniProgramIcons.class);
-    public static final Icon WXML = IconLoader.getIcon("/icons/wxml.svg", WechatMiniProgramIcons.class);
-    public static final Icon QML = IconLoader.getIcon("/icons/qml.svg", WechatMiniProgramIcons.class);
-    public static final Icon WXSS = IconLoader.getIcon("/icons/wxss.svg", WechatMiniProgramIcons.class);
-    public static final Icon QSS = IconLoader.getIcon("/icons/qss.svg", WechatMiniProgramIcons.class);
-    public static final Icon WXS = IconLoader.getIcon("/icons/wxs.svg", WechatMiniProgramIcons.class);
-    public static final Icon QS = IconLoader.getIcon("/icons/qs.svg", WechatMiniProgramIcons.class);
-
+object WechatMiniProgramIcons {
+    val COMPONENT = getIcon("/icons/Component.svg", WechatMiniProgramIcons::class.java)
+    val PAGE = getIcon("/icons/Page.svg", WechatMiniProgramIcons::class.java)
+    val QQ_LOGO = getIcon("/icons/qqIcon.svg", WechatMiniProgramIcons::class.java)
+    val WXML = getIcon("/icons/wxml.svg", WechatMiniProgramIcons::class.java)
+    val QML = getIcon("/icons/qml.svg", WechatMiniProgramIcons::class.java)
+    val WXSS = getIcon("/icons/wxss.svg", WechatMiniProgramIcons::class.java)
+    val QSS = getIcon("/icons/qss.svg", WechatMiniProgramIcons::class.java)
+    val WXS = getIcon("/icons/wxs.svg", WechatMiniProgramIcons::class.java)
+    val QS = getIcon("/icons/qs.svg", WechatMiniProgramIcons::class.java)
 }
