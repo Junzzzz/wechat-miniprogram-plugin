@@ -94,7 +94,7 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
         val isQQ = project.isQQContext()
         return arrayOf(
             ScriptingLibraryModel.createPredefinedLibrary(
-                "wechat-mini-program-api",
+                "Wechat Miniprogram API",
                 arrayOf(
                     VfsUtil.findFileByURL(
                         ResourceUtil.getResource(
@@ -105,7 +105,7 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
                 isOn && !isQQ
             ),
             ScriptingLibraryModel.createPredefinedLibrary(
-                "qq-mini-program-api",
+                "QQ Miniprogram API",
                 arrayOf(
                     VfsUtil.findFileByURL(
                         ResourceUtil.getResource(
