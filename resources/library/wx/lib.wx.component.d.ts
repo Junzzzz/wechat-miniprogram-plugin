@@ -1,5 +1,5 @@
 /*! *****************************************************************************
-Copyright (c) 2021 Tencent, Inc. All rights reserved.
+Copyright (c) 2023 Tencent, Inc. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -21,11 +21,13 @@ SOFTWARE.
 ***************************************************************************** */
 
 declare namespace WechatMiniprogram.Component {
-    type Instance<TData extends DataOption,
+    type Instance<
+        TData extends DataOption,
         TProperty extends PropertyOption,
         TMethod extends Partial<MethodOption>,
         TCustomInstanceProperty extends IAnyObject = {},
-        TIsPage extends boolean = false> = InstanceProperties &
+        TIsPage extends boolean = false
+    > = InstanceProperties &
         InstanceMethods<TData> &
         TMethod &
         (TIsPage extends true ? Page.ILifetime : {}) &
@@ -35,37 +37,49 @@ declare namespace WechatMiniprogram.Component {
         /** 组件数据，**包括内部数据和属性值**（与 `data` 一致） */
         properties: TData & PropertyOptionToData<TProperty>
     }
-    type TrivialInstance = Instance<IAnyObject,
+    type TrivialInstance = Instance<
         IAnyObject,
         IAnyObject,
-        IAnyObject>
+        IAnyObject,
+        IAnyObject
+    >
     type TrivialOption = Options<IAnyObject, IAnyObject, IAnyObject, IAnyObject>
-    type Options<TData extends DataOption,
+    type Options<
+        TData extends DataOption,
         TProperty extends PropertyOption,
         TMethod extends MethodOption,
         TCustomInstanceProperty extends IAnyObject = {},
-        TIsPage extends boolean = false> = Partial<Data<TData>> &
+        TIsPage extends boolean = false
+    > = Partial<Data<TData>> &
         Partial<Property<TProperty>> &
         Partial<Method<TMethod, TIsPage>> &
         Partial<OtherOption> &
         Partial<Lifetimes> &
-        ThisType<Instance<TData,
-            TProperty,
-            TMethod,
-            TCustomInstanceProperty,
-            TIsPage>>
-
-    interface Constructor {
-        <TData extends DataOption,
-            TProperty extends PropertyOption,
-            TMethod extends MethodOption,
-            TCustomInstanceProperty extends IAnyObject = {},
-            TIsPage extends boolean = false>(
-            options: Options<TData,
+        ThisType<
+            Instance<
+                TData,
                 TProperty,
                 TMethod,
                 TCustomInstanceProperty,
-                TIsPage>
+                TIsPage
+            >
+        >
+
+    interface Constructor {
+        <
+            TData extends DataOption,
+            TProperty extends PropertyOption,
+            TMethod extends MethodOption,
+            TCustomInstanceProperty extends IAnyObject = {},
+            TIsPage extends boolean = false
+        >(
+            options: Options<
+                TData,
+                TProperty,
+                TMethod,
+                TCustomInstanceProperty,
+                TIsPage
+            >
         ): string
     }
 
@@ -143,6 +157,7 @@ declare namespace WechatMiniprogram.Component {
         ? ValueType<T>
         : FullPropertyToData<Exclude<T, ShortProperty>>
     type FullPropertyToData<T extends AllFullProperty> = ValueType<T['type']>
+    // type FullPropertyToData<T extends AllFullProperty> = unknown extends T['value'] ? ValueType<T['type']> : T['value']
     type PropertyOptionToData<P extends PropertyOption> = {
         [name in keyof P]: PropertyToData<P[name]>
     }
@@ -276,7 +291,23 @@ declare namespace WechatMiniprogram.Component {
             callback?: () => void
         ): void
 
+        /**
+         * 当从另一页面跳转到该页面时，获得与来源页面实例通信当事件通道，详见 [wx.navigateTo]((wx.navigateTo))
+         *
+         * 最低基础库版本：[`2.7.3`](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html)
+         */
         getOpenerEventChannel(): EventChannel
+
+        /**
+         * 获取更新性能统计信息，详见 [获取更新性能统计信息]((custom-component/update-perf-stat))
+         *
+         *
+         * 最低基础库版本：[`2.12.0`](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html)
+         */
+        setUpdatePerformanceListener<WithDataPath extends boolean = false>(
+            options: SetUpdatePerformanceListenerOption<WithDataPath>,
+            callback?: UpdatePerformanceListener<WithDataPath>
+        ): void
     }
 
     interface ComponentOptions {
@@ -644,6 +675,32 @@ declare namespace WechatMiniprogram.Component {
         endScrollOffset: number
         /** 起始和结束的滚动范围映射的时间长度，该时间可用于与关键帧动画里的时间 (duration) 相匹配，单位 ms */
         timeRange: number
+    }
+
+    interface SetUpdatePerformanceListenerOption<WithDataPath> {
+        /** 是否返回变更的 data 字段信息 */
+        withDataPaths?: WithDataPath
+    }
+
+    interface UpdatePerformanceListener<WithDataPath> {
+        (res: UpdatePerformance<WithDataPath>): void
+    }
+
+    interface UpdatePerformance<WithDataPath> {
+        /** 此次更新过程的 ID */
+        updateProcessId: number
+        /** 对于子更新，返回它所属的更新过程 ID */
+        parentUpdateProcessId?: number
+        /** 是否是被合并更新，如果是，则 updateProcessId 表示被合并到的更新过程 ID */
+        isMergedUpdate: boolean
+        /** 此次更新的 data 字段信息，只有 withDataPaths 设为 true 时才会返回 */
+        dataPaths: WithDataPath extends true ? string[] : undefined
+        /** 此次更新进入等待队列时的时间戳 */
+        pendingStartTimestamp: number
+        /** 更新运算开始时的时间戳 */
+        updateStartTimestamp: number
+        /** 更新运算结束时的时间戳 */
+        updateEndTimestamp: number
     }
 }
 /** Component构造器可用于定义组件，调用Component构造器时可以指定组件的属性、数据、方法等。

@@ -1,5 +1,5 @@
 /*! *****************************************************************************
-Copyright (c) 2021 Tencent, Inc. All rights reserved.
+Copyright (c) 2023 Tencent, Inc. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -19,6 +19,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
+
+/**
+ * Common interfaces and types
+ */
 
 interface IAPIError {
     errMsg: string
@@ -128,6 +132,18 @@ interface WxCloud {
 
     CloudID: ICloud.ICloudIDConstructor
     CDN: ICloud.ICDNConstructor
+
+    callContainer(param: OQ<ICloud.CallContainerParam>): void
+
+    callContainer(
+        param: RQ<ICloud.CallContainerParam>
+    ): Promise<ICloud.CallContainerResult>
+
+    connectContainer(param: OQ<ICloud.ConnectContainerParam>): void
+
+    connectContainer(
+        param: RQ<ICloud.ConnectContainerParam>
+    ): Promise<ICloud.ConnectContainerResult>
 }
 
 declare namespace ICloud {
@@ -148,6 +164,51 @@ declare namespace ICloud {
         slow?: boolean
     }
 
+    // === end ===
+
+    // === API: container ===
+    type CallContainerData = AnyObject
+
+    interface CallContainerResult extends IAPISuccessParam {
+        data: any
+        statusCode: number
+        header: Record<string, any>
+        callID: string
+    }
+
+    interface CallContainerParam extends ICloudAPIParam<CallContainerResult> {
+        path: string
+        service?: string
+        method?: string
+        header?: Record<string, any>
+        data?: any // string, object, ArrayBuffer
+        dataType?: string
+        responseType?: string
+        timeout?: number
+        verbose?: boolean
+        followRedirect?: boolean
+    }
+
+    interface ConnectContainerResult extends IAPISuccessParam {
+        socketTask: WechatMiniprogram.SocketTask
+    }
+
+    interface ConnectSocketOptions extends IAPIParam<void> {
+        header?: Record<string, string>
+        protocols?: string[]
+        tcpNoDelay?: boolean
+        perMessageDeflate?: boolean
+        timeout?: number
+    }
+
+    type ConnectContainerParam = Omit<
+        ConnectSocketOptions,
+        'success' | 'fail' | 'complete'
+    > &
+        ICloudAPIParam<ConnectContainerResult> & {
+        service: string
+        path?: string
+    }
     // === end ===
 
     // === API: uploadFile ===
@@ -636,10 +697,12 @@ declare namespace DB {
     /**
      * A contract that all API provider must adhere to
      */
-    class APIBaseContract<PromiseReturn,
+    class APIBaseContract<
+        PromiseReturn,
         CallbackReturn,
         Param extends IAPIParam,
-        Context = any> {
+        Context = any
+    > {
         getContext(param: Param): Context
 
         /**
@@ -982,7 +1045,11 @@ declare namespace DB {
 
 type Optional<T> = { [K in keyof T]+?: T[K] }
 
-type OQ<T extends Optional<Record<'complete' | 'success' | 'fail', (...args: any[]) => any>>> =
+type OQ<
+    T extends Optional<
+        Record<'complete' | 'success' | 'fail', (...args: any[]) => any>
+    >
+> =
     | (RQ<T> & Required<Pick<T, 'success'>>)
     | (RQ<T> & Required<Pick<T, 'fail'>>)
     | (RQ<T> & Required<Pick<T, 'complete'>>)
@@ -991,4 +1058,8 @@ type OQ<T extends Optional<Record<'complete' | 'success' | 'fail', (...args: any
     | (RQ<T> & Required<Pick<T, 'fail' | 'complete'>>)
     | (RQ<T> & Required<Pick<T, 'fail' | 'complete' | 'success'>>)
 
-type RQ<T extends Optional<Record<'complete' | 'success' | 'fail', (...args: any[]) => any>>> = Pick<T, Exclude<keyof T, 'complete' | 'success' | 'fail'>>
+type RQ<
+    T extends Optional<
+        Record<'complete' | 'success' | 'fail', (...args: any[]) => any>
+    >
+> = Pick<T, Exclude<keyof T, 'complete' | 'success' | 'fail'>>

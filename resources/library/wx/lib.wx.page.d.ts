@@ -1,5 +1,5 @@
 /*! *****************************************************************************
-Copyright (c) 2021 Tencent, Inc. All rights reserved.
+Copyright (c) 2023 Tencent, Inc. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -21,14 +21,22 @@ SOFTWARE.
 ***************************************************************************** */
 
 declare namespace WechatMiniprogram.Page {
-    type Instance<TData extends DataOption,
-        TCustom extends CustomOption> = OptionalInterface<ILifetime> &
+    type Instance<
+        TData extends DataOption,
+        TCustom extends CustomOption
+    > = OptionalInterface<ILifetime> &
         InstanceProperties &
         InstanceMethods<TData> &
         Data<TData> &
         TCustom
-    type Options<TData extends DataOption,
-        TCustom extends CustomOption> = (TCustom & Partial<Data<TData>> & Partial<ILifetime>) &
+    type Options<
+        TData extends DataOption,
+        TCustom extends CustomOption
+    > = (TCustom &
+        Partial<Data<TData>> &
+        Partial<ILifetime> & {
+        options?: Component.ComponentOptions
+    }) &
         ThisType<Instance<TData, TCustom>>
     type TrivialInstance = Instance<IAnyObject, IAnyObject>
 
@@ -103,7 +111,12 @@ declare namespace WechatMiniprogram.Page {
         onShareAppMessage(
             /** 分享发起来源参数 */
             options: IShareAppMessageOption
-        ): ICustomShareContent | void
+        ):
+            | ICustomShareContent
+            | IAsyncCustomShareContent
+            | Promise<ICustomShareContent>
+            | void
+            | Promise<void>
 
         /**
          * 监听右上角菜单“分享到朋友圈”按钮的行为，并自定义分享内容
@@ -179,6 +192,10 @@ declare namespace WechatMiniprogram.Page {
         imageUrl?: string
     }
 
+    interface IAsyncCustomShareContent extends ICustomShareContent {
+        promise: Promise<ICustomShareContent>
+    }
+
     interface ICustomTimelineContent {
         /** 自定义标题，即朋友圈列表页上显示的标题。默认值：当前小程序名称 */
         title?: string
@@ -202,7 +219,7 @@ declare namespace WechatMiniprogram.Page {
          *
          * 最低基础库： `1.2.4`
          */
-        from: 'button' | 'menu' | string
+        from: 'button' | 'menu'
         /** 如果 `from` 值是 `button`，则 `target` 是触发这次转发事件的 `button`，否则为 `undefined`
          *
          * 最低基础库： `1.2.4` */

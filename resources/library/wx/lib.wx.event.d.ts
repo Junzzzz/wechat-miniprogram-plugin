@@ -1,5 +1,5 @@
 /*! *****************************************************************************
-Copyright (c) 2021 Tencent, Inc. All rights reserved.
+Copyright (c) 2023 Tencent, Inc. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -35,9 +35,11 @@ declare namespace WechatMiniprogram {
     }
 
     /** 基础事件参数 */
-    interface BaseEvent<Mark extends IAnyObject = IAnyObject,
+    interface BaseEvent<
+        Mark extends IAnyObject = IAnyObject,
         CurrentTargetDataset extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = CurrentTargetDataset> {
+        TargetDataset extends IAnyObject = CurrentTargetDataset
+    > {
         /** 事件类型 */
         type: string
         /** 页面打开到触发事件所经过的毫秒数 */
@@ -51,10 +53,12 @@ declare namespace WechatMiniprogram {
     }
 
     /** 自定义事件 */
-    interface CustomEvent<Detail extends IAnyObject = IAnyObject,
+    interface CustomEvent<
+        Detail extends IAnyObject = IAnyObject,
         Mark extends IAnyObject = IAnyObject,
         CurrentTargetDataset extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = CurrentTargetDataset> extends BaseEvent<Mark, CurrentTargetDataset, TargetDataset> {
+        TargetDataset extends IAnyObject = CurrentTargetDataset
+    > extends BaseEvent<Mark, CurrentTargetDataset, TargetDataset> {
         /** 额外的信息 */
         detail: Detail
     }
@@ -84,11 +88,13 @@ declare namespace WechatMiniprogram {
     }
 
     /** 触摸事件 */
-    interface Touch<Detail extends IAnyObject = IAnyObject,
+    interface Touch<
+        Detail extends IAnyObject = IAnyObject,
         T extends TouchDetail | TouchCanvasDetail = TouchDetail,
         Mark extends IAnyObject = IAnyObject,
         CurrentTargetDataset extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = CurrentTargetDataset> extends CustomEvent<Detail, Mark, CurrentTargetDataset, TargetDataset> {
+        TargetDataset extends IAnyObject = CurrentTargetDataset
+    > extends CustomEvent<Detail, Mark, CurrentTargetDataset, TargetDataset> {
         /** 触摸事件，当前停留在屏幕中的触摸点信息的数组 */
         touches: T[]
         /** 触摸事件，当前变化的触摸点信息的数组 */
@@ -96,14 +102,18 @@ declare namespace WechatMiniprogram {
     }
 
     /** 触摸事件响应 */
-    type TouchEvent<Detail extends IAnyObject = IAnyObject,
+    type TouchEvent<
+        Detail extends IAnyObject = IAnyObject,
         Mark extends IAnyObject = IAnyObject,
         CurrentTargetDataset extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = CurrentTargetDataset> = Touch<Detail, TouchDetail, Mark, CurrentTargetDataset, TargetDataset>
+        TargetDataset extends IAnyObject = CurrentTargetDataset
+    > = Touch<Detail, TouchDetail, Mark, CurrentTargetDataset, TargetDataset>
 
     /** canvas 触摸事件响应 */
-    interface TouchCanvas<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> extends Touch<never, TouchCanvasDetail, Mark, never, TargetDataset> {
+    interface TouchCanvas<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > extends Touch<never, TouchCanvasDetail, Mark, never, TargetDataset> {
         // canvas 中的触摸事件不可冒泡，所以没有 currentTarget。
         currentTarget: never
     }
@@ -113,15 +123,19 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 2.1.0
      */
-    type CoverImageLoad<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** 图片宽度 */
-        width: number
-        /** 图片高度 */
-        height: number
-    },
+    type CoverImageLoad<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** 图片宽度 */
+            width: number
+            /** 图片高度 */
+            height: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 图片加载失败时触发
@@ -135,28 +149,32 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 1.9.90
      */
-    type MovableViewChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        x: number
-        y: number
-        /**
-         * 产生移动的原因
-         *
-         * - `touch` 拖动
-         * - `touch-out-of-bounds` 超出移动范围
-         * - `out-of-bounds` 超出移动范围后的回弹
-         * - `friction` 惯性
-         * - `空字符串` setData
-         */
-        source:
-            | 'touch'
-            | 'touch-out-of-bounds'
-            | 'out-of-bounds'
-            | 'friction'
-            | ''
-    },
+    type MovableViewChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            x: number
+            y: number
+            /**
+             * 产生移动的原因
+             *
+             * - `touch` 拖动
+             * - `touch-out-of-bounds` 超出移动范围
+             * - `out-of-bounds` 超出移动范围后的回弹
+             * - `friction` 惯性
+             * - `空字符串` setData
+             */
+            source:
+                | 'touch'
+                | 'touch-out-of-bounds'
+                | 'out-of-bounds'
+                | 'friction'
+                | ''
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 缩放过程中触发的事件
@@ -167,16 +185,20 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 1.9.90
      */
-    type MovableViewScale<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** 最低基础库: 2.1.0 */
-        x: number
-        /** 最低基础库: 2.1.0 */
-        y: number
-        scale: number
-    },
+    type MovableViewScale<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** 最低基础库: 2.1.0 */
+            x: number
+            /** 最低基础库: 2.1.0 */
+            y: number
+            scale: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 滑动开始事件 (同时开启 enhanced 属性后生效)
@@ -185,13 +207,17 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 2.12.0
      */
-    type ScrollViewDragStart<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        scrollTop: number
-        scrollLeft: number
-    },
+    type ScrollViewDragStart<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            scrollTop: number
+            scrollLeft: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 滑动事件 (同时开启 enhanced 属性后生效)
@@ -200,13 +226,17 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 2.12.0
      */
-    type ScrollViewDragging<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        scrollTop: number
-        scrollLeft: number
-    },
+    type ScrollViewDragging<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            scrollTop: number
+            scrollLeft: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 滑动结束事件 (同时开启 enhanced 属性后生效)
@@ -215,58 +245,82 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 2.12.0
      */
-    type ScrollViewDragEnd<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        scrollTop: number
-        scrollLeft: number
-    },
+    type ScrollViewDragEnd<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            scrollTop: number
+            scrollLeft: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /** 滚动到顶部/左边时触发 */
-    type ScrollViewScrollToUpper<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        direction: 'top' | 'left'
-    },
+    type ScrollViewScrollToUpper<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            direction: 'top' | 'left'
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /** 滚动到底部/右边时触发 */
-    type ScrollViewScrollToLower<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        direction: 'bottom' | 'right'
-    },
+    type ScrollViewScrollToLower<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            direction: 'bottom' | 'right'
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 滚动时触发
      *
      * event.detail = {scrollLeft, scrollTop, scrollHeight, scrollWidth, deltaX, deltaY}
      */
-    type ScrollViewScroll<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        scrollLeft: number
-        scrollTop: number
-        scrollHeight: number
-        scrollWidth: number
-        deltaX: number
-        deltaY: number
-    },
+    type ScrollViewScroll<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            scrollLeft: number
+            scrollTop: number
+            scrollHeight: number
+            scrollWidth: number
+            deltaX: number
+            deltaY: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
-    type ScrollViewRefresherPulling<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<never, Mark, TargetDataset>
+    type ScrollViewRefresherPulling<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<never, Mark, TargetDataset>
 
-    type ScrollViewRefresherRefresh<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<never, Mark, TargetDataset>
+    type ScrollViewRefresherRefresh<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<never, Mark, TargetDataset>
 
-    type ScrollViewRefresherRestore<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<never, Mark, TargetDataset>
+    type ScrollViewRefresherRestore<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<never, Mark, TargetDataset>
 
-    type ScrollViewRefresherAbort<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<never, Mark, TargetDataset>
+    type ScrollViewRefresherAbort<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<never, Mark, TargetDataset>
 
     /**
      * current 改变时会触发 change 事件
@@ -275,24 +329,28 @@ declare namespace WechatMiniprogram {
      *
      * **Tip**: 如果在 bindchange 的事件回调函数中使用 setData 改变 current 值，则有可能导致 setData 被不停地调用，因而通常情况下请在改变 current 值前检测 source 字段来判断是否是由于用户触摸引起。
      */
-    type SwiperChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        current: number
-        /**
-         * 表示导致变更的原因
-         *
-         * - `autoplay` 自动播放导致 swiper 变化；
-         * - `touch` 用户划动引起 swiper 变化；
-         * - 其它原因将用空字符串表示。
-         *
-         * 最低基础库: 1.4.0
-         */
-        source: '' | 'autoplay' | 'touch'
-        /** 该 swiper-item 的标识符 */
-        currentItemId: string
-    },
+    type SwiperChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            current: number
+            /**
+             * 表示导致变更的原因
+             *
+             * - `autoplay` 自动播放导致 swiper 变化；
+             * - `touch` 用户划动引起 swiper 变化；
+             * - 其它原因将用空字符串表示。
+             *
+             * 最低基础库: 1.4.0
+             */
+            source: '' | 'autoplay' | 'touch'
+            /** 该 swiper-item 的标识符 */
+            currentItemId: string
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * swiper-item 的位置发生改变时会触发 transition 事件
@@ -301,40 +359,52 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 2.4.3
      */
-    type SwiperTransition<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        dx: number
-        dy: number
-    },
+    type SwiperTransition<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            dx: number
+            dy: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 动画结束时会触发 animationfinish 事件
      *
      * 最低基础库: 1.9.0
      */
-    type SwiperAnimationFinish<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = SwiperChange<Mark, TargetDataset>
+    type SwiperAnimationFinish<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = SwiperChange<Mark, TargetDataset>
 
     /**
      * progress 动画完成事件
      *
      * 最低基础库 2.4.1
      */
-    type ProgressActiveEnd<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        curPercent: number
-    },
+    type ProgressActiveEnd<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            curPercent: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 用户点击该按钮时，会返回获取到的用户信息，回调的 detail 数据与 `wx. getUserInfo` 返回的一致，`open-type="getUserInfo"` 时有效
      *
      * 最低基础库: 1.3.0
      */
-    type ButtonGetUserInfo = CustomEvent<GeneralCallbackResult & GetUserInfoSuccessCallbackResult>
+    type ButtonGetUserInfo = CustomEvent<
+        GeneralCallbackResult & GetUserInfoSuccessCallbackResult
+    >
 
     /**
      * 客服消息回调，`open-type="contact"` 时有效
@@ -348,7 +418,12 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 1.2.0
      */
-    type ButtonGetPhoneNumber = CustomEvent<GeneralCallbackResult & Partial<GetWeRunDataSuccessCallbackResult>>
+    type ButtonGetPhoneNumber = CustomEvent<
+        GeneralCallbackResult &
+        Partial<GetWeRunDataSuccessCallbackResult> & {
+        code: string
+    }
+    >
 
     /**
      * 当使用开放能力时，发生错误的回调，`open-type=launchApp` 时有效
@@ -362,7 +437,9 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 2.0.7
      */
-    type ButtonOpenSetting = CustomEvent<GeneralCallbackResult & OpenSettingSuccessCallbackResult>
+    type ButtonOpenSetting = CustomEvent<
+        GeneralCallbackResult & OpenSettingSuccessCallbackResult
+    >
 
     /**
      * 打开 APP 成功的回调，`open-type=launchApp` 时有效
@@ -376,21 +453,27 @@ declare namespace WechatMiniprogram {
      *
      * detail = { value: ['选中的checkbox 的 value 的数组'] }
      */
-    type CheckboxGroupChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** 选中的 checkbox 的 value 的数组 */
-        value: string[]
-    },
+    type CheckboxGroupChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** 选中的 checkbox 的 value 的数组 */
+            value: string[]
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 编辑器初始化完成时触发
      *
      * 最低基础库: 2.7.0
      */
-    type EditorReady<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<never, Mark, TargetDataset>
+    type EditorReady<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<never, Mark, TargetDataset>
 
     /**
      * 编辑器聚焦时触发
@@ -399,15 +482,19 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 2.7.0
      */
-    type EditorFocus<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        html: string
-        text: string
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        delta: any[]
-    },
+    type EditorFocus<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            html: string
+            text: string
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delta: any[]
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 编辑器失去焦点时触发
@@ -416,8 +503,10 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 2.7.0
      */
-    type EditorBlur<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = EditorFocus<Mark, TargetDataset>
+    type EditorBlur<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = EditorFocus<Mark, TargetDataset>
 
     /**
      * 编辑器内容改变时触发
@@ -426,60 +515,74 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 2.7.0
      */
-    type EditorInput<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = EditorFocus<Mark, TargetDataset>
+    type EditorInput<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = EditorFocus<Mark, TargetDataset>
 
     /**
      * 通过 Context 方法改变编辑器内样式时触发，返回选区已设置的样式
      *
      * 最低基础库: 2.7.0
      */
-    type EditorStatusChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<Partial<{
-        align: 'left' | 'center' | 'right' | 'justify'
-        bold: 'strong'
-        italic: 'em'
-        underline: true
-        strike: 'del'
-        lineHeight: string
-        letterSpacing: string
-        marginTop: string
-        marginBottom: string
-        fontFamily: string
-        fontSize: string
-        color: string
-        backgroundColor: string
-        list: 'checked' | 'unchecked' | 'ordered' | 'bullet'
-        indent: number
-        header: number
-        script: 'sub' | 'super'
-        direction: 'rtl'
-    }>,
+    type EditorStatusChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        Partial<{
+            align: 'left' | 'center' | 'right' | 'justify'
+            bold: 'strong'
+            italic: 'em'
+            underline: true
+            strike: 'del'
+            lineHeight: string
+            letterSpacing: string
+            marginTop: string
+            marginBottom: string
+            fontFamily: string
+            fontSize: string
+            color: string
+            backgroundColor: string
+            list: 'checked' | 'unchecked' | 'ordered' | 'bullet'
+            indent: number
+            header: number
+            script: 'sub' | 'super'
+            direction: 'rtl'
+        }>,
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 携带 form 中的数据触发 submit 事件
      *
      * event.detail = {value : {'name': 'value'} , formId: ''}
      */
-    type FormSubmit<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        formId?: unknown
-        target: Target
-        /** 表单中的数据，需要在表单组件中加上 name 来作为 key。 */
-        value: IAnyObject
-    },
+    type FormSubmit<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            formId?: unknown
+            target: Target
+            /** 表单中的数据，需要在表单组件中加上 name 来作为 key。 */
+            value: IAnyObject
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /** 表单重置时会触发 reset 事件 */
-    type FormReset<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        target: Target
-    },
+    type FormReset<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            target: Target
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /** 键盘输入时触发
      *
@@ -487,58 +590,74 @@ declare namespace WechatMiniprogram {
      *
      * 处理函数可以直接 return 一个字符串，将替换输入框的内容。
      */
-    type Input<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** 输入框内容 */
-        value: string
-        /** 光标位置 */
-        cursor: number
-        /** keyCode 为键值 (目前工具还不支持返回keyCode参数) `2.1.0` 起支持 */
-        keyCode?: number
-    },
+    type Input<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** 输入框内容 */
+            value: string
+            /** 光标位置 */
+            cursor: number
+            /** keyCode 为键值 (目前工具还不支持返回keyCode参数) `2.1.0` 起支持 */
+            keyCode?: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 输入框聚焦时触发
      *
      * event.detail = { value, height }
      */
-    type InputFocus<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** 输入框内容 */
-        value: string
-        /** 键盘高度, 在基础库 `1.9.90` 起支持 */
-        height: number
-    },
+    type InputFocus<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** 输入框内容 */
+            value: string
+            /** 键盘高度, 在基础库 `1.9.90` 起支持 */
+            height: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 输入框失去焦点时触发
      *
      * event.detail = {value: value}
      */
-    type InputBlur<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** 输入框内容 */
-        value: string
-    },
+    type InputBlur<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** 输入框内容 */
+            value: string
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 点击完成按钮时触发
      *
      * event.detail = {value: value}
      */
-    type InputConfirm<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** 输入框内容 */
-        value: string
-    },
+    type InputConfirm<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** 输入框内容 */
+            value: string
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 键盘高度发生变化的时候触发此事件
@@ -549,22 +668,28 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: `2.7.0`
      */
-    type InputKeyboardHeightChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** 键盘高度 */
-        height: number
-        duration: number
-    },
+    type InputKeyboardHeightChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** 键盘高度 */
+            height: number
+            duration: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 取消选择时触发
      *
      * 最低基础库: 1.9.90
      */
-    type PickerCancel<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<never, Mark, TargetDataset>
+    type PickerCancel<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<never, Mark, TargetDataset>
 
     /**
      * value 改变时触发 change 事件
@@ -575,86 +700,110 @@ declare namespace WechatMiniprogram {
      *
      * value 改变时触发 change 事件，event.detail = {value, code, postcode}，其中字段 code 是统计用区划代码，postcode 是邮政编码
      */
-    type PickerChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /**
-         * 当 mode = selector 时, 返回当前选择的 value
-         *
-         * 当 mode = multiSelector 时, 返回一个索引数组
-         *
-         * 当 mode = time | date 时, 返回 `"12:01"` | `"2016-09-01"`
-         *
-         * 当 mode = region 时, 返回 `["广东省", "广州市", "海珠区"]`
-         */
-        value: string | number[] | [string, string, string]
-        /** 统计用区划代码 当 mode = region 时有效 (最低基础库: 1.4.0) */
-        code: [string, string, string]
-        /** 邮政编码 当 mode = region 时有效 (最低基础库: 1.4.0) */
-        postcode: string
-    },
+    type PickerChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /**
+             * 当 mode = selector 时, 返回当前选择的 value
+             *
+             * 当 mode = multiSelector 时, 返回一个索引数组
+             *
+             * 当 mode = time | date 时, 返回 `"12:01"` | `"2016-09-01"`
+             *
+             * 当 mode = region 时, 返回 `["广东省", "广州市", "海珠区"]`
+             */
+            value: string | number[] | [string, string, string]
+            /** 统计用区划代码 当 mode = region 时有效 (最低基础库: 1.4.0) */
+            code: [string, string, string]
+            /** 邮政编码 当 mode = region 时有效 (最低基础库: 1.4.0) */
+            postcode: string
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /** 列改变时触发 当 `mode = multiSelector` 时有效 */
-    type PickerColumnChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** 修改的列 */
-        column: number
-        value: number
-    },
+    type PickerColumnChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** 修改的列 */
+            column: number
+            value: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 滚动选择时触发 change 事件
      *
      * event.detail = {value}
      */
-    type PickerViewChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** value 为数组，表示 picker-view 内的 picker-view-column 当前选择的是第几项 (下标从 0 开始)  */
-        value: number[]
-    },
+    type PickerViewChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** value 为数组，表示 picker-view 内的 picker-view-column 当前选择的是第几项 (下标从 0 开始)  */
+            value: number[]
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 当滚动选择开始时候触发事件
      *
      * 最低基础库: 2.3.1
      */
-    type PickerViewPickStart<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<never, Mark, TargetDataset>
+    type PickerViewPickStart<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<never, Mark, TargetDataset>
 
     /**
      * 当滚动选择结束时候触发事件
      *
      * 最低基础库: 2.3.1
      */
-    type PickerViewPickEnd<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<never, Mark, TargetDataset>
+    type PickerViewPickEnd<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<never, Mark, TargetDataset>
 
     /** radio-group 切换事件 */
-    type RadioGroupChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent</** radio-group 中选中项的 value */
+    type RadioGroupChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        /** radio-group 中选中项的 value */
         {
             value: string
         },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 完成一次拖动后触发的事件
      *
      * event.detail = {value}
      */
-    type SliderChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** slider 的数值 0 - 100 */
-        value: number
-    },
+    type SliderChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** slider 的数值 0 - 100 */
+            value: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 拖动过程中触发的事件
@@ -663,20 +812,26 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 1.7.0
      */
-    type SliderChanging<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = SliderChange<Mark, TargetDataset>
+    type SliderChanging<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = SliderChange<Mark, TargetDataset>
 
     /**
      * checked 改变时触发 change 事件
      *
      * event.detail={ value}
      */
-    type SwitchChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        value: boolean
-    },
+    type SwitchChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            value: boolean
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 输入框聚焦时触发
@@ -685,8 +840,10 @@ declare namespace WechatMiniprogram {
      *
      * 在基础库 1.9.90 起支持
      */
-    type TextareaFocus<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = InputFocus<Mark, TargetDataset>
+    type TextareaFocus<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = InputFocus<Mark, TargetDataset>
 
     /**
      * 输入框失去焦点时触发
@@ -695,27 +852,33 @@ declare namespace WechatMiniprogram {
      *
      * **tip**: textarea 的 blur 事件会晚于页面上的 tap 事件，如果需要在 button 的点击事件获取 textarea，可以使用 form 的 bindsubmit。
      */
-    type TextareaBlur<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = InputBlur<Mark, TargetDataset>
+    type TextareaBlur<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = InputBlur<Mark, TargetDataset>
 
     /**
      * 输入框行数变化时调用
      *
      * event.detail = {height: 0, heightRpx: 0, lineCount: 0}
      */
-    type TextareaLineChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = CustomEvent<{
-        /** 输入框高度(px) */
-        height: number
-        /** 输入框高度(rpx) */
-        heightRpx: number
-        /** 行数 */
-        lineCount: number
-        /** 行高 */
-        lineHeight: number
-    },
+    type TextareaLineChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = CustomEvent<
+        {
+            /** 输入框高度(px) */
+            height: number
+            /** 输入框高度(rpx) */
+            heightRpx: number
+            /** 行数 */
+            lineCount: number
+            /** 行高 */
+            lineHeight: number
+        },
         Mark,
-        TargetDataset>
+        TargetDataset
+    >
 
     /**
      * 当键盘输入时，触发 input 事件
@@ -726,16 +889,20 @@ declare namespace WechatMiniprogram {
      *
      * **tip**: 不建议在多行文本上对用户的输入进行修改，所以 **bindinput 处理函数的返回值并不会反映到 textarea 上**
      */
-    type TextareaInput<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = Input<Mark, TargetDataset>
+    type TextareaInput<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = Input<Mark, TargetDataset>
 
     /**
      * 点击完成时， 触发 confirm 事件
      *
      * event.detail = {value: value}
      */
-    type TextareaConfirm<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = InputConfirm<Mark, TargetDataset>
+    type TextareaConfirm<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = InputConfirm<Mark, TargetDataset>
 
     /**
      * 键盘高度发生变化的时候触发此事件
@@ -746,22 +913,26 @@ declare namespace WechatMiniprogram {
      *
      * 最低基础库: 2.7.0
      */
-    type TextareaKeyboardHeightChange<Mark extends IAnyObject = IAnyObject,
-        TargetDataset extends IAnyObject = IAnyObject> = InputKeyboardHeightChange<Mark, TargetDataset>
+    type TextareaKeyboardHeightChange<
+        Mark extends IAnyObject = IAnyObject,
+        TargetDataset extends IAnyObject = IAnyObject
+    > = InputKeyboardHeightChange<Mark, TargetDataset>
 
     /**
      * 功能页返回，且操作成功时触发， detail 格式与具体功能页相关
      *
      * 最低基础库: 2.1.0
      */
-    type FunctionalNavigatorSuccess<Detail extends IAnyObject = IAnyObject> = CustomEvent<Detail, never, never>
+    type FunctionalNavigatorSuccess<Detail extends IAnyObject = IAnyObject> =
+        CustomEvent<Detail, never, never>
 
     /**
      * 功能页返回，且操作失败时触发， detail 格式与具体功能页相关
      *
      * 最低基础库: 2.1.0
      */
-    type FunctionalNavigatorFail<Detail extends IAnyObject = IAnyObject> = CustomEvent<Detail, never, never>
+    type FunctionalNavigatorFail<Detail extends IAnyObject = IAnyObject> =
+        CustomEvent<Detail, never, never>
 
     /**
      * 当 `target="miniProgram"` 时有效，跳转小程序成功

@@ -98,7 +98,7 @@ class MyJSPredefinedLibraryProvider : JSPredefinedLibraryProvider() {
                 arrayOf(
                     VfsUtil.findFileByURL(
                         ResourceUtil.getResource(
-                            javaClass.classLoader, "/library/wx", "typings"
+                            javaClass.classLoader, "/library/", "wx"
                         )
                     )
                 ).filterNotNull().toTypedArray(),
