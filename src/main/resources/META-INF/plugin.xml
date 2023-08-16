@@ -29,7 +29,7 @@
                 id="CreateWechatMiniProgramPageAction"
                 text="Wechat Mini Program Page"
                 description="Create wechat mini program page (wxml js css json)"
-                icon="com.zxy.ijplugin.wechat_miniprogram.icons.WechatMiniProgramIcons.COMPONENT"
+                icon="com.zxy.ijplugin.miniprogram.icons.WechatMiniProgramIcons.COMPONENT"
         >
             <add-to-group group-id="NewGroup" anchor="first"/>
         </action>
@@ -37,7 +37,7 @@
                 class="com.zxy.ijplugin.miniprogram.action.CreateWechatMiniProgramComponentAction"
                 text="Wechat Mini Program Component"
                 description="Create wechat mini program component (wxml,js,json,wxss)"
-                icon="com.zxy.ijplugin.wechat_miniprogram.icons.WechatMiniProgramIcons.PAGE"
+                icon="com.zxy.ijplugin.miniprogram.icons.WechatMiniProgramIcons.PAGE"
         >
             <add-to-group group-id="NewGroup" anchor="first"/>
         </action>
